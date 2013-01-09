@@ -1,0 +1,53 @@
+body {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.wpshop_element_search_result {
+	height: 300px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.wpshop_shortcode_options_container {
+	margin: 12px auto;
+	width: 85%;
+}
+
+.wpshop_created_shortcode_container {
+	margin: 12px auto;
+	width: 70%;
+}
+#wpshop_created_shortcode {
+	width: 100%;
+}
+
+.search_element_container {
+	width: 50%;
+	margin: 0px auto;
+}
+
+#selected_content {
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #DFDFDF;
+    border-left: 1px solid #DFDFDF;
+    margin: 0;
+    padding: 0px 5px 10px;
+}
+#selected_content div p {
+    margin-top: 0.9em;
+    text-align: justify;
+}
+
+#wpshop_loading {
+	display: none; 
+	position: absolute;
+	height: 32px;
+	width: 32px;
+	background: transparent url('../../medias/icones/loading.gif') no-repeat;
+	z-index:99999;
+}
+
+.wpshop_shortcode_element_attribute_value {
+	margin:0px 12px 0px;
+}

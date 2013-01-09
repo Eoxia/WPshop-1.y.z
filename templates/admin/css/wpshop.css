@@ -1,0 +1,90 @@
+/*	Menu */
+#toplevel_page_wpshop_dashboard .wp-menu-image {
+    background: url("../medias/icones/wpshop_menu_icons.png") no-repeat scroll 0 -32px transparent !important;
+}
+#toplevel_page_wpshop_dashboard:hover .wp-menu-image, #toplevel_page_wpshop_dashboard.wp-has-current-submenu .wp-menu-image {
+    background: url("../medias/icones/wpshop_menu_icons.png") no-repeat scroll 0 0 transparent !important;
+}
+#toplevel_page_wpshop_dashboard .wp-menu-image img {
+    display: none;
+}
+#menu-posts-wpshop_product .wp-menu-image img {
+    display: none;
+}
+#menu-posts-wpshop_product .wp-menu-image {
+    background: url("../medias/icones/wpshop_menu_icons.png") no-repeat scroll -35px -32px transparent !important;
+}
+#menu-posts-wpshop_product:hover .wp-menu-image, #menu-posts-wpshop_product.wp-has-current-submenu .wp-menu-image {
+    background: url("../medias/icones/wpshop_menu_icons.png") no-repeat scroll -35px 0 transparent !important;
+}
+#menu-posts-wpshop_shop_order .wp-menu-image {
+    background: url("../medias/icones/wpshop_menu_icons.png") no-repeat scroll -70px -32px transparent !important;
+}
+#menu-posts-wpshop_shop_order:hover .wp-menu-image, #menu-posts-wpshop_shop_order.wp-has-current-submenu .wp-menu-image {
+    background: url("../medias/icones/wpshop_menu_icons.png") no-repeat scroll -70px 0 transparent !important;
+}
+
+
+/* Admin notifications */
+.wpshop_admin_notice{
+	position: relative;
+	z-index: 100;
+	overflow: hidden;
+	border: 1px solid #E1E1E1 !important; /*	important to overwrite class "updated" instruction	*/
+	background: #3A96AD url("../medias/images/wpshop_logo.png") no-repeat 23px 28px !important; /*	important to overwrite class "updated" instruction	*/
+	padding: 34px 0 9px 200px !important;/*	important to overwrite class "updated" instruction	*/
+	height:45px;
+	color:#FFFFFF;
+	font-weight:bold;
+}
+.wpshop_admin_notice p {
+	margin:0px 10px 0 0 !important;
+	float:left;
+}
+.wpshop_admin_notice ul {
+	margin:0px !important;
+	padding-top:4px;
+}
+.wpshop_admin_notice li {
+	margin:0px !important;
+	color:#205d6d;
+	font-style:italic;
+}
+.wpshop_admin_notice a{
+	color:#6AAEBF;
+	margin-right:12px;
+	font-weight:normal;
+}
+.wpshop_admin_notice p a.button-primary{
+	padding:6px 12px;
+}
+.wpshop_admin_notice li a {
+	margin:0px 0 0 10px !important;
+	font-style:normal;
+	padding:3px 10px;
+}
+
+/*    Wysiwyg editor icon    */
+.mce_wpshop_wysiwyg_button span{
+    background: url("../medias/icones/wpshop_tiny_icon.png") no-repeat -1px -20px !important;
+}
+.wp_themeSkin .mceButtonEnabled:hover span.mce_wpshop_wysiwyg_button, .wp_themeSkin span.mceButtonActive span.mce_wpshop_wysiwyg_button{
+    background: url("../medias/icones/wpshop_tiny_icon.png") no-repeat -1px 0px !important;
+}
+
+/*	Admin loading /success / error picture	*/
+.wpshop_loading_picture {
+	position: absolute;
+	margin: 7px 5px;
+	height: 17px;
+	width: 17px;
+	background: white url('../medias/icones/loading.gif') no-repeat;
+	display: none;
+	padding: 0px !important;
+}
+.wpshop_loading_picture.success {
+	background-image: url('../medias/icones/success.gif');
+}
+.wpshop_loading_picture.error {
+	background-image: url('../medias/icones/error.gif');
+}

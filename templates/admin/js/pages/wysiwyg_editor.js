@@ -1,0 +1,133 @@
+(function() {
+	tinymce.create('tinymce.plugins.wpshop_wysiwyg_shortcodes', {
+
+		/**
+		 * Creates control instances based in the incomming name. This method is normally not
+		 * needed since the addButton method of the tinymce.Editor class is a more easy way of adding buttons
+		 * but you sometimes need to create more complex controls like listboxes, split buttons etc then this
+		 * method can be used to create those.
+		 *
+		 * @param {String} n Name of the control to create.
+		 * @param {tinymce.ControlManager} cm Control manager to use inorder to create new control.
+		 * @return {tinymce.ui.Control} New control instance or null if no control was created.
+		 */
+		createControl : function(n, cm) {
+			switch (n) {
+				case 'wpshop_wysiwyg_button':
+					var wpshop_wysiwyg_button = cm.createMenuButton(n,{
+						title : WPSHOP_BUTTON_DESCRIPTION,
+						image: false
+					});
+					
+					wpshop_wysiwyg_button.onRenderMenu.add(function(c, m) {
+						/*	Define wpshop products shortcodes menu	*/
+						var wpshop_product_shortode;
+						wpshop_product_shortode = m.addMenu({title : WPSHOP_WYSIWYG_MENU_TITLE_PRODUCT_LISTING});
+						wpshop_product_shortode.add({title : WPSHOP_WYSIWYG_PRODUCT_LISTING_BY_PID_TITLE, onclick : function() {
+							tinyMCE.activeEditor.windowManager.open({
+								file : WPSHOP_TEMPLATES_URL + 'admin/wpshop_shortcodes_wysiwyg_dialog.php?type=product&post_type=' + jQuery("#post_type").val(),
+								width : 800,
+								height : 600,
+								inline : 1
+							});
+						}});
+						wpshop_product_shortode.add({title : WPSHOP_WYSIWYG_PRODUCT_LISTING_BY_ATTRIBUTE_TITLE, onclick : function() {
+							tinyMCE.activeEditor.windowManager.open({
+								file : WPSHOP_TEMPLATES_URL + 'admin/wpshop_shortcodes_wysiwyg_dialog.php?type=product_by_attribute&post_type=' + jQuery("#post_type").val(),
+								width : 800,
+								height : 600,
+								inline : 1
+							});
+						}});
+
+						/*	Define wpshop categories shortcode menu	*/
+						m.add({title : WPSHOP_WYSIWYG_MENU_TITLE_CATEGORIES, onclick : function() {
+	                        tinyMCE.activeEditor.windowManager.open({
+	        					file : WPSHOP_TEMPLATES_URL + 'admin/wpshop_shortcodes_wysiwyg_dialog.php?type=categories&post_type=' + jQuery("#post_type").val(),
+	        					width : 800,
+	        					height : 600,
+	        					inline : 1
+	        				});
+	                    }});
+
+						/*	Define wpshop attributes shortcode menu	*/
+						m.add({title : WPSHOP_WYSIWYG_MENU_TITLE_ATTRIBUTE_VALUE, onclick : function() {
+							tinyMCE.activeEditor.windowManager.open({
+								file : WPSHOP_TEMPLATES_URL + 'admin/wpshop_shortcodes_wysiwyg_dialog.php?type=attribute_value&post_type=' + jQuery("#post_type").val(),
+								width : 800,
+								height : 600,
+								inline : 1
+							});
+						}});
+
+						/*	Define wpshop custom tags	*/
+						if ( jQuery("#post_type").val() === 'page') {
+							var wpshop_custom_tags;
+							wpshop_custom_tags = m.addMenu({title : WPSHOP_CUSTOM_TAGS_TITLE});
+							wpshop_custom_tags.add({title : WPSHOP_CUSTOM_TAGS_CART, onclick : function() {
+								tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[wpshop_cart]');
+							}});
+							wpshop_custom_tags.add({title : WPSHOP_CUSTOM_TAGS_CART_MINI, onclick : function() {
+								tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[wpshop_mini_cart]');
+							}});
+							wpshop_custom_tags.add({title : WPSHOP_CUSTOM_TAGS_CHECKOUT, onclick : function() {
+								tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[wpshop_checkout]');
+							}});
+							wpshop_custom_tags.add({title : WPSHOP_CUSTOM_TAGS_ACCOUNT, onclick : function() {
+								tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[wpshop_myaccount]');
+							}});
+							wpshop_custom_tags.add({title : WPSHOP_CUSTOM_TAGS_SHOP, onclick : function() {
+								tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[wpshop_products]');
+							}});
+							//wpshop_custom_tags.add({title : WPSHOP_CUSTOM_TAGS_ADVANCED_SEARCH, onclick : function() {
+	                        //	tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[wpshop_custom_search]');
+	                        //}});
+						}
+
+						/*	Define wpshop custom message content	*/
+						if ( jQuery("#post_type").val() === WPSHOP_NEWTYPE_IDENTIFIER_MESSAGE) {
+
+							var wpshop_custom_message;
+							wpshop_custom_message = m.addMenu({title : WPSHOP_CUSTOM_MESSAGE_CONTENT_TITLE});
+							wpshop_custom_message.add({title : WPSHOP_CUSTOM_MESSAGE_CONTENT_CUSTOMER_FIRST_NAME, onclick : function() {
+								tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[customer_first_name]');
+							}});
+							wpshop_custom_message.add({title : WPSHOP_CUSTOM_MESSAGE_CONTENT_CUSTOMER_LAST_NAME, onclick : function() {
+								tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[customer_last_name]');
+							}});
+							wpshop_custom_message.add({title : WPSHOP_CUSTOM_MESSAGE_CONTENT_ORDER_ID, onclick : function() {
+								tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[order_key]');
+							}});
+							wpshop_custom_message.add({title : WPSHOP_CUSTOM_MESSAGE_CONTENT_PAYPAL_TRANSACTION_ID, onclick : function() {
+	                        	tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[paypal_order_key]');
+	                        }});
+
+						}
+					});
+					if (( jQuery("#post_type").val() === 'page' ) || ( jQuery("#post_type").val() === 'post' ) || ( jQuery("#post_type").val() === WPSHOP_NEWTYPE_IDENTIFIER_MESSAGE ) || ( jQuery("#post_type").val() === WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT )) {
+						return wpshop_wysiwyg_button;
+					}
+				break;
+			}
+			return null;
+		},
+
+		/**
+		 * Returns information about the plugin as a name/value array.
+		 * The current keys are longname, author, authorurl, infourl and version.
+		 *
+		 * @return {Object} Name/value array containing information about the plugin.
+		 */
+		getInfo : function() {
+			return {
+				longname : 'Wpshop shortcode add',
+				author : 'Eoxia',
+				authorurl : 'http://www.eoxia.com',
+				version : "1.0"
+			};
+		}
+	});
+
+	// Register plugin
+	tinymce.PluginManager.add('wpshop_wysiwyg_shortcodes', tinymce.plugins.wpshop_wysiwyg_shortcodes);
+})();
