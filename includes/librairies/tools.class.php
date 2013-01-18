@@ -102,33 +102,6 @@ class wpshop_tools
 		exit;
 	}
 
-	/** Custom search shortcode */
-	function wpshop_custom_search_shortcode() {
-		global $post;
-
-		$products_list = $others = '';
-
-		while ( have_posts() ) : the_post();
-			if($post->post_type=="wpshop_product") {
-				ob_start();
-				echo wpshop_products::product_mini_output($post->ID, 0, 'list');
-				$products_list .= ob_get_contents();
-				ob_end_clean();
-			}
-			else {
-				ob_start();
-				get_template_part( 'content', get_post_format() );
-				$others .= ob_get_contents();
-				ob_end_clean();
-			}
-		endwhile;
-
-		if(!empty($products_list)) {
-			echo '<ul class="products_listing list_3 list_mode clearfix">'.$products_list.'</ul>';
-		}
-		echo $others;
-	}
-
 	function is_sendsms_actived() {
 		if(is_plugin_active('wordpress-send-sms/Send-SMS.php')) {
 			$configOption = get_option('sendsms_config', '');
@@ -142,106 +115,86 @@ class wpshop_tools
 		return false;
 	}
 
-	/** Advanced search shortcode */
-	function wpshop_advanced_search_shortcode() {
-		global $wpdb;
+	function search_all_possibilities($input) {
+		$result = array();
 
-		if(!empty($_POST['search'])) {
+		while (list($key, $values) = each($input)) {
+			if (empty($values)) {
+				continue;
+			}
 
-			if(!empty($_POST['advanced_search_attribute'])) {
-
-				$att_type = array(
-					'datetime'	=>	WPSHOP_DBT_ATTRIBUTE_VALUES_DATETIME,
-					'decimal'	=>	WPSHOP_DBT_ATTRIBUTE_VALUES_DECIMAL,
-					'integer'	=>	WPSHOP_DBT_ATTRIBUTE_VALUES_INTEGER,
-					'text'		=>	WPSHOP_DBT_ATTRIBUTE_VALUES_TEXT,
-					'varchar'	=>	WPSHOP_DBT_ATTRIBUTE_VALUES_VARCHAR
-				);
-
-				$table_to_use = $data_to_use = array();
-				// Foreach the post data
-				foreach($_POST['advanced_search_attribute'] as $type => $array) {
-					foreach($array as $att_code => $att_value) {
-						if(!empty($att_value)) {
-
-							// If data type is decimal, we trait the number format
-							if($type=='decimal') {
-								$att_value = str_replace(',', '.', $att_value);
-								$number_figures=5;
-								$att_value = number_format((float)$att_value, $number_figures, '.', '');
-							}
-
-							$data_to_use[$type][$att_code] = $att_value;
-
-							if(!in_array($type, $table_to_use)) {
-								$table_to_use[] = $type;
-							}
-						}
-					}
+			// Special case: seeding the product array with the values from the first sub-array
+			if (empty($result)) {
+				foreach($values as $value) {
+					$result[] = array($key => $value);
 				}
-				$left_join=$where='';
-				foreach($table_to_use as $t) {
+			}
+			else {
+				// Second and subsequent input sub-arrays work like this:
+				//   1. In each existing array inside $product, add an item with
+				//      key == $key and value == first item in input sub-array
+				//   2. Then, for each remaining item in current input sub-array,
+				//      add a copy of each existing array inside $product with
+				//      key == $key and value == first item in current input sub-array
 
-					$left_join .= ' LEFT JOIN '.$att_type[$t].' AS att_'.$t.' ON att_'.$t.'.entity_id=post.ID';
+				// Store all items to be added to $product here; adding them on the spot
+				// inside the foreach will result in an infinite loop
+				$append = array();
+				foreach($result as &$product) {
+					// Do step 1 above. array_shift is not the most efficient, but it
+					// allows us to iterate over the rest of the items with a simple
+					// foreach, making the code short and familiar.
+					$product[$key] = array_shift($values);
 
-					foreach($data_to_use[$t] as $code => $value) {
-						$attr = wpshop_attributes::getElement($code,"'valid'",'code');
-						$where .= 'att_'.$t.'.attribute_id="'.$attr->id.'" AND att_'.$t.'.value="'.$value.'" AND ';
+					// $product is by reference (that's why the key we added above
+					// will appear in the end result), so make a copy of it here
+					$copy = $product;
+
+					// Do step 2 above.
+					foreach($values as $item) {
+						$copy[$key] = $item;
+						$append[] = $copy;
 					}
+
+					// Undo the side effecst of array_shift
+					array_unshift($values, $product[$key]);
 				}
-				if(!empty($where))$where='WHERE '.substr($where,0,-4);
 
-				$results='';
-
-				if( (!empty($table_to_use) && !empty($data_to_use) && !empty($where) && !empty($left_join)) OR !empty($_POST['product_name']))
-				{
-					if(!empty($_POST['product_name'])) {
-						if(!empty($where))$where.='AND post.post_title LIKE "%'.$wpdb->escape($_POST['product_name']).'%"';
-						else $where.='WHERE post.post_title LIKE "%'.$wpdb->escape($_POST['product_name']).'%"';
-					}
-
-					$query = 'SELECT post.ID FROM '.$wpdb->posts.' AS post '.$left_join.' '.$where.' GROUP BY post.ID';
-					$data = $wpdb->get_results($query);
-
-					if(!empty($data)) {
-						foreach($data as $d) {
-							$results .= wpshop_products::product_mini_output($d->ID, 0, 'list');
-						}
-					}
-				}
+				// Out of the foreach, we can add to $results now
+				$result = array_merge($result, $append);
 			}
 		}
 
-		$inputs = wpshop_attributes::getAttributeForAdvancedSearch();
-
-		echo '
-			<form method="post">
-				'.__('Product name','wpshop').' : <input type="text" name="product_name" /><br />
-				'.$inputs.'
-				<input type="submit" name="search" value="'.__('Search','wpshop').'" />
-			</form>
-		';
-
-		if(!empty($_POST['search'])) {
-			if(!empty($results)) {
-				echo '<ul class="products_listing list_3 list_mode clearfix">'.$results.'</ul>';
-			} else echo '<p>'.__('Empty list','wpshop').'</p>';
-		}
+		return $result;
 	}
 
 	/** Return the shop currency */
 	function wpshop_get_currency($code=false) {
 		// Currency
-		$wpshop_shop_currency = get_option('wpshop_shop_default_currency', WPSHOP_SHOP_DEFAULT_CURRENCY);
-		$wpshop_shop_currencies = unserialize(WPSHOP_SHOP_CURRENCIES);
-		return $code ? $wpshop_shop_currency : $wpshop_shop_currencies[$wpshop_shop_currency];
+		global $wpdb;
+		$current_currency = get_option('wpshop_shop_default_currency');
+		$query = $wpdb->prepare('SELECT * FROM ' .WPSHOP_DBT_ATTRIBUTE_UNIT. ' WHERE id =%d ', $current_currency );
+		$currency_infos = $wpdb->get_row( $query );
+		if ( !empty($currency_infos) ) {
+			$code = ($code) ?  $currency_infos->name : $currency_infos->unit;
+			return $code;
+		}
+		else {
+			return '';
+		}
 	}
 
 	/** Return the shop currency */
-	function wpshop_get_sigle($code) {
-		// Currencies
-		$wpshop_shop_currencies = unserialize(WPSHOP_SHOP_CURRENCIES);
-		return $wpshop_shop_currencies[$code];
+	function wpshop_get_sigle($code, $column_to_return = "unit") {
+		$tmp_code = (int)$code;
+		$key_to_get = 'name';
+		if ( is_int($tmp_code) && !empty($tmp_code) ) {
+			$key_to_get = 'id';
+		}
+
+		$current_currency = wpshop_attributes_unit::getElement($code, "'valid'", $key_to_get);
+
+		return $current_currency->$column_to_return;
 	}
 
 	/**
@@ -282,18 +235,31 @@ class wpshop_tools
 	*/
 	function defineFieldType($dataFieldType, $input_type){
 		$type = 'text';
-		if(($dataFieldType == 'char') || ($dataFieldType == 'varchar') || ($dataFieldType == 'int')){
+
+		if ( $dataFieldType == 'datetime' ) {
 			$type = 'text';
-			if($input_type == 'password'){
-				$type = 'password';
-			}
 		}
-		elseif($dataFieldType == 'text'){
-			$type = 'textarea';
+		else {
+			$type = $input_type;
 		}
-		elseif($dataFieldType == 'enum'){
-			$type = 'select';
-		}
+// 		if( ($dataFieldType == 'char') || ($dataFieldType == 'varchar') || ($dataFieldType == 'int') ){
+// 			$type = 'text';
+// 			if($input_type == 'password'){
+// 				$type = 'password';
+// 			}
+// 			elseif($input_type == 'hidden') {
+// 				$type = 'hidden';
+// 			}
+// 			elseif( $input_type == 'country' ){
+// 				$type = 'country';
+// 			}
+// 		}
+// 		elseif($dataFieldType == 'text'){
+// 			$type = 'textarea';
+// 		}
+// 		elseif($dataFieldType == 'enum'){
+// 				$type = 'select';
+// 		}
 
 		return $type;
 	}
@@ -421,21 +387,21 @@ class wpshop_tools
 		else return $string;
 	}
 
-	/** Run a safe redirect in javascript */
+	/**
+	 * Run a safe redirect in javascript
+	 */
 	function wpshop_safe_redirect($url='') {
 		$url = empty($url) ? admin_url('admin.php?page='.WPSHOP_URL_SLUG_DASHBOARD) : $url;
 		echo '<script type="text/javascript">window.top.location.href = "'.$url.'"</script>';
 		exit;
 	}
 
-
-
 	/**
 	 * Format a number before displaying it
 	 * @deprecated
 	 *
 	 */
-	function price($price) {
+	function price( $price ) {
 		return $price;
 	}
 

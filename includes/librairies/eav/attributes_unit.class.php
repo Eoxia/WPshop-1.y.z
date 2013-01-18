@@ -7,7 +7,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 
 /**
 * Define the different method to manage attributes
-* 
+*
 *	Define the different method and variable used to manage attributes
 * @author Eoxia <dev@eoxia.com>
 * @version 1.0
@@ -103,7 +103,7 @@ class wpshop_attributes_unit
 	}
 
 	/**
-	*	Define the title of the page 
+	*	Define the title of the page
 	*
 	*	@return string $title The title of the page looking at the environnement
 	*/
@@ -223,8 +223,7 @@ class wpshop_attributes_unit
 		/****************************************************************************/
 		if($actionResult != ''){
 			$elementIdentifierForMessage = '<span class="bold" >' . $_REQUEST[self::getDbTable()]['frontend_label'] . '</span>';
-			if($actionResult == 'error')
-			{/*	CHANGE HERE FOR SPECIFIC CASE	*/
+			if ($actionResult == 'error') {
 				$pageMessage .= '<img src="' . WPSHOP_ERROR_ICON . '" alt="action error" class="wpshopPageMessage_Icon" />' . sprintf(__('An error occured while saving %s', 'wpshop'), $elementIdentifierForMessage);
 				if(WPSHOP_DEBUG_MODE)
 				{
@@ -234,11 +233,12 @@ class wpshop_attributes_unit
 			elseif(($actionResult == 'done') || ($actionResult == 'nothingToUpdate'))
 			{/*	CHANGE HERE FOR SPECIFIC CASE	*/
 				/*****************************************************************************************************************/
-				/*************************			CHANGE FOR SPECIFIC ACTION FOR CURRENT ELEMENT				****************************/
+				/*************************			CHANGE FOR SPECIFIC ACTION FOR CURRENT ELEMENT				******************/
 				/*****************************************************************************************************************/
 
+				/***********************************************************************************/
 				/*************************			GENERIC				****************************/
-				/*************************************************************************/
+				/***********************************************************************************/
 				$pageMessage .= '<img src="' . WPSHOP_SUCCES_ICON . '" alt="action success" class="wpshopPageMessage_Icon" />' . sprintf(__('%s succesfully saved', 'wpshop'), $elementIdentifierForMessage);
 				if(($pageAction == 'edit') || ($pageAction == 'save'))
 				{
@@ -392,7 +392,7 @@ class wpshop_attributes_unit
 	*	@return string The html code that output the interface for adding a nem item
 	*/
 	function elementEdition($itemToEdit = ''){
-		global $attribute_displayed_field;
+		global $attribute_displayed_field; global $wpdb;
 		$dbFieldList = wpshop_database::fields_to_input(self::getDbTable());
 
 		$editedItem = '';
@@ -401,6 +401,8 @@ class wpshop_attributes_unit
 			$editedItem = self::getElement($itemToEdit);
 			$_REQUEST['action'] = 'update_attribute_unit';
 		}
+		$query = $wpdb->prepare('SELECT unit FROM ' .WPSHOP_DBT_ATTRIBUTE_UNIT. ' WHERE id = ' .get_option('wpshop_shop_default_currency'). '', '');
+ 		$default_unit = $wpdb->get_var($query);
 
 		$the_form_content_hidden = $the_form_general_content = $the_form_option_content = '';
 		foreach($dbFieldList as $input_key => $input_def){
@@ -424,21 +426,24 @@ class wpshop_attributes_unit
 			$input_def['value'] = str_replace("\\", "", $input_def['value']);
 			$the_input = wpshop_form::check_input_type($input_def, self::getDbTable());
 
-			
+
 			if($input_def['type'] != 'hidden'){
 				$label = 'for="' . $input_def['name'] . '"';
 				if(($input_def['type'] == 'radio') || ($input_def['type'] == 'checkbox')){
 					$label = '';
 				}
+
 				$the_form_general_content .= '
-	<div class="clear" >
-		<div class="wpshop_form_label wpshop_' . self::currentPageCode . '_' . $input_def['name'] . '_label alignleft" >
-			<label ' . $label . ' >' . __($input_def['name'], 'wpshop') . '</label>
-		</div>
-		<div class="wpshop_form_input wpshop_' . self::currentPageCode . '_' . $input_def['name'] . '_input alignleft" >
-			' . $the_input . '
-		</div>
-	</div>';
+				<div class="clear" >
+					<div class="wpshop_form_label wpshop_' . self::currentPageCode . '_' . $input_def['name'] . '_label alignleft" >
+						<label ' . $label . ' >' . __($input_def['name'], 'wpshop') . '</label>
+					</div>
+					<div class="wpshop_form_input wpshop_' . self::currentPageCode . '_' . $input_def['name'] . '_input alignleft" >
+						' . $the_input . ' ' .( ($input_def['name'] == 'change_rate') ? $default_unit : ''). '
+					</div>
+				</div>';
+
+
 			}
 			else{
 				$the_form_content_hidden .= '
@@ -462,7 +467,7 @@ class wpshop_attributes_unit
 		wpshopMainInterface("' . self::getDbTable() . '", "' . __('Are you sure you want to quit this page? You will loose all current modification', 'wpshop') . '", "' . __('Are you sure you want to delete this attribute?', 'wpshop') . '");
 
 		jQuery("#wpshop_unit_group_list_tab").hide();
-		
+
 		jQuery("#cancel_unit_edition").click(function(){
 			jQuery("#wpshop_unit_list").load(WPSHOP_AJAX_FILE_URL, {
 				"post": "true",
@@ -555,7 +560,7 @@ class wpshop_attributes_unit
 		$unit_list_for_group = '';
 
 		$query = $wpdb->prepare("
-			SELECT 0 as id, %s AS name FROM " . WPSHOP_DBT_ATTRIBUTE_UNIT . " WHERE status = 'valid' AND group_id = %d GROUP BY id 
+			SELECT 0 as id, %s AS name FROM " . WPSHOP_DBT_ATTRIBUTE_UNIT . " WHERE status = 'valid' AND group_id = %d GROUP BY id
 				UNION
 			SELECT id, GROUP_CONCAT(name, \" (\", unit, \")\") AS name FROM " . WPSHOP_DBT_ATTRIBUTE_UNIT . " WHERE status = 'valid' AND group_id = %d GROUP BY id", __('No unit', 'wpshop'), $group_id, $group_id);
 		$unit_list_for_group = $wpdb->get_results($query);
@@ -818,5 +823,30 @@ class wpshop_attributes_unit
 
 		return $the_form;
 	}
+
+
+	/*	Default currecy for the entire shop	*/
+	function wpshop_shop_currency_list_field() {
+		global $wpdb;
+		$wpshop_shop_currencies = unserialize(WPSHOP_SHOP_CURRENCIES);
+		$currency_group = get_option('wpshop_shop_currency_group');
+		$current_currency = get_option('wpshop_shop_default_currency');
+
+		$currencies_options = '';
+		if ( !empty ($currency_group) ) {
+			$query = $wpdb->prepare('SELECT * FROM ' .WPSHOP_DBT_ATTRIBUTE_UNIT. ' WHERE group_id = ' . $currency_group . '', '');
+			$currencies = $wpdb->get_results($query);
+			foreach ( $currencies as $currency) {
+				$currencies_options .= '<option value="'.$currency->id.'"'.(($currency->id == $current_currency) ? ' selected="selected"' : null).'>'.$currency->name.' ('.$currency->unit.')</option>';
+			}
+		}
+		else {
+			foreach($wpshop_shop_currencies as $k => $v) {
+				$currencies_options .= '<option value="'.$k.'"'.(($k==$current_currency) ? ' selected="selected"' : null).'>'.$k.' ('.$v.')</option>';
+			}
+		}
+		return '<select name="wpshop_shop_default_currency" class="wpshop_currency_field" >'.$currencies_options.'</select>';
+	}
+
 
 }

@@ -447,32 +447,15 @@ class wpshop_display {
 	}
 
 	function display_template_element($template_part, $template_part_component, $extras_args = array(), $default_template_dir = 'wpshop', $template_elements_file = 'wpshop_elements_template.tpl.php') {
-		/*
-		 * Directory containing custom templates
-		 */
-		$custom_template_part = get_stylesheet_directory() . '/' . $default_template_dir . '/';
+		/*	Get the defined template	*/
+		$template = unserialize(WPSHOP_TEMPLATE);
 
-		/*
-		 * Get the default template in all cases
-		 */
-		require(WPSHOP_TEMPLATES_DIR . $default_template_dir . '/' . $template_elements_file);
-		$tpl_element_default = $tpl_element; unset($tpl_element);
+		/*	Set the template element to return by default before checking if custom exists in order to be sure to return something	*/
+		$tpl_element_to_return = !empty($template[$default_template_dir]['default'][$template_part]) ? $template[$default_template_dir]['default'][$template_part] : '';
 
-		/*
-		 * Set the template element to return by default before checking if custom exists in order to be sure to return something
-		 */
-		$tpl_element_to_return = $tpl_element_default[$template_part];
-
-		/*
-		 * Check if the file have been duplicated into theme directory for customization
-		 */
-		if ( is_file($custom_template_part . $template_elements_file) ) {
-			$file_path = $custom_template_part . $template_elements_file;
-
-			require($file_path);
-			if ( !empty($tpl_element) && !empty($tpl_element[$template_part]) ) {
-				$tpl_element_to_return = $tpl_element[$template_part];
-			}
+		/*	Check if the file have been duplicated into theme directory for customization	*/
+		if ( !empty( $template[$default_template_dir]['custom'] ) && !empty( $template[$default_template_dir]['custom'][$template_part] ) ) {
+			$tpl_element_to_return = $template[$default_template_dir]['custom'][$template_part];
 		}
 
 		return self::feed_template($tpl_element_to_return, $template_part_component);
@@ -491,9 +474,12 @@ class wpshop_display {
 		$feed['CURRENCY'] = wpshop_tools::wpshop_get_currency();
 		$feed['CART_LINK'] = get_permalink(get_option('wpshop_cart_page_id'));
 
+		$available_key = array();
 		foreach ($feed as $element => $value) {
+			$available_key[] = '{WPSHOP_'.$element.'}';
 			$template_to_fill = str_replace('{WPSHOP_'.$element.'}', $value, $template_to_fill);
 		}
+		if (WPSHOP_DISPLAY_AVAILABLE_KEYS_FOR_TEMPLATE) $template_to_fill = '<!-- Available keys : ' . implode(' / ', $available_key) . ' -->' . $template_to_fill;
 
 		return $template_to_fill;
 	}
@@ -508,7 +494,7 @@ class wpshop_display {
 
 		/*	Add different file template	*/
 		if(!is_dir($wpshop_directory)){
-			mkdir($wpshop_directory, 0755, true);
+			@mkdir($wpshop_directory, 0755, true);
 		}
 		/* On s'assure que le dossier principal est bien en 0755	*/
 		@chmod($wpshop_directory, 0755);
@@ -516,7 +502,7 @@ class wpshop_display {
 
 		/*	Add the category template	*/
 		if(!is_file(get_stylesheet_directory() . '/taxonomy-wpshop_product_category.php') || ($force_replacement)){
-			copy(WPSHOP_TEMPLATES_DIR . 'taxonomy-wpshop_product_category.php', get_stylesheet_directory() . '/taxonomy-wpshop_product_category.php');
+			@copy(WPSHOP_TEMPLATES_DIR . 'taxonomy-wpshop_product_category.php', get_stylesheet_directory() . '/taxonomy-wpshop_product_category.php');
 		}
 	}
 
@@ -538,8 +524,10 @@ class wpshop_display {
 			$taxonomies = get_taxonomies();
 
 			foreach ($taxonomies as $tax) {
-				add_action($tax . '_edit_form_fields', array('wpshop_display','wpshop_add_form'));
-				add_action($tax . '_add_form_fields', array('wpshop_display','wpshop_add_form'));
+				if ( in_array($tax, array(WPSHOP_NEWTYPE_IDENTIFIER_CATEGORIES)) ) {
+					add_action($tax . '_edit_form_fields', array('wpshop_display','wpshop_add_form'));
+					add_action($tax . '_add_form_fields', array('wpshop_display','wpshop_add_form'));
+				}
 			}
 
 			if ($pagenow == 'edit-tags.php' && isset($_REQUEST['action']) && $_REQUEST['action'] == 'edit' && empty($_REQUEST['taxonomy'])) {
@@ -549,6 +537,7 @@ class wpshop_display {
 			foreach ( array( 'pre_term_description', 'pre_link_description', 'pre_link_notes', 'pre_user_description' ) as $filter ) {
 				remove_filter( $filter, 'wp_filter_kses' );
 			}
+
 		}
 
 		/*	Enable shortcodes in category, taxonomy, tag descriptions */
@@ -595,6 +584,9 @@ class wpshop_display {
 		 * Template parameters
 		*/
 		$template_part = 'wpshop_transform_taxonomy_description_field_into_wysiwyg';
+		if ( !empty($_GET['action']) && ($_GET['action'] == 'edit') ) {
+			$template_part = 'wpshop_transform_taxonomy_description_field_into_wysiwyg_for_full_page';
+		}
 		$tpl_component = array();
 		ob_start();
 		wp_editor($content, $editor_id, array(

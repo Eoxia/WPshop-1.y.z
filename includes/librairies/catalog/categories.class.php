@@ -305,7 +305,7 @@ class wpshop_categories
 		$tpl_component['CATEGORY_THUMBNAIL'] = $categoryThumbnail;
 		$tpl_component['CATEGORY_TITLE'] = $category_title;
 		$tpl_component['CATEGORY_DESCRIPTION'] = $category_more_informations;
-		$tpl_component['CATEGORY_ITEM_WIDTH'] = $item_width;
+		$tpl_component['ITEM_WIDTH'] = $item_width;
 		$tpl_component['CATEGORY_ID'] = $category->term_id;
 		$tpl_component['CATEGORY_DISPLAY_TYPE'] = $output_type;
 
@@ -377,17 +377,19 @@ class wpshop_categories
 		return do_shortcode($string);
 	}
 
+
 	/**
-	*	Allows to switch easyly between the archive template and a normal page template in order to output a category.
-	*/
-	function category_template_switcher($template){
-		/*	Check if the current template page contains the "archive" word in order to change it into "page"	*/
-		if(strpos($template, 'archive') !== false){
-			return str_ireplace('archive', 'page', $template);
-		}
-		else{
-			return $template;
-		}
-	}
+	 * @TODO Check utility of this function | Commented out on 2013-01-04 by Alexandre
+	 *	Allows to switch easyly between the archive template and a normal page template in order to output a category.
+	 */
+// 	function category_template_switcher($template){
+// 		/*	Check if the current template page contains the "archive" word in order to change it into "page"	*/
+// 		if(strpos($template, 'archive') !== false){
+// 			return str_ireplace('archive', 'page', $template);
+// 		}
+// 		else{
+// 			return $template;
+// 		}
+// 	}
 
 }

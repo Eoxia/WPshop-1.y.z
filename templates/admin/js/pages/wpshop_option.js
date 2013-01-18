@@ -38,14 +38,15 @@ wpshop(document).ready(function(){
 	jQuery("#wpshop_shipping_fees_freefrom_activation").change(function(){
 		gerer_affichage_element(jQuery(this));
 	});
+	
 	jQuery("#custom_shipping_active").change(function(){
 		gerer_affichage_element(jQuery(this));
 	});
-
+	
+	
 	gerer_affichage_element(jQuery("#paymentByPaypal"));
 	gerer_affichage_element(jQuery("#paymentByCheck"));
 	gerer_affichage_element(jQuery("#paymentByCreditCard_CIC"));
-
 
 	/*	Activation de module	*/
 	jQuery(".addons_activating_button").live('click',function(){
@@ -94,5 +95,32 @@ wpshop(document).ready(function(){
 			}, 'json');
 		}
 	});
+
+	if ( jQuery("#wpshop_billing_address_integrate_into_register_form_integrate-billing-form-into-register-form").is(":checked") ) {
+		display_extra_options_for_address_integration();
+	};
+	jQuery("#wpshop_billing_address_integrate_into_register_form_integrate-billing-form-into-register-form").live('click', function(){
+		display_extra_options_for_address_integration();
+	});
+	jQuery("#wpshop_billing_address_choice").live("change", function(){
+		display_extra_options_for_address_integration();
+	});
+
+	function display_extra_options_for_address_integration() {
+		if ( jQuery("#wpshop_billing_address_integrate_into_register_form_integrate-billing-form-into-register-form").is(":checked")) {
+			var data = {
+				action: "integrate_billing_into_register",
+				wpshop_ajax_nonce: jQuery("#wpshop_ajax_integrate_billin_into_register").val(),
+				selected_field: jQuery("#wpshop_include_billing_form_into_register_where_value").val(),
+				current_billing_address: jQuery("#wpshop_billing_address_choice").val()
+			};
+			jQuery.post(ajaxurl, data, function(response) {
+				jQuery(".wpshop_include_billing_form_into_register_where").html(response);
+			});
+		}
+		else {
+			jQuery(".wpshop_include_billing_form_into_register_where").html("");
+		}
+	}
 
 });

@@ -83,8 +83,7 @@ class wpshop_paypal {
 								// Donn�es commande
 								$order = get_post_meta($order_id, '_order_postmeta', true);
 								// On parse les montant afin de pouvoir les comparer correctement
-// 								$amount2pay = floatval($order['order_total']);
-								$amount2pay = floatval($order['order_total_ttc']);
+								$amount2pay = floatval($order['order_total']);
 								$amount_paid = floatval($amount_paid);
 
 								/*	Check the payment status	*/
@@ -98,6 +97,7 @@ class wpshop_paypal {
 									wpshop_payment::setOrderPaymentStatus($order_id, strtolower($payment_status));
 								}
 								else wpshop_payment::setOrderPaymentStatus($order_id, 'incorrect_amount');
+
 							}
 							else {
 								@mail($notify_email, 'VERIFIED DUPLICATED TRANSACTION', 'VERIFIED DUPLICATED TRANSACTION');
@@ -170,8 +170,9 @@ class wpshop_paypal {
 						<input id="amount_'.$i.'" name="amount_'.$i.'" type="hidden" value="'.sprintf('%0.2f', $c['item_pu_ttc']).'" />
 					';
 				endforeach;
+
 				/*
-				 <input id="shipping_1" name="shipping_1" type="hidden" value="' . $order['order_shipping_cost'] . '" />
+					<input id="shipping_1" name="shipping_1" type="hidden" value="' . $order['order_shipping_cost'] . '" />
 				*/
 
 				echo '
@@ -179,6 +180,7 @@ class wpshop_paypal {
 						<input id="item_name_'.($i+1).'" name="item_name_'.($i+1).'" type="hidden" value="' . __('Shipping cost', 'wpshop') . '" />
 						<input id="quantity_'.($i+1).'" name="quantity_'.($i+1).'" type="hidden" value="1" />
 						<input id="amount_'.($i+1).'" name="amount_'.($i+1).'" type="hidden" value="'.sprintf('%0.2f', $order['order_shipping_cost']).'" />
+
 						<noscript><input type="submit" value="' . __('Checkout', 'wpshop') . '" /></noscript>
 					</form>
 				';
@@ -186,4 +188,5 @@ class wpshop_paypal {
 		}
 	}
 }
+
 ?>

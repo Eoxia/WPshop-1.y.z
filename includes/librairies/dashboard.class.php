@@ -520,7 +520,8 @@ class wpshop_dashboard {
 				<div class="postbox">
 					<h3 class="hndle"><span><?php _e('Quick product add', 'wpshop') ?></span></h3>
 					<div class="inside">
-						<?php do_shortcode('[wpshop_entities post_type="wpshop_product" fields="post_title, post_thumbnail" attribute_set_id="1"]'); ?>
+						<?php do_shortcode('[wpshop_entities post_type="wpshop_product" fields="post_title, post_thumbnail" attribute_set_id="1" button_text="' . __('Add a new product', 'wpshop') . '" ]'); ?>
+						<?php //do_shortcode('[wpshop_entities post_type="wpshop_product" fields="post_title" attribute_set_id="1" button_text="' . __('Add a new product', 'wpshop') . '" ]'); ?>
 					</div>
 				</div><!-- postbox end -->
 

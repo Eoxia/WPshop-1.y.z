@@ -46,59 +46,6 @@ $elementIdentifier = isset($_REQUEST['elementIdentifier']) ? wpshop_tools::varSa
 
 /*	Look at the element type we have to work on	*/
 switch ( $elementCode ) {
-	// Login
-	case 'ajax_login':
-		$status = false; $reponse='';
-		if($wpshop->validateForm($wpshop_account->login_fields)) {
-			// Log the customer
-			if($wpshop_account->isRegistered($_REQUEST['account_email'], $_REQUEST['account_password'], true)) {
-				$status = true;
-			} else $status = false;
-		}
-		// If there is errors
-		if($wpshop->error_count()>0) {
-			$reponse = $wpshop->show_messages();
-		}
-		$reponse = array('status' => $status, 'reponse' => $reponse);
-		echo json_encode($reponse);
-	break;
-
-	// Register
-	case 'ajax_register':
-		$status = false; $reponse='';
-		if($wpshop->validateForm($wpshop_account->personal_info_fields) && $wpshop->validateForm($wpshop_account->billing_fields)) {
-			if(isset($_REQUEST['shiptobilling']) || (!isset($_REQUEST['shiptobilling']) && $wpshop->validateForm($wpshop_account->shipping_fields))) {
-				$wpshop_checkout = new wpshop_checkout();
-				if ($wpshop_checkout->new_customer_account()) {
-					$status = true;
-				} else $status = false;
-			}
-		}
-		// If there is errors
-		if($wpshop->error_count()>0) {
-			$reponse = $wpshop->show_messages();
-		}
-		$reponse = array('status' => $status, 'reponse' => $reponse);
-		echo json_encode($reponse);
-	break;
-
-	//	Load user infos
-	case 'ajax_order_customer_adress_load':
-		$current_order_id = !empty( $_REQUEST['order'] ) ? $_REQUEST['order'] : 0;
-		$action = !empty( $_REQUEST['action'] ) ? $_REQUEST['action'] : 'Shipping';
-		$current_customer_id = !empty( $_REQUEST['customer_id'] ) ? $_REQUEST['customer_id'] : 0;
-
-		if ( !empty( $current_order_id ) ) {
-			$order_postmeta = get_post_meta($current_order_id, '_order_postmeta', true);
-			$order_info = get_post_meta($current_order_id, '_order_info', true);
-		}
-
-		$current_order_address = (!empty($order_info[strtolower($action)]) ? $order_info[strtolower($action)] : array());
-		$current_order_status = (!empty($order_postmeta['order_status']) ? $order_postmeta['order_status'] : '');
-
-		echo wpshop_account::edit_customer_address($action, $current_order_address, $current_customer_id, $current_order_status);
-	break;
-
 	case 'ajax_refresh_order':{
 		/*	Get order current content	*/
 		$order_meta = get_post_meta($elementIdentifier, '_order_postmeta', true);
@@ -384,7 +331,7 @@ jQuery("#order_product_container").load(WPSHOP_AJAX_FILE_URL,{
 			case 'load_unit_interface':
 				echo '
 					<div id="wpshop_unit_main_listing_interface">
-					<div class="wpshop_full_page_tabs">						
+					<div class="wpshop_full_page_tabs">
 					<ul class="ui-tabs-nav">
 					<li id="wpshop_unit_list_tab" class="ui-state-default"><a href="#wpshop_unit_list" >' . __('Unit', 'wpshop') . '</a></li>
 					<li id="wpshop_unit_group_list_tab" ><a href="#wpshop_unit_group_list" >' . __('Unit group', 'wpshop') . '</a></li>
@@ -445,7 +392,8 @@ jQuery("#order_product_container").load(WPSHOP_AJAX_FILE_URL,{
 				$attribute_unit_informations['unit'] = wpshop_tools::varSanitizer($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['unit']);
 				$attribute_unit_informations['group_id'] = wpshop_tools::varSanitizer($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['group_id']);
 				$attribute_unit_informations['is_default_of_group'] = wpshop_tools::varSanitizer($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['is_default_of_group']);
-				
+				$attribute_unit_informations['change_rate'] = wpshop_tools::varSanitizer($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['change_rate']);
+
 				if ( $attribute_unit_informations['is_default_of_group'] == 'yes' ) {
 					$wpdb->update(WPSHOP_DBT_ATTRIBUTE_UNIT, array(
 						'is_default_of_group' => 'no'
@@ -487,7 +435,7 @@ jQuery("#order_product_container").load(WPSHOP_AJAX_FILE_URL,{
 			case 'load_attribute_unit_groups':
 				echo wpshop_attributes_unit::unit_group_list();
 			break;
-			
+
 			case 'add_attribute_unit_group':
 			case 'edit_attribute_unit_group':
 				$atribute_unit_group = '';
@@ -496,7 +444,7 @@ jQuery("#order_product_container").load(WPSHOP_AJAX_FILE_URL,{
 				}
 				echo wpshop_attributes_unit::unit_group_edition($atribute_unit_group);
 			break;
-			
+
 			case 'save_new_attribute_unit_group':
 			{
 				$save_output = '';
@@ -761,24 +709,7 @@ jQuery("#order_product_container").load(WPSHOP_AJAX_FILE_URL,{
 
 	case 'ajax_cartAction':
 		global $wpshop_cart;
-		switch($_REQUEST['action'])
-		{
-			case 'setProductQty':
-
-				if (!empty($_REQUEST['pid'])) {
-
-					if (isset($_REQUEST['qty'])) {
-						$return = $wpshop_cart->set_product_qty($_REQUEST['pid'],$_REQUEST['qty']);
-						echo json_encode(array(true));
-					}
-					else {
-						echo json_encode(array(false, __('Parameters error.','wpshop')));
-					}
-
-				}
-
-				break;
-
+		switch ($_REQUEST['action']) {
 			case 'applyCoupon':
 				$result = wpshop_coupons::applyCoupon($_REQUEST['coupon_code']);
 				if ($result['status']===true) {
@@ -790,9 +721,13 @@ jQuery("#order_product_container").load(WPSHOP_AJAX_FILE_URL,{
 		}
 	break;
 
+	case 'reload_mini_cart':
+		echo wpshop_cart::mini_cart_content();
+	break;
+
 	case 'ajax_display_cart':
 		global $wpshop_cart;
-		$wpshop_cart->display_cart();
+		echo $wpshop_cart->display_cart();
 	break;
 
 	case 'ajaxUpload':
@@ -810,9 +745,5 @@ jQuery("#order_product_container").load(WPSHOP_AJAX_FILE_URL,{
 		if (!$n) continue;
 		echo $n;
 
-	break;
-
-	case 'reload_mini_cart':
-		echo wpshop_cart::mini_cart_content();
 	break;
 }

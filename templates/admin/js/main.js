@@ -2,14 +2,15 @@
 var wpshop = jQuery.noConflict();
 
 /*	Center an element into the current page	*/
-jQuery.fn.center = function () {
+wpshop.fn.center = function () {
 	this.css("top", ( jQuery(window).height() - this.height() ) / 2 + "px");
 	this.css("left", ( jQuery(window).width() - this.width() ) / 2 + "px");
 	return this;
 };
 
-// On a successful save, reset field
-jQuery(document).ajaxComplete(function(e, xhr, settings) {
+
+//START RICH TEXT EDIT
+wpshop(document).ajaxComplete(function(e, xhr, settings) {
 	if(typeof(settings.data)!='undefined' && settings.data.match(/action=(add|update)-tag/)) {
 		tinyMCE.get(0).setContent('');
 		kwsTriggerSave();
@@ -23,7 +24,7 @@ wpshop(document).ready(function(){
 
 /*	Chosen select librairy call	*/
 	// Normal chosen selects
-	jQuery("select.chosen_select").chosen(WPSHOP_CHOSEN_ATTRS);
+	jQuery("select.chosen_select").chosen( WPSHOP_CHOSEN_ATTRS );
 
 	// Ajax chosen selects
 	jQuery("select.ajax_chosen_select").ajaxChosen({
@@ -43,7 +44,77 @@ wpshop(document).ready(function(){
 
 		return terms;
 	});
+
+	/** Allow user to select all values when a multiselect or a checkbox input are displayed */
+	jQuery(".wpshop_list_chosen_select_all").live('click', function(){
+		jQuery( "#" + jQuery(this).attr("id").replace("wpshop_list_chosen_select_all_", "") + " option" ).prop('selected', true);
+		jQuery( "#" + jQuery(this).attr("id").replace("wpshop_list_chosen_select_all_", "") ).trigger('liszt:updated');
+		return false;
+	});
+	/** Allow user to deselect all values when a multiselect or a checkbox input are displayed */
+	jQuery(".wpshop_list_chosen_deselect_all").live('click', function(){
+		jQuery( "#" + jQuery(this).attr("id").replace("wpshop_list_chosen_deselect_all_", "") + " option" ).prop('selected', false);
+		jQuery( "#" + jQuery(this).attr("id").replace("wpshop_list_chosen_deselect_all_", "") ).trigger('liszt:updated');
+		return false;
+	});
+
+	/**	Add a box for adding element to select list on the fly	*/
+	jQuery("#wpshop_new_attribute_option_value_add").dialog({
+		modal: true,
+		dialogClass: "wpshop_uidialog_box",
+		autoOpen:false,
+		show: "blind",
+		resizable: false,
+		buttons:{
+			'new-value-for-attribute-list' : {
+				text: WPSHOP_ADD_TEXT,
+				click : function(){
+					var already_selected_items = [];
+					jQuery("select.wpshop_product_attribute_" + jQuery("#wpshop_attribute_type_select_code").val() + " option").each(function(){
+						if ( jQuery(this).is(":selected") ) {
+							already_selected_items.push(jQuery(this).val());
+						}
+					});
+					var data = {
+						action: "new_option_for_select_from_product_edition",
+						wpshop_ajax_nonce: WPSHOP_NEWOPTION_CREATION_NONCE,
+						attribute_code: jQuery("#wpshop_attribute_type_select_code").val(),
+						attribute_new_label: jQuery("#wpshop_new_attribute_option_value").val(),
+						attribute_selected_values: already_selected_items,
+						item_in_edition: jQuery("#post_ID").val()
+					};
+					jQuery.post(ajaxurl, data, function(response) {
+						if( response[0] ) {
+							var container = "wpshop_product_" + response[2] + "_input";
+							jQuery("." + container).html( response[1] );
+							jQuery("select.chosen_select").chosen({disable_search_threshold: 5, no_results_text: WPSHOP_CHOSEN_NO_RESULT});
+							jQuery("#wpshop_new_attribute_option_value_add").dialog("close");
+							jQuery("#wpshop_new_attribute_option_value_add").children("img").hide();
+							jQuery("#wpshop_attribute_type_select_code").val("");
+						}
+						else {
+							alert( response[1] );
+						}
+					}, "json");
+		
+					jQuery(this).children("img").show();
+				},
+				class: "button-primary",
+			}
+		},
+		close:function(){
+			jQuery("#wpshop_new_attribute_option_value").val("");
+		}
+	});
+	/**	Open the box to create a new value for a list	*/
+	jQuery(".wpshop_icons_add_new_value_to_option_list").live('click', function(){
+		jQuery("#wpshop_attribute_type_select_code").val(jQuery(this).attr("id").replace("new_value_pict_", ""));
+		jQuery("#wpshop_new_attribute_option_value_add").dialog("open");
+		return false;
+	});
 /*	Chosen select librairy call	*/
+
+
 	// Remove the non-rich fields
 	jQuery('.form-field').has('#tag-description').remove();
 	jQuery('.form-field').has('#category-description').remove();
@@ -112,12 +183,18 @@ wpshop(document).ready(function(){
 	jQuery("#shortcode-tabs").tabs();
 	jQuery("#fixed-tabs").tabs();
 
+	jQuery(".wpshop_icons_add_new_value_to_available_date_list").live('click', function(){
+		jQuery(this).before( jQuery("#wpshop_attribute_date_empy_field").html() );
+	});
+
 	/*	Start attribute unit management part	*/
 	wpshop("#wpshop_attribute_unit_manager").dialog({
 		autoOpen: false,
 		width: 800,
 		height: 600,
 		modal: true,
+		dialogClass: "wpshop_uidialog_box",
+		resizable: false,
 		close:function(){
 			wpshop("#wpshop_attribute_unit_manager").html("");
 			
@@ -202,7 +279,7 @@ wpshop(document).ready(function(){
 				jQuery(".wpshop_attr_combo_option_delete_" + jQuery(this).closest("li").attr("id").replace("att_option_div_container_", "")).html(jQuery("#wpshopLoadingPicture").html());
 				var data = {
 					action: "delete_option_for_select",
-					current_type: jQuery("#wpshop_attributes_edition_table_field_id_backend_input").val(),
+					current_type: jQuery("#wpshop_attributes_edition_table_field_id_frontend_input").val(),
 					attribute_value_id: jQuery(this).closest("li").attr("id").replace("att_option_div_container_", ""),
 					wpshop_ajax_nonce: jQuery("#wpshop_new_option_for_attribute_deletion_nonce").val()
 				};
@@ -255,8 +332,6 @@ wpshop(document).ready(function(){
 		}
 		
 	});
-	
-	
 	// ReSend message
 	jQuery('input[name=resendMessage]').click(function(){
 	
@@ -641,6 +716,14 @@ wpshop(document).ready(function(){
 		});
 	}
 
+	
+	
+	jQuery('input[type=checkbox][name=shiptobilling]').click(function(){
+		if (jQuery(this).attr('checked')=='checked') {
+			jQuery('#shipping_infos_bloc').slideUp(250);
+		}
+		else jQuery('#shipping_infos_bloc').slideDown(250);
+	});
 
 	// Copie automatique de formulaire
 	jQuery('input[name="wpshop_company_info[company_name]"]').keyup(function(){jQuery('input[name="wpshop_paymentAddress[company_name]"]').val(jQuery(this).val());});
@@ -649,22 +732,23 @@ wpshop(document).ready(function(){
 	jQuery('input[name="wpshop_company_info[company_city]"]').keyup(function(){jQuery('input[name="wpshop_paymentAddress[company_city]"]').val(jQuery(this).val());});
 	jQuery('input[name="wpshop_company_info[company_country]"]').keyup(function(){jQuery('input[name="wpshop_paymentAddress[company_country]"]').val(jQuery(this).val());});
 
-	/*	Allows to fill the installation form without having to type anything	*/
-	jQuery(".fill_form_for_test").click(function(){
-		jQuery("input[name='wpshop_company_info[company_capital]']").val("10000");
-		jQuery("input[name='wpshop_company_info[company_name]']").val("Ma societe");
-		jQuery("input[name='wpshop_company_info[company_street]']").val("5 avenue des champs Elisee");
-		jQuery("input[name='wpshop_company_info[company_postcode]']").val("75000");
-		jQuery("input[name='wpshop_company_info[company_city]']").val("Paris");
-		jQuery("input[name='wpshop_company_info[company_country]']").val("France");
-
-		jQuery("input[name='wpshop_paymentMethod[checks]']").prop("checked", true);
-		if(jQuery("input[name='wpshop_paymentAddress[company_name]']").val()=="")jQuery("input[name='wpshop_paymentAddress[company_name]']").val("Ma societe");
-		if(jQuery("input[name='wpshop_paymentAddress[company_street]']").val()=="")jQuery("input[name='wpshop_paymentAddress[company_street]']").val("5 avenue des champs Elisee");
-		if(jQuery("input[name='wpshop_paymentAddress[company_postcode]']").val()=="")jQuery("input[name='wpshop_paymentAddress[company_postcode]']").val("75000");
-		if(jQuery("input[name='wpshop_paymentAddress[company_city]']").val()=="")jQuery("input[name='wpshop_paymentAddress[company_city]']").val("Paris");
-		if(jQuery("input[name='wpshop_paymentAddress[company_country]']").val()=="")jQuery("input[name='wpshop_paymentAddress[company_country]']").val("France");
+	jQuery("#wpshop_admin_variation_options_toogler").live("click", function(){
+		if ( jQuery(".wpshop_product_variation_options").is(":visible") ) {
+			jQuery(".wpshop_product_variation_options").hide();
+		}
+		else {
+			jQuery(".wpshop_product_variation_options").show();
+		}
+		jQuery("#wpshop_admin_variation_options_toogler span").toggleClass("toogler_opened toogler_closed");
 	});
+	
+	//wpshop(document).ready(function(){
+		//display_customer_address_form ( jQuery("#wpshop_order_user_customer_id").val() );
+
+		jQuery("#wpshop_order_user_customer_id").change(function(){
+			display_customer_address_form (jQuery(this).val());
+		});
+	//});
 });
 
 /* Javascript plotting library for jQuery, v. 0.7.

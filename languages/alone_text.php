@@ -40,6 +40,20 @@ __('sale', 'wpshop');
 __('wpshop_product', 'wpshop');
 __('wpshop_customers', 'wpshop');
 __('is_used_in_quick_add_form', 'wpshop');
+__('_need_verification', 'wpshop');
+__('is_used_in_variation', 'wpshop');
+__('is_used_for_variation', 'wpshop');
+__('frontend_verification', 'wpshop');
+__('frontend_input', 'wpshop');
+__('_display_informations_about_value', 'wpshop');
+__('frontend_css_class', 'wpshop');
+__('backend_css_class', 'wpshop');
+__('frontend_help_message', 'wpshop');
+
+__('radio', 'wpshop');
+__('checkbox', 'wpshop');
+__('pass_field', 'wpshop');
+__('hidden_field', 'wpshop');
 
 __('WP Shop options', 'wpshop');
 

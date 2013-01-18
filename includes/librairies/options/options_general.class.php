@@ -52,6 +52,12 @@ class wpshop_general_options {
 
 		register_setting('wpshop_options', 'wpshop_shop_price_piloting', array('wpshop_general_options', 'wpshop_options_validate_price_piloting'));
 			add_settings_field('wpshop_shop_price_piloting', __('Price piloting for the shop', 'wpshop'), array('wpshop_general_options', 'wpshop_shop_price_piloting_field'), 'wpshop_general_config', 'wpshop_general_config');
+
+		register_setting('wpshop_options', 'wpshop_shop_default_weight_unity', array('wpshop_general_options', 'wpshop_options_validate_default_weight_unity'));
+		add_settings_field('wpshop_shop_default_weight_unity', __('Weight unity', 'wpshop'), array('wpshop_general_options', 'wpshop_default_weight_unity_field'), 'wpshop_general_config', 'wpshop_general_config');
+
+		register_setting('wpshop_options', 'wpshop_google_map_api_key', array('wpshop_general_options', 'wpshop_options_validate_google_map_api_key'));
+		add_settings_field('wpshop_google_map_api_key', __('GoogleMap API Key', 'wpshop'), array('wpshop_general_options', 'wpshop_google_map_api_key_field'), 'wpshop_general_config', 'wpshop_general_config');
 	}
 
 	// Common section description
@@ -61,16 +67,28 @@ class wpshop_general_options {
 
 	/*	Default currecy for the entire shop	*/
 	function wpshop_shop_default_currency_field() {
-		$wpshop_shop_currencies = unserialize(WPSHOP_SHOP_CURRENCIES);
-		$current_currency = get_option('wpshop_shop_default_currency');
-
-		$currencies_options = '';
-		foreach($wpshop_shop_currencies as $k => $v) {
-			$currencies_options .= '<option value="'.$k.'"'.(($k==$current_currency) ? ' selected="selected"' : null).'>'.$k.' ('.$v.')</option>';
-		}
-		echo '<select name="wpshop_shop_default_currency">'.$currencies_options.'</select>
-		<a href="#" title="'.__('This is the currency the shop will use','wpshop').'" class="wpshop_infobulle_marker">?</a>';
+		echo wpshop_attributes_unit::wpshop_shop_currency_list_field() . '<a href="#" title="'.__('This is the currency the shop will use','wpshop').'" class="wpshop_infobulle_marker">?</a>';
 	}
+
+	function wpshop_default_weight_unity_field() {
+		global $wpdb;
+
+		$weight_group = get_option('wpshop_shop_weight_group');
+		$current_weight = get_option('wpshop_shop_default_weight_unit');
+
+		$weight_options = '';
+		if ( !empty ($weight_group) ) {
+			$query = $wpdb->prepare('SELECT * FROM ' .WPSHOP_DBT_ATTRIBUTE_UNIT. ' WHERE group_id = ' .$weight_group. '', '');
+			$weight_units = $wpdb->get_results($query);
+			foreach ( $weight_units as $weight_unit) {
+				$weight_options .= '<option value="'.$weight_unit->id.'"'.(($weight_unit->id == $current_weight) ? ' selected="selected"' : null).'>'.$weight_unit->name.' ('.$weight_unit->unit.')</option>';
+			}
+		}
+
+		echo '<select name="wpshop_shop_default_weight_unity">'.$weight_options.'</select>
+		<a href="#" title="'.__('This is the weight unity the shop will use','wpshop').'" class="wpshop_infobulle_marker">?</a>';
+	}
+
 	function wpshop_options_validate_default_currency($input) {
 		return $input;
 	}
@@ -88,6 +106,16 @@ class wpshop_general_options {
 		}
 		echo '<select name="wpshop_shop_price_piloting">'.$piloting_options.'</select>
 		<a href="#" title="'.__('You can choose if the price you will enter in each product is the \'all tax include\' price or the \'tax free price\'','wpshop').'" class="wpshop_infobulle_marker">?</a>';
+	}
+	function wpshop_google_map_api_key_field() {
+		$googlemap_option = get_option('wpshop_google_map_api_key');
+		echo '<input type="text" name="wpshop_google_map_api_key" value="'.$googlemap_option.'" />';
+	}
+	function wpshop_options_validate_google_map_api_key ($input) {
+		return $input;
+	}
+	function wpshop_options_validate_default_weight_unity ($input) {
+		return $input;
 	}
 	function wpshop_options_validate_price_piloting($input) {
 		global $wpdb;

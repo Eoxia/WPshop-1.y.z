@@ -23,17 +23,17 @@ if (!empty($_GET['download']) && !empty($_GET['oid'])) {
 		$user_id = get_current_user_id();
 		$order = get_post_meta($_GET['oid'], '_order_postmeta', true);
 		if(!empty($order)) {
-		
+
 			$download_codes = get_user_meta($user_id, '_order_download_codes_'.$_GET['oid'], true);
-			
+
 			foreach($download_codes as $d) {
 				if($d['download_code'] == $_GET['download']) {
-				
+
 					$link = wpshop_attributes::get_attribute_option_output(
-						array('item_id' => $d['item_id'], 'item_is_downloadable_'=>'yes'), 
+						array('item_id' => $d['item_id'], 'item_is_downloadable_'=>'yes'),
 						'is_downloadable_', 'file_url', $order
 					);
-					
+
 					if($link!==false) {
 						$uploads = wp_upload_dir();
 						$basedir = $uploads['basedir'];

@@ -59,7 +59,7 @@ class wpshop_customer{
 		$user_list = $wpdb->get_results($query);
 
 		/*	Get the different meta needed for user in wpshop	*/
-		foreach($user_list as $user){
+		foreach ($user_list as $user) {
 			/*	Check if meta exist for each user	*/
 			foreach($user_meta_for_wpshop as $meta_to_check){
 				$query = $wpdb->prepare("SELECT meta_value FROM ".$wpdb->usermeta." WHERE user_id=%d AND meta_key=%s", $user->ID, $meta_to_check);
@@ -69,7 +69,6 @@ class wpshop_customer{
 				}
 			}
 		}
-
 		return;
 	}
 

@@ -59,83 +59,63 @@ class wpshop_payment {
 		}
 	}
 
-	/** Display the list of payment methods available */
-	function display_payment_methods_choice_form($display_comments_field=false, $order_id=0) {
-
-		// On r�cup�re les m�thodes de paiements disponibles
+	/**
+	 * Display the list of payment methods available
+	 *
+	 * @param integer $order_id The order id if existing - Useful when user does not finish its order and want to validateit later
+	 * @return string The different payment method
+	 */
+	function display_payment_methods_choice_form($order_id=0, $cart_type = 'cart') {
+		$output = '';
+		/**	Get available payment method	*/
 		$paymentMethod = get_option('wpshop_paymentMethod', array());
 
-		// Cart type
-		$cart_type = (!empty($_SESSION['cart']['cart_type']) && $_SESSION['cart']['cart_type']=='quotation') ? 'quotation' : 'cart';
+		if(!empty($order_id) && is_numeric($order_id)) {
+			$output .= '<input type="hidden" name="order_id" value="'.$order_id.'" />';
+		}
 
-		echo '<form method="post" name="checkoutForm" action="'.get_permalink(get_option('wpshop_checkout_page_id')).'">';
-
-			if(!empty($order_id) && is_numeric($order_id)) {
-				echo '<input type="hidden" name="order_id" value="'.$order_id.'" />';
+		if ($cart_type == 'cart') {
+			if(!empty($paymentMethod['paypal'])) {
+				$tpl_component = array();
+				$tpl_component['CHECKOUT_PAYMENT_METHOD_STATE_CLASS'] = ' active';
+				$tpl_component['CHECKOUT_PAYMENT_METHOD_INPUT_STATE'] = ' checked="checked"';
+				$tpl_component['CHECKOUT_PAYMENT_METHOD_IDENTIFIER'] = 'paypal';
+				$tpl_component['CHECKOUT_PAYMENT_METHOD_ICON'] = 'wpshop/medias/paypal.png';
+				$tpl_component['CHECKOUT_PAYMENT_METHOD_NAME'] = __('Paypal', 'wpshop');
+				$tpl_component['CHECKOUT_PAYMENT_METHOD_EXPLANATION'] = __('<strong>Tips</strong> : If you have a Paypal account, by choosing this payment method, you will be redirected to the secure payment site Paypal to make your payment. Debit your PayPal account, immediate booking products.','wpshop');
+				$output .= wpshop_display::display_template_element('wpshop_checkout_page_payment_method_bloc', $tpl_component);
+				unset($tpl_component);
 			}
 
-			if ( $display_comments_field ) {
-				// Si cest un devis on affiche un titre different
-				if ($cart_type=='quotation') {
-					echo __('Comments about the quotation','wpshop').' :<br />';
-				}
-				else {
-					echo __('Comments about the order','wpshop').' :<br />';
-				}
-				echo '<textarea name="order_comments"></textarea><br /><br />';
+			if(!empty($paymentMethod['checks'])) {
+				$current_payment_method_state = (!empty($paymentMethod['paypal']) && $paymentMethod['paypal']) ? false : true;
+				$tpl_component = array();
+				$tpl_component['CHECKOUT_PAYMENT_METHOD_STATE_CLASS'] = !$current_payment_method_state ? '' : ' active';
+				$tpl_component['CHECKOUT_PAYMENT_METHOD_INPUT_STATE'] = !$current_payment_method_state ? '' : ' checked="checked"';
+				$tpl_component['CHECKOUT_PAYMENT_METHOD_IDENTIFIER'] = 'check';
+				$tpl_component['CHECKOUT_PAYMENT_METHOD_ICON'] = 'wpshop/medias/cheque.png';
+				$tpl_component['CHECKOUT_PAYMENT_METHOD_NAME'] = __('Check', 'wpshop');
+				$tpl_component['CHECKOUT_PAYMENT_METHOD_EXPLANATION'] = __('Reservation of products upon receipt of the check.','wpshop');
+				$output .= wpshop_display::display_template_element('wpshop_checkout_page_payment_method_bloc', $tpl_component);
+				unset($tpl_component);
 			}
 
-			if ($cart_type == 'cart') {
-				if(!empty($paymentMethod['paypal'])) {
-					echo '<table class="blockPayment active">';
-					echo '<tr>';
-					echo '<td class="paymentInput rounded-left"><input type="radio" name="modeDePaiement" checked="checked" value="paypal" /></td>';
-					echo '<td class="paymentImg"><img src="'.WPSHOP_TEMPLATES_URL.'wpshop/medias/paypal.png" alt="Paypal" title="Payer avec Paypal" /></td>';
-					echo '<td class="paymentName">Paypal</td>';
-					echo '<td class="last rounded-right">'.__('<strong>Tips</strong> : If you have a Paypal account, by choosing this payment method, you will be redirected to the secure payment site Paypal to make your payment. Debit your PayPal account, immediate booking products.','wpshop').'</td>';
-					echo '</tr>';
-					echo '</table>';
-				}
-
-				if(!empty($paymentMethod['checks'])) {
-					$active_check = !empty($paymentMethod['paypal']) && $paymentMethod['paypal'] ? false : true;
-					echo '<table class="blockPayment '.($active_check?'active':null).'">';
-					echo '<tr>';
-					echo '<td class="paymentInput rounded-left"><input type="radio" name="modeDePaiement" '.($active_check?'checked="checked"':null).' value="check" /></td>';
-					echo '<td class="paymentImg"><img src="'.WPSHOP_TEMPLATES_URL.'wpshop/medias/cheque.png" alt="Ch�que" title="Payer par ch�que" /></td>';
-					echo '<td class="paymentName">'.__('Check','wpshop').'</td>';
-					echo '<td class="last rounded-right">'.__('Reservation of products upon receipt of the check.','wpshop').'</td>';
-					echo '</tr>';
-					echo '</table>';
-				}
-				$wpshop_paymentMethod = get_option('wpshop_paymentMethod');
-				if(WPSHOP_PAYMENT_METHOD_CIC || !empty($wpshop_paymentMethod['cic'])) {
-					$active_check = false;
-					echo '<table class="blockPayment '.($active_check?'active':null).'">';
-					echo '<tr>';
-					echo '<td class="paymentInput rounded-left"><input type="radio" name="modeDePaiement" '.($active_check?'checked="checked"':null).' value="cic" /></td>';
-					echo '<td class="paymentImg"><img src="'.WPSHOP_TEMPLATES_URL.'wpshop/medias/cic_payment_logo.jpg" alt="Ch�que" title="Payer par ch�que" /></td>';
-					echo '<td class="paymentName" colspan="3">'.__('Credit card','wpshop').'</td>';
-					echo '<td class="last rounded-right">'.__('Reservation of products upon confirmation of payment.','wpshop').'</td>';
-					echo '</tr>';
-					echo '</table>';
-					echo '<br />';
-				}
-			}
-
-			// Si une m�thode de paiement est disponible
 			$wpshop_paymentMethod = get_option('wpshop_paymentMethod');
-			if(!empty($paymentMethod['paypal']) || !empty($paymentMethod['checks']) || WPSHOP_PAYMENT_METHOD_CIC || !empty($wpshop_paymentMethod['cic']) || $cart_type=='quotation') {
-				if ($cart_type=='quotation') {
-					echo '<input type="submit" name="takeOrder" value="'.__('Ask the quotation', 'wpshop').'" />';
-				}
-				else {
-					echo '<input type="submit" name="takeOrder" value="'.__('Order', 'wpshop').'" />';
-				}
+			if(WPSHOP_PAYMENT_METHOD_CIC || !empty($wpshop_paymentMethod['cic'])) {
+				$current_payment_method_state = false;
+				$tpl_component = array();
+				$tpl_component['CHECKOUT_PAYMENT_METHOD_STATE_CLASS'] = !$current_payment_method_state ? '' : ' active';
+				$tpl_component['CHECKOUT_PAYMENT_METHOD_INPUT_STATE'] = !$current_payment_method_state ? '' : ' checked="checked"';
+				$tpl_component['CHECKOUT_PAYMENT_METHOD_IDENTIFIER'] = 'cic';
+				$tpl_component['CHECKOUT_PAYMENT_METHOD_ICON'] = 'wpshop/medias/cic_payment_logo.png';
+				$tpl_component['CHECKOUT_PAYMENT_METHOD_NAME'] = __('Credit card', 'wpshop');
+				$tpl_component['CHECKOUT_PAYMENT_METHOD_EXPLANATION'] = __('Reservation of products upon confirmation of payment.','wpshop');
+				$output .= wpshop_display::display_template_element('wpshop_checkout_page_payment_method_bloc', $tpl_component);
+				unset($tpl_component);
 			}
-			else echo '<p><strong>'.__('It is impossible to order for the moment','wpshop').'</strong></p>';
+		}
 
-		echo '</form>';
+		return array( $output, $paymentMethod );
 	}
 
 	/**
@@ -164,9 +144,9 @@ class wpshop_payment {
 			// Generate the billing reference (payment is completed here!!)
 			wpshop_orders::order_generate_billing_number($order_id, true);
 
-			$email = $order_info['billing']['email'];
-			$first_name = $order_info['billing']['first_name'];
-			$last_name = $order_info['billing']['last_name'];
+			$email = (!empty($order_info['billing']['email']) ? $order_info['billing']['email'] : '' );
+			$first_name = ( !empty($order_info['billing']['first_name']) ? $order_info['billing']['first_name'] : '' );
+			$last_name = ( !empty($order_info['billing']['last_name']) ? $order_info['billing']['last_name'] : '' );
 
 			// Envoie du message de confirmation de paiement au client
 			switch($order['payment_method']) {

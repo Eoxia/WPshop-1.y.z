@@ -292,4 +292,5 @@ $wpshop_db_version = 0;
 
 {/*	Version dev	- Call for every plugin db version	*/
 	$wpshop_db_version = 'dev';
+	
 }

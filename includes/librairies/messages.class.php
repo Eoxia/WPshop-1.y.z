@@ -216,7 +216,7 @@ class wpshop_messages {
 				foreach ( $histo_message as $message ) {
 					$stored_message[$message->mess_title][] = $message;
 				}
-				$query = $wpdb->prepare("SELECT ID FROM " . $wpdb->posts . " WHERE SUBSTRING(post_title, 1, ".$number_of_character.") = '".$object_components[0]."' OR  SUBSTRING(post_title, 1, ".$number_of_character.") = '".__($object_components[0], 'wpshop')."' ", '');
+				$query = $wpdb->prepare("SELECT ID FROM " . $wpdb->posts . " WHERE SUBSTRING(post_title, 1, ".$number_of_character.") = '".$object_components[0]."' OR  SUBSTRING(post_title, 1, ".$number_of_character.") = '".__($object_components[0], 'wpshop')."'", '');
 				$post_id = $wpdb->get_var($query);
 				foreach ( $stored_message as $message_subject => $messages ) {
 					foreach ( $messages as $message ) {

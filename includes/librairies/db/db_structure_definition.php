@@ -90,6 +90,7 @@ $wpshop_db_version = 0;
   is_default_of_group enum('yes','no') collate utf8_unicode_ci default 'no',
   unit char(25) collate utf8_unicode_ci NOT NULL,
   name char(50) collate utf8_unicode_ci NOT NULL,
+  change_rate decimal(12,5),
   PRIMARY KEY  (id),
   KEY status (status)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
@@ -134,6 +135,10 @@ $wpshop_db_version = 0;
   is_recordable_in_cart_meta enum('yes','no') collate utf8_unicode_ci NOT NULL default 'no',
   is_used_in_admin_listing_column enum('yes','no') collate utf8_unicode_ci NOT NULL default 'no',
   is_used_in_quick_add_form enum('yes','no') collate utf8_unicode_ci NOT NULL default 'no',
+  is_used_for_variation enum('yes','no') collate utf8_unicode_ci NOT NULL default 'no',
+  is_used_in_variation enum('yes','no') collate utf8_unicode_ci NOT NULL default 'no',
+  _display_informations_about_value enum('yes','no') collate utf8_unicode_ci NOT NULL default 'no',
+  _need_verification enum('yes','no') collate utf8_unicode_ci NOT NULL default 'no',
   _unit_group_id int(10) default NULL,
   _default_unit int(10) default NULL,
   is_historisable enum('yes','no') collate utf8_unicode_ci default 'yes',
@@ -143,13 +148,16 @@ $wpshop_db_version = 0;
   data_type enum('datetime','decimal','integer','text','varchar') collate utf8_unicode_ci NOT NULL default 'varchar',
   backend_table varchar(255) collate utf8_unicode_ci default NULL,
   backend_label varchar(255) collate utf8_unicode_ci default NULL,
-  backend_input enum('text', 'textarea', 'select', 'multiple-select') collate utf8_unicode_ci NOT NULL default 'text',
+  backend_input enum('text', 'textarea', 'select', 'multiple-select', 'password', 'hidden', 'radio', 'checkbox') collate utf8_unicode_ci NOT NULL default 'text',
   frontend_label varchar(255) collate utf8_unicode_ci default NULL,
-  frontend_input enum('text', 'textarea', 'select', 'multiple-select') collate utf8_unicode_ci NOT NULL default 'text',
-  frontend_verification varchar(255) collate utf8_unicode_ci default NULL,
+  frontend_input enum('text', 'textarea', 'select', 'multiple-select', 'password', 'hidden','radio', 'checkbox') collate utf8_unicode_ci NOT NULL default 'text',
+  frontend_verification enum('','username','email','postcode','country','state','phone') collate utf8_unicode_ci default NULL,
   code varchar(255) collate utf8_unicode_ci NOT NULL default '',
   note varchar(255) collate utf8_unicode_ci NOT NULL,
   default_value text collate utf8_unicode_ci,
+  frontend_css_class varchar(255) collate utf8_unicode_ci default NULL,
+  backend_css_class varchar(255) collate utf8_unicode_ci default NULL,
+  frontend_help_message varchar(255) collate utf8_unicode_ci default NULL,
   PRIMARY KEY	(id),
   UNIQUE KEY code (code),
   KEY status (status),
@@ -205,7 +213,7 @@ $wpshop_db_version = 0;
   unit_id int(10) unsigned NOT NULL default '0',
 	user_id bigint(20) unsigned NOT NULL default '1',
 	creation_date_value datetime,
-  language char(10) collate utf8_unicode_ci NOT NULL default 'fr_FR',
+  language char(10) collate utf8_unicode_ci NOT NULL default '" . WPSHOP_CURRENT_LOCALE . "',
   value varchar(255) collate utf8_unicode_ci NOT NULL default '',
   PRIMARY KEY  (value_id),
   KEY entity_id (entity_id),
@@ -225,7 +233,7 @@ $wpshop_db_version = 0;
   unit_id int(10) unsigned NOT NULL default '0',
 	user_id bigint(20) unsigned NOT NULL default '1',
 	creation_date_value datetime,
-  language char(10) collate utf8_unicode_ci NOT NULL default 'fr_FR',
+  language char(10) collate utf8_unicode_ci NOT NULL default '" . WPSHOP_CURRENT_LOCALE . "',
   value datetime default NULL,
   PRIMARY KEY  (value_id),
   KEY entity_id (entity_id),
@@ -245,7 +253,7 @@ $wpshop_db_version = 0;
   unit_id int(10) unsigned NOT NULL default '0',
 	user_id bigint(20) unsigned NOT NULL default '1',
 	creation_date_value datetime,
-  language char(10) collate utf8_unicode_ci NOT NULL default 'fr_FR',
+  language char(10) collate utf8_unicode_ci NOT NULL default '" . WPSHOP_CURRENT_LOCALE . "',
   value decimal(12,5) NOT NULL,
   PRIMARY KEY  (value_id),
   KEY entity_id (entity_id),
@@ -265,7 +273,7 @@ $wpshop_db_version = 0;
   unit_id int(10) unsigned NOT NULL default '0',
 	user_id bigint(20) unsigned NOT NULL default '1',
 	creation_date_value datetime,
-  language char(10) collate utf8_unicode_ci NOT NULL default 'fr_FR',
+  language char(10) collate utf8_unicode_ci NOT NULL default '" . WPSHOP_CURRENT_LOCALE . "',
   value int(10) NOT NULL,
   PRIMARY KEY  (value_id),
   KEY entity_id (entity_id),
@@ -285,7 +293,7 @@ $wpshop_db_version = 0;
   unit_id int(10) unsigned NOT NULL default '0',
 	user_id bigint(20) unsigned NOT NULL default '1',
 	creation_date_value datetime,
-  language char(10) collate utf8_unicode_ci NOT NULL default 'fr_FR',
+  language char(10) collate utf8_unicode_ci NOT NULL default '" . WPSHOP_CURRENT_LOCALE . "',
   value longtext collate utf8_unicode_ci NOT NULL,
   PRIMARY KEY  (value_id),
   KEY entity_id (entity_id),
@@ -310,7 +318,7 @@ $wpshop_db_version = 0;
   unit_id int(10) unsigned NOT NULL default '0',
 	user_id bigint(20) unsigned NOT NULL default '1',
 	creation_date_value datetime,
-  language char(10) collate utf8_unicode_ci NOT NULL default 'fr_FR',
+  language char(10) collate utf8_unicode_ci NOT NULL default '" . WPSHOP_CURRENT_LOCALE . "',
   value longtext collate utf8_unicode_ci NOT NULL,
   value_type char(70) collate utf8_unicode_ci NOT NULL default '',
   PRIMARY KEY  (value_id),
@@ -407,7 +415,6 @@ $wpshop_db_version = 0;
 	$wpshop_update_way[$wpshop_db_version] = 'creation';
 
 	$wpshop_db_table_operation_list[$wpshop_db_version]['ADD_TABLE'] = array(WPSHOP_DBT_ENTITIES, WPSHOP_DBT_ATTRIBUTE_SET, WPSHOP_DBT_ATTRIBUTE_GROUP, WPSHOP_DBT_ATTRIBUTE_UNIT, WPSHOP_DBT_ATTRIBUTE, WPSHOP_DBT_ATTRIBUTE_DETAILS, WPSHOP_DBT_ATTRIBUTE_VALUES_VARCHAR, WPSHOP_DBT_ATTRIBUTE_VALUES_DATETIME, WPSHOP_DBT_ATTRIBUTE_VALUES_DECIMAL, WPSHOP_DBT_ATTRIBUTE_VALUES_INTEGER, WPSHOP_DBT_ATTRIBUTE_VALUES_TEXT);
-
 	$wpshop_db_table_list[$wpshop_db_version] = array(/*WPSHOP_DBT_ENTITIES, */WPSHOP_DBT_ATTRIBUTE_SET, WPSHOP_DBT_ATTRIBUTE_GROUP, WPSHOP_DBT_ATTRIBUTE_UNIT, WPSHOP_DBT_ATTRIBUTE, WPSHOP_DBT_ATTRIBUTE_DETAILS, WPSHOP_DBT_ATTRIBUTE_VALUES_VARCHAR, WPSHOP_DBT_ATTRIBUTE_VALUES_DATETIME, WPSHOP_DBT_ATTRIBUTE_VALUES_DECIMAL, WPSHOP_DBT_ATTRIBUTE_VALUES_INTEGER, WPSHOP_DBT_ATTRIBUTE_VALUES_TEXT);
 }
 
@@ -618,7 +625,23 @@ $wpshop_db_version = 0;
 	$wpshop_db_table_list[$wpshop_db_version] = array(WPSHOP_DBT_ATTRIBUTE);
 }
 
+{/*	Version 29  - 1.3.3.4	*/
+	$wpshop_db_version = 29;
+	$wpshop_update_way[$wpshop_db_version] = 'multiple';
+
+	$wpshop_db_table_operation_list[$wpshop_db_version]['FIELD_CHANGE'][WPSHOP_DBT_ATTRIBUTE] = array(array('field' => 'frontend_verification', 'type' => "enum('','email','postcode','country','state','phone')"));
+	$wpshop_db_table_operation_list[$wpshop_db_version]['FIELD_ADD'][WPSHOP_DBT_ATTRIBUTE] = array('is_used_for_variation', 'is_used_in_variation', '_display_informations_about_value');
+	$wpshop_db_table_operation_list[$wpshop_db_version]['FIELD_ADD'][WPSHOP_DBT_ATTRIBUTE_UNIT] = array('change_rate');
+
+	$wpshop_db_table_list[$wpshop_db_version] = array(WPSHOP_DBT_ATTRIBUTE, WPSHOP_DBT_ATTRIBUTE_UNIT);
+}
+
+{/*	Version 30  - 1.3.3.5	*/
+	$wpshop_db_version = 30;
+}
+
 {/*	Version dev	- Call for every plugin db version	*/
 	$wpshop_db_version = 'dev';
 	$wpshop_update_way[$wpshop_db_version] = 'multiple';
+// 	$wpshop_db_table_list[$wpshop_db_version] = array(WPSHOP_DBT_ATTRIBUTE);
 }

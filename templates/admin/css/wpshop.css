@@ -26,20 +26,25 @@
 
 
 /* Admin notifications */
-.wpshop_admin_notice{
+.wpshop_admin_notice {
 	position: relative;
 	z-index: 100;
 	overflow: hidden;
-	border: 1px solid #E1E1E1 !important; /*	important to overwrite class "updated" instruction	*/
-	background: #3A96AD url("../medias/images/wpshop_logo.png") no-repeat 23px 28px !important; /*	important to overwrite class "updated" instruction	*/
-	padding: 34px 0 9px 200px !important;/*	important to overwrite class "updated" instruction	*/
-	height:45px;
+	border: none !important; /*	important to overwrite class "updated" instruction	*/
+	/*background: #2790b0 url("../medias/images/wpshop_logo.png") no-repeat 23px 28px !important; /*	important to overwrite class "updated" instruction	*/
+	background: #2790b0 url("../medias/images/wpshop-banner-pattern.png") repeat !important; /*	important to overwrite class "updated" instruction	*/
+	padding: 20px !important;/*	important to overwrite class "updated" instruction	*/
+	height:auto;
 	color:#FFFFFF;
-	font-weight:bold;
+	margin-bottom:0 !important;
+	border-top-left-radius: 0 !important;
+	border-top-right-radius: 0 !important;
+	border-bottom-left-radius: 0 !important;
+	border-bottom-right-radius: 0 !important;
+	margin:0 !important;
 }
 .wpshop_admin_notice p {
 	margin:0px 10px 0 0 !important;
-	float:left;
 }
 .wpshop_admin_notice ul {
 	margin:0px !important;
@@ -47,7 +52,7 @@
 }
 .wpshop_admin_notice li {
 	margin:0px !important;
-	color:#205d6d;
+	color:#274765;
 	font-style:italic;
 }
 .wpshop_admin_notice a{
@@ -56,7 +61,9 @@
 	font-weight:normal;
 }
 .wpshop_admin_notice p a.button-primary{
-	padding:6px 12px;
+	/*padding:6px 12px;
+	line-height:10px;*/
+	margin-right:7px;
 }
 .wpshop_admin_notice li a {
 	margin:0px 0 0 10px !important;

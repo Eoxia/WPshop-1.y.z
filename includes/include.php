@@ -6,19 +6,17 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 }
 
 /**
-* Plugin librairies include file.
-*
-*	This file will be called in every other file of the plugin and will include every library needed by the plugin to work correctly. If a file is needed in only one script prefer direct inclusion
-* @author Eoxia <dev@eoxia.com>
-* @version 1.1
-* @package wpshop
-* @subpackage includes
-*/
-/*************************** LOAD THE BASE CLASS *******************************
- *******************************************************************************
- * The WP_List_Table class isn't automatically available to plugins, so we need
- * to check if it's available and load it if necessary.
+ * Plugin librairies include file.
+ *
+ * This file will be called in every other file of the plugin and will include every library needed by the plugin to work correctly. If a file is needed in only one script prefer direct inclusion
+ * @author Eoxia <dev@eoxia.com>
+ * @version 1.1
+ * @package wpshop
+ * @subpackage includes
  */
+
+/*************************** LOAD THE BASE CLASS *******************************
+ *******************************************************************************/
 
 include_once(WPSHOP_INCLUDES_DIR . 'wpshop_ajax.php');
 
@@ -31,10 +29,12 @@ include_once(WPSHOP_LIBRAIRIES_DIR . 'notices.class.php');
 include_once(WPSHOP_LIBRAIRIES_DIR . 'shortcodes.class.php');
 include_once(WPSHOP_LIBRAIRIES_DIR . 'messages.class.php');
 include_once(WPSHOP_LIBRAIRIES_DIR . 'dashboard.class.php');
+include_once(WPSHOP_LIBRAIRIES_DIR . 'search.class.php');
 
 /* Customers management */
 include_once(WPSHOP_LIBRAIRIES_DIR . 'customers/signup.class.php');
 include_once(WPSHOP_LIBRAIRIES_DIR . 'customers/account.class.php');
+include_once(WPSHOP_LIBRAIRIES_DIR . 'customers/address.class.php');
 include_once(WPSHOP_LIBRAIRIES_DIR . 'customers/customer_custom_list_table.class.php');
 include_once(WPSHOP_LIBRAIRIES_DIR . 'customers/customer.class.php');
 $customer_obj = new wpshop_customer();
@@ -77,7 +77,7 @@ include_once(WPSHOP_LIBRAIRIES_DIR . 'pdf/fpdf.php');
 include_once(WPSHOP_LIBRAIRIES_DIR . 'pdf/fpdf_extends.class.php');
 
 /* Display management */
-if(!class_exists('WP_List_Table')){
+if ( !class_exists('WP_List_Table') ) {
 	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
 include_once(WPSHOP_LIBRAIRIES_DIR . 'display/display.class.php');

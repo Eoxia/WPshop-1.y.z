@@ -12,7 +12,7 @@
 			<tr class="wpshop_attr_combo_option_detail_table_line wpshop_attr_combo_option_detail_table_values" >
 				<td>
 				<?php if( current_user_can('wpshop_edit_attributes_select_values') ): ?>
-					<input type="text" value="<?php echo $option_name; ?>" name="optionsUpdate[<?php echo $option_id; ?>]" id="attribute_option_<?php echo $option_id; ?>" />
+					<input type="text" value="<?php echo stripslashes($option_name); ?>" name="optionsUpdate[<?php echo $option_id; ?>]" id="attribute_option_<?php echo $option_id; ?>" />
 				<?php else: ?>
 					<?php echo $option_name; ?>
 				<?php endif; ?>

@@ -4,7 +4,7 @@ Tags: shop, boutique, produits, e-commerce, commerce, m-commerce, mcommerce, sho
 Donate link: http://www.eoxia.com/wpshop-simple-ecommerce-pour-wordpress/
 Requires at least: 3.4.0
 Tested up to: 3.5
-Stable tag: 1.3.3.3
+Stable tag: 1.3.3.5
 
 Wpshop une extension e-commerce 100% libre, gratuite et d&eacute;velopp&eacute;e en France. Inclus un th&egrave;me adapt&eacute; pour les mobiles.
 
@@ -61,6 +61,47 @@ Il faut v&eacute;rifier que le r&eacute;glage des permaliens pour votre site est
 
 
 == Changelog ==
+
+= Version 1.3.3.5 =
+
+Am&eacute;liorations
+
+* ST359 - R&eacute;cup&eacute;ration de toutes les tailles d'image pour la g&eacute;n&eacute;ration de l'image &agrave; la une dans la fiche produit (Permet de choisir la taille voulue directement en indiquant le bon code dans le template)
+* ST361 - Homog&eacute;n&eacute;isation des boutons de s&eacute;lection en masse et d'ajout d'une nouvelle valeur pour les attributs de type liste d&eacute;roulante
+* ST362 - Ajout de la possibilit&eacute; d'afficher les diff&eacute;rents de template disponible pour chaque bloc en activant l'option (Dans Options -&gt; Avanc&eacute;es mettre la cl&eacute; "WPSHOP_DISPLAY_AVAILABLE_KEYS_FOR_TEMPLATE" et "true" dans la valeur)
+* ST364 - Possibilit&eacute; d'afficher des informations sur les valeurs des attributs utilis&eacute;s pour les produits avec options (En choisissant type "interne a wordpress" lors de la cr&eacute;ation de l'attribut, en cochant la case "Afficher une description pour cet attribut" dans l'onglet option de l'attribut puis en ins&eacute;rant le shortcode [wpshop_product_variation_value_detail] dans la page)
+* ST369 - D&eacute;finition des attributs Prix / Stock / Reference du produit comme attribut par d&eacute;faut pour les informations sp&eacute;cifiques des options (Permet d'&eacute;viter &agrave; l'administrateur d'avoir &agrave; le d&eacute;finir et corrige les erreurs lorsqu'aucun attribut n'est s&eacute;lectionn&eacute;)
+* ST373 - Prise en compte de la langue courante du plugin pour les valeurs des attributs (Permet l'installation du plugin WMPL pour g&eacute;rer les traductions)
+* ST375 - Possibilit&eacute; d'afficher le texte "&agrave; partir de" sur les produits ayant des options (A partir des param&egrave;tres de chaque produit)
+* ST376 - Possibilit&eacute; de choisir d'afficher le prix le plus bas des options comme prix de d&eacute;part pour les produits avec options
+
+Corrections
+
+* ST360 - Affectation des valeurs d&eacute;j&agrave; s&eacute;lectionn&eacute;es pour les attributs de type liste d&eacute;roulante a choix multiple ap&egrave;rs ajout d'une nouvelle valeur
+* ST363 - Impossibilit&eacute; d'ajouter une valeur &agrave; un attribut de type liste d&eacute;roulante si une erreur survient la premi&egrave;re fois (ex. la valeur existe d&eacute;j&agrave; apr&egrave;s modification: impossible de cr&eacute;er une nouvelle valeur sans fermer la fen&ecirc;tre et r&eacute;ouvrir)
+* ST365 - G&eacute;n&eacute;ration d'une option simple pour les produits
+* ST366 - Modification de l'&eacute;x&eacute;cution du shortcode de la page checkout pour que le contenu soit plac&eacute; au bon endroit
+* ST367 - Affichage des boutons d'actions sur les attributs de type liste dans la fiche d'&eacute;dition d'un produit
+* ST368 - Affichage du bouton "Ajouter au panier" dans la fiche produit (Si il existe des d&eacute;clinaisons, un bouton "configurer le produit" &eacute;tait ins&eacute;rer &agrave; la place)
+* ST370 - Corrections du calcul du prix en "live" si des options &eacute;taient pr&eacute;sents pour le produit en cours d'&eacute;dition
+* ST371 - Affichage du boutton de suppression en masse des options si s&eacute;lection non globale
+* ST372 - Correction notices php
+* ST374 - Suppression de l'affichage des valeurs non affect&eacute;es au produits dans les listes permettant de g&eacute;n&eacute;rer des options simple et de f&eacute;inir les valeurs par d&eacute;faut dans les param&egrave;tres
+* ST377 - Correction de l'affichage du panier quand un produit avec option est ajout&eacute;
+
+
+= Version 1.3.3.4 =
+
+Am&eacute;liorations
+
+* ST297 - Gestion des d&eacute;clinaisons de produits
+* ST332 - Gestion des formulaires (Addresses postales / Compte utilisateur)
+* ST346 - Inclusion des attributs dans la recherche globale de wordpress (L'inclusion se fait au travers des options des attributs)
+
+Corrections
+
+* ST356 - Compatibilit&eacute; version 3.5 de wordpress
+
 
 = Version 1.3.3.3 =
 

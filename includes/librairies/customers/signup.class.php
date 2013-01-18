@@ -7,7 +7,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 
 /**
  * Checkout
- * 
+ *
  * The WPShop checkout class handles the checkout process, collecting user data and processing the payment.
  *
  * @class 		wpwhop_checkout
@@ -25,39 +25,41 @@ function wpshop_signup_init() {
 
 /** Signup management */
 class wpshop_signup {
-	
+
 	var $creating_account = true;
-	
+
 	/** Constructor of the class
 	* @return void
 	*/
 	function __construct () {
 	}
-	
+
 	/** Affiche le formulaire de commande
 	* @return void
 	*/
 	function display_form() {
-	
 		global $wpshop, $wpshop_account;
-			
-		$user_id = get_current_user_id();	
-			
+		$output = '';
+
+		$user_id = get_current_user_id();
+
 		if($user_id) {
 			wpshop_tools::wpshop_safe_redirect(get_permalink(get_option('wpshop_myaccount_page_id')));
-			echo __('Your are already registered','wpshop');
+			$output .= __('Your are already registered','wpshop');
 		}
 		else {
-			echo '<div id="reponseBox"></div>';
-			echo '<form  method="post" id="register_form" action="'.WPSHOP_AJAX_FILE_URL.'">';
-				echo '<input type="hidden" name="post" value="true" />';
-				echo '<input type="hidden" name="elementCode" value="ajax_register" />';
+			$output .= '<div id="reponseBox"></div>';
+			$output .= '<form  method="post" id="register_form" action="' . admin_url('admin-ajax.php') . '">';
+				$output .= '<input type="hidden" name="wpshop_ajax_nonce" value="' . wp_create_nonce('wpshop_customer_register') . '" />';
+				$output .= '<input type="hidden" name="action" value="wpshop_save_customer_account" />';
 				// Bloc REGISTER
-				echo '<div class="col1 wpshopShow" id="register_form_classic">';
-				$wpshop_account->display_billing_and_shipping_form_field();
-				echo '<input type="submit" name="submitOrderInfos" value="'.__('Take order','wpshop').'"" />';
-				echo '</div>';
-			echo '</form>';
+				$output .= '<div class="col1 wpshopShow" id="register_form_classic">';
+				$wpshop_account->display_account_form();
+				$output .= '<input type="submit" name="submitOrderInfos" value="'.__('Create my account','wpshop').'" />';
+				$output .= '</div>';
+			$output .= '</form>';
 		}
+
+		return $output;
 	}
 }

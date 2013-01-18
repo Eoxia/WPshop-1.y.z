@@ -56,18 +56,16 @@ class WP_Widget_Wpshop_Product_categories extends WP_Widget {
 			}
 		}
 		$wpshop_widget_categories	= esc_attr($instance['wpshop_widget_categories']);
+		$checked = (($show_product != '') && ($show_product == 'yes')) ? 'checked="checked"' : '';
 ?>
 		<p>
 			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title', 'wpshop' ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title; ?>" />
 		</p>
 		<p>
-<?php
-			$checked = (($show_product != '') && ($show_product == 'yes')) ? 'checked="checked"' : '';
-?>
 			<input id="<?php echo $this->get_field_id( 'show_all_cat' ); ?>" class="wpshop-widget-all-cat" name="<?php echo $this->get_field_name( 'show_all_cat' ); ?>" type="hidden" value="yes" />
 			<input <?php echo $checked; ?> id="<?php echo $this->get_field_id( 'show_product' ); ?>" name="<?php echo $this->get_field_name( 'show_product' ); ?>" type="checkbox" value="yes" />
-			<label for="<?php echo $this->get_field_id('show_product'); ?>" ><?php _e( 'Show product', 'wpshop' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'show_product' ); ?>" ><?php _e( 'Show product', 'wpshop' ); ?></label>
 		</p>
 <?php
 	}

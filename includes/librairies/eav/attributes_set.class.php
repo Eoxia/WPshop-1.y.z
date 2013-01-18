@@ -542,7 +542,7 @@ class wpshop_attributes_set{
 	*
 	*	@return object $elements A wordpress database object containing the element list
 	*/
-	function getElement($elementId = '', $elementStatus = "'valid', 'moderated'", $whatToSearch = 'id', $resultList = ''){
+	function getElement($elementId = '', $elementStatus = "'valid', 'moderated'", $whatToSearch = 'id', $resultList = '', $entity_id = ''){
 		global $wpdb;
 		$elements = array();
 		$moreQuery = "";
@@ -566,11 +566,21 @@ class wpshop_attributes_set{
 			AND ATTRIBUTE_SET.default_set = '" . $elementId . "' ";
 				break;
 
+				case 'name':
+					$moreQuery = "
+			AND ATTRIBUTE_SET.name = '" . $elementId . "' ";
+				break;
+
 				default:
 					$moreQuery = "
 			AND ATTRIBUTE_SET.id = '" . $elementId . "' ";
 				break;
 			}
+		}
+
+		if ( !empty($entity_id) ) {
+			$moreQuery .= "
+			AND ATTRIBUTE_SET.entity_id = '" . $entity_id . "' ";
 		}
 
 		$query = $wpdb->prepare(
@@ -627,8 +637,10 @@ class wpshop_attributes_set{
 		$user_more_script .= '
 			jQuery("#'.$dialog_identifier.'").dialog({
 				modal: true,
+				dialogClass: "wpshop_uidialog_box",
 				autoOpen:false,
 				show: "blind",
+				resizable: false,
 				buttons:{
 					"'.__('Add', 'wpshop').'": function(){
 						jQuery("#managementContainer").load(WPSHOP_AJAX_FILE_URL,{
@@ -799,7 +811,7 @@ class wpshop_attributes_set{
 			"SELECT ATTRIBUTE_GROUP.id AS attr_group_id, ATTRIBUTE_GROUP.backend_display_type AS backend_display_type, ATTRIBUTE_GROUP.used_in_shop_type,
 				ATTRIBUTE_GROUP.code AS attr_group_code, ATTRIBUTE_GROUP.position AS attr_group_position, ATTRIBUTE_GROUP.name AS attr_group_name,
 				ATTRIBUTE.*, ATTRIBUTE_DETAILS.position AS attr_position_in_group, ATTRIBUTE_GROUP.id as attribute_detail_id, ATTRIBUTE_GROUP.default_group,
-				ATTRIBUTE_GROUP.display_on_frontend, ATTRIBUTE_SET.entity_id
+				ATTRIBUTE_GROUP.display_on_frontend, ATTRIBUTE_SET.entity_id, ATTRIBUTE_SET.id as attribute_set_id
 			FROM " . WPSHOP_DBT_ATTRIBUTE_GROUP . " AS ATTRIBUTE_GROUP
 				INNER JOIN " . self::getDbTable() . " AS ATTRIBUTE_SET ON (ATTRIBUTE_SET.id = ATTRIBUTE_GROUP.attribute_set_id)
 				LEFT JOIN " . WPSHOP_DBT_ATTRIBUTE_DETAILS . " AS ATTRIBUTE_DETAILS ON ((ATTRIBUTE_DETAILS.attribute_group_id = ATTRIBUTE_GROUP.id) AND (ATTRIBUTE_DETAILS.attribute_set_id = ATTRIBUTE_SET.id) AND (ATTRIBUTE_DETAILS.status = 'valid'))
@@ -812,6 +824,7 @@ class wpshop_attributes_set{
 		$attributeSetDetails = $wpdb->get_results($query);
 
 		foreach($attributeSetDetails as $attributeGroup){
+			$attributeSetDetailsGroups[$attributeGroup->attr_group_id]['attribute_set_id'] = $attributeGroup->attribute_set_id;
 			$attributeSetDetailsGroups[$attributeGroup->attr_group_id]['id'] = $attributeGroup->attribute_detail_id;
 			$attributeSetDetailsGroups[$attributeGroup->attr_group_id]['code'] = $attributeGroup->attr_group_code;
 			$attributeSetDetailsGroups[$attributeGroup->attr_group_id]['name'] = $attributeGroup->attr_group_name;
@@ -916,7 +929,7 @@ class wpshop_attributes_set{
 		WHERE
 			'.WPSHOP_DBT_ATTRIBUTE_DETAILS.'.status="valid"
 			AND '.WPSHOP_DBT_ATTRIBUTE.'.status="valid"
-			AND '.WPSHOP_DBT_ATTRIBUTE_DETAILS.'.attribute_group_id='.$atts['sid'].'
+			AND '.WPSHOP_DBT_ATTRIBUTE_DETAILS.'.attribute_group_id IN ('.$atts['sid'].')
 			AND (
 				'.WPSHOP_DBT_ATTRIBUTE_VALUES_DECIMAL.'.entity_id='.$atts['pid'].'
 				OR '.WPSHOP_DBT_ATTRIBUTE_VALUES_DATETIME.'.entity_id='.$atts['pid'].'
