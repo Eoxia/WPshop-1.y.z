@@ -95,11 +95,38 @@
 							wpshop_custom_message.add({title : WPSHOP_CUSTOM_MESSAGE_CONTENT_CUSTOMER_LAST_NAME, onclick : function() {
 								tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[customer_last_name]');
 							}});
+							wpshop_custom_message.add({title : WPSHOP_CUSTOM_MESSAGE_CONTENT_CUSTOMER_EMAIL, onclick : function() {
+								tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[customer_email]');
+							}});
 							wpshop_custom_message.add({title : WPSHOP_CUSTOM_MESSAGE_CONTENT_ORDER_ID, onclick : function() {
 								tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[order_key]');
 							}});
 							wpshop_custom_message.add({title : WPSHOP_CUSTOM_MESSAGE_CONTENT_PAYPAL_TRANSACTION_ID, onclick : function() {
-	                        	tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[paypal_order_key]');
+								tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[paypal_order_key]');
+							}});
+							wpshop_custom_message.add({title : WPSHOP_CUSTOM_MESSAGE_CONTENT_ORDER_PAYMENT_METHOD, onclick : function() {
+	                        	tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[order_payment_method]');
+	                        }});
+							wpshop_custom_message.add({title : WPSHOP_CUSTOM_MESSAGE_CONTENT_ORDER_CUSTOMER_PERSONNAL_INFORMATIONS, onclick : function() {
+	                        	tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[order_personnal_informations]');
+	                        }});
+							wpshop_custom_message.add({title : WPSHOP_CUSTOM_MESSAGE_CONTENT_ORDER_CONTENT, onclick : function() {
+	                        	tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[order_content]');
+	                        }});
+							wpshop_custom_message.add({title : WPSHOP_CUSTOM_MESSAGE_CONTENT_ORDER_ADDRESSES, onclick : function() {
+	                        	tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[order_addresses]');
+	                        }});
+							wpshop_custom_message.add({title : WPSHOP_CUSTOM_MESSAGE_CONTENT_BILLING_ORDER_ADDRESS, onclick : function() {
+	                        	tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[order_billing_address]');
+	                        }});
+							wpshop_custom_message.add({title : WPSHOP_CUSTOM_MESSAGE_CONTENT_SHIPPING_ORDER_ADDRESS, onclick : function() {
+								tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[order_shipping_address]');
+							}});
+							wpshop_custom_message.add({title : WPSHOP_CUSTOM_MESSAGE_CONTENT_SHIPPING_METHOD, onclick : function() {
+	                        	tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[order_shipping_method]');
+	                        }});
+							wpshop_custom_message.add({title : WPSHOP_CUSTOM_MESSAGE_CONTENT_CUSTOMER_COMMENT, onclick : function() {
+	                        	tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[order_customer_comments]');
 	                        }});
 
 						}

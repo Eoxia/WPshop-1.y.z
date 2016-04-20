@@ -1,0 +1,204 @@
+.wps-address-item-header {
+	overflow: hidden;
+	background-color: #DDD;
+	height: 35px;
+	line-height: 35px;
+}
+.wps-address-item-header.wpeosociety-new-action-header {
+	font-weight: bold;
+    padding: 0 15px;
+}
+.wps-address-item-header > a {
+	display: block;
+	float: left;
+	height: 35px;
+	line-height: 35px;
+	width: 85%;
+	text-decoration: none;
+	color: #000;
+}
+.wps-address-item-header > a:focus, .wps-address-item-header > a:hover, .wps-address-item-header > a:active {
+	color: #000;
+}
+.wps-address-item-header span:last-child {
+	float: right;
+}
+.wps-address-item-header a {
+	margin: 0 1px 0;
+}
+.wps-address-item-content {
+	padding: 5px;
+	border: 1px solid #DDD;
+	overflow: hidden;
+	position: relative;
+}
+.wps-address-list-container {
+	overflow: hidden;
+	position: relative;
+}
+
+.wps-address-actions-container img {
+	margin: 40% 35% 0 0;
+}
+
+#wps-address-type-chooser-form select {
+	width: 75%;
+}
+.wps-address-item-header.wps-address-creation-header {
+	font-weight: bold;
+    padding: 0 15px;
+}
+
+#postbox-container-2 .postbox .inside .wps-address-item-content form {
+	width: 35%;	
+}
+.wps-address-item-content form input[type=text], .wps-address-item-content form select, .wps-address-item-content form textarea {
+	width: 100%;	
+}
+.wps-address-item-content form button {
+    background-color: #3A96AD;
+    border: 0 solid #000000;
+    border-radius: 10px;
+    color: #FFFFFF;
+    cursor: pointer;
+    float: right;
+    font-weight: bold;
+    height: 35px;
+    margin: 1px 0 0;
+}
+.wps-address-item-content form button[type="reset"] {
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
+    color: #000000;
+    font-size: 0.8em;
+    margin: 1px 2px 0 0;
+}
+
+/**	Icons	*/
+.wps-address-arrow-down:before {
+	content: "";
+	display: inline-block;
+	height: 0;
+	width: 0;
+	margin: 1px 6px;
+
+	border-top: 4px solid transparent;
+	border-bottom: 4px solid transparent;
+	
+	border-left: 4px solid #000;
+	
+	-webkit-transform:rotate(90deg);
+	-moz-transform: rotate(90deg);
+	-o-transform:  rotate(90deg);
+	transform:  rotate(90deg);
+}
+.wps-address-arrow-right:before {
+	content: "";
+	display: inline-block;
+	height: 0;
+	width: 0;
+	margin: 1px 6px;
+
+	border-top: 4px solid transparent;
+	border-bottom: 4px solid transparent;
+	
+	border-left: 4px solid #000;
+}
+
+.wps-address-icon-black {
+	background: url('../medias/black_35.png') right center no-repeat;
+	height: 35px;
+	width: 35px;
+}
+.wps-address-icon-geoloc {
+	background-position: -70px -210px;
+	display: block;
+	float: right;
+	margin: 1px 0 0;
+}
+.wps-address-icon-add {
+	background-position: 0px -210px;
+	display: block;
+}
+.wps-address-icon-edit {
+	background-position: -70px -105px;
+	display: block;
+	border-left: 1px solid #000;
+}
+.wps-address-icon-geomarker {
+	background-position: -140px -70px;
+	display: block;
+}
+
+/**	Error and alert management	*/
+.wps-alert {
+	color: #C09853;
+}
+.wps-alert {
+	background-color: #FCF8E3;
+	border: 1px solid #FBEED5;
+	border-radius: 4px 4px 4px 4px;
+	margin-bottom: 20px;
+	padding: 8px 35px 8px 14px;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+.wps-alert-error {
+    background-color: #F2DEDE;
+    border-color: #EED3D7;
+    color: #B94A48;
+}
+.wps-alert-success {
+    background-color: #DFF0D8;
+    border-color: #D6E9C6;
+    color: #468847;
+}
+.error label {
+	color: #B94A48;	
+}
+.error input, .error select, .error textarea {
+	border-color: #B94A48;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+}
+.success label {
+	color: #468847;	
+}
+.success input, .success select, .success textarea {
+	border-color: #468847;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+}
+.wps-alert li {
+	margin: 0 0 0 12px;
+}
+
+/**	Overlay loader	*/
+#wps-overlay {
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+}
+.wps-overlay-background {
+    background-color: #000000;
+    opacity: 0.45;
+}
+#wps-overlay-load {
+	position: absolute;
+	z-index:103;
+	top: 50%;
+	left: 0;
+	text-align: center;
+	width: 100%;
+}
+* html #wps-overlay-load { /* ie6 hack */
+	position: absolute;
+	margin-top: expression(0 - parseInt(this.offsetHeight / 2) + (TBWindowMargin = document.documentElement && document.documentElement.scrollTop || document.body.scrollTop) + 'px');
+}
+#wps-overlay-load img {
+	width: 237px!important;
+	height: 15px !important;
+}
+#wps-overlay-load div {
+	width: 80%;
+	margin: 0 auto;
+}

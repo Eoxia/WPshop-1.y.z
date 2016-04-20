@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definition>
+	<pages>
+
+		<!-- Shop pages -->
+		<page code="wpshop_product_page_id" position="569841" shop_type="presentation" >
+			<title>Shop</title>
+			<content>[wpshop_products]</content>
+			<slug></slug>
+			<description>Display shop product list</description>
+		</page>
+
+		<!-- Frontend order pages -->
+		<page code="wpshop_cart_page_id" position="569842" shop_type="sale" >
+			<title>Cart</title>
+			<content>[wps_cart]</content>
+			<slug>cart</slug>
+			<description>Display the cart page</description>
+		</page>
+		<page code="wpshop_checkout_page_id" position="569843" shop_type="sale" >
+			<title>Checkout</title>
+			<content>[wps_checkout]</content>
+			<slug>checkout</slug>
+			<description>Display the checkout page</description>
+		</page>
+
+		<!-- User pages -->
+		<page code="wpshop_myaccount_page_id" position="569844" shop_type="presentation" >
+			<title>My account</title>
+			<content>[wps_account_dashboard]</content>
+			<slug>myaccount</slug>
+			<description>Display the user account page</description>
+		</page>
+		<page code="wpshop_signup_page_id" position="569845" shop_type="presentation" >
+			<title>Signup</title>
+			<content>[wpshop_signup]</content>
+			<slug>signup</slug>
+			<description>Display the signout page</description>
+		</page>
+
+		<!-- Payment pages -->
+		<page code="wpshop_payment_return_page_id" position="569846" shop_type="sale" >
+			<title>Payment return successfull</title>
+			<content>[wpshop_payment_result]</content>
+			<slug>return</slug>
+			<description>Page for succesfull payment return</description>
+		</page>
+		<page code="wpshop_payment_return_nok_page_id" position="569847" shop_type="sale" >
+			<title>Payment return unsuccessfull</title>
+			<content>[wpshop_payment_result_unsuccessfull]</content>
+			<slug>unsuccessfull_payment_return</slug>
+			<description>Page for unsuccesfull payment return</description>
+		</page>
+
+		<page code="wpshop_terms_of_sale_page_id" position="569848" shop_type="sale" >
+			<title>Terms of sale</title>
+			<content>[wpshop_terms_of_sale]</content>
+			<slug>terms-of-sale</slug>
+			<description>Define the page for terms of sale</description>
+		</page>
+	</pages>
+</definition>

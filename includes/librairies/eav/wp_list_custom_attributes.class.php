@@ -13,6 +13,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
  * @subpackage librairies
  */
 class wpshop_attributes_custom_List_table extends WP_List_Table{
+	var $datas;
 
 	/** ************************************************************************
 	 * REQUIRED. Set up a constructor that references the parent constructor. We
@@ -37,9 +38,9 @@ class wpshop_attributes_custom_List_table extends WP_List_Table{
 		$unactive_nb = wpshop_attributes::getElement('', "'moderated', 'notused'");
 		$deleted_nb = wpshop_attributes::getElement('', "'deleted'");
 
-		$wpshop_attribute_links['wpshop_attributes_links wpshop_attributes_links_valid'.(empty($_REQUEST['attribute_status'])?' current':'')] = '<a href="'.admin_url('edit.php?post_type='.WPSHOP_NEWTYPE_IDENTIFIER_ENTITIES.'&page=wpshop_attribute').'" >'.__('Used attributes', 'wpshop').' ('.count($active_nb).')</a>';
-		$wpshop_attribute_links['wpshop_attributes_links wpshop_attributes_links_moderated'.(!empty($_REQUEST['attribute_status']) && ($_REQUEST['attribute_status']=='unactive')?' current':'')] = '<a href="'.admin_url('edit.php?post_type='.WPSHOP_NEWTYPE_IDENTIFIER_ENTITIES.'&page=wpshop_attribute&attribute_status=unactive').'" >'.__('Unactive attributes', 'wpshop').' ('.count($unactive_nb).')</a>';
-		$wpshop_attribute_links['wpshop_attributes_links wpshop_attributes_links_deleted'.(!empty($_REQUEST['attribute_status']) && ($_REQUEST['attribute_status']=='deleted')?' current':'')] = '<a href="'.admin_url('edit.php?post_type='.WPSHOP_NEWTYPE_IDENTIFIER_ENTITIES.'&page=wpshop_attribute&attribute_status=deleted').'" >'.__('Trashed attributes', 'wpshop').' ('.count($deleted_nb).')</a>';
+		$wpshop_attribute_links['wpshop_attributes_links wpshop_attributes_links_valid'.(empty($_REQUEST['attribute_status'])?' current':'')] = '<a href="'.admin_url('admin.php?page=' . WPSHOP_URL_SLUG_ATTRIBUTE_LISTING).'" >'.__('Used attributes', 'wpshop').' ('.count($active_nb).')</a>';
+		$wpshop_attribute_links['wpshop_attributes_links wpshop_attributes_links_moderated'.(!empty($_REQUEST['attribute_status']) && ($_REQUEST['attribute_status']=='unactive')?' current':'')] = '<a href="'.admin_url('admin.php?page=' . WPSHOP_URL_SLUG_ATTRIBUTE_LISTING.'&attribute_status=unactive').'" >'.__('Unactive attributes', 'wpshop').' ('.count($unactive_nb).')</a>';
+		$wpshop_attribute_links['wpshop_attributes_links wpshop_attributes_links_deleted'.(!empty($_REQUEST['attribute_status']) && ($_REQUEST['attribute_status']=='deleted')?' current':'')] = '<a href="'.admin_url('admin.php?page=' . WPSHOP_URL_SLUG_ATTRIBUTE_LISTING.'&attribute_status=deleted').'" >'.__('Trashed attributes', 'wpshop').' ('.count($deleted_nb).')</a>';
 		$wpshop_attribute_links['unit_management_link'] = '<a href="#" id="wpshop_attribute_unit_manager_opener">'.__('Unit management', 'wpshop').'</a>';
 		$wpshop_attribute_links['unit_management_dialog'] = '<div id="wpshop_attribute_unit_manager"title="' . __('Unit management', 'wpshop') . '" class="wpshopHide" ><div class="loading_picture_container" id="product_chooser_picture" ><img src="' . WPSHOP_LOADING_ICON . '" alt="loading..." /></div></div>';
 		return $wpshop_attribute_links;
@@ -193,7 +194,7 @@ class wpshop_attributes_custom_List_table extends WP_List_Table{
 	function column_name($item){
 		$attribute_undeletable = unserialize(WPSHOP_ATTRIBUTE_UNDELETABLE);
 
-		$link_format = admin_url('edit.php').'?post_type=%s&amp;page=%s&amp;action=%s&amp;id=%s';
+		$link_format = admin_url('admin.php').'?page=%2$s&amp;action=%3$s&amp;id=%4$s';
 		$default_action='edit';
 		$default_action_text=__('Edit', 'wpshop');
 		if(!empty($_REQUEST['attribute_status']) && ($_REQUEST['attribute_status']=='deleted')){
@@ -303,9 +304,9 @@ class wpshop_attributes_custom_List_table extends WP_List_Table{
 	 * @uses $this->get_pagenum()
 	 * @uses $this->set_pagination_args()
 	 **************************************************************************/
-	function prepare_items($data) {
+	function prepare_items() {
 		/*	First, lets decide how many records per page to show	*/
-		$per_page = $this->get_items_per_page('attributes_per_page', 10);
+		$per_page = 10;//$this->get_items_per_page('attributes_per_page', 10);
 
 		/**
 		 * REQUIRED. Now we need to define our column headers. This includes a complete
@@ -341,7 +342,7 @@ class wpshop_attributes_custom_List_table extends WP_List_Table{
 		 * use sort and pagination data to build a custom query instead, as you'll
 		 * be able to use your precisely-queried data immediately.
 		*/
-		// $data = ;
+		$data = $this->datas;
 
 		/**
 		 * REQUIRED for pagination. Let's figure out what page the user is currently

@@ -1,0 +1,309 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WP action logger - V2\n"
+"POT-Creation-Date: 2016-01-21 17:00+0100\n"
+"PO-Revision-Date: 2016-01-21 17:00+0100\n"
+"Last-Translator: Eoxia developement team <dev@eoxia.com>\n"
+"Language-Team: Eoxia development team <dev@eoxia.com>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: _e;__;_x\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../controller/log.controller.01.php:76 ../template/backend/main.php:4
+msgid "Logs"
+msgstr "Logs"
+
+#: ../controller/log.controller.01.php:88
+msgid "On"
+msgstr "Oui"
+
+#: ../controller/log.controller.01.php:88
+msgid "Off"
+msgstr "Non"
+
+#: ../controller/log.controller.01.php:198
+msgid "Information"
+msgstr "Information"
+
+#: ../controller/log.controller.01.php:203
+msgid "Warning"
+msgstr "Attention"
+
+#: ../controller/log.controller.01.php:208
+msgid "Critical"
+msgstr "Critique"
+
+#: ../controller/log.controller.01.php:518
+msgid "A new service has been created!"
+msgstr "Un nouveau service à été créer!"
+
+#: ../controller/log.controller.01.php:532
+#: ../controller/log.controller.01.php:539
+msgid "Invalid data to update service"
+msgstr "Les données sont invalide pour mettre à jour le service"
+
+#: ../controller/log.controller.01.php:558
+msgid "The services has been updated!"
+msgstr "Les services ont été mis à jour"
+
+#: ../controller/log.controller.01.php:602
+msgid "The file has been deleted!"
+msgstr "Le fichier à été supprimé!"
+
+#: ../template/backend/chart.php:3
+msgid "Chart"
+msgstr "Graphique"
+
+#: ../template/backend/chart.php:6
+msgid "No data for chart"
+msgstr "Pas de donnée pour créer le graphique"
+
+#: ../template/backend/list-service-edit.php:5
+#: ../template/backend/list-service.php:5
+msgid " item(s)"
+msgstr "item(s)"
+
+#: ../template/backend/list-service-edit.php:16
+#: ../template/backend/list-service-edit.php:73
+msgid "ID"
+msgstr "ID"
+
+#: ../template/backend/list-service-edit.php:17
+#: ../template/backend/list-service-edit.php:74
+#: ../template/backend/list-service.php:12
+#: ../template/backend/list-service.php:51
+msgid "Active"
+msgstr "Activé"
+
+#: ../template/backend/list-service-edit.php:19
+#: ../template/backend/list-service-edit.php:75
+msgid "Name"
+msgstr "Nom"
+
+#: ../template/backend/list-service-edit.php:20
+#: ../template/backend/list-service-edit.php:76
+#: ../template/backend/list-service.php:16
+#: ../template/backend/list-service.php:55
+#: ../template/backend/view-service.php:14
+#: ../template/backend/view-service.php:41
+msgid "Size"
+msgstr "Taille"
+
+#: ../template/backend/list-service-edit.php:21
+#: ../template/backend/list-service-edit.php:77
+msgid "File size"
+msgstr "Taille du fichier"
+
+#: ../template/backend/list-service-edit.php:22
+#: ../template/backend/list-service-edit.php:78
+msgid "File rotate"
+msgstr "Rotation"
+
+#: ../template/backend/list-service-edit.php:23
+#: ../template/backend/list-service-edit.php:79
+msgid "Number file"
+msgstr "Nombre de fichier"
+
+#: ../template/backend/list-service-edit.php:39
+#: ../template/backend/view-service.php:28
+msgid "Move this item to the Trash"
+msgstr "Supprimer ce service"
+
+#: ../template/backend/list-service-edit.php:39
+#: ../template/backend/list-service.php:29
+#: ../template/backend/view-service.php:28
+msgid "Trash"
+msgstr "Supprimer"
+
+#: ../template/backend/list-service-edit.php:66
+#: ../template/backend/list-service.php:45
+msgid "No services found."
+msgstr "Pas de service trouvé."
+
+#: ../template/backend/list-service-edit.php:86
+msgid "Save Changes"
+msgstr "Enregistrer les modifications"
+
+#: ../template/backend/list-service-edit.php:87
+#: ../template/backend/view-service.php:5
+msgid "Back"
+msgstr "Retour"
+
+#: ../template/backend/list-service.php:13
+#: ../template/backend/list-service.php:52
+#: ../template/backend/view-service.php:13
+#: ../template/backend/view-service.php:40
+msgid "Title"
+msgstr "Titre"
+
+#: ../template/backend/list-service.php:14
+#: ../template/backend/list-service.php:53
+msgid "Errors"
+msgstr "Erreurs"
+
+#: ../template/backend/list-service.php:15
+#: ../template/backend/list-service.php:54
+msgid "Warnings"
+msgstr "Attentions"
+
+#: ../template/backend/list-service.php:17
+#: ../template/backend/list-service.php:56
+msgid "Date"
+msgstr "Date"
+
+#: ../template/backend/list-service.php:26
+#: ../template/backend/list-service.php:28
+msgid "View this service"
+msgstr "Voir le service"
+
+#: ../template/backend/list-service.php:28
+msgid "View"
+msgstr "Voir"
+
+#: ../template/backend/list-service.php:29
+msgid "Move this service to the Trash"
+msgstr "Supprimer ce service"
+
+#: ../template/backend/list-service.php:63
+msgid "Quick edit"
+msgstr "Édition rapide"
+
+#: ../template/backend/main.php:4
+msgid "Add New"
+msgstr "Ajouter"
+
+#: ../template/backend/view-service.php:9
+msgid "Archive"
+msgstr ""
+
+#: ../template/backend/view-service.php:35
+msgid "No archive file"
+msgstr ""
+
+#: ../template/backend/view-service.php:48
+msgid "Data"
+msgstr ""
+
+#: ../template/backend/view-service.php:52
+msgid "Author"
+msgstr "Auteur"
+
+#: ../template/backend/view-service.php:53
+msgid "Severity"
+msgstr "Critique"
+
+#: ../template/backend/view-service.php:54
+msgid "Object ID"
+msgstr "Object ID"
+
+#: ../template/backend/view-service.php:55
+msgid "Message"
+msgstr "Message"
+
+#: ../template/backend/view-service.php:65
+#: ../template/backend/view-service.php:74
+#: ../template/backend/view-service.php:75
+#: ../template/backend/view-service.php:76
+msgid "Empty"
+msgstr "Vide"
+
+#: ../template/backend/view-service.php:81
+msgid "Nothing to display, select your log of file"
+msgstr "Rien à afficher, veuillez sélectionner votre fichier de log"
+
+#~ msgid "The folder "
+#~ msgstr "Le fichier"
+
+#~ msgid "Service active"
+#~ msgstr "Service activé"
+
+#~ msgid "Service name"
+#~ msgstr "Nom du service"
+
+#~ msgid "Service size"
+#~ msgstr "Taille du service"
+
+#~ msgid "Service size format"
+#~ msgstr "Format du service"
+
+#~ msgid "Active rotate"
+#~ msgstr "Rotation activé"
+
+#~ msgid "Service rotate number file"
+#~ msgstr "Nombre de fichier de rotation"
+
+#~ msgid "Service file"
+#~ msgstr "Fichier du service"
+
+#~ msgid "No archived file"
+#~ msgstr "Pas de fichier d'archive"
+
+#~ msgid "Your log data"
+#~ msgstr "Vos données de log"
+
+#~ msgid "Service"
+#~ msgstr "Service"
+
+#~ msgid "Main informations"
+#~ msgstr "Informations principale"
+
+#~ msgid "Metas informations"
+#~ msgstr "Informations secondaires"
+
+#~ msgid "Files"
+#~ msgstr "Fichiers"
+
+#~ msgid "In short"
+#~ msgstr "En bref"
+
+#~ msgid "Archive file"
+#~ msgstr "Fichier d'archive"
+
+#~ msgid "Select your file in the left menu"
+#~ msgstr "Sélectionner un fichier dans le menu de gauche"
+
+#~ msgid "Log"
+#~ msgstr "Log"
+
+#~ msgid "Criticality"
+#~ msgstr "Critique"
+
+#~ msgid "User"
+#~ msgstr "Utilisateur"
+
+#~ msgid "files"
+#~ msgstr "fichiers"
+
+#~ msgid "My services"
+#~ msgstr "Mes services"
+
+#~ msgid "There are no logs for current element"
+#~ msgstr "Aucun log n'a été trouvé pour l'élément courant"
+
+#~ msgid "Log settings"
+#~ msgstr "Configuration des logs"
+
+#~ msgid "Post type"
+#~ msgstr "Post type"
+
+#~ msgid "Number displayed log"
+#~ msgstr "Nombre de log affiché"
+
+#~ msgid "Number archive"
+#~ msgstr "Nombre d'archive"
+
+#~ msgid "Browse log file"
+#~ msgstr "Parcours les fichiers de log"
+
+#~ msgid "No file"
+#~ msgstr "Pas de fichier"
+
+#~ msgid "Select your log of file"
+#~ msgstr "Sélectionner votre fichier de log"

@@ -1,0 +1,9 @@
+.wps-my-message > .wps-table-row:hover {
+	cursor: pointer;	
+}
+.wps-message-title-container {
+	text-align: left !important;
+}
+.wps-message-title {
+	margin-left: 20% !important;
+}

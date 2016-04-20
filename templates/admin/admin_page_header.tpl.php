@@ -9,5 +9,5 @@
 		<?php if($hasAddButton): ?><a href="<?php echo $addButtonLink ?>" class="button add-new-h2" ><?php _e('Add', 'wpshop') ?></a><?php endif; ?>
 		</h2>
 	</div>
-	<div id="champsCaches" class="clear wpshopHide" ></div>
-	<div class="clear" id="wpshopMainContent" >
+	<div id="champsCaches" class="wpshop_cls wpshopHide" ></div>
+	<div class="wpshop_cls" id="wpshopMainContent" >

@@ -1,0 +1,56 @@
+@CHARSET "ISO-8859-1";
+.wps_shipping_method_choice {
+	margin-top : 10px;
+	width : 95%;
+	padding : 8px;
+	border : 1px solid #DFDFDF;
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: 0 1px 0 #FFFFFF inset;
+	background: linear-gradient(to top, #F5F5F5, #F9F9F9) repeat scroll 0 0 #F5F5F5;	
+	overflow : auto;
+	height : auto;
+}
+.wps_shipping_method_choice_input {
+	height : 20px;
+	width : 40px;
+	padding-top : 10px;
+	float : left;
+	position : relative;
+}
+.wps_shipping_method_choice_logo {
+	float : left;
+	position : relative;
+	height : 40px;
+	width : auto;
+	margin : 0 5px;
+}
+.wps_shipping_method_choice_logo img {
+	height : 40px;
+	width : auto;
+}
+.wps_shipping_mode_choice_name {
+	font-size: 16px;
+    font-weight: bold;
+    float : left;
+	position : relative;
+	padding-top : 7px;
+	margin-left : 10px;
+}
+.wps_shipping_method_additional_element_container {
+	position : relative;
+	float : left;
+	width : 95%;
+	height : auto;
+	overflow : auto;
+}
+.wps_shipping_mode_choice_explanation {
+	font-size: 13px;
+    float : left;
+	position : relative;
+	padding-top : 10px;
+	margin-left : 20px;
+}
+.wps-shipping-method-logo {
+	height: 27px;
+	width: 27px;
+}

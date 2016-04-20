@@ -1,0 +1,95 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WPS Opinions\n"
+"POT-Creation-Date: 2014-09-17 11:54+0100\n"
+"PO-Revision-Date: 2014-09-18 11:08+0100\n"
+"Last-Translator: \n"
+"Language-Team: Eoxia Dev Team <dev@eoxia.com>\n"
+"Language: French\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop;_e;__\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../controller/wps_opinion_ctr.php:232
+msgid "No opinion has been posted on this product"
+msgstr "Aucun avis n'a été posté sur ce produit"
+
+#: ../controller/wps_opinion_ctr.php:281
+msgid ""
+"Comment has been send and must be approved by an administrator before "
+"publishing"
+msgstr ""
+"Votre avis a bien été envoyé et doit être approuvé par un administrateur "
+"avant sa publication"
+
+#: ../controller/wps_opinion_ctr.php:284
+msgid "You have already post a comment for this product"
+msgstr "Vous avez déjà posté un avis pour ce produit"
+
+#: ../controller/wps_opinion_ctr.php:305
+#: ../templates/frontend/waited_opinion.php:4
+msgid "Add your opinion"
+msgstr "Ajouter votre avis"
+
+#: ../templates/frontend/opinions.php:1
+#: ../templates/frontend/posted_opinions.php:1
+msgid "My opinions"
+msgstr "Mes avis"
+
+#: ../templates/frontend/opinions.php:4
+#: ../templates/frontend/posted_opinions.php:4
+msgid "Date"
+msgstr "Date"
+
+#: ../templates/frontend/opinions.php:5
+#: ../templates/frontend/posted_opinions.php:5
+#: ../templates/frontend/waited_opinions.php:5
+msgid "Product"
+msgstr "Produit"
+
+#: ../templates/frontend/opinions.php:6
+#: ../templates/frontend/posted_opinions.php:6
+msgid "Opinion"
+msgstr "Avis"
+
+#: ../templates/frontend/opinions.php:7
+#: ../templates/frontend/posted_opinions.php:7
+msgid "Rate"
+msgstr "Note"
+
+#: ../templates/frontend/opinions.php:16
+msgid "You have never post opinion"
+msgstr "Vous n'avez jamais posté d'avis"
+
+#: ../templates/frontend/waited_opinions.php:1
+msgid "This products wait your opinion"
+msgstr "Ces produits attendent votre avis"
+
+#: ../templates/frontend/waited_opinions.php:4
+msgid "Picture"
+msgstr "Photo"
+
+#: ../templates/frontend/waited_opinions.php:13
+msgid "No products wait your opinion !"
+msgstr "Aucun produit n'attends votre avis"
+
+#: ../templates/frontend/wps-modal-opinion.php:6
+msgid "Your opinion"
+msgstr "Votre avis"
+
+#: ../templates/frontend/wps-modal-opinion.php:14
+msgid "Your rate"
+msgstr "Votre note"
+
+#: ../templates/frontend/wps-modal-opinion.php:24
+msgid "Star rate"
+msgstr "Note en étoiles"
+
+#: ../templates/frontend/wps-modal-opinion.php:37
+msgid "Save your opinion"
+msgstr "Enregistrer votre avis"

@@ -1,0 +1,16 @@
+@CHARSET "ISO-8859-1";
+#selected_media_container, ul#product_media_list {
+	position : relative;
+	width : 100%;
+	height : auto;
+	overflow : auto;
+}
+#product_media_list li {
+	list_style : none;
+	position : relative;
+	display : inline-block;
+	width: 176px;
+}
+#attachment-preview-border {
+	border : 4px solid #CCCCCC;
+}

@@ -30,12 +30,12 @@
 	position: relative;
 	z-index: 100;
 	overflow: hidden;
-	border: none !important; /*	important to overwrite class "updated" instruction	*/
+	border-left: 4px solid #2790b0 !important; /*	important to overwrite class "updated" instruction	*/
 	/*background: #2790b0 url("../medias/images/wpshop_logo.png") no-repeat 23px 28px !important; /*	important to overwrite class "updated" instruction	*/
-	background: #2790b0 url("../medias/images/wpshop-banner-pattern.png") repeat !important; /*	important to overwrite class "updated" instruction	*/
+	/*background: #2790b0 url("../medias/images/wpshop-banner-pattern.png") repeat !important; /*	important to overwrite class "updated" instruction	*/
 	padding: 20px !important;/*	important to overwrite class "updated" instruction	*/
 	height:auto;
-	color:#FFFFFF;
+	color:#000;
 	margin-bottom:0 !important;
 	border-top-left-radius: 0 !important;
 	border-top-right-radius: 0 !important;

@@ -1,0 +1,79 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WPS Highlighting\n"
+"POT-Creation-Date: 2014-06-18 14:54+0100\n"
+"PO-Revision-Date: 2014-07-22 15:55+0100\n"
+"Last-Translator: \n"
+"Language-Team: Eoxia Dev Team <dev@eoxia.com>\n"
+"Language: French\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_e\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../controller/wps_highlighting_ctr.php:60
+#: ../controller/wps_highlighting_ctr.php:61
+msgid "Highlighting"
+msgstr "Mise en avant"
+
+#: ../controller/wps_highlighting_ctr.php:62
+msgid "Highlightings"
+msgstr "Mises en avant"
+
+#: ../controller/wps_highlighting_ctr.php:63
+#: ../controller/wps_highlighting_ctr.php:64
+msgid "Add new highlighting"
+msgstr "Ajouter une nouvelle mise en avant"
+
+#: ../controller/wps_highlighting_ctr.php:65
+msgid "New Highlighting"
+msgstr "Nouvelle mise en avant"
+
+#: ../controller/wps_highlighting_ctr.php:66
+msgid "Edit Highlighting"
+msgstr "Editer la mise en avant"
+
+#: ../controller/wps_highlighting_ctr.php:67
+msgid "View Highlighting"
+msgstr "Voir la mise en avant"
+
+#: ../controller/wps_highlighting_ctr.php:68
+msgid "All Highlightings"
+msgstr "Toutes les mises en avant"
+
+#: ../controller/wps_highlighting_ctr.php:69
+msgid "Search Highlighting"
+msgstr "Chercher une mise en avant"
+
+#: ../controller/wps_highlighting_ctr.php:70
+msgid "Parent Highlighting :"
+msgstr "Mise en avant parente"
+
+#: ../controller/wps_highlighting_ctr.php:71
+msgid "No Highlighting found."
+msgstr "Aucune mise en avant trouvée"
+
+#: ../controller/wps_highlighting_ctr.php:72
+msgid "No Highlightings found in Trash."
+msgstr "Aucune mise en avant trouvée dans la corbeille"
+
+#: ../controller/wps_highlighting_ctr.php:98
+msgid "Select the hook"
+msgstr "Sélectionnez un point d'accroche"
+
+#: ../controller/wps_highlighting_ctr.php:99
+#: ../controller/wps_highlighting_ctr.php:120
+msgid "Link of Highlighting"
+msgstr "Lien de la mise en avant"
+
+#: ../controller/wps_highlighting_ctr.php:110
+msgid "Sidebar"
+msgstr "Sidebar"
+
+#: ../controller/wps_highlighting_ctr.php:111
+msgid "HomePage Content"
+msgstr "Contenu de la page d'accueil"

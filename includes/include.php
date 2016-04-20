@@ -18,45 +18,22 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 /*************************** LOAD THE BASE CLASS *******************************
  *******************************************************************************/
 
+include_once( WPSHOP_DIR . '/core/module_management/module_management.php');
+
 include_once(WPSHOP_INCLUDES_DIR . 'wpshop_ajax.php');
 
 include_once(WPSHOP_LIBRAIRIES_DIR . 'install.class.php');
-include_once(WPSHOP_LIBRAIRIES_DIR . 'init.class.php');
-include_once(WPSHOP_LIBRAIRIES_DIR . 'tools.class.php');
+
 include_once(WPSHOP_LIBRAIRIES_DIR . 'permissions.class.php');
 include_once(WPSHOP_LIBRAIRIES_DIR . 'options/options.class.php');
 include_once(WPSHOP_LIBRAIRIES_DIR . 'notices.class.php');
 include_once(WPSHOP_LIBRAIRIES_DIR . 'shortcodes.class.php');
-include_once(WPSHOP_LIBRAIRIES_DIR . 'messages.class.php');
-include_once(WPSHOP_LIBRAIRIES_DIR . 'dashboard.class.php');
-include_once(WPSHOP_LIBRAIRIES_DIR . 'search.class.php');
 
-/* Customers management */
-include_once(WPSHOP_LIBRAIRIES_DIR . 'customers/signup.class.php');
-include_once(WPSHOP_LIBRAIRIES_DIR . 'customers/account.class.php');
-include_once(WPSHOP_LIBRAIRIES_DIR . 'customers/address.class.php');
-include_once(WPSHOP_LIBRAIRIES_DIR . 'customers/customer_custom_list_table.class.php');
-include_once(WPSHOP_LIBRAIRIES_DIR . 'customers/customer.class.php');
-$customer_obj = new wpshop_customer();
-
-/* Groups management */
-include_once(WPSHOP_LIBRAIRIES_DIR . 'customers/groups.class.php');
-include_once(WPSHOP_LIBRAIRIES_DIR . 'customers/wp_list_custom_groups.class.php');
 
 /* Purchase management */
-include_once(WPSHOP_LIBRAIRIES_DIR . 'purchase/cart.class.php');
 include_once(WPSHOP_LIBRAIRIES_DIR . 'purchase/checkout.class.php');
 include_once(WPSHOP_LIBRAIRIES_DIR . 'purchase/orders.class.php');
-include_once(WPSHOP_LIBRAIRIES_DIR . 'purchase/coupons.class.php');
-include_once(WPSHOP_LIBRAIRIES_DIR . 'purchase/shipping.class.php');
-include_once(WPSHOP_LIBRAIRIES_DIR . 'purchase/wp_list_custom_entities_customers.php');
 
-
-/* Documentation management */
-include_once(WPSHOP_LIBRAIRIES_DIR . 'doc.class.php');
-
-/* Webservice management */
-include_once(WPSHOP_LIBRAIRIES_DIR . 'webservice.class.php');
 
 /* Database management */
 include_once(WPSHOP_LIBRAIRIES_DIR . 'db/db_structure_definition.php');
@@ -67,14 +44,10 @@ include_once(WPSHOP_LIBRAIRIES_DIR . 'db/database.class.php');
 include_once(WPSHOP_LIBRAIRIES_DIR . 'payments/payment.class.php');
 include_once(WPSHOP_LIBRAIRIES_DIR . 'payments/paypal.class.php');
 // If the CIC payment method is active
-$wpshop_paymentMethod = get_option('wpshop_paymentMethod');
-if(WPSHOP_PAYMENT_METHOD_CIC || !empty($wpshop_paymentMethod['cic'])){
+$wpshop_paymentMethod = get_option( 'wps_payment_mode' );
+if ( WPSHOP_PAYMENT_METHOD_CIC && !empty($wpshop_paymentMethod) && !empty($wpshop_paymentMethod['mode']) && !empty($wpshop_paymentMethod['mode']['cic']) ) {
 	include_once(WPSHOP_LIBRAIRIES_DIR . 'payments/cic.class.php');
 }
-
-/* PDF management */
-include_once(WPSHOP_LIBRAIRIES_DIR . 'pdf/fpdf.php');
-include_once(WPSHOP_LIBRAIRIES_DIR . 'pdf/fpdf_extends.class.php');
 
 /* Display management */
 if ( !class_exists('WP_List_Table') ) {
@@ -85,7 +58,8 @@ include_once(WPSHOP_LIBRAIRIES_DIR . 'display/display.class.php');
 include_once(WPSHOP_LIBRAIRIES_DIR . 'display/form.class.php');
 include_once(WPSHOP_LIBRAIRIES_DIR . 'display/form_management.class.php');
 include_once(WPSHOP_LIBRAIRIES_DIR . 'display/widgets/categories.widget.php');
-add_action('widgets_init', create_function('', 'return register_widget("WP_Widget_Wpshop_Product_categories");'));
+include_once(WPSHOP_LIBRAIRIES_DIR . 'display/widgets/products.widget.php');
+
 /*	Add needed file to the current theme	*/
 add_action('admin_init', array('wpshop_display', 'check_template_file'));
 
@@ -112,5 +86,5 @@ include(WPSHOP_LIBRAIRIES_DIR . 'eav/wp_list_custom_attributes_set.class.php');
 include(WPSHOP_LIBRAIRIES_DIR . 'eav/attributes_set.class.php');
 include(WPSHOP_LIBRAIRIES_DIR . 'eav/entities.class.php');
 
-add_action( 'user_register', array('wpshop_entities', 'create_entity_customer_when_user_is_created') );
-
+/* Modules management */
+eo_module_management::extra_modules();

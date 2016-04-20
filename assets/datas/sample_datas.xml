@@ -1,0 +1,1207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<definition
+	xmlns:excerpt="http://wordpress.org/export/1.2/excerpt/"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:wp="http://wordpress.org/export/1.2/" >
+
+<wpshop_products>
+	<wpshop_product>
+		<title>Tee shirt</title>
+		<link>http://demo.wpshop.fr/catalog/wpshop_product/tee-shirt/</link>
+		<pubDate>Mon, 27 May 2013 09:31:10 +0000</pubDate>
+		<dc:creator><![CDATA[demo]]></dc:creator>
+		<guid isPermaLink="false">http://demo.wpshop.fr/?post_type=wpshop_product&#038;p=42</guid>
+		<description></description>
+		<content:encoded><![CDATA[Tee shirt WPshop.
+<em id="__mceDel"> Finition de très haute qualité. 100% coton et grammage de 145g/m².</em>
+<ul>
+	<li>Homme</li>
+	<li>Manches courtes</li>
+	<li>Col rond</li>
+</ul>]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>42</wp:post_id>
+		<wp:post_date>2013-05-27 10:31:10</wp:post_date>
+		<wp:post_date_gmt>2013-05-27 09:31:10</wp:post_date_gmt>
+		<wp:comment_status>closed</wp:comment_status>
+		<wp:ping_status>open</wp:ping_status>
+		<wp:post_name>tee-shirt</wp:post_name>
+		<wp:status>publish</wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type>wpshop_product</wp:post_type>
+		<wp:post_password></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="wpshop_product_category" nicename="mode-pret-a-porter"><![CDATA[Mode, prêt à porter]]></category>
+		<category domain="wpshop_product_category" nicename="vetements-homme"><![CDATA[Vêtements homme]]></category>
+		<wp:postmeta>
+			<wp:meta_key>_edit_last</wp:meta_key>
+			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_displayed_price</wp:meta_key>
+			<wp:meta_value><![CDATA[18.00]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_metadata</wp:meta_key>
+			<wp:meta_value><![CDATA[a:19:{s:14:"product_weight";s:7:"0,00000";s:14:"product_height";s:7:"0,00000";s:4:"unit";a:2:{s:14:"product_height";s:1:"2";s:13:"product_width";s:1:"2";}s:13:"product_width";s:7:"0,00000";s:13:"product_stock";s:8:"50,00000";s:13:"product_price";d:18;s:8:"price_ht";d:15;s:3:"tva";d:3;s:15:"cost_of_postage";s:7:"5,00000";s:8:"couleur_";a:3:{i:0;s:2:"45";i:1;s:2:"46";i:2;s:2:"47";}s:7:"taille_";a:4:{i:0;s:2:"48";i:1;s:2:"49";i:2;s:2:"50";i:3;s:2:"51";}s:24:"product_attribute_set_id";s:1:"1";s:12:"manage_stock";s:1:"9";s:6:"tx_tva";s:2:"17";s:11:"declare_new";s:1:"8";s:17:"product_reference";s:11:"PDCT0000047";s:7:"barcode";s:0:"";s:12:"special_from";s:10:"0000-00-00";s:10:"special_to";s:10:"0000-00-00";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_attribute_set_id</wp:meta_key>
+			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_variation_defining</wp:meta_key>
+			<wp:meta_value><![CDATA[a:1:{s:10:"attributes";a:2:{i:0;s:8:"couleur_";i:1;s:7:"taille_";}}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_stock</wp:meta_key>
+			<wp:meta_value><![CDATA[50.00000]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_price</wp:meta_key>
+			<wp:meta_value><![CDATA[18.00000]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_view_nb</wp:meta_key>
+			<wp:meta_value><![CDATA[50]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wps_price_infos</wp:meta_key>
+			<wp:meta_value><![CDATA[a:5:{s:12:"TAX_PILOTING";s:0:"";s:17:"CROSSED_OUT_PRICE";s:12:"18.00 &euro;";s:18:"MESSAGE_SAVE_MONEY";s:23:"Economie 17.00 &euro;
+";s:13:"PRODUCT_PRICE";s:62:"1<span class="wpshop_price_centimes_display">,00</span> &euro;";s:10:"PRICE_FROM";s:2:"on";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_thumbnail_id</wp:meta_key>
+			<wp:meta_value><![CDATA[198]]></wp:meta_value>
+		</wp:postmeta>
+	</wpshop_product>
+	<wpshop_product>
+		<title>Clé USB </title>
+		<link>http://demo.wpshop.fr/catalog/wpshop_product/cle-usb-2/</link>
+		<pubDate>Tue, 28 May 2013 13:18:58 +0000</pubDate>
+		<dc:creator><![CDATA[demo]]></dc:creator>
+		<guid isPermaLink="false">http://demo.wpshop.fr/?post_type=wpshop_product&#038;p=121</guid>
+		<description></description>
+		<content:encoded><![CDATA[Clé USB 3.0  WPshop pour transférer vos photos, vidéos et autres fichiers
+Vitesse de transfert jusqu'à 190Mo/s
+
+Compatible Windows, Mac et Linux]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>121</wp:post_id>
+		<wp:post_date>2013-05-28 14:18:58</wp:post_date>
+		<wp:post_date_gmt>2013-05-28 13:18:58</wp:post_date_gmt>
+		<wp:comment_status>open</wp:comment_status>
+		<wp:ping_status>open</wp:ping_status>
+		<wp:post_name>cle-usb-2</wp:post_name>
+		<wp:status>publish</wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type>wpshop_product</wp:post_type>
+		<wp:post_password></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="wpshop_product_category" nicename="cle-usb"><![CDATA[Clés usb]]></category>
+		<category domain="wpshop_product_category" nicename="informatique"><![CDATA[Informatique]]></category>
+		<category domain="wpshop_product_category" nicename="nouveautes"><![CDATA[Nouveautés]]></category>
+		<wp:postmeta>
+			<wp:meta_key>_wps_price_infos</wp:meta_key>
+			<wp:meta_value><![CDATA[a:5:{s:12:"TAX_PILOTING";s:0:"";s:17:"CROSSED_OUT_PRICE";s:0:"";s:18:"MESSAGE_SAVE_MONEY";s:0:"";s:13:"PRODUCT_PRICE";s:62:"7<span class="wpshop_price_centimes_display">,00</span> &euro;";s:10:"PRICE_FROM";s:2:"on";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_edit_last</wp:meta_key>
+			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_displayed_price</wp:meta_key>
+			<wp:meta_value><![CDATA[7.00]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_thumbnail_id</wp:meta_key>
+			<wp:meta_value><![CDATA[117]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_metadata</wp:meta_key>
+			<wp:meta_value><![CDATA[a:16:{s:14:"product_weight";s:7:"0,00000";s:14:"product_height";s:2:"10";s:4:"unit";a:2:{s:14:"product_height";s:1:"1";s:13:"product_width";s:1:"1";}s:13:"product_width";s:2:"50";s:13:"product_stock";s:3:"500";s:13:"product_price";d:7;s:8:"price_ht";d:5.8333333333333339254522798000834882259368896484375;s:3:"tva";d:1.1666666666666667406815349750104360282421112060546875;s:15:"cost_of_postage";s:7:"0,00000";s:9:"capacit__";a:3:{i:0;s:2:"52";i:1;s:2:"53";i:2;s:2:"54";}s:24:"product_attribute_set_id";s:1:"6";s:12:"manage_stock";s:1:"9";s:6:"tx_tva";s:2:"17";s:11:"declare_new";s:1:"7";s:17:"product_reference";s:12:"PDCT00000122";s:7:"barcode";s:0:"";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_attribute_set_id</wp:meta_key>
+			<wp:meta_value><![CDATA[6]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_variation_defining</wp:meta_key>
+			<wp:meta_value><![CDATA[a:1:{s:10:"attributes";a:1:{i:0;s:9:"capacit__";}}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_stock</wp:meta_key>
+			<wp:meta_value><![CDATA[500]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_price</wp:meta_key>
+			<wp:meta_value><![CDATA[7]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_view_nb</wp:meta_key>
+			<wp:meta_value><![CDATA[18]]></wp:meta_value>
+		</wp:postmeta>
+	</wpshop_product>
+	<wpshop_product>
+		<title>Montre Homme</title>
+		<link>http://demo.wpshop.fr/catalog/wpshop_product/montre-homme/</link>
+		<pubDate>Tue, 28 May 2013 13:36:04 +0000</pubDate>
+		<dc:creator><![CDATA[demo]]></dc:creator>
+		<guid isPermaLink="false">http://demo.wpshop.fr/?post_type=wpshop_product&#038;p=132</guid>
+		<description></description>
+		<content:encoded><![CDATA[Montre aiguille WPshop de couleur bleu sur fond noir.
+Elle est luminescente et permet de lire l'heure de nuit.
+
+Montre résistant à une pression de 5 Atm.
+
+Garantie 1 an]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>132</wp:post_id>
+		<wp:post_date>2013-05-28 14:36:04</wp:post_date>
+		<wp:post_date_gmt>2013-05-28 13:36:04</wp:post_date_gmt>
+		<wp:comment_status>closed</wp:comment_status>
+		<wp:ping_status>open</wp:ping_status>
+		<wp:post_name>montre-homme</wp:post_name>
+		<wp:status>publish</wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type>wpshop_product</wp:post_type>
+		<wp:post_password></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="wpshop_product_category" nicename="accessoires"><![CDATA[Accessoires]]></category>
+		<category domain="wpshop_product_category" nicename="mode-pret-a-porter"><![CDATA[Mode, prêt à porter]]></category>
+		<category domain="wpshop_product_category" nicename="promotions"><![CDATA[Promotions]]></category>
+		<wp:postmeta>
+			<wp:meta_key>_wps_price_infos</wp:meta_key>
+			<wp:meta_value><![CDATA[a:5:{s:12:"TAX_PILOTING";s:0:"";s:17:"CROSSED_OUT_PRICE";s:13:"120.00 &euro;";s:18:"MESSAGE_SAVE_MONEY";s:23:"Economie 40.00 &euro;
+";s:13:"PRODUCT_PRICE";s:63:"80<span class="wpshop_price_centimes_display">,00</span> &euro;";s:10:"PRICE_FROM";s:0:"";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_edit_last</wp:meta_key>
+			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_displayed_price</wp:meta_key>
+			<wp:meta_value><![CDATA[80.00]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_thumbnail_id</wp:meta_key>
+			<wp:meta_value><![CDATA[133]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_metadata</wp:meta_key>
+			<wp:meta_value><![CDATA[a:21:{s:14:"product_weight";s:7:"0.00000";s:14:"product_height";s:7:"0.00000";s:4:"unit";a:2:{s:14:"product_height";s:1:"2";s:13:"product_width";s:1:"2";}s:13:"product_width";s:7:"0.00000";s:13:"product_stock";s:7:"5.00000";s:13:"product_price";d:120;s:8:"price_ht";d:100;s:3:"tva";d:20;s:13:"special_price";s:8:"80.00000";s:15:"discount_amount";s:7:"0.00000";s:13:"discount_rate";s:7:"0.00000";s:15:"cost_of_postage";s:7:"0.00000";s:17:"product_reference";s:12:"PDCT00000134";s:7:"barcode";s:0:"";s:17:"quotation_allowed";i:35;s:12:"manage_stock";i:9;s:6:"tx_tva";i:17;s:11:"declare_new";i:8;s:24:"product_attribute_set_id";i:8;s:12:"special_from";s:10:"0000-00-00";s:10:"special_to";s:10:"0000-00-00";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_attribute_set_id</wp:meta_key>
+			<wp:meta_value><![CDATA[8]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_stock</wp:meta_key>
+			<wp:meta_value><![CDATA[5.00000]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_price</wp:meta_key>
+			<wp:meta_value><![CDATA[120.00000]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_view_nb</wp:meta_key>
+			<wp:meta_value><![CDATA[16]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_entity_attached_address</wp:meta_key>
+			<wp:meta_value><![CDATA[a:0:{}]]></wp:meta_value>
+		</wp:postmeta>
+	</wpshop_product>
+	<wpshop_product>
+		<title>Mug </title>
+		<link>http://demo.wpshop.fr/catalog/wpshop_product/mug/</link>
+		<pubDate>Wed, 29 May 2013 09:09:30 +0000</pubDate>
+		<dc:creator><![CDATA[demo]]></dc:creator>
+		<guid isPermaLink="false">http://demo.wpshop.fr/?post_type=wpshop_product&#038;p=140</guid>
+		<description></description>
+		<content:encoded><![CDATA[Ce mug Wpshop très résistant aux chocs, ne s’ébréchant pas est idéal pour vos consommations de tous les jours.
+
+Il se lave très facilement et convient pour un lave-vaisselle.]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>140</wp:post_id>
+		<wp:post_date>2013-05-29 10:09:30</wp:post_date>
+		<wp:post_date_gmt>2013-05-29 09:09:30</wp:post_date_gmt>
+		<wp:comment_status>open</wp:comment_status>
+		<wp:ping_status>open</wp:ping_status>
+		<wp:post_name>mug</wp:post_name>
+		<wp:status>publish</wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type>wpshop_product</wp:post_type>
+		<wp:post_password></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="wpshop_product_category" nicename="nouveautes"><![CDATA[Nouveautés]]></category>
+		<category domain="wpshop_product_category" nicename="pour-la-maison"><![CDATA[Pour la maison]]></category>
+		<category domain="wpshop_product_category" nicename="vaisselle"><![CDATA[Vaisselle]]></category>
+		<wp:postmeta>
+			<wp:meta_key>_wps_price_infos</wp:meta_key>
+			<wp:meta_value><![CDATA[a:5:{s:12:"TAX_PILOTING";s:0:"";s:17:"CROSSED_OUT_PRICE";s:0:"";s:18:"MESSAGE_SAVE_MONEY";s:0:"";s:13:"PRODUCT_PRICE";s:63:"15<span class="wpshop_price_centimes_display">,00</span> &euro;";s:10:"PRICE_FROM";s:0:"";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_edit_last</wp:meta_key>
+			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_displayed_price</wp:meta_key>
+			<wp:meta_value><![CDATA[15.00]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_metadata</wp:meta_key>
+			<wp:meta_value><![CDATA[a:20:{s:14:"product_weight";s:7:"0,00000";s:14:"product_height";s:8:"95,00000";s:4:"unit";a:2:{s:14:"product_height";s:1:"1";s:13:"product_width";s:1:"1";}s:13:"product_width";s:8:"80,00000";s:13:"product_stock";s:7:"5,00000";s:13:"product_price";d:15;s:8:"price_ht";d:12.5;s:3:"tva";d:2.5;s:13:"special_price";s:7:"0,00000";s:15:"discount_amount";s:7:"0,00000";s:13:"discount_rate";s:7:"0,00000";s:15:"cost_of_postage";s:7:"0,00000";s:17:"product_reference";s:12:"PDCT00000142";s:7:"barcode";s:0:"";s:24:"product_attribute_set_id";s:1:"8";s:12:"manage_stock";s:1:"9";s:6:"tx_tva";s:2:"17";s:11:"declare_new";s:1:"7";s:12:"special_from";s:10:"0000-00-00";s:10:"special_to";s:10:"0000-00-00";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_attribute_set_id</wp:meta_key>
+			<wp:meta_value><![CDATA[8]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_stock</wp:meta_key>
+			<wp:meta_value><![CDATA[5.00000]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_price</wp:meta_key>
+			<wp:meta_value><![CDATA[15.00000]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_view_nb</wp:meta_key>
+			<wp:meta_value><![CDATA[10]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_thumbnail_id</wp:meta_key>
+			<wp:meta_value><![CDATA[146]]></wp:meta_value>
+		</wp:postmeta>
+	</wpshop_product>
+	<wpshop_product>
+		<title>Ordinateur portable 17&quot;</title>
+		<link>http://demo.wpshop.fr/catalog/wpshop_product/ordinateur-portable-17/</link>
+		<pubDate>Wed, 29 May 2013 13:14:20 +0000</pubDate>
+		<dc:creator><![CDATA[demo]]></dc:creator>
+		<guid isPermaLink="false">http://demo.wpshop.fr/?post_type=wpshop_product&#038;p=148</guid>
+		<description></description>
+		<content:encoded><![CDATA[<h3>Caractéristiques:</h3>
+<strong>Processeur :</strong> Intel Core i7 Processor 2670QM (2.20Ghz, 6MB, 4C)
+<strong>Display :</strong> 17.3in WideFHD (1920 x 1080) WLED LCD
+<strong>Webcam :</strong> Intégrée 3,0 mégapixels Webcam HD <em id="__mceDel"><em id="__mceDel"><em id="__mceDel">
+</em></em></em><strong>Memoire :</strong> 4096MB (2x2048) 1333MHz DDR3 <em id="__mceDel"><em id="__mceDel"><em id="__mceDel"><em id="__mceDel">
+</em></em></em></em><strong>Disque dur :</strong> 500GB Momentus XT Solid State Hybrid Drive <em id="__mceDel"><em id="__mceDel"><em id="__mceDel"><em id="__mceDel"><em id="__mceDel">
+</em></em></em></em></em><strong>Lecteur DVD :</strong> 8X DVD+/-RW Drive including software
+<strong>Chargeur:</strong> 240W AC Adapter
+<strong>Batterie:</strong> Primary 9-cell 93W/HR LI-ION
+<strong>Carte graphique :</strong> 2GB GDDR5 NVIDIA GeForce GTX 580M
+<strong>Bluetooth :</strong> European Dell Wireless 375 Bluetooth Card
+<strong>Wireless :</strong> Europe Killer Wireless-N 1103
+<strong>Clavier :</strong> Azerty Keyboard
+<strong>OS :</strong> Windows 7 SP1 Home Premium (64 BIT) <em id="__mceDel"><em id="__mceDel"><em id="__mceDel"><em id="__mceDel"><em id="__mceDel"><em id="__mceDel"><em id="__mceDel"></em></em></em></em></em></em></em>
+
+<strong>Garantie: 3 ans</strong>]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>148</wp:post_id>
+		<wp:post_date>2013-05-29 14:14:20</wp:post_date>
+		<wp:post_date_gmt>2013-05-29 13:14:20</wp:post_date_gmt>
+		<wp:comment_status>open</wp:comment_status>
+		<wp:ping_status>open</wp:ping_status>
+		<wp:post_name>ordinateur-portable-17</wp:post_name>
+		<wp:status>publish</wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type>wpshop_product</wp:post_type>
+		<wp:post_password></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="wpshop_product_category" nicename="informatique"><![CDATA[Informatique]]></category>
+		<category domain="wpshop_product_category" nicename="ordinateur-portable"><![CDATA[Ordinateurs portables]]></category>
+		<category domain="wpshop_product_category" nicename="promotions"><![CDATA[Promotions]]></category>
+		<wp:postmeta>
+			<wp:meta_key>_wps_price_infos</wp:meta_key>
+			<wp:meta_value><![CDATA[a:5:{s:12:"TAX_PILOTING";s:0:"";s:17:"CROSSED_OUT_PRICE";s:15:"1,200.00 &euro;";s:18:"MESSAGE_SAVE_MONEY";s:24:"Economie 201.00 &euro;
+";s:13:"PRODUCT_PRICE";s:64:"999<span class="wpshop_price_centimes_display">,00</span> &euro;";s:10:"PRICE_FROM";s:0:"";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_edit_last</wp:meta_key>
+			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_displayed_price</wp:meta_key>
+			<wp:meta_value><![CDATA[999.00]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_metadata</wp:meta_key>
+			<wp:meta_value><![CDATA[a:21:{s:14:"product_weight";s:10:"2800.00000";s:14:"product_height";s:8:"29.00000";s:4:"unit";a:2:{s:14:"product_height";s:1:"1";s:13:"product_width";s:1:"1";}s:13:"product_width";s:9:"413.00000";s:13:"product_stock";s:8:"15.00000";s:13:"product_price";d:1200;s:8:"price_ht";d:1000;s:3:"tva";d:200;s:13:"special_price";s:9:"999.00000";s:15:"discount_amount";s:7:"0.00000";s:13:"discount_rate";s:7:"0.00000";s:15:"cost_of_postage";s:7:"0.00000";s:17:"product_reference";s:12:"PDCT00000148";s:7:"barcode";s:0:"";s:17:"quotation_allowed";i:35;s:12:"manage_stock";i:9;s:6:"tx_tva";i:17;s:11:"declare_new";i:8;s:24:"product_attribute_set_id";i:8;s:12:"special_from";s:10:"0000-00-00";s:10:"special_to";s:10:"0000-00-00";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_attribute_set_id</wp:meta_key>
+			<wp:meta_value><![CDATA[8]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_thumbnail_id</wp:meta_key>
+			<wp:meta_value><![CDATA[149]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_stock</wp:meta_key>
+			<wp:meta_value><![CDATA[15.00000]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_price</wp:meta_key>
+			<wp:meta_value><![CDATA[1200.00000]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_view_nb</wp:meta_key>
+			<wp:meta_value><![CDATA[33]]></wp:meta_value>
+		</wp:postmeta>
+	</wpshop_product>
+	<wpshop_product>
+		<title>Sac de voyage</title>
+		<link>http://demo.wpshop.fr/catalog/wpshop_product/sac-de-voyage/</link>
+		<pubDate>Wed, 29 May 2013 15:43:52 +0000</pubDate>
+		<dc:creator><![CDATA[demo]]></dc:creator>
+		<guid isPermaLink="false">http://demo.wpshop.fr/?post_type=wpshop_product&#038;p=152</guid>
+		<description></description>
+		<content:encoded><![CDATA[Que ce soit pour aller au sport, ou même en voyage. Ce sac vous emmènera partout !
+
+Solide et robuste, vous pourrez parti sans crainte.
+
+Volume: 20l]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>152</wp:post_id>
+		<wp:post_date>2013-05-29 16:43:52</wp:post_date>
+		<wp:post_date_gmt>2013-05-29 15:43:52</wp:post_date_gmt>
+		<wp:comment_status>open</wp:comment_status>
+		<wp:ping_status>open</wp:ping_status>
+		<wp:post_name>sac-de-voyage</wp:post_name>
+		<wp:status>publish</wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type>wpshop_product</wp:post_type>
+		<wp:post_password></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="wpshop_product_category" nicename="accessoires"><![CDATA[Accessoires]]></category>
+		<category domain="wpshop_product_category" nicename="mode-pret-a-porter"><![CDATA[Mode, prêt à porter]]></category>
+		<wp:postmeta>
+			<wp:meta_key>_wps_price_infos</wp:meta_key>
+			<wp:meta_value><![CDATA[a:5:{s:12:"TAX_PILOTING";s:0:"";s:17:"CROSSED_OUT_PRICE";s:0:"";s:18:"MESSAGE_SAVE_MONEY";s:0:"";s:13:"PRODUCT_PRICE";s:63:"40<span class="wpshop_price_centimes_display">,00</span> &euro;";s:10:"PRICE_FROM";s:0:"";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_edit_last</wp:meta_key>
+			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_displayed_price</wp:meta_key>
+			<wp:meta_value><![CDATA[40.00]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_thumbnail_id</wp:meta_key>
+			<wp:meta_value><![CDATA[153]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_metadata</wp:meta_key>
+			<wp:meta_value><![CDATA[a:20:{s:14:"product_weight";s:0:"";s:14:"product_height";s:3:"220";s:4:"unit";a:2:{s:14:"product_height";s:1:"1";s:13:"product_width";s:1:"1";}s:13:"product_width";s:3:"440";s:13:"product_stock";s:4:"1000";s:13:"product_price";d:40;s:8:"price_ht";d:33.33333333333333570180911920033395290374755859375;s:3:"tva";d:6.666666666666667850904559600166976451873779296875;s:13:"special_price";s:0:"";s:15:"discount_amount";s:0:"";s:13:"discount_rate";s:0:"";s:15:"cost_of_postage";s:2:"10";s:17:"product_reference";s:12:"PDCT00000154";s:7:"barcode";s:0:"";s:24:"product_attribute_set_id";s:1:"8";s:12:"manage_stock";s:1:"9";s:6:"tx_tva";s:2:"17";s:11:"declare_new";s:1:"7";s:12:"special_from";s:0:"";s:10:"special_to";s:0:"";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_attribute_set_id</wp:meta_key>
+			<wp:meta_value><![CDATA[8]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_stock</wp:meta_key>
+			<wp:meta_value><![CDATA[1000]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_price</wp:meta_key>
+			<wp:meta_value><![CDATA[40]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_view_nb</wp:meta_key>
+			<wp:meta_value><![CDATA[5]]></wp:meta_value>
+		</wp:postmeta>
+	</wpshop_product>
+	<wpshop_product>
+		<title>Stylo bille</title>
+		<link>http://demo.wpshop.fr/catalog/papeterie/stylo-bille/</link>
+		<pubDate>Thu, 30 May 2013 08:04:45 +0000</pubDate>
+		<dc:creator><![CDATA[demo]]></dc:creator>
+		<guid isPermaLink="false">http://demo.wpshop.fr/?post_type=wpshop_product&#038;p=157</guid>
+		<description></description>
+		<content:encoded><![CDATA[Stylo Bille WPshop Chrome
+
+stylos en métal de couleur argenté avec fermoir vissage
+Couleur de l'ancre: Noire.
+
+Prise en main adaptée pour les gauchers ou les droitiers]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>157</wp:post_id>
+		<wp:post_date>2013-05-30 09:04:45</wp:post_date>
+		<wp:post_date_gmt>2013-05-30 08:04:45</wp:post_date_gmt>
+		<wp:comment_status>open</wp:comment_status>
+		<wp:ping_status>open</wp:ping_status>
+		<wp:post_name>stylo-bille</wp:post_name>
+		<wp:status>publish</wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type>wpshop_product</wp:post_type>
+		<wp:post_password></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="wpshop_product_category" nicename="papeterie"><![CDATA[Papeterie]]></category>
+		<wp:postmeta>
+			<wp:meta_key>_wps_price_infos</wp:meta_key>
+			<wp:meta_value><![CDATA[a:5:{s:12:"TAX_PILOTING";s:0:"";s:17:"CROSSED_OUT_PRICE";s:0:"";s:18:"MESSAGE_SAVE_MONEY";s:0:"";s:13:"PRODUCT_PRICE";s:63:"29<span class="wpshop_price_centimes_display">,90</span> &euro;";s:10:"PRICE_FROM";s:0:"";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_edit_last</wp:meta_key>
+			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_displayed_price</wp:meta_key>
+			<wp:meta_value><![CDATA[29.90]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_metadata</wp:meta_key>
+			<wp:meta_value><![CDATA[a:20:{s:14:"product_weight";s:2:"28";s:14:"product_height";s:3:"136";s:4:"unit";a:2:{s:14:"product_height";s:1:"1";s:13:"product_width";s:1:"1";}s:13:"product_width";s:2:"10";s:13:"product_stock";s:6:"10 000";s:13:"product_price";d:29.89999999999999857891452847979962825775146484375;s:8:"price_ht";d:24.916666666666667850904559600166976451873779296875;s:3:"tva";d:4.9833333333333342807236476801335811614990234375;s:13:"special_price";s:0:"";s:15:"discount_amount";s:0:"";s:13:"discount_rate";s:0:"";s:15:"cost_of_postage";s:0:"";s:17:"product_reference";s:12:"PDCT00000160";s:7:"barcode";s:0:"";s:24:"product_attribute_set_id";s:1:"8";s:12:"manage_stock";s:1:"9";s:6:"tx_tva";s:2:"17";s:11:"declare_new";s:1:"8";s:12:"special_from";s:0:"";s:10:"special_to";s:0:"";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_attribute_set_id</wp:meta_key>
+			<wp:meta_value><![CDATA[8]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_thumbnail_id</wp:meta_key>
+			<wp:meta_value><![CDATA[161]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_stock</wp:meta_key>
+			<wp:meta_value><![CDATA[10 000]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_price</wp:meta_key>
+			<wp:meta_value><![CDATA[29.90]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_view_nb</wp:meta_key>
+			<wp:meta_value><![CDATA[5]]></wp:meta_value>
+		</wp:postmeta>
+	</wpshop_product>
+	<wpshop_product>
+		<title>Tablette WPshop</title>
+		<link>http://demo.wpshop.fr/catalog/wpshop_product/tablette-wpshop/</link>
+		<pubDate>Thu, 30 May 2013 08:18:41 +0000</pubDate>
+		<dc:creator><![CDATA[demo]]></dc:creator>
+		<guid isPermaLink="false">http://demo.wpshop.fr/?post_type=wpshop_product&#038;p=163</guid>
+		<description></description>
+		<content:encoded><![CDATA[Cette tablette WPshop très performante et ultra mobile vous permettra de vous connecter partout.
+Naviguez sur Internet comme sur un PC, regardez des vidéos HD et profitez d'une autonomie de 5 heures.
+
+<strong>Caractéristiques:</strong>
+<ul>
+	<li>Ecran 7" (17,8 cm) - Mémoire 8 Go</li>
+	<li>Processeur Dual Core - 1,2 GHz</li>
+	<li>WiFi et Bluetooth</li>
+	<li>Android 4.1</li>
+	<li>Appareil photo 5M</li>
+</ul>
+&nbsp;]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>163</wp:post_id>
+		<wp:post_date>2013-05-30 09:18:41</wp:post_date>
+		<wp:post_date_gmt>2013-05-30 08:18:41</wp:post_date_gmt>
+		<wp:comment_status>open</wp:comment_status>
+		<wp:ping_status>open</wp:ping_status>
+		<wp:post_name>tablette-wpshop</wp:post_name>
+		<wp:status>publish</wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type>wpshop_product</wp:post_type>
+		<wp:post_password></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="wpshop_product_category" nicename="informatique"><![CDATA[Informatique]]></category>
+		<category domain="wpshop_product_category" nicename="nouveautes"><![CDATA[Nouveautés]]></category>
+		<category domain="wpshop_product_category" nicename="tablette"><![CDATA[Tablettes]]></category>
+		<wp:postmeta>
+			<wp:meta_key>_wps_price_infos</wp:meta_key>
+			<wp:meta_value><![CDATA[a:5:{s:12:"TAX_PILOTING";s:0:"";s:17:"CROSSED_OUT_PRICE";s:0:"";s:18:"MESSAGE_SAVE_MONEY";s:0:"";s:13:"PRODUCT_PRICE";s:64:"130<span class="wpshop_price_centimes_display">,00</span> &euro;";s:10:"PRICE_FROM";s:0:"";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_edit_last</wp:meta_key>
+			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_displayed_price</wp:meta_key>
+			<wp:meta_value><![CDATA[130.00]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_thumbnail_id</wp:meta_key>
+			<wp:meta_value><![CDATA[164]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_metadata</wp:meta_key>
+			<wp:meta_value><![CDATA[a:20:{s:14:"product_weight";s:9:"400,00000";s:14:"product_height";s:9:"197,00000";s:4:"unit";a:2:{s:14:"product_height";s:1:"1";s:13:"product_width";s:1:"1";}s:13:"product_width";s:9:"128,00000";s:13:"product_stock";s:7:"2,00000";s:13:"product_price";d:130;s:8:"price_ht";d:108.333333333333342807236476801335811614990234375;s:3:"tva";d:21.6666666666666714036182384006679058074951171875;s:13:"special_price";s:7:"0,00000";s:15:"discount_amount";s:7:"0,00000";s:13:"discount_rate";s:7:"0,00000";s:15:"cost_of_postage";s:7:"0,00000";s:17:"product_reference";s:12:"PDCT00000165";s:7:"barcode";s:0:"";s:24:"product_attribute_set_id";s:1:"8";s:12:"manage_stock";s:1:"9";s:6:"tx_tva";s:2:"17";s:11:"declare_new";s:1:"7";s:12:"special_from";s:10:"0000-00-00";s:10:"special_to";s:10:"0000-00-00";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_attribute_set_id</wp:meta_key>
+			<wp:meta_value><![CDATA[8]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_stock</wp:meta_key>
+			<wp:meta_value><![CDATA[2.00000]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_price</wp:meta_key>
+			<wp:meta_value><![CDATA[130.00000]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_related_products</wp:meta_key>
+			<wp:meta_value><![CDATA[a:1:{i:0;s:3:"148";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_view_nb</wp:meta_key>
+			<wp:meta_value><![CDATA[6]]></wp:meta_value>
+		</wp:postmeta>
+	</wpshop_product>
+	<wpshop_product>
+		<title>Casquette personnalisable</title>
+		<link>http://demo.wpshop.fr/catalog/wpshop_product/casquette-personnalisable/</link>
+		<pubDate>Thu, 30 May 2013 15:30:25 +0000</pubDate>
+		<dc:creator><![CDATA[demo]]></dc:creator>
+		<guid isPermaLink="false">http://demo.wpshop.fr/?post_type=wpshop_product&#038;p=206</guid>
+		<description></description>
+		<content:encoded><![CDATA[Casquette WPshop personnalisable.
+
+Caractéristiques:
+<ul>
+	<li>Facilement réglable</li>
+	<li>Taille Unique</li>
+	<li>Adulte</li>
+	<li>Pur Coton</li>
+</ul>
+&nbsp;]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>206</wp:post_id>
+		<wp:post_date>2013-05-30 16:30:25</wp:post_date>
+		<wp:post_date_gmt>2013-05-30 15:30:25</wp:post_date_gmt>
+		<wp:comment_status>open</wp:comment_status>
+		<wp:ping_status>open</wp:ping_status>
+		<wp:post_name>casquette-personnalisable</wp:post_name>
+		<wp:status>publish</wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type>wpshop_product</wp:post_type>
+		<wp:post_password></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="wpshop_product_category" nicename="accessoires"><![CDATA[Accessoires]]></category>
+		<category domain="wpshop_product_category" nicename="mode-pret-a-porter"><![CDATA[Mode, prêt à porter]]></category>
+		<wp:postmeta>
+			<wp:meta_key>_wps_price_infos</wp:meta_key>
+			<wp:meta_value><![CDATA[a:5:{s:12:"TAX_PILOTING";s:0:"";s:17:"CROSSED_OUT_PRICE";s:0:"";s:18:"MESSAGE_SAVE_MONEY";s:0:"";s:13:"PRODUCT_PRICE";s:63:"35<span class="wpshop_price_centimes_display">,00</span> &euro;";s:10:"PRICE_FROM";s:0:"";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_edit_last</wp:meta_key>
+			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_displayed_price</wp:meta_key>
+			<wp:meta_value><![CDATA[35.00]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_thumbnail_id</wp:meta_key>
+			<wp:meta_value><![CDATA[108]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_metadata</wp:meta_key>
+			<wp:meta_value><![CDATA[a:16:{s:14:"product_weight";s:0:"";s:14:"product_height";s:0:"";s:4:"unit";a:2:{s:14:"product_height";s:1:"2";s:13:"product_width";s:1:"2";}s:13:"product_width";s:0:"";s:13:"product_stock";s:3:"130";s:13:"product_price";d:35;s:8:"price_ht";d:29.166666666666667850904559600166976451873779296875;s:3:"tva";d:5.8333333333333339254522798000834882259368896484375;s:15:"cost_of_postage";s:0:"";s:22:"saisir_votre_nom__5740";s:0:"";s:17:"product_reference";s:12:"PDCT00000209";s:7:"barcode";s:0:"";s:24:"product_attribute_set_id";i:7;s:12:"manage_stock";i:9;s:6:"tx_tva";i:17;s:11:"declare_new";i:8;}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_attribute_set_id</wp:meta_key>
+			<wp:meta_value><![CDATA[7]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_stock</wp:meta_key>
+			<wp:meta_value><![CDATA[130]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_price</wp:meta_key>
+			<wp:meta_value><![CDATA[35]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_view_nb</wp:meta_key>
+			<wp:meta_value><![CDATA[9]]></wp:meta_value>
+		</wp:postmeta>
+	</wpshop_product>
+</wpshop_products>
+
+<wps_pdt_variations>
+	<wps_pdt_variation>
+		<title>Produit avec option 42 - Tee shirt</title>
+		<link>http://demo.wpshop.fr/wps_pdt_variations/produit-avec-option-42-tee-shirt/</link>
+		<pubDate>Mon, 27 May 2013 09:28:51 +0000</pubDate>
+		<dc:creator><![CDATA[demo]]></dc:creator>
+		<guid isPermaLink="false">http://demo.wpshop.fr/?wps_pdt_variations=produit-avec-option-42-tee-shirt</guid>
+		<description></description>
+		<content:encoded><![CDATA[]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>48</wp:post_id>
+		<wp:post_date>2013-05-27 10:28:51</wp:post_date>
+		<wp:post_date_gmt>2013-05-27 09:28:51</wp:post_date_gmt>
+		<wp:comment_status>open</wp:comment_status>
+		<wp:ping_status>open</wp:ping_status>
+		<wp:post_name>produit-avec-option-42-tee-shirt</wp:post_name>
+		<wp:status>publish</wp:status>
+		<wp:post_parent>42</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type>wps_pdt_variations</wp:post_type>
+		<wp:post_password></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_metadata</wp:meta_key>
+			<wp:meta_value><![CDATA[a:10:{s:8:"couleur_";s:2:"45";s:7:"taille_";s:2:"48";s:6:"tx_tva";s:2:"17";s:17:"product_reference";s:0:"";s:13:"product_price";d:18;s:8:"price_ht";d:15;s:3:"tva";d:3;s:15:"cost_of_postage";s:7:"5,00000";s:13:"special_price";i:1;s:15:"discount_amount";i:1;}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_variations_attribute_def</wp:meta_key>
+			<wp:meta_value><![CDATA[a:2:{s:8:"couleur_";s:2:"45";s:7:"taille_";s:2:"48";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_attribute_set_id</wp:meta_key>
+			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_price</wp:meta_key>
+			<wp:meta_value><![CDATA[18.00000]]></wp:meta_value>
+		</wp:postmeta>
+	</wps_pdt_variation>
+	<wps_pdt_variation>
+		<title>Produit avec option 42 - Tee shirt</title>
+		<link>http://demo.wpshop.fr/wps_pdt_variations/produit-avec-option-42-tee-shirt-2/</link>
+		<pubDate>Mon, 27 May 2013 09:28:52 +0000</pubDate>
+		<dc:creator><![CDATA[demo]]></dc:creator>
+		<guid isPermaLink="false">http://demo.wpshop.fr/?wps_pdt_variations=produit-avec-option-42-tee-shirt-2</guid>
+		<description></description>
+		<content:encoded><![CDATA[]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>49</wp:post_id>
+		<wp:post_date>2013-05-27 10:28:52</wp:post_date>
+		<wp:post_date_gmt>2013-05-27 09:28:52</wp:post_date_gmt>
+		<wp:comment_status>open</wp:comment_status>
+		<wp:ping_status>open</wp:ping_status>
+		<wp:post_name>produit-avec-option-42-tee-shirt-2</wp:post_name>
+		<wp:status>publish</wp:status>
+		<wp:post_parent>42</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type>wps_pdt_variations</wp:post_type>
+		<wp:post_password></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_metadata</wp:meta_key>
+			<wp:meta_value><![CDATA[a:10:{s:8:"couleur_";s:2:"46";s:7:"taille_";s:2:"48";s:6:"tx_tva";s:2:"17";s:17:"product_reference";s:0:"";s:13:"product_price";d:18;s:8:"price_ht";d:15;s:3:"tva";d:3;s:15:"cost_of_postage";s:7:"5,00000";s:13:"special_price";i:1;s:15:"discount_amount";i:1;}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_variations_attribute_def</wp:meta_key>
+			<wp:meta_value><![CDATA[a:2:{s:8:"couleur_";s:2:"46";s:7:"taille_";s:2:"48";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_attribute_set_id</wp:meta_key>
+			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_price</wp:meta_key>
+			<wp:meta_value><![CDATA[18.00000]]></wp:meta_value>
+		</wp:postmeta>
+	</wps_pdt_variation>
+	<wps_pdt_variation>
+		<title>Produit avec option 42 - Tee shirt</title>
+		<link>http://demo.wpshop.fr/wps_pdt_variations/produit-avec-option-42-tee-shirt-3/</link>
+		<pubDate>Mon, 27 May 2013 09:28:52 +0000</pubDate>
+		<dc:creator><![CDATA[demo]]></dc:creator>
+		<guid isPermaLink="false">http://demo.wpshop.fr/?wps_pdt_variations=produit-avec-option-42-tee-shirt-3</guid>
+		<description></description>
+		<content:encoded><![CDATA[]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>50</wp:post_id>
+		<wp:post_date>2013-05-27 10:28:52</wp:post_date>
+		<wp:post_date_gmt>2013-05-27 09:28:52</wp:post_date_gmt>
+		<wp:comment_status>open</wp:comment_status>
+		<wp:ping_status>open</wp:ping_status>
+		<wp:post_name>produit-avec-option-42-tee-shirt-3</wp:post_name>
+		<wp:status>publish</wp:status>
+		<wp:post_parent>42</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type>wps_pdt_variations</wp:post_type>
+		<wp:post_password></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_metadata</wp:meta_key>
+			<wp:meta_value><![CDATA[a:10:{s:8:"couleur_";s:2:"47";s:7:"taille_";s:2:"48";s:6:"tx_tva";s:2:"17";s:17:"product_reference";s:0:"";s:13:"product_price";d:18;s:8:"price_ht";d:15;s:3:"tva";d:3;s:15:"cost_of_postage";s:7:"5,00000";s:13:"special_price";i:1;s:15:"discount_amount";i:1;}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_variations_attribute_def</wp:meta_key>
+			<wp:meta_value><![CDATA[a:2:{s:8:"couleur_";s:2:"47";s:7:"taille_";s:2:"48";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_attribute_set_id</wp:meta_key>
+			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_price</wp:meta_key>
+			<wp:meta_value><![CDATA[18.00000]]></wp:meta_value>
+		</wp:postmeta>
+	</wps_pdt_variation>
+	<wps_pdt_variation>
+		<title>Produit avec option 42 - Tee shirt</title>
+		<link>http://demo.wpshop.fr/wps_pdt_variations/produit-avec-option-42-tee-shirt-4/</link>
+		<pubDate>Mon, 27 May 2013 09:28:53 +0000</pubDate>
+		<dc:creator><![CDATA[demo]]></dc:creator>
+		<guid isPermaLink="false">http://demo.wpshop.fr/?wps_pdt_variations=produit-avec-option-42-tee-shirt-4</guid>
+		<description></description>
+		<content:encoded><![CDATA[]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>51</wp:post_id>
+		<wp:post_date>2013-05-27 10:28:53</wp:post_date>
+		<wp:post_date_gmt>2013-05-27 09:28:53</wp:post_date_gmt>
+		<wp:comment_status>open</wp:comment_status>
+		<wp:ping_status>open</wp:ping_status>
+		<wp:post_name>produit-avec-option-42-tee-shirt-4</wp:post_name>
+		<wp:status>publish</wp:status>
+		<wp:post_parent>42</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type>wps_pdt_variations</wp:post_type>
+		<wp:post_password></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_metadata</wp:meta_key>
+			<wp:meta_value><![CDATA[a:10:{s:8:"couleur_";s:2:"45";s:7:"taille_";s:2:"49";s:6:"tx_tva";s:2:"17";s:17:"product_reference";s:0:"";s:13:"product_price";d:20;s:8:"price_ht";d:16.666666666666667850904559600166976451873779296875;s:3:"tva";d:3.3333333333333339254522798000834882259368896484375;s:15:"cost_of_postage";s:7:"5,00000";s:13:"special_price";i:1;s:15:"discount_amount";i:1;}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_variations_attribute_def</wp:meta_key>
+			<wp:meta_value><![CDATA[a:2:{s:8:"couleur_";s:2:"45";s:7:"taille_";s:2:"49";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_attribute_set_id</wp:meta_key>
+			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_price</wp:meta_key>
+			<wp:meta_value><![CDATA[20.00000]]></wp:meta_value>
+		</wp:postmeta>
+	</wps_pdt_variation>
+	<wps_pdt_variation>
+		<title>Produit avec option 42 - Tee shirt</title>
+		<link>http://demo.wpshop.fr/wps_pdt_variations/produit-avec-option-42-tee-shirt-5/</link>
+		<pubDate>Mon, 27 May 2013 09:28:53 +0000</pubDate>
+		<dc:creator><![CDATA[demo]]></dc:creator>
+		<guid isPermaLink="false">http://demo.wpshop.fr/?wps_pdt_variations=produit-avec-option-42-tee-shirt-5</guid>
+		<description></description>
+		<content:encoded><![CDATA[]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>52</wp:post_id>
+		<wp:post_date>2013-05-27 10:28:53</wp:post_date>
+		<wp:post_date_gmt>2013-05-27 09:28:53</wp:post_date_gmt>
+		<wp:comment_status>open</wp:comment_status>
+		<wp:ping_status>open</wp:ping_status>
+		<wp:post_name>produit-avec-option-42-tee-shirt-5</wp:post_name>
+		<wp:status>publish</wp:status>
+		<wp:post_parent>42</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type>wps_pdt_variations</wp:post_type>
+		<wp:post_password></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_metadata</wp:meta_key>
+			<wp:meta_value><![CDATA[a:10:{s:8:"couleur_";s:2:"45";s:7:"taille_";s:2:"50";s:6:"tx_tva";s:2:"17";s:17:"product_reference";s:0:"";s:13:"product_price";d:22;s:8:"price_ht";d:18.33333333333333570180911920033395290374755859375;s:3:"tva";d:3.666666666666667406815349750104360282421112060546875;s:15:"cost_of_postage";s:7:"5,00000";s:13:"special_price";i:1;s:15:"discount_amount";i:1;}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_variations_attribute_def</wp:meta_key>
+			<wp:meta_value><![CDATA[a:2:{s:8:"couleur_";s:2:"45";s:7:"taille_";s:2:"50";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_attribute_set_id</wp:meta_key>
+			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_price</wp:meta_key>
+			<wp:meta_value><![CDATA[22.00000]]></wp:meta_value>
+		</wp:postmeta>
+	</wps_pdt_variation>
+	<wps_pdt_variation>
+		<title>Produit avec option 42 - Tee shirt</title>
+		<link>http://demo.wpshop.fr/wps_pdt_variations/produit-avec-option-42-tee-shirt-6/</link>
+		<pubDate>Mon, 27 May 2013 09:28:54 +0000</pubDate>
+		<dc:creator><![CDATA[demo]]></dc:creator>
+		<guid isPermaLink="false">http://demo.wpshop.fr/?wps_pdt_variations=produit-avec-option-42-tee-shirt-6</guid>
+		<description></description>
+		<content:encoded><![CDATA[]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>53</wp:post_id>
+		<wp:post_date>2013-05-27 10:28:54</wp:post_date>
+		<wp:post_date_gmt>2013-05-27 09:28:54</wp:post_date_gmt>
+		<wp:comment_status>open</wp:comment_status>
+		<wp:ping_status>open</wp:ping_status>
+		<wp:post_name>produit-avec-option-42-tee-shirt-6</wp:post_name>
+		<wp:status>publish</wp:status>
+		<wp:post_parent>42</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type>wps_pdt_variations</wp:post_type>
+		<wp:post_password></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_metadata</wp:meta_key>
+			<wp:meta_value><![CDATA[a:10:{s:8:"couleur_";s:2:"45";s:7:"taille_";s:2:"51";s:6:"tx_tva";s:2:"17";s:17:"product_reference";s:0:"";s:13:"product_price";d:24;s:8:"price_ht";d:20;s:3:"tva";d:4;s:15:"cost_of_postage";s:7:"5,00000";s:13:"special_price";i:1;s:15:"discount_amount";i:1;}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_variations_attribute_def</wp:meta_key>
+			<wp:meta_value><![CDATA[a:2:{s:8:"couleur_";s:2:"45";s:7:"taille_";s:2:"51";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_attribute_set_id</wp:meta_key>
+			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_price</wp:meta_key>
+			<wp:meta_value><![CDATA[24.00000]]></wp:meta_value>
+		</wp:postmeta>
+	</wps_pdt_variation>
+	<wps_pdt_variation>
+		<title>Produit avec option 42 - Tee shirt</title>
+		<link>http://demo.wpshop.fr/wps_pdt_variations/produit-avec-option-42-tee-shirt-7/</link>
+		<pubDate>Mon, 27 May 2013 09:28:54 +0000</pubDate>
+		<dc:creator><![CDATA[demo]]></dc:creator>
+		<guid isPermaLink="false">http://demo.wpshop.fr/?wps_pdt_variations=produit-avec-option-42-tee-shirt-7</guid>
+		<description></description>
+		<content:encoded><![CDATA[]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>54</wp:post_id>
+		<wp:post_date>2013-05-27 10:28:54</wp:post_date>
+		<wp:post_date_gmt>2013-05-27 09:28:54</wp:post_date_gmt>
+		<wp:comment_status>open</wp:comment_status>
+		<wp:ping_status>open</wp:ping_status>
+		<wp:post_name>produit-avec-option-42-tee-shirt-7</wp:post_name>
+		<wp:status>publish</wp:status>
+		<wp:post_parent>42</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type>wps_pdt_variations</wp:post_type>
+		<wp:post_password></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_metadata</wp:meta_key>
+			<wp:meta_value><![CDATA[a:10:{s:8:"couleur_";s:2:"46";s:7:"taille_";s:2:"49";s:6:"tx_tva";s:2:"17";s:17:"product_reference";s:0:"";s:13:"product_price";d:20;s:8:"price_ht";d:16.666666666666667850904559600166976451873779296875;s:3:"tva";d:3.3333333333333339254522798000834882259368896484375;s:15:"cost_of_postage";s:7:"5,00000";s:13:"special_price";i:1;s:15:"discount_amount";i:1;}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_variations_attribute_def</wp:meta_key>
+			<wp:meta_value><![CDATA[a:2:{s:8:"couleur_";s:2:"46";s:7:"taille_";s:2:"49";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_attribute_set_id</wp:meta_key>
+			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_price</wp:meta_key>
+			<wp:meta_value><![CDATA[20.00000]]></wp:meta_value>
+		</wp:postmeta>
+	</wps_pdt_variation>
+	<wps_pdt_variation>
+		<title>Produit avec option 42 - Tee shirt</title>
+		<link>http://demo.wpshop.fr/wps_pdt_variations/produit-avec-option-42-tee-shirt-8/</link>
+		<pubDate>Mon, 27 May 2013 09:28:54 +0000</pubDate>
+		<dc:creator><![CDATA[demo]]></dc:creator>
+		<guid isPermaLink="false">http://demo.wpshop.fr/?wps_pdt_variations=produit-avec-option-42-tee-shirt-8</guid>
+		<description></description>
+		<content:encoded><![CDATA[]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>55</wp:post_id>
+		<wp:post_date>2013-05-27 10:28:54</wp:post_date>
+		<wp:post_date_gmt>2013-05-27 09:28:54</wp:post_date_gmt>
+		<wp:comment_status>open</wp:comment_status>
+		<wp:ping_status>open</wp:ping_status>
+		<wp:post_name>produit-avec-option-42-tee-shirt-8</wp:post_name>
+		<wp:status>publish</wp:status>
+		<wp:post_parent>42</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type>wps_pdt_variations</wp:post_type>
+		<wp:post_password></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_metadata</wp:meta_key>
+			<wp:meta_value><![CDATA[a:10:{s:8:"couleur_";s:2:"46";s:7:"taille_";s:2:"50";s:6:"tx_tva";s:2:"17";s:17:"product_reference";s:0:"";s:13:"product_price";d:22;s:8:"price_ht";d:18.33333333333333570180911920033395290374755859375;s:3:"tva";d:3.666666666666667406815349750104360282421112060546875;s:15:"cost_of_postage";s:7:"5,00000";s:13:"special_price";i:1;s:15:"discount_amount";i:1;}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_variations_attribute_def</wp:meta_key>
+			<wp:meta_value><![CDATA[a:2:{s:8:"couleur_";s:2:"46";s:7:"taille_";s:2:"50";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_attribute_set_id</wp:meta_key>
+			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_price</wp:meta_key>
+			<wp:meta_value><![CDATA[22.00000]]></wp:meta_value>
+		</wp:postmeta>
+	</wps_pdt_variation>
+	<wps_pdt_variation>
+		<title>Produit avec option 42 - Tee shirt</title>
+		<link>http://demo.wpshop.fr/wps_pdt_variations/produit-avec-option-42-tee-shirt-9/</link>
+		<pubDate>Mon, 27 May 2013 09:28:55 +0000</pubDate>
+		<dc:creator><![CDATA[demo]]></dc:creator>
+		<guid isPermaLink="false">http://demo.wpshop.fr/?wps_pdt_variations=produit-avec-option-42-tee-shirt-9</guid>
+		<description></description>
+		<content:encoded><![CDATA[]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>56</wp:post_id>
+		<wp:post_date>2013-05-27 10:28:55</wp:post_date>
+		<wp:post_date_gmt>2013-05-27 09:28:55</wp:post_date_gmt>
+		<wp:comment_status>open</wp:comment_status>
+		<wp:ping_status>open</wp:ping_status>
+		<wp:post_name>produit-avec-option-42-tee-shirt-9</wp:post_name>
+		<wp:status>publish</wp:status>
+		<wp:post_parent>42</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type>wps_pdt_variations</wp:post_type>
+		<wp:post_password></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_metadata</wp:meta_key>
+			<wp:meta_value><![CDATA[a:10:{s:8:"couleur_";s:2:"46";s:7:"taille_";s:2:"51";s:6:"tx_tva";s:2:"17";s:17:"product_reference";s:0:"";s:13:"product_price";d:24;s:8:"price_ht";d:20;s:3:"tva";d:4;s:15:"cost_of_postage";s:7:"5,00000";s:13:"special_price";i:1;s:15:"discount_amount";i:1;}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_variations_attribute_def</wp:meta_key>
+			<wp:meta_value><![CDATA[a:2:{s:8:"couleur_";s:2:"46";s:7:"taille_";s:2:"51";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_attribute_set_id</wp:meta_key>
+			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_price</wp:meta_key>
+			<wp:meta_value><![CDATA[24.00000]]></wp:meta_value>
+		</wp:postmeta>
+	</wps_pdt_variation>
+	<wps_pdt_variation>
+		<title>Produit avec option 42 - Tee shirt</title>
+		<link>http://demo.wpshop.fr/wps_pdt_variations/produit-avec-option-42-tee-shirt-10/</link>
+		<pubDate>Mon, 27 May 2013 09:28:55 +0000</pubDate>
+		<dc:creator><![CDATA[demo]]></dc:creator>
+		<guid isPermaLink="false">http://demo.wpshop.fr/?wps_pdt_variations=produit-avec-option-42-tee-shirt-10</guid>
+		<description></description>
+		<content:encoded><![CDATA[]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>57</wp:post_id>
+		<wp:post_date>2013-05-27 10:28:55</wp:post_date>
+		<wp:post_date_gmt>2013-05-27 09:28:55</wp:post_date_gmt>
+		<wp:comment_status>open</wp:comment_status>
+		<wp:ping_status>open</wp:ping_status>
+		<wp:post_name>produit-avec-option-42-tee-shirt-10</wp:post_name>
+		<wp:status>publish</wp:status>
+		<wp:post_parent>42</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type>wps_pdt_variations</wp:post_type>
+		<wp:post_password></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_metadata</wp:meta_key>
+			<wp:meta_value><![CDATA[a:10:{s:8:"couleur_";s:2:"47";s:7:"taille_";s:2:"49";s:6:"tx_tva";s:2:"17";s:17:"product_reference";s:0:"";s:13:"product_price";d:20;s:8:"price_ht";d:16.666666666666667850904559600166976451873779296875;s:3:"tva";d:3.3333333333333339254522798000834882259368896484375;s:15:"cost_of_postage";s:7:"5,00000";s:13:"special_price";i:1;s:15:"discount_amount";i:1;}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_variations_attribute_def</wp:meta_key>
+			<wp:meta_value><![CDATA[a:2:{s:8:"couleur_";s:2:"47";s:7:"taille_";s:2:"49";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_attribute_set_id</wp:meta_key>
+			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_price</wp:meta_key>
+			<wp:meta_value><![CDATA[20.00000]]></wp:meta_value>
+		</wp:postmeta>
+	</wps_pdt_variation>
+	<wps_pdt_variation>
+		<title>Produit avec option 42 - Tee shirt</title>
+		<link>http://demo.wpshop.fr/wps_pdt_variations/produit-avec-option-42-tee-shirt-11/</link>
+		<pubDate>Mon, 27 May 2013 09:28:56 +0000</pubDate>
+		<dc:creator><![CDATA[demo]]></dc:creator>
+		<guid isPermaLink="false">http://demo.wpshop.fr/?wps_pdt_variations=produit-avec-option-42-tee-shirt-11</guid>
+		<description></description>
+		<content:encoded><![CDATA[]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>58</wp:post_id>
+		<wp:post_date>2013-05-27 10:28:56</wp:post_date>
+		<wp:post_date_gmt>2013-05-27 09:28:56</wp:post_date_gmt>
+		<wp:comment_status>open</wp:comment_status>
+		<wp:ping_status>open</wp:ping_status>
+		<wp:post_name>produit-avec-option-42-tee-shirt-11</wp:post_name>
+		<wp:status>publish</wp:status>
+		<wp:post_parent>42</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type>wps_pdt_variations</wp:post_type>
+		<wp:post_password></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_metadata</wp:meta_key>
+			<wp:meta_value><![CDATA[a:10:{s:8:"couleur_";s:2:"47";s:7:"taille_";s:2:"50";s:6:"tx_tva";s:2:"17";s:17:"product_reference";s:0:"";s:13:"product_price";d:22;s:8:"price_ht";d:18.33333333333333570180911920033395290374755859375;s:3:"tva";d:3.666666666666667406815349750104360282421112060546875;s:15:"cost_of_postage";s:7:"5,00000";s:13:"special_price";i:1;s:15:"discount_amount";i:1;}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_variations_attribute_def</wp:meta_key>
+			<wp:meta_value><![CDATA[a:2:{s:8:"couleur_";s:2:"47";s:7:"taille_";s:2:"50";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_attribute_set_id</wp:meta_key>
+			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_price</wp:meta_key>
+			<wp:meta_value><![CDATA[22.00000]]></wp:meta_value>
+		</wp:postmeta>
+	</wps_pdt_variation>
+	<wps_pdt_variation>
+		<title>Produit avec option 42 - Tee shirt</title>
+		<link>http://demo.wpshop.fr/wps_pdt_variations/produit-avec-option-42-tee-shirt-12/</link>
+		<pubDate>Mon, 27 May 2013 09:28:56 +0000</pubDate>
+		<dc:creator><![CDATA[demo]]></dc:creator>
+		<guid isPermaLink="false">http://demo.wpshop.fr/?wps_pdt_variations=produit-avec-option-42-tee-shirt-12</guid>
+		<description></description>
+		<content:encoded><![CDATA[]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>59</wp:post_id>
+		<wp:post_date>2013-05-27 10:28:56</wp:post_date>
+		<wp:post_date_gmt>2013-05-27 09:28:56</wp:post_date_gmt>
+		<wp:comment_status>open</wp:comment_status>
+		<wp:ping_status>open</wp:ping_status>
+		<wp:post_name>produit-avec-option-42-tee-shirt-12</wp:post_name>
+		<wp:status>publish</wp:status>
+		<wp:post_parent>42</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type>wps_pdt_variations</wp:post_type>
+		<wp:post_password></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_metadata</wp:meta_key>
+			<wp:meta_value><![CDATA[a:10:{s:8:"couleur_";s:2:"47";s:7:"taille_";s:2:"51";s:6:"tx_tva";s:2:"17";s:17:"product_reference";s:0:"";s:13:"product_price";d:24;s:8:"price_ht";d:20;s:3:"tva";d:4;s:15:"cost_of_postage";s:7:"5,00000";s:13:"special_price";i:1;s:15:"discount_amount";i:1;}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_variations_attribute_def</wp:meta_key>
+			<wp:meta_value><![CDATA[a:2:{s:8:"couleur_";s:2:"47";s:7:"taille_";s:2:"51";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_attribute_set_id</wp:meta_key>
+			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_price</wp:meta_key>
+			<wp:meta_value><![CDATA[24.00000]]></wp:meta_value>
+		</wp:postmeta>
+	</wps_pdt_variation>
+	<wps_pdt_variation>
+		<title>Produit avec option 121 - Clé USB</title>
+		<link>http://demo.wpshop.fr/wps_pdt_variations/produit-avec-option-121-cle-usb/</link>
+		<pubDate>Tue, 28 May 2013 13:17:44 +0000</pubDate>
+		<dc:creator><![CDATA[demo]]></dc:creator>
+		<guid isPermaLink="false">http://demo.wpshop.fr/?wps_pdt_variations=produit-avec-option-121-cle-usb</guid>
+		<description></description>
+		<content:encoded><![CDATA[]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>124</wp:post_id>
+		<wp:post_date>2013-05-28 14:17:44</wp:post_date>
+		<wp:post_date_gmt>2013-05-28 13:17:44</wp:post_date_gmt>
+		<wp:comment_status>open</wp:comment_status>
+		<wp:ping_status>open</wp:ping_status>
+		<wp:post_name>produit-avec-option-121-cle-usb</wp:post_name>
+		<wp:status>publish</wp:status>
+		<wp:post_parent>121</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type>wps_pdt_variations</wp:post_type>
+		<wp:post_password></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_metadata</wp:meta_key>
+			<wp:meta_value><![CDATA[a:7:{s:9:"capacit__";s:2:"52";s:6:"tx_tva";s:2:"17";s:17:"product_reference";s:0:"";s:13:"product_price";d:7;s:8:"price_ht";d:5.8333333333333339254522798000834882259368896484375;s:3:"tva";d:1.1666666666666667406815349750104360282421112060546875;s:15:"cost_of_postage";s:7:"0,00000";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_variations_attribute_def</wp:meta_key>
+			<wp:meta_value><![CDATA[a:1:{s:9:"capacit__";s:2:"52";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_attribute_set_id</wp:meta_key>
+			<wp:meta_value><![CDATA[6]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_price</wp:meta_key>
+			<wp:meta_value><![CDATA[7]]></wp:meta_value>
+		</wp:postmeta>
+	</wps_pdt_variation>
+	<wps_pdt_variation>
+		<title>Produit avec option 121 - Clé USB</title>
+		<link>http://demo.wpshop.fr/wps_pdt_variations/produit-avec-option-121-cle-usb-2/</link>
+		<pubDate>Tue, 28 May 2013 13:17:45 +0000</pubDate>
+		<dc:creator><![CDATA[demo]]></dc:creator>
+		<guid isPermaLink="false">http://demo.wpshop.fr/?wps_pdt_variations=produit-avec-option-121-cle-usb-2</guid>
+		<description></description>
+		<content:encoded><![CDATA[]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>125</wp:post_id>
+		<wp:post_date>2013-05-28 14:17:45</wp:post_date>
+		<wp:post_date_gmt>2013-05-28 13:17:45</wp:post_date_gmt>
+		<wp:comment_status>open</wp:comment_status>
+		<wp:ping_status>open</wp:ping_status>
+		<wp:post_name>produit-avec-option-121-cle-usb-2</wp:post_name>
+		<wp:status>publish</wp:status>
+		<wp:post_parent>121</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type>wps_pdt_variations</wp:post_type>
+		<wp:post_password></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_metadata</wp:meta_key>
+			<wp:meta_value><![CDATA[a:7:{s:9:"capacit__";s:2:"53";s:6:"tx_tva";s:2:"17";s:17:"product_reference";s:0:"";s:13:"product_price";d:15;s:8:"price_ht";d:12.5;s:3:"tva";d:2.5;s:15:"cost_of_postage";s:7:"0,00000";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_variations_attribute_def</wp:meta_key>
+			<wp:meta_value><![CDATA[a:1:{s:9:"capacit__";s:2:"53";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_attribute_set_id</wp:meta_key>
+			<wp:meta_value><![CDATA[6]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_price</wp:meta_key>
+			<wp:meta_value><![CDATA[15]]></wp:meta_value>
+		</wp:postmeta>
+	</wps_pdt_variation>
+	<wps_pdt_variation>
+		<title>Produit avec option 121 - Clé USB</title>
+		<link>http://demo.wpshop.fr/wps_pdt_variations/produit-avec-option-121-cle-usb-3/</link>
+		<pubDate>Tue, 28 May 2013 13:17:45 +0000</pubDate>
+		<dc:creator><![CDATA[demo]]></dc:creator>
+		<guid isPermaLink="false">http://demo.wpshop.fr/?wps_pdt_variations=produit-avec-option-121-cle-usb-3</guid>
+		<description></description>
+		<content:encoded><![CDATA[]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>126</wp:post_id>
+		<wp:post_date>2013-05-28 14:17:45</wp:post_date>
+		<wp:post_date_gmt>2013-05-28 13:17:45</wp:post_date_gmt>
+		<wp:comment_status>open</wp:comment_status>
+		<wp:ping_status>open</wp:ping_status>
+		<wp:post_name>produit-avec-option-121-cle-usb-3</wp:post_name>
+		<wp:status>publish</wp:status>
+		<wp:post_parent>121</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type>wps_pdt_variations</wp:post_type>
+		<wp:post_password></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_metadata</wp:meta_key>
+			<wp:meta_value><![CDATA[a:7:{s:9:"capacit__";s:2:"54";s:6:"tx_tva";s:2:"17";s:17:"product_reference";s:0:"";s:13:"product_price";d:50;s:8:"price_ht";d:41.6666666666666714036182384006679058074951171875;s:3:"tva";d:8.3333333333333339254522798000834882259368896484375;s:15:"cost_of_postage";s:7:"0,00000";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_variations_attribute_def</wp:meta_key>
+			<wp:meta_value><![CDATA[a:1:{s:9:"capacit__";s:2:"54";}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wpshop_product_attribute_set_id</wp:meta_key>
+			<wp:meta_value><![CDATA[6]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_product_price</wp:meta_key>
+			<wp:meta_value><![CDATA[50]]></wp:meta_value>
+		</wp:postmeta>
+	</wps_pdt_variation>
+</wps_pdt_variations>
+</definition>

@@ -6,137 +6,206 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 }
 
 /**
-* Plugin installation file.
-*
-*	This file contains the different methods called when plugin is actived and removed
-* @author Eoxia <dev@eoxia.com>
-* @version 1.1
-* @package wpshop
-* @subpackage librairies
-*/
+ * Plugin installation file.
+ *
+ * This file contains the different methods called when plugin is actived and removed
+ * @author Eoxia <dev@eoxia.com>
+ * @version 1.1
+ * @package wpshop
+ * @subpackage librairies
+ */
 
 /**
-*	Class defining the different method used when plugin is activated
-* @package wpshop
-* @subpackage librairies
-*/
-class wpshop_install{
+ * Class defining the different method used when plugin is activated
+ * @package wpshop
+ * @subpackage librairies
+ */
+class wpshop_install {
 
 	/**
 	*	Define the action launch when plugin is activate
 	*
 	* @return void
 	*/
-	function install_on_activation(){
+	public static function install_on_activation(){
 		/*	Create the different option needed for the plugin work properly	*/
 		add_option('wpshop_db_options', array('db_version' => 0));
-		add_option('wpshop_shop_type', WPSHOP_DEFAULT_SHOP_TYPE);
 		add_option('wpshop_shop_default_currency', WPSHOP_SHOP_DEFAULT_CURRENCY);
-		add_option('wpshop_emails', array('noreply_mail' => get_bloginfo('admin_email'), 'contact' =>  get_bloginfo('admin_email')));
+		add_option('wpshop_emails', array('noreply_email' => get_bloginfo('admin_email'), 'contact_email' =>  get_bloginfo('admin_email')));
 		add_option('wpshop_catalog_product_option', array('wpshop_catalog_product_slug' => WPSHOP_CATALOG_PRODUCT_SLUG));
 		add_option('wpshop_catalog_categories_option', array('wpshop_catalog_categories_slug' => WPSHOP_CATALOG_CATEGORIES_SLUG));
 		add_option('wpshop_display_option', array('wpshop_display_list_type' => 'grid', 'wpshop_display_grid_element_number' => '3', 'wpshop_display_cat_sheet_output' => array('category_description', 'category_subcategory', 'category_subproduct')));
-
-		/*	Create the different pages	*/
-		self::wpshop_insert_default_pages(WPSHOP_DEFAULT_SHOP_TYPE);
 	}
 
 	/**
-	*	Create the default pages
-	*/
-	function wpshop_insert_default_pages($pages_type = ''){
-		global $wpdb,$wp_rewrite;
+	 *	Create the default pages
+	 */
+	public static function wpshop_insert_default_pages( $pages_type = '' ) {
+		global $wpdb, $wp_rewrite;
 
-		$default_pages = unserialize(WPSHOP_DEFAULT_PAGES);
-		$pages_to_create = array();
-		if(!empty($pages_type) && !empty($default_pages[$pages_type]) && is_array($default_pages[$pages_type])){
-			$pages_to_create = $default_pages[$pages_type];
-		}
-		else{
-			foreach($default_pages as $page_shop_type => $pages){
-				foreach($pages as $page_definition){
-					$pages_to_create[] = $page_definition;
-				}
-			}
-		}
-
-		/*	if we will create any new pages we need to flush page cache */
+		/**	if we will create any new pages we need to flush page cache */
 		$page_creation = false;
+		$created_pages = array();
 
-		/* Default data array for add page */
-		$default_add_post_array = array(
+		/** Default data array for add page */
+		$page_default_args = array(
 			'post_type' 	=>	'page',
 			'comment_status'=>	'closed',
 			'ping_status' 	=>	'closed',
 			'post_status' 	=>	'publish',
-			'post_author' 	=>	1
+			'post_author' 	=>	get_current_user_id(),
 		);
 
-		/*	Rename the basket page into cart page if 	*/
-		$query = $wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_content LIKE %s	AND post_type != %s", '%[wpshop_basket]%', 'revision');
-		$cart_page_id = $wpdb->get_var($query);
-		if(!empty($cart_page_id)){
-			$query = $wpdb->update($wpdb->posts, array(
-				'post_content' => '[wpshop_cart]'
-			), array(
-				'ID' => $cart_page_id
-			));
+		/**	Get defined shop type	*/
+		$wpshop_shop_type = !empty( $pages_type ) ? $pages_type : get_option( 'wpshop_shop_type', WPSHOP_DEFAULT_SHOP_TYPE );
 
-			/* On enregistre l'ID de la page dans les options */
-			add_option('wpshop_cart_page_id', $cart_page_id);
-			wp_cache_flush();
-			wp_cache_delete('all_page_ids', 'pages');
+		/**	Get the default datas for installation - Pages	*/
+		$xml_default_pages = file_get_contents( WP_PLUGIN_DIR . '/' . WPSHOP_PLUGIN_DIR . '/assets/datas/default_pages.xml' );
+		$defined_default_pages = new SimpleXMLElement( $xml_default_pages );
+		foreach ( $defined_default_pages->xpath( '//pages/page' ) as $page ) {
+			if ( ( $wpshop_shop_type == $page->attributes()->shop_type ) || ( 'sale' == $wpshop_shop_type ) ) {
+				$page_id = null;
+
+				/**	Do a specific check for cart page, for old wpshop installation	*/
+				if ( 'wpshop_cart_page_id' == (string)$page->attributes()->code ) {
+					$query = $wpdb->prepare("SELECT ID FROM " . $wpdb->posts . " WHERE post_content LIKE %s	AND post_type != %s", '%[wpshop_basket]%', 'revision');
+					$page_id = $wpdb->get_var($query);
+
+					wp_update_post( array(
+						'ID' => $page_id,
+						'post_content' => (string)$page->content,
+					) );
+				}
+
+				/**	Check if a page exists with the current content readed form xml file	*/
+				if ( empty( $page_id ) ) {
+					$query = $wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE post_content LIKE %s AND post_type != %s", '%' . (string)$page->content . '%', 'revision');
+					$page_id = $wpdb->get_var($query);
+				}
+
+				/**	If the page does not exists create it	*/
+				if ( empty( $page_id ) ) {
+					$default_page_args  = wp_parse_args( array(
+						'post_title' 	=> __( (string)$page->title, 'wpshop' ),
+						'post_name' 	=> __( (string)$page->slug, 'wpshop' ),
+						'post_content' 	=> __( (string)$page->content, 'wpshop' ),
+						'menu_order' 	=> (string)$page->attributes()->position,
+					), $page_default_args );
+
+					$page_id = wp_insert_post( $default_page_args );
+					$created_pages[] = (string)$page->attributes()->code;
+				}
+
+				/**	If the page is created or already exists associated the page to the good service	*/
+				if ( !empty( $page_id ) ) {
+					add_option( (string)$page->attributes()->code, $page_id );
+
+					$page_creation = true;
+				}
+
+			}
 		}
 
-		/*	Check if pages exists. If page does not exist so we create the page	*/
-		foreach($pages_to_create as $page_definition){
-			$query = $wpdb->prepare("SELECT ID FROM ". $wpdb->posts . " WHERE post_content LIKE %s AND post_type != %s", '%' . $page_definition['post_content'] . '%', 'revision');
-			$page = $wpdb->get_var($query);
-			if(empty($page)){
-				/*	Create the default page for product in front	*/
-				$page_id = wp_insert_post(array_merge(array(
-					 'post_title' 		=>	__($page_definition['post_title'], 'wpshop'),
-					 'post_name'		=>	$page_definition['post_name'],
-					 'post_content' 	=>	$page_definition['post_content'],
-					 'menu_order' 		=>	$page_definition['menu_order']
-				),$default_add_post_array));
-
-				/* On enregistre l'ID de la page dans les options */
-				add_option($page_definition['page_code'], $page_id);
-
-				$page_creation = true;
+		/**	Check if page have been created in order to do specific action	*/
+		if ( !empty( $created_pages ) ) {
+			/**	If cart page and checkout page have just been created, change cart page id into checkout page id	*/
+			if ( in_array( 'wpshop_cart_page_id', $created_pages ) && in_array( 'wpshop_checkout_page_id', $created_pages ) ) {
+				update_option( 'wpshop_cart_page_id', get_option( 'wpshop_checkout_page_id' ) );
 			}
-			else{
-				/* On enregistre l'ID de la page dans les options */
-				add_option($page_definition['page_code'], $page);
 
-				$page_creation = true;
-			}
 		}
 
 		wp_cache_flush();
+		/** If new page => empty cache */
+		if ( $page_creation ) {
+			wp_cache_delete( 'all_page_ids', 'pages' );
+		//	$wp_rewrite->flush_rules();
+		}
+	}
 
-		/* If new page => empty cache */
-		if($page_creation) {
-			wp_cache_delete('all_page_ids', 'pages');
-			$wp_rewrite->flush_rules();
+	/**
+	 * Insert sample datas when installing wpshop the first time if the admin choose
+	 */
+	public static function import_sample_datas() {
+		global $wpdb, $wp_rewrite;
+
+		/** Default data array for add product */
+		$product_default_args = array(
+			'comment_status'=>	'closed',
+			'ping_status' 	=>	'closed',
+			'post_status' 	=>	'publish',
+			'post_author' 	=>	get_current_user_id(),
+		);
+
+		/**	Get the default datas for installation - sample products	*/
+		$sample_datas = file_get_contents( WP_PLUGIN_DIR . '/' . WPSHOP_PLUGIN_DIR . '/assets/datas/sample_datas.xml' );
+		$defined_sample_datas = new SimpleXMLElement( $sample_datas, LIBXML_NOCDATA );
+
+		$namespaces = $defined_sample_datas->getDocNamespaces();
+		if ( ! isset( $namespaces['wp'] ) )
+			$namespaces['wp'] = 'http://wordpress.org/export/1.1/';
+		if ( ! isset( $namespaces['excerpt'] ) )
+			$namespaces['excerpt'] = 'http://wordpress.org/export/1.1/excerpt/';
+
+		foreach ( $defined_sample_datas->xpath( '//wpshop_products/wpshop_product' ) as $product ) {
+			$dc = $product->children( 'http://purl.org/dc/elements/1.1/' );
+			$content = $product->children( 'http://purl.org/rss/1.0/modules/content/' );
+			$excerpt = $product->children( $namespaces['excerpt'] );
+			$wp = $product->children( $namespaces['wp'] );
+
+			$product_args  = wp_parse_args( array(
+				'post_title' => (string)$product->title,
+				'post_name' => (string) $wp->post_name,
+				'post_content' => (string) $content->encoded,
+				'post_excerpt' => (string) $excerpt->encoded,
+				'post_type' => (string) $wp->post_type,
+			), $product_default_args );
+
+			$product_id = wp_insert_post( $product_args );
+
+			foreach ( $wp->postmeta as $meta ) {
+				update_post_meta( $product_id, (string)$meta->meta_key, (string)$meta->meta_value);
+			}
+
+			foreach ( $defined_sample_datas->xpath( '//wps_pdt_variations/wps_pdt_variation/wp:post_parent[. ="' . $wp->post_id . '"]/parent::*' ) as $product_variation ) {
+				$wps_pdt_var_dc = $product_variation->children( 'http://purl.org/dc/elements/1.1/' );
+				$wps_pdt_var_content = $product_variation->children( 'http://purl.org/rss/1.0/modules/content/' );
+				$wps_pdt_var_excerpt = $product_variation->children( $namespaces['excerpt'] );
+				$wps_pdt_var_wp = $product_variation->children( $namespaces['wp'] );
+
+				$product_args  = wp_parse_args( array(
+						'post_title' => (string)$product_variation->title,
+						'post_name' => (string) $wps_pdt_var_wp->post_name,
+						'post_content' => (string) $wps_pdt_var_content->encoded,
+						'post_excerpt' => (string) $wps_pdt_var_excerpt->encoded,
+						'post_type' => (string) $wps_pdt_var_wp->post_type,
+						'post_parent' => $product_id,
+				), $product_default_args );
+
+				$product_variation_id = wp_insert_post( $product_args );
+
+				foreach ( $wps_pdt_var_wp->postmeta as $meta ) {
+					update_post_meta( $product_variation_id, (string)$meta->meta_key, (string)$meta->meta_value);
+				}
+			}
 		}
 	}
 
 	/**
 	 * Method called when plugin is loaded for database update. This method allows to update the database structure, insert default content.
 	 */
-	function update_wpshop_dev(){
+	public static function update_wpshop_dev() {
 		global $wpdb, $wpshop_db_table, $wpshop_db_table_list, $wpshop_update_way, $wpshop_db_content_add, $wpshop_db_content_update, $wpshop_db_options_add, $wpshop_eav_content, $wpshop_eav_content_update, $wpshop_db_options_update;
 
 		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 
 		self::execute_operation_on_db_for_update('dev');
 	}
+
 	/**
 	 * Method called when plugin is loaded for database update. This method allows to update the database structure, insert default content.
 	 */
-	function update_wpshop(){
+	public static function update_wpshop() {
 		global $wpdb, $wpshop_db_table, $wpshop_db_table_list, $wpshop_update_way, $wpshop_db_content_add, $wpshop_db_content_update, $wpshop_db_options_add, $wpshop_eav_content, $wpshop_eav_content_update, $wpshop_db_options_update;
 		$do_changes = false;
 
@@ -168,15 +237,14 @@ class wpshop_install{
 	}
 
 	/**
-	 * Do changes on database for wpshop plugin for a given version
+	 * Update db structure on each plugin update
 	 *
-	 * @param integer $i The wpshop db version to execute operation for
-	 *
-	 * @return boolean
+	 * @param integer $i The current plugin db version
+	 * @return boolean If the changes are done correctly or not
 	 */
-	function execute_operation_on_db_for_update($i){
-		global $wpdb, $wpshop_db_table, $wpshop_db_table_list, $wpshop_update_way, $wpshop_db_content_add, $wpshop_db_content_update, $wpshop_db_options_add, $wpshop_eav_content, $wpshop_eav_content_update, $wpshop_db_options_update, $wpshop_db_request, $wpshop_db_delete;
+	public static function alter_db_structure_on_update( $i ) {
 		$do_changes = false;
+		global $wpdb, $wpshop_db_table, $wpshop_db_table_list, $wpshop_update_way, $wpshop_db_request, $wpshop_db_delete;
 
 		/*	Check if there are modification to do	*/
 		if(isset($wpshop_update_way[$i])){
@@ -187,6 +255,41 @@ class wpshop_install{
 				}
 				$do_changes = true;
 			}
+
+			/*	Request maker	*/
+			if(isset($wpshop_db_request[$i]) && is_array($wpshop_db_request) && is_array($wpshop_db_request[$i]) && (count($wpshop_db_request[$i]) > 0)){
+				foreach($wpshop_db_request[$i] as $request){
+					$wpdb->query($request);
+					$do_changes = true;
+				}
+			}
+
+			/*	Delete datas	*/
+			if(isset($wpshop_db_delete[$i]) && is_array($wpshop_db_delete) && is_array($wpshop_db_delete[$i]) && (count($wpshop_db_delete[$i]) > 0)){
+				foreach($wpshop_db_delete[$i] as $request){
+					$wpdb->query($request);
+				}
+			}
+		}
+
+		return $do_changes;
+	}
+
+	/**
+	 * Do changes on database for wpshop plugin for a given version
+	 *
+	 * @param integer $i The wpshop db version to execute operation for
+	 *
+	 * @return boolean
+	 */
+	public static function execute_operation_on_db_for_update($i){
+		global $wpdb, $wpshop_db_table, $wpshop_db_table_list, $wpshop_update_way, $wpshop_db_content_add, $wpshop_db_content_update, $wpshop_db_options_add, $wpshop_eav_content, $wpshop_eav_content_update, $wpshop_db_options_update, $wpshop_db_request, $wpshop_db_delete;
+		$do_changes = false;
+
+		/*	Check if there are modification to do	*/
+		if(isset($wpshop_update_way[$i])){
+			$do_changes = self::alter_db_structure_on_update($i);
+
 
 			/********************/
 			/*		Insert data		*/
@@ -211,203 +314,11 @@ class wpshop_install{
 
 			/*	Eav content	*/
 			if(isset($wpshop_eav_content[$i]) && is_array($wpshop_eav_content) && is_array($wpshop_eav_content[$i]) && (count($wpshop_eav_content[$i]) > 0)){
-				/*	Create entities if entites are set to be created for the current version	*/
-				if(isset($wpshop_eav_content[$i]['entities']) && is_array($wpshop_eav_content[$i]['entities']) && is_array($wpshop_eav_content[$i]['entities']) && (count($wpshop_eav_content[$i]['entities']) > 0)){
-					foreach($wpshop_eav_content[$i]['entities'] as $entity){
-						/*	Creation de l'entité produit dans la table des posts	*/
-						wp_insert_post( $entity );
-					}
-				}
-
-				/*	Create attributes for a given entity if attributes are set to be created for current version	*/
-				if(!empty($wpshop_eav_content[$i]['attributes']) && is_array($wpshop_eav_content[$i]['attributes']) && is_array($wpshop_eav_content[$i]['attributes']) && (count($wpshop_eav_content[$i]['attributes']) > 0)){
-					foreach($wpshop_eav_content[$i]['attributes'] as $entity_code => $attribute_definition){
-						foreach($attribute_definition as $attribute_def){
-							$option_list_for_attribute = '';
-							if(isset($attribute_def['backend_input_values'])){
-								$option_list_for_attribute = $attribute_def['backend_input_values'];
-								unset($attribute_def['backend_input_values']);
-							}
-
-							/*	Get entity identifier from code	*/
-							$attribute_def['entity_id'] = wpshop_entities::get_entity_identifier_from_code($entity_code);
-							$attribute_def['status'] = 'valid';
-							if(!empty($attribute_def['attribute_status'])){
-								$attribute_def['status'] = $attribute_def['attribute_status'];
-								unset($attribute_def['attribute_status']);
-							}
-							$attribute_def['creation_date'] = current_time('mysql', 0);
-							$wpdb->insert(WPSHOP_DBT_ATTRIBUTE, $attribute_def);
-							$new_attribute_id = $wpdb->insert_id;
-
-							/*	Insert option values if there are some to add for the current attribute	*/
-							if(($option_list_for_attribute != '') && (is_array($option_list_for_attribute))){
-								foreach($option_list_for_attribute as $option_code => $option_value){
-									$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'attribute_id' => $new_attribute_id, 'label' => ((substr($option_code, 0, 2) != '__') ? $option_value : __(substr($option_code, 2), 'wpshop')), 'value' => $option_value));
-									if($option_code == $attribute_def['default_value']){
-										$wpdb->update(WPSHOP_DBT_ATTRIBUTE, array('last_update_date' => current_time('mysql', 0), 'default_value' => $wpdb->insert_id), array('id' => $new_attribute_id, 'default_value' => $option_code));
-									}
-								}
-							}
-						}
-					}
-				}
-
-				/*	Create attribute groups for a given entity if attributes groups are set to be created for current version	*/
-				if(isset($wpshop_eav_content[$i]['attribute_groups']) && is_array($wpshop_eav_content[$i]['attribute_groups']) && (count($wpshop_eav_content[$i]['attribute_groups']) > 0)){
-					foreach($wpshop_eav_content[$i]['attribute_groups'] as $entity_code => $attribute_set){
-						$entity_id = wpshop_entities::get_entity_identifier_from_code($entity_code);
-
-						if($entity_id > 0){
-							foreach($attribute_set as $set_name => $set_groups){
-								$query = $wpdb->prepare("SELECT id FROM " . WPSHOP_DBT_ATTRIBUTE_SET . " WHERE entity_id = %d AND name = LOWER(%s)", $entity_id, wpshop_tools::slugify($set_name, array('noAccent', 'noSpaces', 'lowerCase')));
-								$attribute_set_id = $wpdb->get_var($query);
-								if($attribute_set_id <= 0){
-									$attribute_set_content = array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_id' => $entity_id, 'name' => $set_name);
-									if($set_name == 'default'){
-										$attribute_set_content['default_set'] = 'yes';
-									}
-									$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_SET, $attribute_set_content);
-									$attribute_set_id = $wpdb->insert_id;
-								}
-
-								if($attribute_set_id > 0){
-									foreach($set_groups as $set_group_infos){
-										$set_group_infos_details = $set_group_infos['details'];
-										unset($set_group_infos['details']);
-										/*	Change an attribute set status if definition specify this param 	*/
-										if(isset($set_group_infos['status'])){
-											$wpdb->update(WPSHOP_DBT_ATTRIBUTE_SET, array('last_update_date' => current_time('mysql', 0), 'status' => $set_group_infos['status']), array('id' => $attribute_set_id));
-										}
-										$query = $wpdb->prepare("SELECT id FROM " . WPSHOP_DBT_ATTRIBUTE_GROUP . " WHERE attribute_set_id = %d AND code = LOWER(%s)", $attribute_set_id, $set_group_infos['code']);
-										$attribute_set_section_id = $wpdb->get_var($query);
-										if($attribute_set_section_id <= 0){
-											$new_set_section_infos = $set_group_infos;
-											$new_set_section_infos['status'] = (isset($new_set_section_infos['status']) ? $new_set_section_infos['status'] : 'valid');
-											$new_set_section_infos['creation_date'] = current_time('mysql', 0);
-											$new_set_section_infos['attribute_set_id'] = $attribute_set_id;
-											$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_GROUP, $new_set_section_infos);
-											$attribute_set_section_id = $wpdb->insert_id;
-										}
-
-										if(($attribute_set_section_id > 0) && (isset($set_group_infos_details) && is_array($set_group_infos_details) && (count($set_group_infos_details) > 0))){
-											$query = $wpdb->prepare("SELECT MAX(position) AS position FROM " . WPSHOP_DBT_ATTRIBUTE_DETAILS . " WHERE entity_type_id = %d AND attribute_set_id = %d AND attribute_group_id = %d", $entity_id, $attribute_set_id, $attribute_set_section_id);
-											$last_position = $wpdb->get_var($query);
-											$position = (int)$last_position + 1;
-											foreach($set_group_infos_details as $attribute_code){
-												$query = $wpdb->prepare("SELECT id FROM " . WPSHOP_DBT_ATTRIBUTE . " WHERE code = %s AND entity_id = %d", $attribute_code, $entity_id);
-												$attribute_id = $wpdb->get_var($query);
-												if($attribute_id > 0){
-													$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $entity_id, 'attribute_set_id' => $attribute_set_id, 'attribute_group_id' => $attribute_set_section_id, 'attribute_id' => $attribute_id, 'position' => $position));
-													$position++;
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-				$do_changes = true;
+				$do_changes = self::add_content_to_eav($wpshop_eav_content[$i], $do_changes);
 			}
 			/*	Eav content update	*/
 			if(isset($wpshop_eav_content_update[$i]) && is_array($wpshop_eav_content_update) && is_array($wpshop_eav_content_update[$i]) && (count($wpshop_eav_content_update[$i]) > 0)){
-				/*	Update attributes fo a given entity if attributes are set to be updated for current version	*/
-				if(isset($wpshop_eav_content_update[$i]['attributes']) && is_array($wpshop_eav_content_update[$i]['attributes']) && (count($wpshop_eav_content_update[$i]['attributes']) > 0)){
-					foreach($wpshop_eav_content_update[$i]['attributes'] as $entity_code => $attribute_definition){
-						foreach($attribute_definition as $attribute_def){
-							$option_list_for_attribute = '';
-							if(isset($attribute_def['backend_input_values'])){
-								$option_list_for_attribute = $attribute_def['backend_input_values'];
-								unset($attribute_def['backend_input_values']);
-							}
-
-							/*	Get entity identifier from code	*/
-							$attribute_def['entity_id'] = wpshop_entities::get_entity_identifier_from_code($entity_code);
-							$attribute_def['status'] = $attribute_def['attribute_status'];
-							unset($attribute_def['attribute_status']);
-							$attribute_def['last_update_date'] = current_time('mysql', 0);
-							$wpdb->update(WPSHOP_DBT_ATTRIBUTE, $attribute_def, array('code' => $attribute_def['code']));
-							$attribute_id = $wpdb->get_var($wpdb->prepare("SELECT id FROM " . WPSHOP_DBT_ATTRIBUTE . " WHERE code = %s", $attribute_def['code']));
-
-							/*	Insert option values if there are some to add for the current attribute	*/
-							if(($option_list_for_attribute != '') && (is_array($option_list_for_attribute))){
-								foreach($option_list_for_attribute as $option_code => $option_value){
-									$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'attribute_id' => $attribute_id, 'label' => ((substr($option_code, 0, 2) != '__') ? $option_value : __(substr($option_code, 2), 'wpshop')), 'value' => $option_value));
-									if($option_code == $attribute_def['default_value']){
-										$wpdb->update(WPSHOP_DBT_ATTRIBUTE, array('last_update_date' => current_time('mysql', 0), 'default_value' => $wpdb->insert_id), array('id' => $attribute_id, 'default_value' => $option_code));
-									}
-								}
-							}
-						}
-					}
-					$do_changes = true;
-				}
-
-				/*	Update attribute groups fo a given entity if attributes groups are set to be updated for current version	*/
-				if(is_array($wpshop_eav_content_update[$i]['attribute_groups']) && is_array($wpshop_eav_content_update[$i]['attribute_groups']) && (count($wpshop_eav_content_update[$i]['attribute_groups']) > 0)){
-					foreach($wpshop_eav_content_update[$i]['attribute_groups'] as $entity_code => $attribute_set){
-						$entity_id = wpshop_entities::get_entity_identifier_from_code($entity_code);
-
-						if($entity_id > 0){
-							foreach($attribute_set as $set_name => $set_groups){
-								$query = $wpdb->prepare("SELECT id FROM " . WPSHOP_DBT_ATTRIBUTE_SET . " WHERE entity_id = %d AND name = LOWER(%s)", $entity_id, wpshop_tools::slugify($set_name, array('noAccent', 'noSpaces', 'lowerCase')));
-								$attribute_set_id = $wpdb->get_var($query);
-								if($attribute_set_id <= 0){
-									$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_SET, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_id' => $entity_id, 'name' => $set_name));
-									$attribute_set_id = $wpdb->insert_id;
-								}
-
-								if($attribute_set_id > 0){
-									foreach($set_groups as $set_group_infos){
-										$set_group_infos_details = $set_group_infos['details'];
-										unset($set_group_infos['details']);
-										/*	Change an attribute set status if definition specify this param 	*/
-										if(isset($set_group_infos['status'])){
-											$wpdb->update(WPSHOP_DBT_ATTRIBUTE_SET, array('last_update_date' => current_time('mysql', 0), 'status' => $set_group_infos['status']), array('id' => $attribute_set_id));
-										}
-										$query = $wpdb->prepare("SELECT id FROM " . WPSHOP_DBT_ATTRIBUTE_GROUP . " WHERE attribute_set_id = %d AND code = LOWER(%s)", $attribute_set_id, $set_group_infos['code']);
-										$attribute_set_section_id = $wpdb->get_var($query);
-										if($attribute_set_section_id <= 0){
-											$new_set_section_infos = $set_group_infos;
-											$new_set_section_infos['status'] = (isset($new_set_section_infos['status']) ? $new_set_section_infos['status'] : 'valid');
-											$new_set_section_infos['creation_date'] = current_time('mysql', 0);
-											$new_set_section_infos['attribute_set_id'] = $attribute_set_id;
-											$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_GROUP, $new_set_section_infos);
-											$attribute_set_section_id = $wpdb->insert_id;
-										}
-										else{
-											$new_set_section_infos = $set_group_infos;
-											$new_set_section_infos['last_update_date'] = current_time('mysql', 0);
-											$wpdb->update(WPSHOP_DBT_ATTRIBUTE_GROUP, $new_set_section_infos, array('id' => $attribute_set_section_id));
-										}
-
-										if(($attribute_set_section_id > 0) && (isset($set_group_infos_details) && is_array($set_group_infos_details))){
-											if(count($set_group_infos_details) <= 0){
-												$wpdb->update(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('last_update_date' => current_time('mysql', 0), 'status' => 'deleted'), array('entity_type_id' => $entity_id, 'attribute_set_id' => $attribute_set_id, 'attribute_group_id' => $attribute_set_section_id));
-											}
-											else{
-												$query = $wpdb->prepare("SELECT MAX(position) AS position FROM " . WPSHOP_DBT_ATTRIBUTE_DETAILS . " WHERE entity_type_id = %d AND attribute_set_id = %d AND attribute_group_id = %d", $entity_id, $attribute_set_id, $attribute_set_section_id);
-												$last_position = $wpdb->get_var($query);
-												$position = (int)$last_position + 1;
-												foreach($set_group_infos_details as $attribute_code){
-													$query = $wpdb->prepare("SELECT id FROM " . WPSHOP_DBT_ATTRIBUTE . " WHERE code = %s AND entity_id = %d", $attribute_code, $entity_id);
-													$attribute_id = $wpdb->get_var($query);
-													if($attribute_id > 0){
-														$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $entity_id, 'attribute_set_id' => $attribute_set_id, 'attribute_group_id' => $attribute_set_section_id, 'attribute_id' => $attribute_id, 'position' => $position));
-														$position++;
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-					$do_changes = true;
-				}
+				$do_changes = self::add_content_to_eav($wpshop_eav_content_update[$i], $do_changes);
 			}
 
 			/*	Add datas	*/
@@ -420,15 +331,6 @@ class wpshop_install{
 				}
 			}
 
-			/*	Request maker	*/
-			if(isset($wpshop_db_request[$i]) && is_array($wpshop_db_request) && is_array($wpshop_db_request[$i]) && (count($wpshop_db_request[$i]) > 0)){
-				foreach($wpshop_db_request[$i] as $request){
-					$query = $wpdb->prepare($request, '');
-					$wpdb->query($query);
-					$do_changes = true;
-				}
-			}
-
 			/*	Update datas	*/
 			if(isset($wpshop_db_content_update[$i]) && is_array($wpshop_db_content_update) && is_array($wpshop_db_content_update[$i]) && (count($wpshop_db_content_update[$i]) > 0)){
 				foreach($wpshop_db_content_update[$i] as $table_name => $def){
@@ -436,13 +338,6 @@ class wpshop_install{
 						$wpdb->update($table_name, $table_information['datas'], $table_information['where'], '%s', '%s');
 						$do_changes = true;
 					}
-				}
-			}
-
-			/*	Delete datas	*/
-			if(isset($wpshop_db_delete[$i]) && is_array($wpshop_db_delete) && is_array($wpshop_db_delete[$i]) && (count($wpshop_db_delete[$i]) > 0)){
-				foreach($wpshop_db_delete[$i] as $request){
-					$wpdb->query($request);
 				}
 			}
 		}
@@ -453,24 +348,255 @@ class wpshop_install{
 	}
 
 	/**
+	 * Create specific data in eav db model
+	 *
+	 * @param array $eav_content The complete array with all element to create into database
+	 * @param boolean $do_changes The current state of changes to do
+	 *
+	 * @return boolean If there are changes to do or not
+	 */
+	public static function add_content_to_eav( $eav_content, $do_changes ) {
+		global $wpdb;
+		/*	Create entities if entites are set to be created for the current version	*/
+		if(isset($eav_content['entities']) && is_array($eav_content['entities']) && is_array($eav_content['entities']) && (count($eav_content['entities']) > 0)){
+			foreach($eav_content['entities'] as $entity){
+				/*	Creation de l'entité produit dans la table des posts	*/
+				wpshop_entities::create_cpt_from_csv_file( $entity );
+			}
+			$do_changes = true;
+		}
+
+		/*	Create attributes for a given entity if attributes are set to be created for current version	*/
+		if (!empty($eav_content['attributes']) && is_array($eav_content['attributes']) && is_array($eav_content['attributes']) && (count($eav_content['attributes']) > 0)) {
+			foreach($eav_content['attributes'] as $entity_code){
+				wpshop_entities::create_cpt_attributes_from_csv_file( $entity_code );
+			}
+			$do_changes = true;
+		}
+
+		/*	Create attribute groups for a given entity if attributes groups are set to be created for current version	*/
+		if(isset($eav_content['attribute_groups']) && is_array($eav_content['attribute_groups']) && (count($eav_content['attribute_groups']) > 0)){
+			foreach($eav_content['attribute_groups'] as $entity_code => $attribute_set){
+				$entity_id = wpshop_entities::get_entity_identifier_from_code($entity_code);
+
+				if($entity_id > 0){
+					foreach($attribute_set as $set_name => $set_groups){
+						$query = $wpdb->prepare("SELECT id FROM " . WPSHOP_DBT_ATTRIBUTE_SET . " WHERE entity_id = %d AND name = LOWER(%s)", $entity_id, wpshop_tools::slugify($set_name, array('noAccent', 'noSpaces', 'lowerCase')));
+						$attribute_set_id = $wpdb->get_var($query);
+						if($attribute_set_id <= 0){
+							$attribute_set_content = array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_id' => $entity_id, 'name' => $set_name);
+							if($set_name == 'default'){
+								$attribute_set_content['default_set'] = 'yes';
+							}
+							$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_SET, $attribute_set_content);
+							$attribute_set_id = $wpdb->insert_id;
+						}
+
+						if($attribute_set_id > 0){
+							foreach($set_groups as $set_group_infos){
+								$set_group_infos_details = $set_group_infos['details'];
+								unset($set_group_infos['details']);
+								/*	Change an attribute set status if definition specify this param 	*/
+								if(isset($set_group_infos['status'])){
+									$wpdb->update(WPSHOP_DBT_ATTRIBUTE_SET, array('last_update_date' => current_time('mysql', 0), 'status' => $set_group_infos['status']), array('id' => $attribute_set_id));
+								}
+								$query = $wpdb->prepare("SELECT id FROM " . WPSHOP_DBT_ATTRIBUTE_GROUP . " WHERE attribute_set_id = %d AND code = LOWER(%s)", $attribute_set_id, $set_group_infos['code']);
+								$attribute_set_section_id = $wpdb->get_var($query);
+								if($attribute_set_section_id <= 0){
+									$new_set_section_infos = $set_group_infos;
+									$new_set_section_infos['status'] = (isset($new_set_section_infos['status']) ? $new_set_section_infos['status'] : 'valid');
+									$new_set_section_infos['creation_date'] = current_time('mysql', 0);
+									$new_set_section_infos['attribute_set_id'] = $attribute_set_id;
+									$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_GROUP, $new_set_section_infos);
+									$attribute_set_section_id = $wpdb->insert_id;
+								}
+
+								if(($attribute_set_section_id > 0) && (isset($set_group_infos_details) && is_array($set_group_infos_details) && (count($set_group_infos_details) > 0))){
+									$query = $wpdb->prepare("SELECT MAX(position) AS position FROM " . WPSHOP_DBT_ATTRIBUTE_DETAILS . " WHERE entity_type_id = %d AND attribute_set_id = %d AND attribute_group_id = %d", $entity_id, $attribute_set_id, $attribute_set_section_id);
+									$last_position = $wpdb->get_var($query);
+									$position = (int)$last_position + 1;
+									foreach($set_group_infos_details as $attribute_code){
+										$query = $wpdb->prepare("SELECT * FROM " . WPSHOP_DBT_ATTRIBUTE . " WHERE code = %s AND entity_id = %d", $attribute_code, $entity_id);
+										$attribute_id = $wpdb->get_row($query);
+
+										if($attribute_id->id > 0){
+											$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $entity_id, 'attribute_set_id' => $attribute_set_id, 'attribute_group_id' => $attribute_set_section_id, 'attribute_id' => $attribute_id->id, 'position' => $position));
+											$position++;
+										}
+									}
+								}
+
+							}
+						}
+					}
+				}
+			}
+			$do_changes = true;
+		}
+
+		return $do_changes;
+	}
+
+	/**
+	 * Update specific data in eav db model
+	 *
+	 * @param array $eav_content The complete array with all element to create into database
+	 * @param boolean $do_changes The current state of changes to do
+	 	*
+	 * @return boolean If there are changes to do or not
+	 */
+	public static function update_eav_content( $eav_content, $do_changes ) {
+		/*	Update attributes fo a given entity if attributes are set to be updated for current version	*/
+		if(isset($eav_content['attributes']) && is_array($eav_content['attributes']) && (count($eav_content['attributes']) > 0)){
+			foreach($eav_content['attributes'] as $entity_code => $attribute_definition){
+				foreach($attribute_definition as $attribute_def){
+					$option_list_for_attribute = '';
+					if(isset($attribute_def['backend_input_values'])){
+						$option_list_for_attribute = $attribute_def['backend_input_values'];
+						unset($attribute_def['backend_input_values']);
+					}
+
+					/*	Get entity identifier from code	*/
+					$attribute_def['entity_id'] = wpshop_entities::get_entity_identifier_from_code($entity_code);
+					$attribute_def['status'] = $attribute_def['attribute_status'];
+					unset($attribute_def['attribute_status']);
+					$attribute_def['last_update_date'] = current_time('mysql', 0);
+					$wpdb->update(WPSHOP_DBT_ATTRIBUTE, $attribute_def, array('code' => $attribute_def['code']));
+					$attribute_id = $wpdb->get_var($wpdb->prepare("SELECT id FROM " . WPSHOP_DBT_ATTRIBUTE . " WHERE code = %s", $attribute_def['code']));
+
+					/*	Insert option values if there are some to add for the current attribute	*/
+					if(($option_list_for_attribute != '') && (is_array($option_list_for_attribute))){
+						foreach($option_list_for_attribute as $option_code => $option_value){
+							$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'attribute_id' => $attribute_id, 'label' => ((substr($option_code, 0, 2) != '__') ? $option_value : __(substr($option_code, 2), 'wpshop')), 'value' => $option_value));
+							if($option_code == $attribute_def['default_value']){
+								$wpdb->update(WPSHOP_DBT_ATTRIBUTE, array('last_update_date' => current_time('mysql', 0), 'default_value' => $wpdb->insert_id), array('id' => $attribute_id, 'default_value' => $option_code));
+							}
+						}
+					}
+				}
+			}
+			$do_changes = true;
+		}
+
+		/*	Update attribute groups fo a given entity if attributes groups are set to be updated for current version	*/
+		if(is_array($eav_content['attribute_groups']) && is_array($eav_content['attribute_groups']) && (count($eav_content['attribute_groups']) > 0)){
+			foreach($eav_content['attribute_groups'] as $entity_code => $attribute_set){
+				$entity_id = wpshop_entities::get_entity_identifier_from_code($entity_code);
+
+				if($entity_id > 0){
+					foreach($attribute_set as $set_name => $set_groups){
+						$query = $wpdb->prepare("SELECT id FROM " . WPSHOP_DBT_ATTRIBUTE_SET . " WHERE entity_id = %d AND name = LOWER(%s)", $entity_id, wpshop_tools::slugify($set_name, array('noAccent', 'noSpaces', 'lowerCase')));
+						$attribute_set_id = $wpdb->get_var($query);
+						if($attribute_set_id <= 0){
+							$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_SET, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_id' => $entity_id, 'name' => $set_name));
+							$attribute_set_id = $wpdb->insert_id;
+						}
+
+						if($attribute_set_id > 0){
+							foreach($set_groups as $set_group_infos){
+								$set_group_infos_details = $set_group_infos['details'];
+								unset($set_group_infos['details']);
+								/*	Change an attribute set status if definition specify this param 	*/
+								if(isset($set_group_infos['status'])){
+									$wpdb->update(WPSHOP_DBT_ATTRIBUTE_SET, array('last_update_date' => current_time('mysql', 0), 'status' => $set_group_infos['status']), array('id' => $attribute_set_id));
+								}
+								$query = $wpdb->prepare("SELECT id FROM " . WPSHOP_DBT_ATTRIBUTE_GROUP . " WHERE attribute_set_id = %d AND code = LOWER(%s)", $attribute_set_id, $set_group_infos['code']);
+								$attribute_set_section_id = $wpdb->get_var($query);
+								if($attribute_set_section_id <= 0){
+									$new_set_section_infos = $set_group_infos;
+									$new_set_section_infos['status'] = (isset($new_set_section_infos['status']) ? $new_set_section_infos['status'] : 'valid');
+									$new_set_section_infos['creation_date'] = current_time('mysql', 0);
+									$new_set_section_infos['attribute_set_id'] = $attribute_set_id;
+									$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_GROUP, $new_set_section_infos);
+									$attribute_set_section_id = $wpdb->insert_id;
+								}
+								else{
+									$new_set_section_infos = $set_group_infos;
+									$new_set_section_infos['last_update_date'] = current_time('mysql', 0);
+									$wpdb->update(WPSHOP_DBT_ATTRIBUTE_GROUP, $new_set_section_infos, array('id' => $attribute_set_section_id));
+								}
+
+								if(($attribute_set_section_id > 0) && (isset($set_group_infos_details) && is_array($set_group_infos_details))){
+									if(count($set_group_infos_details) <= 0){
+										$wpdb->update(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('last_update_date' => current_time('mysql', 0), 'status' => 'deleted'), array('entity_type_id' => $entity_id, 'attribute_set_id' => $attribute_set_id, 'attribute_group_id' => $attribute_set_section_id));
+									}
+									else{
+										$query = $wpdb->prepare("SELECT MAX(position) AS position FROM " . WPSHOP_DBT_ATTRIBUTE_DETAILS . " WHERE entity_type_id = %d AND attribute_set_id = %d AND attribute_group_id = %d", $entity_id, $attribute_set_id, $attribute_set_section_id);
+										$last_position = $wpdb->get_var($query);
+										$position = (int)$last_position + 1;
+										foreach($set_group_infos_details as $attribute_code){
+											$query = $wpdb->prepare("SELECT id FROM " . WPSHOP_DBT_ATTRIBUTE . " WHERE code = %s AND entity_id = %d", $attribute_code, $entity_id);
+											$attribute_id = $wpdb->get_var($query);
+											if($attribute_id > 0){
+												$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $entity_id, 'attribute_set_id' => $attribute_set_id, 'attribute_group_id' => $attribute_set_section_id, 'attribute_id' => $attribute_id, 'position' => $position));
+												$position++;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			$do_changes = true;
+		}
+
+		return $do_changes;
+	}
+
+	/**
 	 * Manage special operation on wpshop plugin update
 	 */
-	function make_specific_operation_on_update($version){
-		global $wpdb,$wp_rewrite;
+	public static function make_specific_operation_on_update($version){
+		global $wpdb, $wp_rewrite;
 		$wpshop_shop_type = get_option('wpshop_shop_type', WPSHOP_DEFAULT_SHOP_TYPE);
 
 		switch($version){
 			case 3:
-				self::wpshop_insert_default_pages($wpshop_shop_type);
-				wp_cache_flush();
-				return true;
-			break;
 			case 6:
-				self::wpshop_insert_default_pages($wpshop_shop_type);
+ 				self::wpshop_insert_default_pages($wpshop_shop_type);
 				wp_cache_flush();
 				return true;
 			break;
 			case 8:
+				/**	Change metaboxes order for product in case it already exists	*/
+				$query = $wpdb->prepare( "SELECT umeta_id, meta_value FROM {$wpdb->usermeta} WHERE meta_key = %s", 'meta-box-order_wpshop_product' );
+				$customer_metaboxes_order = $wpdb->get_results( $query );
+				if ( !empty( $customer_metaboxes_order ) ) {
+					foreach ( $customer_metaboxes_order as $customer_metabox_order ) {
+						$do_changes = false;
+						$current_order = unserialize( $customer_metabox_order->meta_value );
+						if ( array_key_exists( 'normal', $current_order ) && ( false !== strpos( 'wpshop_product_important_datas', $current_order[ 'normal' ] ) ) ) {
+							str_replace( 'wpshop_product_important_datas,', '', $current_order[ 'normal' ] );
+							$do_changes = true;
+						}
+
+						if ( array_key_exists( 'side', $current_order ) ) {
+							str_replace( 'wpshop_product_important_datas,', '', $current_order[ 'side' ] );
+							str_replace( 'submitdiv,', 'submitdiv,wpshop_product_important_datas,', $current_order[ 'side' ] );
+							$do_changes = true;
+						}
+
+						if ( true === $do_changes ) {
+							$wpdb->update( $wpdb->usermeta, array( 'meta_value' => serialize( $current_order ), ), array( 'umeta_id' => $customer_metabox_order->umeta_id ) );
+						}
+					}
+				}
+				else {
+					$users = get_users( array( 'role' => 'administrator', ) );
+					if ( !empty( $users ) ) {
+						foreach ( $users as $user ) {
+							$user_meta = array(
+								'side' => 'submitdiv,formatdiv,wpshop_product_important_datas,wpshop_product_categorydiv,pageparentdiv,wps_barcode_product,wpshop_product_actions,wpshop_product_options,postimagediv',
+								'normal' => 'wpshop_product_fixed_tab,postexcerpt,trackbacksdiv,postcustom,commentstatusdiv,slugdiv,authordiv,wpshop_wpshop_variations,wps_media_manager,wpshop_product_order_historic',
+								'advanced' => '',
+							);
+							update_user_meta( $user->ID, 'meta-box-order_wpshop_product', $user_meta );
+						}
+					}
+				}
+
 				/*	Update the product prices into database	*/
 				$query = $wpdb->prepare("
 SELECT
@@ -479,11 +605,11 @@ SELECT
 (SELECT id FROM " . WPSHOP_DBT_ATTRIBUTE . " WHERE code = %s) AS tx_tva,
 (SELECT id FROM " . WPSHOP_DBT_ATTRIBUTE . " WHERE code = %s) AS tva", 'product_price', 'price_ht', 'tx_tva', 'tva');
 				$product_prices = $wpdb->get_row($query);
-				$tax_id = $wpdb->get_var($wpdb->prepare("SELECT ATT_OPT.id FROM " . WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS . " AS ATT_OPT WHERE attribute_id = %d AND value = '19.6'", $product_prices->tx_tva));
+				$tax_id = $wpdb->get_var($wpdb->prepare("SELECT ATT_OPT.id FROM " . WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS . " AS ATT_OPT WHERE attribute_id = %d AND value = '20'", $product_prices->tx_tva));
 				$query = $wpdb->prepare("SELECT * FROM " . WPSHOP_DBT_ATTRIBUTE_VALUES_DECIMAL . " WHERE attribute_id = %d", $product_prices->product_price);
 				$price_list = $wpdb->get_results($query);
 				foreach($price_list as $existing_ttc_price){
-					$tax_rate = 1.196;
+					$tax_rate = 1.20;
 					$price_ht = $existing_ttc_price->value / $tax_rate;
 					$tax_amount = $existing_ttc_price->value - $price_ht;
 
@@ -494,7 +620,7 @@ SELECT
 
 				/*	Update orders structure into database	*/
 				$orders_id = $wpdb->get_results('SELECT ID FROM '.$wpdb->posts.' WHERE post_type = "'.WPSHOP_NEWTYPE_IDENTIFIER_ORDER.'"');
-				foreach($orders_id as $o){
+				foreach ($orders_id as $o) {
 					$myorder = get_post_meta($o->ID, '_order_postmeta', true);
 					$neworder = array();
 					$items = array();
@@ -502,11 +628,11 @@ SELECT
 					if(!isset($myorder['order_tva'])){
 						$order_total_ht = 0;
 						$order_total_ttc = 0;
-						$order_tva = array('19.6'=>0);
+						$order_tva = array('20'=>0);
 
-						foreach($myorder['order_items'] as $item){
+						foreach ($myorder['order_items'] as $item) {
 							/* item */
-							$pu_ht = $item['cost']/1.196;
+							$pu_ht = $item['cost']/1.20;
 							$pu_tva = $item['cost']-$pu_ht;
 							$total_ht = $pu_ht*$item['qty'];
 							$tva_total_amount = $pu_tva*$item['qty'];
@@ -514,7 +640,7 @@ SELECT
 							/* item */
 							$order_total_ht += $total_ht;
 							$order_total_ttc += $total_ttc;
-							$order_tva['19.6'] += $tva_total_amount;
+							$order_tva['20'] += $tva_total_amount;
 
 							$items[] = array(
 								'item_id' => $item['id'],
@@ -522,24 +648,24 @@ SELECT
 								'item_name' => $item['name'],
 								'item_qty' => $item['qty'],
 
-								'item_pu_ht' => number_format($pu_ht, 5, '.', ''),
-								'item_pu_ttc' => number_format($item['cost'], 5, '.', ''),
+								'item_pu_ht' => number_format($pu_ht, 2, '.', ''),
+								'item_pu_ttc' => number_format($item['cost'], 2, '.', ''),
 
-								'item_ecotaxe_ht' => number_format(0, 5, '.', ''),
-								'item_ecotaxe_tva' => 19.6,
-								'item_ecotaxe_ttc' => number_format(0, 5, '.', ''),
+								'item_ecotaxe_ht' => number_format(0, 2, '.', ''),
+								'item_ecotaxe_tva' => 20,
+								'item_ecotaxe_ttc' => number_format(0, 2, '.', ''),
 
 								'item_discount_type' => 0,
 								'item_discount_value' => 0,
-								'item_discount_amount' => number_format(0, 5, '.', ''),
+								'item_discount_amount' => number_format(0, 2, '.', ''),
 
-								'item_tva_rate' => 19.6,
-								'item_tva_amount' => number_format($pu_tva, 5, '.', ''),
+								'item_tva_rate' => 20,
+								'item_tva_amount' => number_format($pu_tva, 2, '.', ''),
 
-								'item_total_ht' => number_format($total_ht, 5, '.', ''),
-								'item_tva_total_amount' => number_format($tva_total_amount, 5, '.', ''),
-								'item_total_ttc' => number_format($total_ttc, 5, '.', '')
-								/*'item_total_ttc_with_ecotaxe' => number_format($total_ttc, 5, '.', '')*/
+								'item_total_ht' => number_format($total_ht, 2, '.', ''),
+								'item_tva_total_amount' => number_format($tva_total_amount, 2, '.', ''),
+								'item_total_ttc' => number_format($total_ttc, 2, '.', '')
+								/*'item_total_ttc_with_ecotaxe' => number_format($total_ttc, 2, '.', '')*/
 							);
 						}
 
@@ -556,8 +682,8 @@ SELECT
 							'order_total_ht' => $order_total_ht,
 							'order_total_ttc' => $order_total_ttc,
 							'order_grand_total' => $order_total_ttc,
-							'order_shipping_cost' => number_format(0, 5, '.', ''),
-							'order_tva' => array_map('number_format_hack', $order_tva),
+							'order_shipping_cost' => number_format(0, 2, '.', ''),
+							'order_tva' => array_map(array( 'wpshop_tools', 'number_format_hack' ), $order_tva),
 							'order_items' => $items
 						);
 						/* Update the order postmeta */
@@ -565,12 +691,12 @@ SELECT
 					}
 				}
 
-				self::wpshop_insert_default_pages($wpshop_shop_type);
+ 				self::wpshop_insert_default_pages($wpshop_shop_type);
 				wp_cache_flush();
 				return true;
 			break;
 			case 12:
-				$query = $wpdb->prepare("SELECT ID FROM $wpdb->users", '');
+				$query = "SELECT ID FROM " . $wpdb->users;
 				$user_list = $wpdb->get_results($query);
 				foreach($user_list as $user){
 					$user_first_name = get_user_meta($user->ID, 'first_name', true);
@@ -606,9 +732,9 @@ SELECT
 				}
 
 				/*	Delete useless database table	*/
-				$query = $wpdb->prepare("DROP TABLE " . WPSHOP_DBT_CART, '');
+				$query = "DROP TABLE " . WPSHOP_DBT_CART;
 				$wpdb->query($query);
-				$query = $wpdb->prepare("DROP TABLE " . WPSHOP_DBT_CART_CONTENTS, '');
+				$query = "DROP TABLE " . WPSHOP_DBT_CART_CONTENTS;
 				$wpdb->query($query);
 				return true;
 			break;
@@ -640,12 +766,12 @@ SELECT
 					}
 					wp_reset_query();
 				}
-				self::wpshop_insert_default_pages($wpshop_shop_type);
+ 				self::wpshop_insert_default_pages($wpshop_shop_type);
 				wp_cache_flush();
 				return true;
 			break;
 			case 18:
-				self::wpshop_insert_default_pages($wpshop_shop_type);
+ 				self::wpshop_insert_default_pages($wpshop_shop_type);
 				wp_cache_flush();
 				return true;
 			break;
@@ -664,7 +790,7 @@ SELECT
 					$no_is_present = false;
 					$attribute_id = $manage_stock_option[0]->attribute_id;
 					foreach ($manage_stock_option as $manage_definition) {
-						if($manage_definition->value == 'no'){
+						if( strtolower( __( $manage_definition->value, 'wpshop' ) ) == strtolower( __( 'no', 'wpshop' ) ) ) {
 							$no_is_present = true;
 						}
 					}
@@ -673,17 +799,11 @@ SELECT
 					}
 				}
 
-				/**
-				 * Transfert des messages de la base ajout�e vers la base de wordpress en vue de la suppression de la base ajout�e
-				 */
-				wpshop_messages::importMessageFromLastVersion();
 
-				/**
-				 * Change price attribute set section order for default set
-				 */
+				/** Change price attribute set section order for default set */
 				$price_tab = unserialize(WPSHOP_ATTRIBUTE_PRICES);
 				unset($price_tab[array_search(WPSHOP_COST_OF_POSTAGE, $price_tab)]);
-				$query = $wpdb->prepare("SELECT GROUP_CONCAT(id) FROM " . WPSHOP_DBT_ATTRIBUTE . " WHERE code IN ('" . implode("','", $price_tab) . "')", "");
+				$query = "SELECT GROUP_CONCAT(id) FROM " . WPSHOP_DBT_ATTRIBUTE . " WHERE code IN ('" . implode("','", $price_tab) . "')";
 				$attribute_ids = $wpdb->get_var($query);
 
 				$query = $wpdb->prepare("
@@ -759,7 +879,7 @@ WHERE ATTR_DET.attribute_id IN (" . $attribute_ids . ")"
 				/*	Create an element of customer entity for each existing user	*/
 				$user_list = get_users();
 				foreach ($user_list as $user) {
-					wpshop_entities::create_entity_customer_when_user_is_created($user->ID);
+					wps_customer_ctr::create_entity_customer_when_user_is_created($user->ID);
 				}
 
 				return true;
@@ -806,7 +926,7 @@ WHERE ATTR_DET.attribute_id IN (" . $attribute_ids . ")"
 				$product_entity_id = $wpdb->get_var($query);
 
 				/*	Update attributes that are not linked with entities	*/
-				$wpdb->update(WPSHOP_DBT_ATTRIBUTE, array('entity_id'=>$product_entity_id), array('entity_id'=>0));
+				$wpdb->update(WPSHOP_DBT_ATTRIBUTE, array('entity_id' => $product_entity_id), array('entity_id' => 0));
 
 				/*	Get entities that have been created a lot of time and delete them	*/
 				$query = $wpdb->prepare("SELECT ID FROM " . $wpdb->posts . " WHERE (post_name LIKE '%%" . WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT . "-%%' OR post_name LIKE '%%" . WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS . "-%%') AND post_type=%s", WPSHOP_NEWTYPE_IDENTIFIER_ENTITIES);
@@ -847,163 +967,56 @@ WHERE ATTR_DET.attribute_id IN (" . $attribute_ids . ")"
 				}
 
 				/*	Update the different entities id into attribute set details table	*/
-				$query = $wpdb->prepare("UPDATE " . WPSHOP_DBT_ATTRIBUTE_DETAILS . " AS ATT_DET INNER JOIN " . WPSHOP_DBT_ATTRIBUTE . " AS ATT ON (ATT.id = ATT_DET.attribute_id) SET ATT_DET.entity_type_id = ATT.entity_id", "");
+				$query = "UPDATE " . WPSHOP_DBT_ATTRIBUTE_DETAILS . " AS ATT_DET INNER JOIN " . WPSHOP_DBT_ATTRIBUTE . " AS ATT ON (ATT.id = ATT_DET.attribute_id) SET ATT_DET.entity_type_id = ATT.entity_id";
 				$wpdb->query($query);
 
 				return true;
 			break;
 			case 26:
-				$query = $wpdb->prepare("SELECT post_id, meta_value FROM " .$wpdb->postmeta. " WHERE meta_key = '_order_postmeta' ", '');
+				$query = "SELECT post_id, meta_value FROM " .$wpdb->postmeta. " WHERE meta_key = '_order_postmeta' ";
 				$results = $wpdb->get_results($query);
 				foreach ($results as $result) {
 					$order_info = unserialize($result->meta_value);
 					update_post_meta($result->post_id, '_wpshop_order_customer_id', $order_info['customer_id']);
 					update_post_meta($result->post_id, '_wpshop_order_shipping_date', $order_info['order_shipping_date']);
 					update_post_meta($result->post_id, '_wpshop_order_status', $order_info['order_status']);
-					update_post_meta($result->post_id, '_wpshop_order_payment_date', $order_info['order_payment_date']);
-					update_post_meta($result->post_id, '_wpshop_payment_method', $order_info['payment_method']);
 				}
 
 				/*	Update the different entities id into attribute set details table	*/
-				$query = $wpdb->prepare("UPDATE " . WPSHOP_DBT_ATTRIBUTE_DETAILS . " AS ATT_DET INNER JOIN " . WPSHOP_DBT_ATTRIBUTE . " AS ATT ON (ATT.id = ATT_DET.attribute_id) SET ATT_DET.entity_type_id = ATT.entity_id", "");
+				$query = "UPDATE " . WPSHOP_DBT_ATTRIBUTE_DETAILS . " AS ATT_DET INNER JOIN " . WPSHOP_DBT_ATTRIBUTE . " AS ATT ON (ATT.id = ATT_DET.attribute_id) SET ATT_DET.entity_type_id = ATT.entity_id";
 				$wpdb->query($query);
 
 				return true;
 			break;
 
 			case 29:
-					$address_entity = array(
-							'post_title' => __('Address', 'wpshop'),
-							'post_name' => WPSHOP_NEWTYPE_IDENTIFIER_ADDRESS,
-							'post_content' => __('Includes the addresses of a customer', 'wpshop'),
-							'post_status' => 'publish',
-							'post_author' => 1,
-							'post_type' => WPSHOP_NEWTYPE_IDENTIFIER_ENTITIES
-						);
-					$address_entity_id = wp_insert_post( $address_entity );
+				$billing_title = __( 'Billing address', 'wpshop' );
+				$shipping_title = __( 'Shipping address', 'wpshop' );
 
-					/* Billing Address */
-					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_id' => $address_entity_id, 'is_visible_in_front' => 'no', 'is_required' => 'yes', 'data_type' => 'varchar', 'backend_input' => 'text', 'backend_label' => __('Address title', 'wpshop'), 'frontend_label' => __('Address title', 'wpshop'), 'frontend_input' => 'text', 'code' => 'address_title') );
-					$titre_adresse_id = $wpdb->insert_id;
-					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_id' => $address_entity_id, 'is_visible_in_front' => 'no', 'is_required' => 'yes', 'data_type' => 'integer', 'backend_input' => 'select', 'backend_label' => __('Civility', 'wpshop'), 'frontend_label' => __('Civility', 'wpshop'), 'frontend_input' => 'select', 'code' => 'civility') );
-					$civility_id = $wpdb->insert_id;
-					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_id' => $address_entity_id, 'is_visible_in_front' => 'no', 'is_required' => 'yes', 'data_type' => 'varchar', 'backend_input' => 'text', 'backend_label' => __('Last name', 'wpshop'), 'frontend_label' => __('Last name', 'wpshop'), 'frontend_input' => 'text', 'code' => 'address_last_name') );
-					$last_name_id = $wpdb->insert_id;
-					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_id' => $address_entity_id, 'is_visible_in_front' => 'no', 'is_required' => 'yes', 'data_type' => 'varchar', 'backend_input' => 'text', 'backend_label' => __('First name', 'wpshop'), 'frontend_label' => __('First name', 'wpshop'), 'frontend_input' => 'text', 'code' => 'address_first_name') );
-					$first_name_id = $wpdb->insert_id;
-					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_id' => $address_entity_id, 'is_visible_in_front' => 'no', 'is_required' => 'no', 'data_type' => 'varchar', 'backend_input' => 'text', 'backend_label' =>  __('Company', 'wpshop'), 'frontend_label' =>  __('Company', 'wpshop'), 'frontend_input' => 'text', 'code' => 'company') );
-					$company_id = $wpdb->insert_id;
-					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_id' => $address_entity_id, 'is_visible_in_front' => 'no', 'is_required' => 'no', 'data_type' => 'varchar', 'backend_input' => 'text', 'backend_label' => __('TVA Intracommunautaire', 'wpshop'), 'frontend_label' => __('TVA Intracommunautaire', 'wpshop'), 'frontend_input' => 'text', 'code' => 'tva_intra') );
-					$tva_id = $wpdb->insert_id;
-					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_id' => $address_entity_id, 'is_visible_in_front' => 'no', 'is_required' => 'yes', 'data_type' => 'varchar', 'backend_input' => 'text', 'backend_label' => __('Email Address', 'wpshop'), 'frontend_label' => __('Email Address', 'wpshop'), 'frontend_input' => 'text', 'code' => 'address_user_email', '_need_verification' => 'yes', 'frontend_verification' => 'email') );
-					$email_id = $wpdb->insert_id;
-					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_id' => $address_entity_id, 'is_visible_in_front' => 'no', 'is_required' => 'yes', 'data_type' => 'varchar', 'backend_input' => 'text', 'backend_label' => __('Address', 'wpshop'), 'frontend_label' => __('Address', 'wpshop'), 'frontend_input' => 'text', 'code' => 'address') );
-					$address_id = $wpdb->insert_id;
-					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_id' => $address_entity_id, 'is_visible_in_front' => 'no', 'is_required' => 'yes', 'data_type' => 'varchar', 'backend_input' => 'text', 'backend_label' => __('City', 'wpshop'), 'frontend_label' => __('City', 'wpshop'), 'frontend_input' => 'text', 'code' => 'city') );
-					$city_id = $wpdb->insert_id;
-					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_id' => $address_entity_id, 'is_visible_in_front' => 'no', 'is_required' => 'yes', 'data_type' => 'varchar', 'backend_input' => 'text', 'backend_label' => __('Postcode', 'wpshop'), 'frontend_label' =>__('Postcode', 'wpshop'), 'frontend_input' => 'text', 'code' => 'postcode', 'frontend_verification' => 'postcode') );
-					$postcode_id = $wpdb->insert_id;
-					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_id' => $address_entity_id, 'is_visible_in_front' => 'no', 'is_required' => 'yes', 'data_type' => 'varchar', 'backend_input' => 'text', 'backend_label' => __('Country', 'wpshop'), 'frontend_label' =>__('Country', 'wpshop'), 'frontend_input' => 'text', 'code' => 'country', 'frontend_verification' => 'country') );
-					$country_id = $wpdb->insert_id;
-					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_id' => $address_entity_id, 'is_visible_in_front' => 'no', 'is_required' => 'no', 'data_type' => 'varchar', 'backend_input' => 'text', 'backend_label' => __('State/County', 'wpshop'), 'frontend_label' =>__('State/County', 'wpshop'), 'frontend_input' => 'text', 'code' => 'state', 'frontend_verification' => 'state') );
-					$state_id = $wpdb->insert_id;
-					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_id' => $address_entity_id, 'is_visible_in_front' => 'no', 'is_required' => 'yes', 'data_type' => 'varchar', 'backend_input' => 'text', 'backend_label' => __('Phone', 'wpshop'), 'frontend_label' =>__('Phone', 'wpshop'), 'frontend_input' => 'text', 'code' => 'phone', 'frontend_verification' => 'phone') );
-					$phone_id = $wpdb->insert_id;
-					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_id' => $address_entity_id, 'is_visible_in_front' => 'no', 'is_required' => 'no', 'data_type' => 'varchar', 'backend_input' => 'hidden', 'backend_label' => __('Longitude', 'wpshop'), 'frontend_label' =>__('Longitude', 'wpshop'), 'frontend_input' => 'hidden', 'code' => 'longitude') );
-					$longitude_id = $wpdb->insert_id;
-					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_id' => $address_entity_id, 'is_visible_in_front' => 'no', 'is_required' => 'no', 'data_type' => 'varchar', 'backend_input' => 'hidden', 'backend_label' => __('Latitude', 'wpshop'), 'frontend_label' =>__('Latitude', 'wpshop'), 'frontend_input' => 'hidden', 'code' => 'latitude') );
-					$latitude_id = $wpdb->insert_id;
-					/* Attribute Set */
-					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE_SET, array( 'status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_id' => $address_entity_id, 'name' => __('Billing address', 'wpshop') ) );
-					$attribute_set_id_billing = $wpdb->insert_id;
-					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE_SET, array( 'status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_id' => $address_entity_id, 'name' => __('Shipping address', 'wpshop') ) );
-					$attribute_set_id_shipping = $wpdb->insert_id;
+				//UPDATE USERS ADDRESSES
+				$billing_address_set_id_query = 'SELECT id FROM ' .WPSHOP_DBT_ATTRIBUTE_SET. ' WHERE name = "' .$billing_title. '"';
+				$shipping_address_set_id_query = 'SELECT id FROM ' .WPSHOP_DBT_ATTRIBUTE_SET. ' WHERE name = "' .$shipping_title. '"';
 
-					/* Attribute Set Section*/
-					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE_GROUP, array( 'status' => 'valid', 'attribute_set_id' => $attribute_set_id_billing, 'creation_date' => current_time('mysql', 0), 'display_on_frontend' => 'no', 'code' => 'billing_address', 'name' => __('Billing address', 'wpshop') ) );
-					$id_attribute_set_section_billing = $wpdb->insert_id;
-					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE_GROUP, array( 'status' => 'valid', 'attribute_set_id' => $attribute_set_id_shipping, 'creation_date' => current_time('mysql', 0), 'display_on_frontend' => 'no','code' => 'shipping_address', 'name' => __('Shipping address', 'wpshop') ) );
-					$id_attribute_set_section_shipping = $wpdb->insert_id;
+				$billing_address_set_id = $wpdb->get_var($billing_address_set_id_query);
+				$shipping_address_set_id = $wpdb->get_var($shipping_address_set_id_query);
 
-					/* Attribute set section details */
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $address_entity_id, 'attribute_set_id' => $attribute_set_id_billing, 'attribute_group_id' => $id_attribute_set_section_billing, 'attribute_id' => $titre_adresse_id, 'position' => 1));
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $address_entity_id, 'attribute_set_id' => $attribute_set_id_billing, 'attribute_group_id' => $id_attribute_set_section_billing, 'attribute_id' => $civility_id, 'position' => 2));
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $address_entity_id, 'attribute_set_id' => $attribute_set_id_billing, 'attribute_group_id' => $id_attribute_set_section_billing, 'attribute_id' => $last_name_id, 'position' => 3));
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $address_entity_id, 'attribute_set_id' => $attribute_set_id_billing, 'attribute_group_id' => $id_attribute_set_section_billing, 'attribute_id' => $first_name_id, 'position' => 4));
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $address_entity_id, 'attribute_set_id' => $attribute_set_id_billing, 'attribute_group_id' => $id_attribute_set_section_billing, 'attribute_id' => $company_id, 'position' => 5));
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $address_entity_id, 'attribute_set_id' => $attribute_set_id_billing, 'attribute_group_id' => $id_attribute_set_section_billing, 'attribute_id' => $address_id, 'position' => 6));
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $address_entity_id, 'attribute_set_id' => $attribute_set_id_billing, 'attribute_group_id' => $id_attribute_set_section_billing, 'attribute_id' => $postcode_id, 'position' => 7));
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $address_entity_id, 'attribute_set_id' => $attribute_set_id_billing, 'attribute_group_id' => $id_attribute_set_section_billing, 'attribute_id' => $city_id, 'position' => 8));
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $address_entity_id, 'attribute_set_id' => $attribute_set_id_billing, 'attribute_group_id' => $id_attribute_set_section_billing, 'attribute_id' => $state_id, 'position' => 9));
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $address_entity_id, 'attribute_set_id' => $attribute_set_id_billing, 'attribute_group_id' => $id_attribute_set_section_billing, 'attribute_id' => $country_id, 'position' => 10));
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $address_entity_id, 'attribute_set_id' => $attribute_set_id_billing, 'attribute_group_id' => $id_attribute_set_section_billing, 'attribute_id' => $tva_id, 'position' => 11));
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $address_entity_id, 'attribute_set_id' => $attribute_set_id_billing, 'attribute_group_id' => $id_attribute_set_section_billing, 'attribute_id' => $phone_id, 'position' => 12));
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $address_entity_id, 'attribute_set_id' => $attribute_set_id_billing, 'attribute_group_id' => $id_attribute_set_section_billing, 'attribute_id' => $email_id, 'position' => 13));
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $address_entity_id, 'attribute_set_id' => $attribute_set_id_billing, 'attribute_group_id' => $id_attribute_set_section_billing, 'attribute_id' => $longitude_id, 'position' => 14));
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $address_entity_id, 'attribute_set_id' => $attribute_set_id_billing, 'attribute_group_id' => $id_attribute_set_section_billing, 'attribute_id' => $latitude_id, 'position' => 15));
 
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $address_entity_id, 'attribute_set_id' => $attribute_set_id_shipping, 'attribute_group_id' => $id_attribute_set_section_shipping, 'attribute_id' => $titre_adresse_id, 'position' => 1));
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $address_entity_id, 'attribute_set_id' => $attribute_set_id_shipping, 'attribute_group_id' => $id_attribute_set_section_shipping, 'attribute_id' => $civility_id, 'position' => 2));
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $address_entity_id, 'attribute_set_id' => $attribute_set_id_shipping, 'attribute_group_id' => $id_attribute_set_section_shipping, 'attribute_id' => $last_name_id, 'position' => 3));
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $address_entity_id, 'attribute_set_id' => $attribute_set_id_shipping, 'attribute_group_id' => $id_attribute_set_section_shipping, 'attribute_id' => $first_name_id, 'position' => 4));
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $address_entity_id, 'attribute_set_id' => $attribute_set_id_shipping, 'attribute_group_id' => $id_attribute_set_section_shipping, 'attribute_id' => $company_id, 'position' => 5));
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $address_entity_id, 'attribute_set_id' => $attribute_set_id_shipping, 'attribute_group_id' => $id_attribute_set_section_shipping, 'attribute_id' => $address_id, 'position' => 6));
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $address_entity_id, 'attribute_set_id' => $attribute_set_id_shipping, 'attribute_group_id' => $id_attribute_set_section_shipping, 'attribute_id' => $postcode_id, 'position' => 7));
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $address_entity_id, 'attribute_set_id' => $attribute_set_id_shipping, 'attribute_group_id' => $id_attribute_set_section_shipping, 'attribute_id' => $city_id, 'position' => 8));
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $address_entity_id, 'attribute_set_id' => $attribute_set_id_shipping, 'attribute_group_id' => $id_attribute_set_section_shipping, 'attribute_id' => $state_id, 'position' => 9));
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $address_entity_id, 'attribute_set_id' => $attribute_set_id_shipping, 'attribute_group_id' => $id_attribute_set_section_shipping, 'attribute_id' => $country_id, 'position' => 10));
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $address_entity_id, 'attribute_set_id' => $attribute_set_id_shipping, 'attribute_group_id' => $id_attribute_set_section_shipping, 'attribute_id' => $longitude_id, 'position' => 11));
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $address_entity_id, 'attribute_set_id' => $attribute_set_id_shipping, 'attribute_group_id' => $id_attribute_set_section_shipping, 'attribute_id' => $latitude_id, 'position' => 12));
+				//Add Address & Google Map API KEY options
+				add_option( 'wpshop_billing_address', array('choice' => $billing_address_set_id), '', 'yes' );
+				add_option( 'wpshop_shipping_address_choice', array('activate'=>'on', 'choice'=> $shipping_address_set_id), '', 'yes' );
+				add_option( 'wpshop_google_map_api_key', '', '', 'yes' );
 
-					$customer_entity_id = wpshop_entities::get_entity_identifier_from_code(WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS);
-					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_id' => $customer_entity_id, 'is_visible_in_front' => 'no', 'is_required' => 'yes', 'data_type' => 'varchar', 'backend_input' => 'text', 'backend_label' => __('Username', 'wpshop'), 'frontend_label' => __('User name', 'wpshop'), 'frontend_input' => 'text', 'code' => 'user_login', 'frontend_verification' => 'username', 'is_unique' => 'yes') );
-					$user_name_id = $wpdb->insert_id;
-					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_id' => $customer_entity_id, 'is_visible_in_front' => 'no', 'is_required' => 'yes', 'data_type' => 'varchar', 'backend_input' => 'password', 'backend_label' => __('Password', 'wpshop'), 'frontend_label' => __('Password', 'wpshop'), 'frontend_input' => 'password', 'code' => 'user_pass', '_need_verification' => 'yes') );
-					$password_id = $wpdb->insert_id;
-					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_id' => $customer_entity_id, 'is_visible_in_front' => 'no', 'is_required' => 'yes', 'data_type' => 'varchar', 'backend_input' => 'text', 'backend_label' => __('Email Address', 'wpshop'), 'frontend_label' => __('Email Address', 'wpshop'), 'frontend_input' => 'text', 'code' => 'user_email', '_need_verification' => 'yes', 'frontend_verification' => 'email', 'is_unique' => 'yes') );
-					$email_id = $wpdb->insert_id;
-					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_id' => $customer_entity_id, 'is_visible_in_front' => 'no', 'is_required' => 'yes', 'data_type' => 'varchar', 'backend_input' => 'text', 'backend_label' => __('Last name', 'wpshop'), 'frontend_label' => __('Last name', 'wpshop'), 'frontend_input' => 'text', 'code' => 'last_name') );
-					$last_name_id = $wpdb->insert_id;
-					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_id' => $customer_entity_id, 'is_visible_in_front' => 'no', 'is_required' => 'yes', 'data_type' => 'varchar', 'backend_input' => 'text', 'backend_label' => __('First name', 'wpshop'), 'frontend_label' => __('First name', 'wpshop'), 'frontend_input' => 'text', 'code' => 'first_name') );
-					$first_name_id = $wpdb->insert_id;
 
-					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE_SET, array( 'status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_id' => $customer_entity_id, 'name' => __('Account', 'wpshop'), 'default_set' => 'yes' ) );
-					$attribute_set_id_account = $wpdb->insert_id;
 
-					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE_GROUP, array( 'status' => 'valid', 'attribute_set_id' => $attribute_set_id_account, 'creation_date' => current_time('mysql', 0), 'display_on_frontend' => 'no', 'code' => 'account', 'name' => __('Account', 'wpshop') ) );
-					$id_attribute_set_section_account = $wpdb->insert_id;
-
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $customer_entity_id, 'attribute_set_id' => $attribute_set_id_account, 'attribute_group_id' => $id_attribute_set_section_account, 'attribute_id' => $last_name_id, 'position' => 1));
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $customer_entity_id, 'attribute_set_id' => $attribute_set_id_account, 'attribute_group_id' => $id_attribute_set_section_account, 'attribute_id' => $first_name_id, 'position' => 2));
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $customer_entity_id, 'attribute_set_id' => $attribute_set_id_account, 'attribute_group_id' => $id_attribute_set_section_account, 'attribute_id' => $user_name_id , 'position' => 3));
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $customer_entity_id, 'attribute_set_id' => $attribute_set_id_account, 'attribute_group_id' => $id_attribute_set_section_account, 'attribute_id' => $email_id, 'position' => 4));
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $customer_entity_id, 'attribute_set_id' => $attribute_set_id_account, 'attribute_group_id' => $id_attribute_set_section_account, 'attribute_id' => $password_id, 'position' => 5));
-
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'attribute_id' => $civility_id, 'position' => 1, 'value' => __('Mister', 'wpshop'), 'label' => __('Mister', 'wpshop')));
-					$mister_id = $wpdb->insert_id;
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'attribute_id' => $civility_id, 'position' => 2, 'value' => __('Madam', 'wpshop'), 'label' => __('Madam', 'wpshop')));
-					$madam_id = $wpdb->insert_id;
-					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'attribute_id' => $civility_id, 'position' => 3, 'value' => __('Miss', 'wpshop'), 'label' => __('Miss', 'wpshop')));
-					$miss_id = $wpdb->insert_id;
-					//Add Address & Google Map API KEY options
-					add_option( 'wpshop_billing_address', array('choice' => $attribute_set_id_billing), '', 'yes' );
-					add_option( 'wpshop_shipping_address_choice', array('activate'=>'on', 'choice'=> $attribute_set_id_shipping), '', 'yes' );
-					add_option( 'wpshop_google_map_api_key', '', '', 'yes' );
-
-					//UPDATE USERS ADDRESSES
-					$query = $wpdb->prepare('SELECT * FROM ' .$wpdb->users. '', '');
-					$results = $wpdb->get_results($query);
-					$billing_address_set_id_query = $wpdb->prepare('SELECT id FROM ' .WPSHOP_DBT_ATTRIBUTE_SET. ' WHERE name = "' .__('Billing address', 'wpshop'). '"', '');
-					$shipping_address_set_id_query = $wpdb->prepare('SELECT id FROM ' .WPSHOP_DBT_ATTRIBUTE_SET. ' WHERE name = "' .__('Shipping address', 'wpshop'). '"', '');
-					$billing_address_set_id = $wpdb->get_var($billing_address_set_id_query);
-					$shipping_address_set_id = $wpdb->get_var($shipping_address_set_id_query);
-
-					foreach ($results as $result) {
-						$billing_infos = get_user_meta( $result->ID, 'billing_info', true );
-						$shipping_infos = get_user_meta( $result->ID, 'shipping_info', true );
-						if ( !empty($billing_infos) ) {
-							//Save Billing Infos
-							$billing_address = array();
+				$query = 'SELECT * FROM ' .$wpdb->users. '';
+				$results = $wpdb->get_results($query);
+				foreach ($results as $result) {
+					$billing_infos = get_user_meta( $result->ID, 'billing_info', true );
+					$shipping_infos = get_user_meta( $result->ID, 'shipping_info', true );
+					if ( !empty($billing_infos) ) {
+						//Save Billing Infos
+						$billing_address = array();
+						if ( !empty($billing_infos['civility']) ) {
 							switch ( $billing_infos['civility'] ) {
 								case 1:
 									$civility = $mister_id ;
@@ -1015,87 +1028,93 @@ WHERE ATTR_DET.attribute_id IN (" . $attribute_ids . ")"
 									$civility = $miss_id;
 								break;
 							}
-							$billing_title = __('Billing address', 'wpshop');
-							$billing_address = array('address_title' => $billing_title,
-									'address_last_name' => $billing_infos['last_name'],
-									'address_first_name' => $billing_infos['first_name'],
-									'company' => $billing_infos['company'],
-									'address' => $billing_infos['address'],
-									'postcode' => $billing_infos['postcode'],
-									'city' => $billing_infos['city'],
-									'state' => $billing_infos['state'],
-									'country' => $billing_infos['country'],
-									'address_user_email' => $billing_infos['email'],
-									'phone' => $billing_infos['phone'],
-									'tva_intra' => $billing_infos['company_tva_intra'],
-									'civility' => $civility
-							);
-							//Create the post and post_meta for the billing address
-							$post_address = array('post_author' => $result->ID,
-									'post_title' => $billing_title,
-									'post_status' => 'publish',
-									'post_name' => WPSHOP_NEWTYPE_IDENTIFIER_ADDRESS,
-									'post_type' => WPSHOP_NEWTYPE_IDENTIFIER_ADDRESS,
-									'post_parent' => $result->ID
-							);
-							$post_address_id = wp_insert_post($post_address);
-
-							//Create the post_meta with the address infos
-
-							update_post_meta($post_address_id, '_'.WPSHOP_NEWTYPE_IDENTIFIER_ADDRESS.'_metadata', $billing_address);
-							update_post_meta($post_address_id, '_'.WPSHOP_NEWTYPE_IDENTIFIER_ADDRESS.'_attribute_set_id', $billing_address_set_id);
 						}
-						if ( !empty($shipping_infos) ) {
-							//Save Shipping Infos
-							if ( !empty($shipping_infos['civility']) ) {
-								switch ( $shipping_infos['civility'] ) {
-									case 1:
-										$civility = $mister_id ;
-										break;
-									case 2:
-										$civility = $madam_id;
-										break;
-									case 3:
-										$civility = $miss_id;
-										break;
-								}
-							}
-							else {
-								$civility = $mister_id ;
-							}
-							$shipping_address = array();
-							$shipping_title = __('Shipping address', 'wpshop');
-							$shipping_address = array('address_title' => $shipping_title,
-									'address_last_name' => $shipping_infos['last_name'],
-									'address_first_name' => $shipping_infos['first_name'],
-									'company' => $shipping_infos['company'],
-									'address' => $shipping_infos['address'],
-									'postcode' => $shipping_infos['postcode'],
-									'city' => $shipping_infos['city'],
-									'state' => $shipping_infos['state'],
-									'country' => $shipping_infos['country'],
-									'civility' => $civility
-							);
-							//Create the post and post_meta for the billing address
-							$post_address = array('post_author' => $result->ID,
-									'post_title' => $shipping_title,
-									'post_status' => 'publish',
-									'post_name' => WPSHOP_NEWTYPE_IDENTIFIER_ADDRESS,
-									'post_type' => WPSHOP_NEWTYPE_IDENTIFIER_ADDRESS,
-									'post_parent' => $result->ID
-							);
-							$post_address_id = wp_insert_post($post_address);
-							//Create the post_meta with the address infos
-							update_post_meta($post_address_id, '_'.WPSHOP_NEWTYPE_IDENTIFIER_ADDRESS.'_metadata', $shipping_address);
-							update_post_meta($post_address_id, '_'.WPSHOP_NEWTYPE_IDENTIFIER_ADDRESS.'_attribute_set_id', $shipping_address_set_id);
+						else {
+							$civility = $mister_id ;
 						}
+						$billing_address = array('address_title' => $billing_title,
+							'address_last_name' => !empty($billing_infos['last_name']) ? $billing_infos['last_name'] : '',
+							'address_first_name' => !empty($billing_infos['first_name']) ? $billing_infos['first_name'] : '',
+							'company' => !empty($billing_infos['company']) ? $billing_infos['company'] : '',
+							'address' => !empty($billing_infos['address']) ? $billing_infos['address'] : '',
+							'postcode' => !empty($billing_infos['postcode']) ? $billing_infos['postcode'] : '',
+							'city' => !empty($billing_infos['city']) ? $billing_infos['city'] : '',
+							'state' => !empty($billing_infos['state']) ? $billing_infos['state'] : '',
+							'country' => !empty($billing_infos['country']) ? $billing_infos['country'] : '',
+							'address_user_email' => !empty($billing_infos['email']) ? $billing_infos['email'] : '',
+							'phone' => !empty($billing_infos['phone']) ? $billing_infos['phone'] : '',
+							'tva_intra' => !empty($billing_infos['company_tva_intra']) ? $billing_infos['company_tva_intra'] : '',
+							'civility' => $civility
+						);
+						//Create the post and post_meta for the billing address
+						$post_address = array(
+							'post_author' => $result->ID,
+							'post_title' => $billing_title,
+							'post_status' => 'publish',
+							'post_name' => WPSHOP_NEWTYPE_IDENTIFIER_ADDRESS,
+							'post_type' => WPSHOP_NEWTYPE_IDENTIFIER_ADDRESS,
+							'post_parent' => $result->ID
+						);
+						$post_address_id = wp_insert_post($post_address);
+
+						//Create the post_meta with the address infos
+						update_post_meta($post_address_id, '_'.WPSHOP_NEWTYPE_IDENTIFIER_ADDRESS.'_metadata', $billing_address);
+						update_post_meta($post_address_id, '_'.WPSHOP_NEWTYPE_IDENTIFIER_ADDRESS.'_attribute_set_id', $billing_address_set_id);
 					}
-					// FORMATE THE ORDER ADDRESSES INFOS
-					$query = $wpdb->prepare('SELECT * FROM ' .$wpdb->posts. ' WHERE post_type = "' .WPSHOP_NEWTYPE_IDENTIFIER_ORDER. '"', '');
-					$results = $wpdb->get_results($query);
-					$results = query_posts( array('post_type' => WPSHOP_NEWTYPE_IDENTIFIER_ORDER, 'post_per_page' => -1) );
-					foreach ( $results as $result ) {
-						$address = get_post_meta($result->ID, '_order_info', true);
+
+					if ( !empty($shipping_infos) ) {
+						//Save Shipping Infos
+						if ( !empty($shipping_infos['civility']) ) {
+							switch ( $shipping_infos['civility'] ) {
+								case 1:
+									$civility = $mister_id ;
+									break;
+								case 2:
+									$civility = $madam_id;
+									break;
+								case 3:
+									$civility = $miss_id;
+									break;
+							}
+						}
+						else {
+							$civility = $mister_id ;
+						}
+						$shipping_address = array();
+						$shipping_address = array('address_title' => $shipping_title,
+								'address_last_name' => !empty($shipping_infos['last_name']) ? $shipping_infos['last_name'] : '',
+								'address_first_name' => !empty($shipping_infos['first_name']) ? $shipping_infos['first_name'] : '',
+								'company' => !empty($shipping_infos['company']) ? $shipping_infos['company'] : '',
+								'address' => !empty($shipping_infos['address']) ? $shipping_infos['address'] : '',
+								'postcode' => !empty($shipping_infos['postcode']) ? $shipping_infos['postcode'] : '',
+								'city' => !empty($shipping_infos['city']) ? $shipping_infos['city'] : '',
+								'state' => !empty($shipping_infos['state']) ? $shipping_infos['state'] : '',
+								'country' => !empty($shipping_infos['country']) ? $shipping_infos['country'] : '',
+								'civility' => $civility
+						);
+						//Create the post and post_meta for the billing address
+						$post_address = array(
+							'post_author' => $result->ID,
+							'post_title' => $shipping_title,
+							'post_status' => 'publish',
+							'post_name' => WPSHOP_NEWTYPE_IDENTIFIER_ADDRESS,
+							'post_type' => WPSHOP_NEWTYPE_IDENTIFIER_ADDRESS,
+							'post_parent' => $result->ID
+						);
+						$post_address_id = wp_insert_post($post_address);
+						//Create the post_meta with the address infos
+						update_post_meta($post_address_id, '_'.WPSHOP_NEWTYPE_IDENTIFIER_ADDRESS.'_metadata', $shipping_address);
+						update_post_meta($post_address_id, '_'.WPSHOP_NEWTYPE_IDENTIFIER_ADDRESS.'_attribute_set_id', $shipping_address_set_id);
+					}
+				}
+
+				// FORMATE THE ORDER ADDRESSES INFOS
+				$results = query_posts( array('post_type' => WPSHOP_NEWTYPE_IDENTIFIER_ORDER, 'posts_per_page' => -1) );
+				foreach ( $results as $result ) {
+					$address = get_post_meta($result->ID, '_order_info', true);
+
+					$billing_address = array();
+					if ( !empty($address['billing']) ) {
 						if ( !empty($address['billing']['civility']) ) {
 							switch ( $address['billing']['civility'] ) {
 								case 1:
@@ -1116,122 +1135,106 @@ WHERE ATTR_DET.attribute_id IN (" . $attribute_ids . ")"
 							$civility = $mister_id ;
 						}
 						$billing_address = array('address_title' => $billing_title,
-								'address_last_name' => $address['billing']['last_name'],
-								'address_first_name' => $address['billing']['first_name'],
-								'company' => $address['billing']['company'],
-								'address' => $address['billing']['address'],
-								'postcode' => $address['billing']['postcode'],
-								'city' => $address['billing']['city'],
-								'state' => $address['billing']['state'],
-								'country' => $address['billing']['country'],
-								'address_user_email' => $address['billing']['email'],
-								'phone' => $address['billing']['phone'],
-								'tva_intra' => $address['billing']['company_tva_intra'],
-								'civility' => $civility
+							'address_last_name' => !empty($address['billing']['last_name']) ? $address['billing']['last_name'] : '',
+							'address_first_name' => !empty($address['billing']['first_name']) ? $address['billing']['first_name'] : '',
+							'company' => !empty($address['billing']['company']) ? $address['billing']['company'] : '',
+							'address' => !empty($address['billing']['address']) ? $address['billing']['address'] : '',
+							'postcode' => !empty($address['billing']['postcode']) ? $address['billing']['postcode'] : '',
+							'city' => !empty($address['billing']['city']) ? $address['billing']['city'] : '',
+							'state' => !empty($address['billing']['state']) ? $address['billing']['state'] : '',
+							'country' => !empty($address['billing']['country']) ? $address['billing']['country'] : '',
+							'address_user_email' => !empty($address['billing']['email']) ? $address['billing']['email'] : '',
+							'phone' => !empty($address['billing']['phone']) ? $address['billing']['phone'] : '',
+							'tva_intra' => !empty($address['billing']['company_tva_intra']) ? $address['billing']['company_tva_intra'] : '',
+							'civility' => $civility
 						);
-						switch ( $address['shipping']['civility'] ) {
-							case 1:
-								$civility = $mister_id ;
-								break;
-							case 2:
-								$civility = $madam_id;
-								break;
-							case 3:
-								$civility = $miss_id;
-								break;
+					}
+
+					$shipping_address = array();
+					if ( !empty($address['shipping']) ) {
+						if ( !empty($address['shipping']['civility']) ) {
+							switch ( $address['shipping']['civility'] ) {
+								case 1:
+									$civility = $mister_id ;
+									break;
+								case 2:
+									$civility = $madam_id;
+									break;
+								case 3:
+									$civility = $miss_id;
+									break;
+							}
+						}
+						else {
+							$civility = $mister_id ;
 						}
 						$shipping_address = array('address_title' => $shipping_title,
-								'address_last_name' => $address['shipping']['last_name'],
-								'address_first_name' => $address['shipping']['first_name'],
-								'company' => $address['shipping']['company'],
-								'address' => $address['shipping']['address'],
-								'postcode' => $address['shipping']['postcode'],
-								'city' => $address['shipping']['city'],
-								'state' =>$address['shipping']['state'],
-								'country' => $address['shipping']['country'],
-								'civility' => $civility
+							'address_last_name' => !empty($address['shipping']['last_name']) ? $address['shipping']['last_name'] : '',
+							'address_first_name' => !empty($address['shipping']['first_name']) ? $address['shipping']['first_name'] : '',
+							'company' => !empty($address['shipping']['company']) ? $address['shipping']['company'] : '',
+							'address' => !empty($address['shipping']['address']) ? $address['shipping']['address'] : '',
+							'postcode' => !empty($address['shipping']['postcode']) ? $address['shipping']['postcode'] : '',
+							'city' => !empty($address['shipping']['city']) ? $address['shipping']['city'] : '',
+							'state' => !empty($address['shipping']['state']) ? $address['shipping']['state'] : '',
+							'country' => !empty($address['shipping']['country']) ? $address['shipping']['country'] : '',
+							'civility' => $civility
 						);
-
-
-						$billing_array_content = array('id'=>$billing_address_set_id, 'address'=>$billing_address);
-						$shipping_array_content = array('id'=>$shipping_address_set_id, 'address'=>$shipping_address);
-						$array_new_format = array('billing' => $billing_array_content, 'shipping' => $shipping_array_content);
-
-						//Update the post meta
-						update_post_meta($result->ID, '_order_info', $array_new_format);
-					}
-					/*	Update entities meta management	*/
-					$entities = query_posts(array('post_type' => WPSHOP_NEWTYPE_IDENTIFIER_ENTITIES));
-					if(!empty($entities)){
-						foreach($entities as $entity){
-							$params = get_post_meta($entity->ID, '_wpshop_entity_params', true);
-							$support = ( !empty($params['support']) ) ? $params['support'] : '';
-							$rewrite = ( !empty($params['rewrite']) ) ? $params['rewrite'] : '';
-							if( $entity->ID == $address_entity_id ) {
-								$display_admin_menu = '';
-							}
-							else {
-								$display_admin_menu = 'on';
-							}
-							update_post_meta($entity->ID, '_wpshop_entity_params', array('support' => $support, 'rewrite' => $rewrite, 'display_admin_menu' => $display_admin_menu));
-						}
-					}
-					wp_reset_query();
-					// Default Weight unity and Currency Options
-					add_option( 'wpshop_shop_weight_group', 3, '', 'yes' );
-					add_option( 'wpshop_shop_default_weight_unity', 6, '', 'yes' );
-					add_option( 'wpshop_shop_currency_group', 4, '', 'yes' );
-
-
-					$default_currency = get_option('wpshop_shop_default_currency');
-					foreach ( unserialize(WPSHOP_SHOP_CURRENCIES) as $k=>$v ) {
-						if ( $default_currency == $k ) {
-							$symbol = $v;
-						}
 					}
 
-					$query = $wpdb->prepare('SELECT * FROM ' .WPSHOP_DBT_ATTRIBUTE_UNIT. ' WHERE unit = "'.html_entity_decode($symbol, ENT_QUOTES, 'UTF-8').'"', '');
+					$billing_array_content = array('id'=>$billing_address_set_id, 'address'=>$billing_address);
+					$shipping_array_content = array('id'=>$shipping_address_set_id, 'address'=>$shipping_address);
+					$array_new_format = array('billing' => $billing_array_content, 'shipping' => $shipping_array_content);
+
+					//Update the post meta
+					update_post_meta($result->ID, '_order_info', $array_new_format);
+				}
+
+				/*	Update entities meta management	*/
+				$entities = query_posts(array('post_type' => WPSHOP_NEWTYPE_IDENTIFIER_ENTITIES, 'posts_per_page' => -1));
+				if(!empty($entities)){
+					foreach($entities as $entity){
+						$params = get_post_meta($entity->ID, '_wpshop_entity_params', true);
+						$support = ( !empty($params['support']) ) ? $params['support'] : '';
+						$rewrite = ( !empty($params['rewrite']) ) ? $params['rewrite'] : '';
+
+						$display_admin_menu = 'on';
+
+						update_post_meta($entity->ID, '_wpshop_entity_params', array('support' => $support, 'rewrite' => $rewrite, 'display_admin_menu' => $display_admin_menu));
+					}
+				}
+				wp_reset_query();
+
+				// Default Weight unity and Currency Options
+				add_option( 'wpshop_shop_weight_group', 3, '', 'yes' );
+				add_option( 'wpshop_shop_default_weight_unity', 6, '', 'yes' );
+				add_option( 'wpshop_shop_currency_group', 4, '', 'yes' );
+
+				$default_currency = get_option('wpshop_shop_default_currency');
+				foreach ( unserialize(WPSHOP_SHOP_CURRENCIES) as $k => $v ) {
+					if ( $default_currency == $k ) {
+						$symbol = $v;
+					}
+				}
+				if ( !empty($symbol) ) {
+					$query = 'SELECT * FROM ' .WPSHOP_DBT_ATTRIBUTE_UNIT. ' WHERE name = "'.html_entity_decode($symbol, ENT_QUOTES, 'UTF-8').'"';
 					$currency = $wpdb->get_row($query);
 					if ( !empty($currency) ) {
 						update_option('wpshop_shop_default_currency', $currency->id);
 						// Update the change rate of the default currency
 						$wpdb->update(WPSHOP_DBT_ATTRIBUTE_UNIT, array('change_rate' => 1), array('id' => $currency->id) );
 					}
-					// Update the field for variation and user definition field
-					$wpdb->update(WPSHOP_DBT_ATTRIBUTE, array('is_used_for_variation' => 'yes'), array('is_user_defined' => 'yes') );
-					// Update field type for frontend output selection
-					$wpdb->update(WPSHOP_DBT_ATTRIBUTE, array('frontend_input' => 'text'), array());
-					$wpdb->update(WPSHOP_DBT_ATTRIBUTE, array('frontend_input' => 'textarea'), array('backend_input' => 'textarea') );
-					$wpdb->update(WPSHOP_DBT_ATTRIBUTE, array('frontend_input' => 'select'), array('backend_input' => 'multiple-select') );
-					$wpdb->update(WPSHOP_DBT_ATTRIBUTE, array('frontend_input' => 'select'), array('backend_input' => 'select') );
+				}
 
-					add_option('wpshop_cart_option', array( 'product_added_to_cart' => array('dialog_msg'), 'product_added_to_quotation' => array('cart_page')) );
+				// Update the field for variation and user definition field
+				$wpdb->update(WPSHOP_DBT_ATTRIBUTE, array('is_used_for_variation' => 'yes'), array('is_user_defined' => 'yes') );
+				// Update field type for frontend output selection
+				$wpdb->update(WPSHOP_DBT_ATTRIBUTE, array('frontend_input' => 'text'), array());
+				$wpdb->update(WPSHOP_DBT_ATTRIBUTE, array('frontend_input' => 'textarea'), array('backend_input' => 'textarea') );
+				$wpdb->update(WPSHOP_DBT_ATTRIBUTE, array('frontend_input' => 'select'), array('backend_input' => 'multiple-select') );
+				$wpdb->update(WPSHOP_DBT_ATTRIBUTE, array('frontend_input' => 'select'), array('backend_input' => 'select') );
 
-					/*	Regenerate the size for wpshop_thumbnail image size	*/
-					$attachments = get_posts(array('post_type' => 'attachment', 'numberposts' => -1, 'post_status' => null));
-					if ( is_array( $attachments ) && ( count( $attachments ) > 0)  ) {
-						foreach ( $attachments as $attachment ) {
-							if ( 'image/' == substr( $attachment->post_mime_type, 0, 6 ) ) {
-								$fullsizepath = get_attached_file( $attachment->ID );
-								if ( false === $fullsizepath || ! file_exists( $fullsizepath ) ) {
+				add_option('wpshop_cart_option', array( 'product_added_to_cart' => array('dialog_msg'), 'product_added_to_quotation' => array('cart_page')) );
 
-								}
-								else {
-									@set_time_limit( 900 );
-
-									$metadata = wp_generate_attachment_metadata( $attachment->ID, $fullsizepath );
-
-									if ( is_wp_error( $metadata ) )
-										$this->die_json_error_msg( $attachment->ID, $metadata->get_error_message() );
-									if ( empty( $metadata ) )
-										$this->die_json_error_msg( $attachment->ID, __( 'Unknown failure reason.', 'wpshop' ) );
-
-									// If this fails, then it just means that nothing was changed (old value == new value)
-									wp_update_attachment_metadata( $attachment->ID, $metadata );
-								}
-							}
-						}
-					}
 				return true;
 			break;
 
@@ -1243,14 +1246,1053 @@ WHERE ATTR_DET.attribute_id IN (" . $attribute_ids . ")"
 				/**	Update the product reference field for using it into variation specific attributes	*/
 				$wpdb->update(WPSHOP_DBT_ATTRIBUTE, array('is_used_in_variation' => 'yes', 'last_update_date' => current_time('mysql', 0)), array('code' => 'product_reference'));
 
-				/**	Update the product stock field for using it into variation specific attributes	*/
-				$wpdb->update(WPSHOP_DBT_ATTRIBUTE, array('is_used_in_variation' => 'yes', 'last_update_date' => current_time('mysql', 0)), array('code' => 'product_stock'));
+				/**	Insert new message for admin when a customer make an order	*/
+				$admin_new_order_message = get_option( 'WPSHOP_NEW_ORDER_ADMIN_MESSAGE' );
+				if ( empty($admin_new_order_message) ) {
+					wps_message_ctr::createMessage( 'WPSHOP_NEW_ORDER_ADMIN_MESSAGE' );
+				}
+				/**	Update all amount for paypal orders	*/
+				$query = $wpdb->prepare("SELECT post_id FROM " . $wpdb->postmeta . " WHERE meta_key = %s AND meta_value = %s ", '_wpshop_payment_method', 'paypal');
+				$paypal_payment_list = $wpdb->get_results( $query );
+				if ( !empty($paypal_payment_list) ) {
+					foreach ( $paypal_payment_list as $post ) {
+						$order_meta = get_post_meta( $post->post_id, '_order_postmeta', true );
+						$order_payment_meta = get_post_meta( $post->post_id, 'wpshop_payment_return_data', true );
+						if ( !empty($order_meta['order_status']) && ($order_meta['order_status'] == 'incorrect_amount') ) {
+							if ( !empty($order_meta['order_grand_total']) && !empty($order_payment_meta['mc_gross']) ) {
+								$order_amount_to_pay = number_format($order_meta['order_grand_total'], 5);
+								$order_amount_payed = number_format(floatval($order_payment_meta['mc_gross']), 5);
+								if ($order_amount_payed == $order_amount_to_pay ) {
+									wpshop_payment::setOrderPaymentStatus($order_id, 'completed');
+								}
+							}
+						}
+					}
+				}
+
+				/**	Save existing orders address information	*/
+				$billing_title = __('Billing address', 'wpshop');
+				$shipping_title = __('Shipping address', 'wpshop');
+				$results = query_posts( array('post_type' => WPSHOP_NEWTYPE_IDENTIFIER_ORDER, 'posts_per_page' => -1) );
+				foreach ( $results as $result ) {
+					$address = get_post_meta($result->ID, '_order_info', true);
+					$address_format = array();
+
+					$billing_address = array();
+					if ( !empty($address['billing']) && empty($address['billing']['id']) ) {
+						if ( !empty($address['billing']['civility']) ) {
+							switch ( $address['billing']['civility'] ) {
+								case 1:
+									$civility = $mister_id ;
+									break;
+								case 2:
+									$civility = $madam_id;
+									break;
+								case 3:
+									$civility = $miss_id;
+									break;
+								default:
+									$civility = $mister_id ;
+									break;
+							}
+						}
+						else {
+							$civility = $mister_id ;
+						}
+						$billing_address = array('address_title' => $billing_title,
+							'address_last_name' => !empty($address['billing']['last_name']) ? $address['billing']['last_name'] : '',
+							'address_first_name' => !empty($address['billing']['first_name']) ? $address['billing']['first_name'] : '',
+							'company' => !empty($address['billing']['company']) ? $address['billing']['company'] : '',
+							'address' => !empty($address['billing']['address']) ? $address['billing']['address'] : '',
+							'postcode' => !empty($address['billing']['postcode']) ? $address['billing']['postcode'] : '',
+							'city' => !empty($address['billing']['city']) ? $address['billing']['city'] : '',
+							'state' => !empty($address['billing']['state']) ? $address['billing']['state'] : '',
+							'country' => !empty($address['billing']['country']) ? $address['billing']['country'] : '',
+							'address_user_email' => !empty($address['billing']['email']) ? $address['billing']['email'] : '',
+							'phone' => !empty($address['billing']['phone']) ? $address['billing']['phone'] : '',
+							'tva_intra' => !empty($address['billing']['company_tva_intra']) ? $address['billing']['company_tva_intra'] : '',
+							'civility' => $civility
+						);
+						$billing_address_option = get_option( 'wpshop_billing_address' );
+						$address_format['billing']['id'] = $billing_address_option['choice'];
+						$address_format['billing']['address'] = $shipping_address;
+					}
+
+					$shipping_address = array();
+					if ( !empty($address['shipping']) && empty($address['shipping']['id']) ) {
+						if ( !empty($address['shipping']['civility']) ) {
+							switch ( $address['shipping']['civility'] ) {
+								case 1:
+									$civility = $mister_id ;
+									break;
+								case 2:
+									$civility = $madam_id;
+									break;
+								case 3:
+									$civility = $miss_id;
+									break;
+							}
+						}
+						else {
+							$civility = $mister_id;
+						}
+						$shipping_address = array('address_title' => $shipping_title,
+							'address_last_name' => !empty($address['shipping']['last_name']) ? $address['shipping']['last_name'] : '',
+							'address_first_name' => !empty($address['shipping']['first_name']) ? $address['shipping']['first_name'] : '',
+							'company' => !empty($address['shipping']['company']) ? $address['shipping']['company'] : '',
+							'address' => !empty($address['shipping']['address']) ? $address['shipping']['address'] : '',
+							'postcode' => !empty($address['shipping']['postcode']) ? $address['shipping']['postcode'] : '',
+							'city' => !empty($address['shipping']['city']) ? $address['shipping']['city'] : '',
+							'state' => !empty($address['shipping']['state']) ? $address['shipping']['state'] : '',
+							'country' => !empty($address['shipping']['country']) ? $address['shipping']['country'] : '',
+							'civility' => $civility
+						);
+						$shipping_address_options = get_option( 'wpshop_shipping_address_choice' );
+						$address_format['shipping']['id'] = $shipping_address_options['choice'];
+						$address_format['shipping']['address'] = $shipping_address;
+					}
+
+					if ( !empty($address_format) ) {
+						update_post_meta($result->ID, '_order_info', $address_format);
+					}
+				}
+
+				/**	Delete username from frontend form	*/
+				$attribute_login = wpshop_attributes::getElement('user_login', "'valid'", 'code');
+				if ( !empty($attribute_login) ) {
+					$wpdb->update(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'deleted', 'last_update_date' => current_time('mysql', 0), 'position' => 0), array('attribute_id' => $attribute_login->id));
+				}
+
+				$wpdb->update(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('last_update_date' => current_time('mysql', 0), 'position' => 0), array('status' => 'deleted'));
+
+				return true;
+			break;
+
+			case '31':
+				/**	Change order structure in order to support several payment	*/
+				$existing_orders = query_posts( array('post_type' => WPSHOP_NEWTYPE_IDENTIFIER_ORDER, 'posts_per_page' => -1, 'post_status' => array('draft', 'trash', 'publish')) );
+				if ( !empty($existing_orders) ) {
+					foreach ( $existing_orders as $order_main_informations) {
+						/**	Transfer payment return data form old meta to new	*/
+						$order_payment_return_data = get_post_meta($order_main_informations->ID, 'wpshop_payment_return_data', true);
+						update_post_meta($order_main_informations->ID, '_wpshop_payment_return_data', $order_payment_return_data);
+						delete_post_meta($order_main_informations->ID, 'wpshop_payment_return_data');
+
+						/**	Transfer old payment storage method to new storage method	*/
+						$order_meta = get_post_meta($order_main_informations->ID, '_order_postmeta', true);
+						if ( !empty($order_meta['order_status']) ) {
+							$order_meta['order_payment']['customer_choice'] = array('method' => (!empty($order_meta['payment_method']) ? $order_meta['payment_method'] : (!empty($order_meta['order_payment']['customer_choice']) ? $order_meta['order_payment']['customer_choice'] : '')));
+							unset($order_meta['payment_method']);
+							$order_meta['order_payment']['received'][0]['waited_amount'] = !empty($order_meta['order_grand_total']) ? $order_meta['order_grand_total'] : 0;
+							$order_meta['order_payment']['received'][0]['method'] = $order_meta['order_payment']['customer_choice']['method'];
+							$order_meta['order_payment']['received'][0]['date'] = $order_meta['order_date'];
+							$order_meta['order_payment']['received'][0]['status'] = 'waiting_payment';
+							$order_meta['order_payment']['received'][0]['comment'] = '';
+							$order_meta['order_payment']['received'][0]['author'] = $order_meta['order_payment']['customer_choice'] == 'check' ? 1 : $order_meta['customer_id'];
+							if ( in_array($order_meta['order_status'], array('completed', 'shipped')) ) {
+								$order_meta['order_payment']['received'][0]['received_amount'] = $order_meta['order_grand_total'];
+								$order_meta['order_payment']['received'][0]['payment_reference'] = wpshop_payment::get_payment_transaction_number_old_way( $order_main_informations->ID );
+								$order_meta['order_payment']['received'][0]['date'] = $order_meta['order_payment_date'];
+								$order_meta['order_payment']['received'][0]['status'] = 'payment_received';
+								$order_meta['order_payment']['received'][0]['comment'] = '';
+								$order_meta['order_payment']['received'][0]['author'] = $order_meta['order_payment']['customer_choice'] == 'check' ? 1 : $order_meta['customer_id'];
+								$order_meta['order_payment']['received'][0]['invoice_ref'] = $order_meta['order_invoice_ref'];
+							}
+							update_post_meta($order_main_informations->ID, '_order_postmeta', $order_meta);
+
+							if (!empty($order_meta['order_payment']['customer_choice'])) {
+								switch ($order_meta['order_payment']['customer_choice']) {
+									case 'check':
+										delete_post_meta($order_main_informations->ID, '_order_check_number', get_post_meta($order_main_informations->ID, '_order_check_number', true));
+									break;
+									case 'paypal':
+										delete_post_meta($order_main_informations->ID, '_order_paypal_txn_id', get_post_meta($order_main_informations->ID, '_order_paypal_txn_id', true));
+									break;
+									case 'cic':
+										delete_post_meta($order_main_informations->ID, '_order_cic_txn_id', get_post_meta($order_main_informations->ID, '_order_cic_txn_id', true));
+									break;
+								}
+							}
+						}
+					}
+				}
+				$wps_messages = new wps_message_ctr();
+				$wps_messages->wpshop_messages_historic_correction();
+				wp_reset_query();
+
+				$default_currency = get_option('wpshop_shop_default_currency');
+				foreach ( unserialize(WPSHOP_SHOP_CURRENCIES) as $k => $v ) {
+					if ( $default_currency == $k ) {
+						$symbol = $v;
+					}
+				}
+				if ( !empty($symbol) ) {
+					$query = $wpdb->prepare('SELECT * FROM ' .WPSHOP_DBT_ATTRIBUTE_UNIT. ' WHERE name = "'.html_entity_decode($symbol, ENT_QUOTES, 'UTF-8').'"', '');
+					$currency = $wpdb->get_row($query);
+					if ( !empty($currency) ) {
+						update_option('wpshop_shop_default_currency', $currency->id);
+						// Update the change rate of the default currency
+						$wpdb->update(WPSHOP_DBT_ATTRIBUTE_UNIT, array('change_rate' => 1), array('id' => $currency->id) );
+					}
+				}
+
+				$shipping_confirmation_message = get_option('WPSHOP_SHIPPING_CONFIRMATION_MESSAGE');
+				if ( !empty($shipping_confirmation_message) ) {
+					$message = __('Hello [customer_first_name] [customer_last_name], this email confirms that your order ([order_key]) has just been shipped (order date : [order_date], tracking number : [order_trackingNumber]). Thank you for your loyalty. Have a good day.', 'wpshop');
+					$post = array('ID'=> $shipping_confirmation_message, 'post_content' => $message);
+					wp_update_post( $post );
+				}
+				return true;
+			break;
+			case '32':
+				/**	Update product set id that are null 	*/
+				$query = $wpdb->prepare( "UPDATE " . $wpdb->postmeta . " SET meta_value = (SELECT id FROM " . WPSHOP_DBT_ATTRIBUTE_SET . " WHERE default_set = 'yes' AND entity_id = '" . wpshop_entities::get_entity_identifier_from_code(WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT) . "') WHERE meta_key = %s AND ((meta_value = '') OR (meta_value = null))", '_' . WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT . '_attribute_set_id' );
+				$wpdb->query($query);
+
+				$addons_options = get_option( WPSHOP_ADDONS_OPTION_NAME );
+				if ( !empty($addons_options) && !empty($addons_options['WPSHOP_ADDONS_QUOTATION']) && !empty($addons_options['WPSHOP_ADDONS_QUOTATION']['activate']) && $addons_options['WPSHOP_ADDONS_QUOTATION']['activate'] ) {
+					$admin_new_quotation_message = get_option( 'WPSHOP_NEW_QUOTATION_ADMIN_MESSAGE' );
+					if ( empty($admin_new_quotation_message) ) {
+						wps_message_ctr::createMessage( 'WPSHOP_NEW_QUOTATION_ADMIN_MESSAGE' );
+					}
+					$admin_new_quotation_confirm_message = get_option( 'WPSHOP_QUOTATION_CONFIRMATION_MESSAGE' );
+					if ( empty($admin_new_quotation_confirm_message) ) {
+						wps_message_ctr::createMessage( 'WPSHOP_QUOTATION_CONFIRMATION_MESSAGE' );
+					}
+				}
+
+				/**	Allows the administrator to manage a little bit more the catalog rewrite parameters	*/
+				$options = get_option('wpshop_catalog_product_option');
+				$options['wpshop_catalog_product_slug_with_category'] = empty($options['wpshop_catalog_product_slug_with_category']) ? 'yes' : $options['wpshop_catalog_product_slug_with_category'];
+				update_option('wpshop_catalog_product_option', $options);
+
+				/**	Create a new page for unsuccessfull payment return	*/
+ 				self::wpshop_insert_default_pages($wpshop_shop_type);
+				wp_cache_flush();
+
+				/**	Update the iso code of currencies	*/
+				$wpdb->update(WPSHOP_DBT_ATTRIBUTE_UNIT, array('code_iso' => 'EUR'), array('name' => 'euro'));
+				$wpdb->update(WPSHOP_DBT_ATTRIBUTE_UNIT, array('code_iso' => 'USD'), array('name' => 'dollar'));
+
+				/** Update VAT Rate*/
+				$query = $wpdb->prepare('SELECT id FROM ' . WPSHOP_DBT_ATTRIBUTE . ' WHERE code = %s OR code = %s', 'tx_tva', 'eco_taxe_rate_tva');
+				$attribute_ids = $wpdb->get_results($query);
+				foreach ( $attribute_ids as $attribute_id) {
+					$query = $wpdb->prepare('UPDATE ' .WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS. ' SET value = replace(value, "-", ".") WHERE attribute_id = %d', $attribute_id->id);
+					$wpdb->query($query);
+				}
+
+				return true;
+			break;
+
+			case '33' :
+				/** Update the user_mail for the new system of log in/register */
+				$query = $wpdb->query('UPDATE ' .WPSHOP_DBT_ATTRIBUTE.' SET is_used_in_quick_add_form = "yes" WHERE code = "user_email"');
+
+				/** Put discount attributes in price attribute set section*/
+				$query = $wpdb->prepare('SELECT id FROM ' .WPSHOP_DBT_ATTRIBUTE_GROUP. ' WHERE code = %s', 'prices');
+				$prices_section_id = $wpdb->get_var($query);
+
+				$query = $wpdb->prepare('SELECT * FROM ' .WPSHOP_DBT_ATTRIBUTE. ' WHERE code = %s OR code = %s', 'discount_rate', 'discount_amount');
+				$attributes = $wpdb->get_results($query);
+				if ( !empty($attributes) && !empty($prices_section_id) ) {
+					foreach ( $attributes as $attribute) {
+						$query = $wpdb->query('UPDATE '.WPSHOP_DBT_ATTRIBUTE_DETAILS.' SET attribute_group_id = '. $prices_section_id .' WHERE attribute_id = '.$attribute->id);
+					}
+				}
+				return true;
+			break;
+
+			case '34' :
+				$query = $wpdb->prepare('SELECT id FROM ' .WPSHOP_DBT_ATTRIBUTE_GROUP. ' WHERE code = %s', 'prices');
+				$prices_section_id = $wpdb->get_var($query);
+
+				$query = $wpdb->prepare('SELECT MAX(position) AS max_position FROM '.WPSHOP_DBT_ATTRIBUTE_DETAILS.' WHERE attribute_group_id = %d', $prices_section_id);
+				$last_position_id = $wpdb->get_var($query);
+
+				$query = $wpdb->prepare('SELECT * FROM '.WPSHOP_DBT_ATTRIBUTE_DETAILS.' WHERE  attribute_group_id = %d AND position = %d', $prices_section_id, $last_position_id);
+				$attribute_example = $wpdb->get_row($query);
+
+				$query = $wpdb->prepare('SELECT * FROM ' .WPSHOP_DBT_ATTRIBUTE. ' WHERE code = %s OR code = %s', 'special_from', 'special_to');
+				$attributes = $wpdb->get_results($query);
+				$i = 1;
+				if ( !empty($attributes) && !empty($prices_section_id) ) {
+
+					foreach ( $attributes as $attribute) {
+						$wpdb->update(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('attribute_group_id' => $prices_section_id), array('attribute_id' => $attribute->id) );
+						$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $attribute_example->entity_type_id, 'attribute_set_id' => $attribute_example->attribute_set_id, 'attribute_group_id' => $prices_section_id, 'attribute_id' => $attribute->id, 'position' => $last_position_id + $i));
+						$i++;
+					}
+				}
+				$discount_options = get_option('wpshop_catalog_product_option');
+				$status =  ( !empty($discount_options) && !empty($discount_options['discount']) ) ? 'valid' : 'notused';
+				$wpdb->update(WPSHOP_DBT_ATTRIBUTE, array('frontend_label' => __('Discount from', 'wpshop'), 'status' => $status ), array('code' => 'special_from') );
+				$wpdb->update(WPSHOP_DBT_ATTRIBUTE, array('frontend_label' => __('Discount to', 'wpshop'), 'status' => $status ), array('code' => 'special_to') );
+				return true;
+			break;
+
+
+			case '35' :
+				$wpdb->update( $wpdb->posts, array('post_status'=>'draft'), array('post_type' => WPSHOP_NEWTYPE_IDENTIFIER_ADDRESS) );
+				return true;
+			break;
+
+			case '36' :
+				wpshop_entities::create_cpt_attributes_from_csv_file(WPSHOP_NEWTYPE_IDENTIFIER_ADDRESS);
+				@set_time_limit( 900 );
+				/** Change the path for old categories pictures */
+				@chmod(WPSHOP_UPLOAD_DIR .'wpshop_product_category', 0755);
+
+				$query = 'SELECT * FROM ' .$wpdb->terms;
+				$terms = $wpdb->get_results($query);
+				if ( !empty($terms) ) {
+					foreach ( $terms as $term ) {
+						@chmod(WPSHOP_UPLOAD_DIR .'wpshop_product_category/'.$term->term_id, 0755);
+						/** Check if a picture exists **/
+						$term_option =  get_option( WPSHOP_NEWTYPE_IDENTIFIER_CATEGORIES . '_' .$term->term_id );
+						if ( !empty($term_option) && !empty($term_option['wpshop_category_picture']) && is_file(WPSHOP_UPLOAD_DIR . $term_option['wpshop_category_picture']) ) {
+							$wp_upload_dir = wp_upload_dir();
+							$img_path = WPSHOP_UPLOAD_DIR . $term_option['wpshop_category_picture'];
+							$img_basename = basename($img_path);
+							$wp_filetype = wp_check_filetype($img_basename, null );
+							/** Check if there is an image with the same name, if yes we add a rand number to image's name **/
+							$rand_name = ( is_file($wp_upload_dir['path'] . '/' .$img_basename) ) ? rand() : '';
+							$img_basename = ( !empty($rand_name) ) ? $rand_name.'_'.$img_basename : $img_basename;
+							if ( copy($img_path, $wp_upload_dir['path'] . '/' . $img_basename) ) {
+								$attachment = array(
+										'guid' => $wp_upload_dir['url'] . '/' . $img_basename,
+										'post_mime_type' => $wp_filetype['type'],
+										'post_title' => preg_replace('/\.[^.]+$/', '', $img_basename),
+										'post_content' => '',
+										'post_status' => 'inherit'
+								);
+								$attach_id = wp_insert_attachment( $attachment, $wp_upload_dir['path'] . '/' . $img_basename);
+								/** Generate differnts sizes for this image **/
+								require_once(ABSPATH . 'wp-admin/includes/image.php');
+								$attach_data = wp_generate_attachment_metadata( $attach_id, $wp_upload_dir['path'] . '/' . $img_basename );
+								wp_update_attachment_metadata( $attach_id, $attach_data );
+								/** Update option picture **/
+								$term_option['wpshop_category_picture'] = $attach_id;
+								update_option(WPSHOP_NEWTYPE_IDENTIFIER_CATEGORIES . '_' .$term->term_id , $term_option);
+							}
+						}
+					}
+				}
+
+
+				/** Change metabox Hidden Nav Menu Definition to display WPShop categories' metabox **/
+				$query = $wpdb->prepare('SELECT * FROM ' .$wpdb->usermeta. ' WHERE meta_key = %s', 'metaboxhidden_nav-menus');
+				$meta_keys = $wpdb->get_results( $query );
+				if ( !empty($meta_keys) && is_array( $meta_keys) ) {
+					foreach ( $meta_keys as $meta_key ) {
+						$user_id = $meta_key->user_id;
+						$meta_value = unserialize($meta_key->meta_value);
+						if ( !empty( $meta_value) && is_array($meta_value) ) {
+							$data_to_delete = array_search('add-wpshop_product_category', $meta_value);
+							if ( $data_to_delete !== false ) {
+								unset( $meta_value[$data_to_delete] );
+							}
+						}
+						update_user_meta($user_id, 'metaboxhidden_nav-menus', $meta_value);
+					}
+				}
+				return true;
+			break;
+
+			case '37' :
+				@set_time_limit( 900 );
+				/** Change the path for old categories pictures */
+				@chmod(WPSHOP_UPLOAD_DIR .'wpshop/wpshop_product_category', 0755);
+				/** Read all categories folders **/
+				$categories_main_dir = WPSHOP_UPLOAD_DIR .'wpshop/wpshop_product_category';
+				if ( file_exists($categories_main_dir) ) {
+					$main_folder_content = scandir($categories_main_dir);
+					/** For each category folder **/
+					foreach ( $main_folder_content as $category_folder ) {
+						if ( $category_folder && substr( $category_folder, 0, 1) != '.' ) {
+							$category_id = $category_folder;
+							@chmod(WPSHOP_UPLOAD_DIR .'wpshop/wpshop_product_category/'.$category_id, 0755);
+							$scan_category_folder = opendir($categories_main_dir.'/'.$category_folder);
+							/** For each Picture of category **/
+							$file_time = 0;
+							$save_this_picture = false;
+							while(false !== ($fichier = readdir($scan_category_folder))) {
+								if ( $fichier && substr( $fichier, 0, 1) != '.' ) {
+									if ( $file_time < filemtime($categories_main_dir . '/'. $category_id . '/'. $fichier) ) {
+										$save_this_picture = true;
+										$file_time = filemtime($categories_main_dir . '/'. $category_id . '/'. $fichier);
+									}
+									/** Select category option **/
+									$term_option =  get_option( WPSHOP_NEWTYPE_IDENTIFIER_CATEGORIES . '_' .$category_id );
+									$wp_upload_dir = wp_upload_dir();
+									$img_path = $categories_main_dir . '/' . $category_id .'/'. $fichier;
+									$img_basename = basename($img_path);
+									$wp_filetype = wp_check_filetype($img_basename, null );
+									/** Check if there is an image with the same name, if yes we add a rand number to image's name **/
+									$rand_name = ( is_file($wp_upload_dir['path'] . '/' .$img_basename) ) ? rand() : '';
+									$img_basename = ( !empty($rand_name) ) ? $rand_name.'_'.$img_basename : $img_basename;
+
+									if ( copy($img_path, $wp_upload_dir['path'] . '/' . $img_basename) ) {
+										$attachment = array(
+												'guid' => $wp_upload_dir['url'] . '/' . $img_basename,
+												'post_mime_type' => $wp_filetype['type'],
+												'post_title' => preg_replace('/\.[^.]+$/', '', $img_basename),
+												'post_content' => '',
+												'post_status' => 'inherit'
+										);
+										$attach_id = wp_insert_attachment( $attachment, $wp_upload_dir['path'] . '/' . $img_basename);
+										/** Generate differnts sizes for this image **/
+										require_once(ABSPATH . 'wp-admin/includes/image.php');
+										$attach_data = wp_generate_attachment_metadata( $attach_id, $wp_upload_dir['path'] . '/' . $img_basename );
+										wp_update_attachment_metadata( $attach_id, $attach_data );
+										/** Update option picture **/
+										$term_option['wpshop_category_picture'] =  $attach_id;
+										if ( $save_this_picture ) {
+											update_option(WPSHOP_NEWTYPE_IDENTIFIER_CATEGORIES . '_' .$category_id , $term_option);
+										}
+										$save_this_picture = false;
+									}
+								}
+							}
+						}
+					}
+				}
+				return true;
+				break;
+
+			case '38' :
+				wps_message_ctr::createMessage( 'WPSHOP_QUOTATION_UPDATE_MESSAGE' );
+				return true;
+			break;
+
+			case '39' :
+				$attribute_def = wpshop_attributes::getElement('tx_tva', "'valid'", 'code');
+				/** Check if the 7% VAT Rate is not already created **/
+				$query = $wpdb->prepare('SELECT id FROM ' .WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS. ' WHERE attribute_id = %d AND value = %s',  $attribute_def->id, '7');
+				$exist_vat_rate = $wpdb->get_results( $query );
+
+				if ( empty($exist_vat_rate) ) {
+					/** Get Max Position **/
+					$query = $wpdb->prepare('SELECT MAX(position) as max_position FROM ' .WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS. ' WHERE attribute_id = %d', $attribute_def->id);
+					$max_position = $wpdb->get_var( $query );
+
+					if ( !empty( $attribute_def) && !empty($attribute_def->id)  ) {
+						$wpdb->insert( WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'attribute_id' =>  $attribute_def->id, 'position' => (int)$max_position + 1, 'value' => '7', 'label' => '7') );
+					}
+				}
+
+				/** Filter Search optimization **/
+				@set_time_limit( 900 );
+				$query = $wpdb->prepare('SELECT term_id FROM '.$wpdb->term_taxonomy.' WHERE taxonomy = %s ', WPSHOP_NEWTYPE_IDENTIFIER_CATEGORIES);
+				$categories = $wpdb->get_results( $query );
+				$cats = array();
+				if ( !empty($categories) ) {
+					foreach($categories as $category) {
+						$cats[] = $category->term_id;
+					}
+					$wpshop_filter_search = new wps_filter_search();
+					$wpshop_filter_search->stock_values_for_attribute($cats);
+				}
+				return true;
+			break;
+
+			case '40' :
+				/**	Store watt in puissance unit group	*/
+				$query = $wpdb->prepare("SELECT id FROM " . WPSHOP_DBT_ATTRIBUTE_UNIT_GROUP . " WHERE name = %s", __('puissance', 'wpshop'));
+				$puissance_unit_group_id = $wpdb->get_var( $query );
+				$wpdb->update( WPSHOP_DBT_ATTRIBUTE_UNIT, array('group_id' => $puissance_unit_group_id), array('unit' => 'watt') );
+
+				/**	Store day/week/year in duration unit group	*/
+				$query = $wpdb->prepare("SELECT id FROM " . WPSHOP_DBT_ATTRIBUTE_UNIT_GROUP . " WHERE name = %s", __('duration', 'wpshop'));
+				$duration_unit_group_id = $wpdb->get_var( $query );
+				$wpdb->update( WPSHOP_DBT_ATTRIBUTE_UNIT, array('group_id' => $duration_unit_group_id), array('unit' => 'day') );
+				$wpdb->update( WPSHOP_DBT_ATTRIBUTE_UNIT, array('group_id' => $duration_unit_group_id), array('unit' => 'week') );
+				$wpdb->update( WPSHOP_DBT_ATTRIBUTE_UNIT, array('group_id' => $duration_unit_group_id), array('unit' => 'year') );
+
+				/**	Store day/week/year in duration unit group	*/
+				$query = $wpdb->prepare("SELECT id FROM " . WPSHOP_DBT_ATTRIBUTE_UNIT_GROUP . " WHERE name = %s", __('length', 'wpshop'));
+				$length_unit_group_id = $wpdb->get_var( $query );
+				$wpdb->update( WPSHOP_DBT_ATTRIBUTE_UNIT, array('group_id' => $length_unit_group_id), array('unit' => 'cm') );
+				return true;
+			break;
+
+			case '41':
+				/**	Get distinct attribute set and delete doublons	*/
+				$query = "SELECT DISTINCT( name ) AS name, MIN( id ) as min_id FROM " . WPSHOP_DBT_ATTRIBUTE_SET . " GROUP BY name HAVING COUNT(id) > 1";
+				$list_of_set = $wpdb->get_results( $query );
+				foreach ( $list_of_set as $set_infos ) {
+					$query = $wpdb->prepare( "DELETE FROM " . WPSHOP_DBT_ATTRIBUTE_SET . " WHERE name = %s AND id != %d", $set_infos->name, $set_infos->min_id );
+					$wpdb->query( $query );
+				}
+				$wpdb->query( "OPTIMIZE TABLE " . WPSHOP_DBT_ATTRIBUTE_SET );
+
+				/**	Get and delete attribute set section	*/
+				$query = "DELETE FROM " . WPSHOP_DBT_ATTRIBUTE_GROUP . " WHERE attribute_set_id NOT IN ( SELECT DISTINCT(id) FROM " . WPSHOP_DBT_ATTRIBUTE_SET . " )";
+				$wpdb->query( $query );
+				$wpdb->query( "OPTIMIZE TABLE " . WPSHOP_DBT_ATTRIBUTE_GROUP );
+
+				/**	Get and delete attribute set details	*/
+				$query = "DELETE FROM " . WPSHOP_DBT_ATTRIBUTE_DETAILS . " WHERE attribute_set_id NOT IN ( SELECT DISTINCT(id) FROM " . WPSHOP_DBT_ATTRIBUTE_SET . " ) OR attribute_group_id NOT IN ( SELECT DISTINCT(id) FROM " . WPSHOP_DBT_ATTRIBUTE_GROUP . " )";
+				$wpdb->query( $query );
+				$wpdb->query( "OPTIMIZE TABLE " . WPSHOP_DBT_ATTRIBUTE_DETAILS );
+
+				$query = "SELECT attribute_set_id, attribute_group_id, attribute_id, MIN(id) as min_id FROM " . WPSHOP_DBT_ATTRIBUTE_DETAILS . " GROUP BY attribute_set_id, attribute_group_id, attribute_id HAVING COUNT(id) > 1";
+				$affectation_list = $wpdb->get_results( $query );
+				foreach ( $affectation_list as $affectation_to_treat ) {
+					$query = $wpdb->prepare( "DELETE FROM " . WPSHOP_DBT_ATTRIBUTE_DETAILS . " WHERE attribute_set_id = %d AND attribute_group_id = %d AND attribute_id = %d AND id != %d", $affectation_to_treat->attribute_set_id, $affectation_to_treat->attribute_group_id, $affectation_to_treat->attribute_id, $affectation_to_treat->min_id );
+					$wpdb->query( $query );
+				}
+				$wpdb->query( "OPTIMIZE TABLE " . WPSHOP_DBT_ATTRIBUTE_DETAILS );
+
+				/**	Get and delete double unit	*/
+				$query = "SELECT DISTINCT( unit ) AS unit, MIN( id ) as min_id FROM " . WPSHOP_DBT_ATTRIBUTE_UNIT . " GROUP BY unit HAVING COUNT(id) > 1";
+				$list_of_set = $wpdb->get_results( $query );
+				foreach ( $list_of_set as $set_infos ) {
+					$query = $wpdb->prepare( "DELETE FROM " . WPSHOP_DBT_ATTRIBUTE_UNIT . " WHERE unit = %s AND id != %d", $set_infos->unit, $set_infos->min_id );
+					$wpdb->query( $query );
+				}
+				$wpdb->query( "OPTIMIZE TABLE " . WPSHOP_DBT_ATTRIBUTE_UNIT );
+
+				$query = "SELECT DISTINCT( name ) AS name, MIN( id ) as min_id FROM " . WPSHOP_DBT_ATTRIBUTE_UNIT_GROUP . " GROUP BY name HAVING COUNT(id) > 1";
+				$list_of_set = $wpdb->get_results( $query );
+				foreach ( $list_of_set as $set_infos ) {
+					$query = $wpdb->prepare( "DELETE FROM " . WPSHOP_DBT_ATTRIBUTE_UNIT_GROUP . " WHERE name = %s AND id != %d", $set_infos->name, $set_infos->min_id );
+					$wpdb->query( $query );
+				}
+				$wpdb->query( "OPTIMIZE TABLE " . WPSHOP_DBT_ATTRIBUTE_UNIT_GROUP );
+
+				/**	Get and delete attribute set details	*/
+				$query = "DELETE FROM " . WPSHOP_DBT_ATTRIBUTE_DETAILS . " WHERE attribute_set_id NOT IN ( SELECT DISTINCT(id) FROM " . WPSHOP_DBT_ATTRIBUTE_SET . " ) OR attribute_group_id NOT IN ( SELECT DISTINCT(id) FROM " . WPSHOP_DBT_ATTRIBUTE_GROUP . " )";
+				$wpdb->query( $query );
+				$query = "SELECT GROUP_CONCAT( id ) AS list_id, MIN( id ) as min_id FROM " . WPSHOP_DBT_ATTRIBUTE_DETAILS . " GROUP BY attribute_set_id, attribute_group_id, attribute_id HAVING COUNT(id) > 1";
+				$affectation_list = $wpdb->get_results( $query );
+				foreach ( $affectation_list as $list ) {
+					$query = $wpdb->prepare( "DELETE FROM " . WPSHOP_DBT_ATTRIBUTE_DETAILS . " WHERE id IN (" . ( substr($list->list_id, -1) == ',' ? substr($list->list_id, 0, -1) : $list->list_id ) . ") AND id != %d", $list->min_id , '');
+					$wpdb->query( $query );
+				}
+				$wpdb->query( "OPTIMIZE TABLE " . WPSHOP_DBT_ATTRIBUTE_DETAILS );
+
+				return true;
+			break;
+
+			case '42' :
+				$available_downloadable_product = get_option( 'WPSHOP_DOWNLOADABLE_FILE_IS_AVAILABLE' );
+				if ( empty($available_downloadable_product) ) {
+					wps_message_ctr::createMessage( 'WPSHOP_DOWNLOADABLE_FILE_IS_AVAILABLE' );
+				}
+				return true;
+			break;
+
+			case '43' :
+				$available_downloadable_product = get_option( 'WPSHOP_ORDER_IS_CANCELED' );
+				if ( empty($available_downloadable_product) ) {
+					wps_message_ctr::createMessage( 'WPSHOP_ORDER_IS_CANCELED' );
+				}
+				return true;
+			break;
+
+			case '44' :
+				$display_option = get_option('wpshop_display_option');
+				if ( !empty($display_option) && empty($display_option['latest_products_ordered']) ) {
+					$display_option['latest_products_ordered'] = 3;
+					update_option('wpshop_display_option', $display_option);
+				}
+
+				/** Check messages for customization **/
+				$messages = array( 'WPSHOP_SIGNUP_MESSAGE' => WPSHOP_SIGNUP_MESSAGE, 'WPSHOP_PAYPAL_PAYMENT_CONFIRMATION_MESSAGE' => WPSHOP_PAYPAL_PAYMENT_CONFIRMATION_MESSAGE, 'WPSHOP_OTHERS_PAYMENT_CONFIRMATION_MESSAGE' => WPSHOP_OTHERS_PAYMENT_CONFIRMATION_MESSAGE, 'WPSHOP_SHIPPING_CONFIRMATION_MESSAGE' => WPSHOP_SHIPPING_CONFIRMATION_MESSAGE, 'WPSHOP_ORDER_UPDATE_MESSAGE' => WPSHOP_ORDER_UPDATE_MESSAGE, 'WPSHOP_ORDER_UPDATE_PRIVATE_MESSAGE' => WPSHOP_ORDER_UPDATE_PRIVATE_MESSAGE, 'WPSHOP_NEW_ORDER_ADMIN_MESSAGE' => WPSHOP_NEW_ORDER_ADMIN_MESSAGE, 'WPSHOP_NEW_QUOTATION_ADMIN_MESSAGE' => WPSHOP_NEW_QUOTATION_ADMIN_MESSAGE, 'WPSHOP_QUOTATION_CONFIRMATION_MESSAGE' => WPSHOP_QUOTATION_CONFIRMATION_MESSAGE, 'WPSHOP_QUOTATION_UPDATE_MESSAGE' => WPSHOP_QUOTATION_UPDATE_MESSAGE, 'WPSHOP_DOWNLOADABLE_FILE_IS_AVAILABLE' => WPSHOP_DOWNLOADABLE_FILE_IS_AVAILABLE, 'WPSHOP_ORDER_IS_CANCELED' => WPSHOP_ORDER_IS_CANCELED);
+				if ( !empty( $messages) ) {
+					foreach ($messages as $key => $message ) {
+						$message_option = get_option( $key );
+						if ( !empty( $message_option) ) {
+							$post_message =  get_post( $message_option );
+							$original_message = ( !empty($post_message) && !empty($post_message->post_content) ) ? $post_message->post_content : '';
+							$tags = array('<p>', '</p>');
+							if ( str_replace( $tags, '', $original_message) == str_replace( $tags, '', __( $message, 'wpshop' ) ) ) {
+								wp_update_post( array( 'ID' => $message_option, 'post_content' => wps_message_ctr::customize_message($original_message) ) );
+							}
+						}
+					}
+				}
+
+				return true;
+			break;
+
+			case '45' :
+				$shipping_mode_ctr = new wps_shipping_mode_ctr();
+				$shipping_mode_ctr->migrate_default_shipping_mode();
+				return true;
+			break;
+
+			case '46':
+				wps_message_ctr::createMessage( 'WPSHOP_FORGOT_PASSWORD_MESSAGE' );
+				wps_message_ctr::customize_message( WPSHOP_FORGOT_PASSWORD_MESSAGE );
+				return true;
+			break;
+
+			case '47' :
+				wps_payment_mode::migrate_payment_modes();
+				return true;
+			break;
+
+			case '48' :
+				@ini_set('max_execution_time', '500');
+
+				$count_products = wp_count_posts(WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT);
+				$output_type_option = get_option( 'wpshop_display_option' );
+				$output_type = $output_type_option['wpshop_display_list_type'];
+
+				for( $i = 0; $i <= $count_products->publish; $i+= 20 ) {
+					$query = $wpdb->prepare( 'SELECT * FROM '. $wpdb->posts .' WHERE post_type = %s AND post_status = %s ORDER BY ID DESC LIMIT '.$i.', 20', WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT, 'publish' );
+					$products = $wpdb->get_results( $query );
+					if ( !empty($products) ) {
+						foreach( $products as $product ) {
+							$p = wpshop_products::get_product_data($product->ID);
+							$price = wpshop_prices::get_product_price($p, 'just_price_infos', array('mini_output', $output_type) );
+							update_post_meta(  $product->ID, '_wps_price_infos', $price );
+						}
+					}
+				}
+
+				return true;
+			break;
+
+			case '49' :
+				update_option( 'wpshop_send_invoice', true);
+				return true;
+			break;
+
+			case '50' :
+				$price_display_option = get_option( 'wpshop_catalog_product_option' );
+				$price_display_option['price_display']['text_from'] = 'on';
+				$price_display_option['price_display']['lower_price'] = 'on';
+				update_option( 'wpshop_catalog_product_option', $price_display_option );
+
+ 				self::wpshop_insert_default_pages();
+
+				return true;
+			break;
+
+			case '51' :
+				/**	Insert new message for direct payment link	*/
+				$direct_payment_link_message = get_option( 'WPSHOP_DIRECT_PAYMENT_LINK_MESSAGE' );
+				if ( empty($direct_payment_link_message) ) {
+					wps_message_ctr::createMessage( 'WPSHOP_DIRECT_PAYMENT_LINK_MESSAGE' );
+				}
+				return true;
+			break;
+
+			case '52' :
+				$account_page_option = get_option( 'wpshop_myaccount_page_id' );
+				if( !empty($account_page_option) ) {
+					$page_account = get_post( $account_page_option );
+					$page_content = ( !empty($page_account) && !empty($page_account->post_content) ) ? str_replace( '[wpshop_myaccount]', '[wps_account_dashboard]', $page_account->post_content ) : '[wps_account_dashboard]';
+					wp_update_post( array('ID' => $account_page_option, 'post_content' => $page_content ) );
+				}
+				return true;
+			break;
+
+			case '53' :
+				$payment_modes_option = get_option( 'wps_payment_mode' );
+				if( !empty($payment_modes_option) && !empty($payment_modes_option['mode']) ) {
+					$payment_modes_option['mode']['cash_on_delivery'] = array(
+							'name' => __( 'Cash on delivery', 'wpshop'),
+							'logo' => WPSHOP_TEMPLATES_URL.'wpshop/cheque.png',
+							'description' => __( 'Pay your order on delivery', 'wpshop') );
+
+					update_option( 'wps_payment_mode' ,$payment_modes_option );
+				}
+
+				// Mass action on products to add a flag on variation definition
+				$products = get_posts( array('posts_per_page' => -1, 'post_type' => WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT) );
+				if( !empty($products) ) {
+					foreach( $products as $p ) {
+						$post_id = $p->ID;
+						$check_product_have_variations = wpshop_products::get_variation( $post_id );
+						if( !empty($check_product_have_variations) ) {
+							$variation_flag =  wpshop_products::check_variation_type( $post_id );
+							$variation_defining = get_post_meta( $post_id, '_wpshop_variation_defining', true );
+							$variation_defining['variation_type'] = $variation_flag;
+							update_post_meta( $post_id, '_wpshop_variation_defining', $variation_defining );
+						}
+					}
+				}
+				return true;
+			break;
+
+			case '54' :
+				// Change shortcode of sign up page
+				$signup_page_id = get_option( 'wpshop_signup_page_id' );
+				if( !empty($signup_page_id) ) {
+					$signup_page = get_post( $signup_page_id );
+					$signup_page_content = ( !empty($signup_page) && !empty($signup_page->post_content) ) ? str_replace( '[wpshop_signup]', '[wps_account_dashboard]', $signup_page->post_content ) : '[wps_account_dashboard]';
+					wp_update_post( array('ID' => $signup_page_id, 'post_content' => $signup_page_content ) );
+				}
+
+				// Change Terms of sale default content
+				$terms_page_id = get_option( 'wpshop_terms_of_sale_page_id' );
+				if( !empty($terms_page_id) ) {
+					$terms_sale_page = get_post( $terms_page_id );
+					if( !empty($terms_sale_page) && !empty($terms_sale_page->post_content) && $terms_sale_page->post_content == '[wpshop_terms_of_sale]' ) {
+						$data  = '<h1>'.__( 'Your terms of sale', 'wpshop' ).'</h1>';
+						$data .= '<h3>'.__( 'Rule', 'wpshop' ).' 1</h3>';
+						$data .= '<p>Ut enim quisque sibi plurimum confidit et ut quisque maxime virtute et sapientia sic munitus est, ut nullo egeat suaque omnia in se ipso posita iudicet, ita in amicitiis expetendis colendisque maxime excellit.</p>';
+						$data .= '<h3>'.__( 'Rule', 'wpshop' ).' 2</h3>';
+						$data .= '<p>Ut enim quisque sibi plurimum confidit et ut quisque maxime virtute et sapientia sic munitus est, ut nullo egeat suaque omnia in se ipso posita iudicet, ita in amicitiis expetendis colendisque maxime excellit.</p>';
+						$data .= '<h3>'.__( 'Rule', 'wpshop' ).' 3</h3>';
+						$data .= '<p>Ut enim quisque sibi plurimum confidit et ut quisque maxime virtute et sapientia sic munitus est, ut nullo egeat suaque omnia in se ipso posita iudicet, ita in amicitiis expetendis colendisque maxime excellit.</p>';
+						$data .= '<h3>'.__( 'Credits', 'wpshop' ).'</h3>';
+						$data .= sprintf( __( '%s uses <a href="http://www.wpshop.fr/" target="_blank" title="%s uses WPShop e-commerce plug-in for Wordpress">WPShop e-commerce for Wordpress</a>', 'wpshop'), get_bloginfo('name'), get_bloginfo('name') );
+						wp_update_post( array('ID' => $terms_page_id, 'post_content' => $data ) );
+					}
+				}
+
+				return true;
+			break;
+
+
+			case '55' :
+				$checkout_page_id = get_option( 'wpshop_checkout_page_id' );
+				$checkout_page = get_post( $checkout_page_id );
+				$checkout_page_content = ( !empty($checkout_page) && !empty($checkout_page->post_content) ) ? str_replace( '[wpshop_checkout]', '[wps_checkout]', $checkout_page->post_content ) : '[wps_checkout]';
+				wp_update_post( array('ID' => $checkout_page_id, 'post_content' => $checkout_page_content ) );
+
+				// Update cart page id
+				update_option( 'wpshop_cart_page_id', $checkout_page_id );
+				return true;
+			break;
+
+
+			case '56' :
+				$wps_entities = new wpshop_entities();
+				$customer_entity_id = $wps_entities->get_entity_identifier_from_code( WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS );
+				$query = $wpdb->prepare( 'SELECT * FROM ' .WPSHOP_DBT_ATTRIBUTE_SET. ' WHERE entity_id = %d ORDER BY id LIMIT 1', $customer_entity_id );
+				$set = $wpdb->get_row( $query );
+				if( !empty($set) ) {
+					$wpdb->update( WPSHOP_DBT_ATTRIBUTE_SET,
+							array( 'default_set' => 'yes' ),
+							array( 'id' => $set->id) );
+				}
+				// Update Opinions activation option
+				update_option( 'wps_opinion', array( 'active' => 'on') );
+				return true;
+			break;
+
+			case '57' :
+				$wpshop_cart_option = get_option( 'wpshop_cart_option' );
+				$wpshop_cart_option['display_newsletter']['site_subscription'][] = 'yes';
+				$wpshop_cart_option['display_newsletter']['partner_subscription'][] = 'yes';
+
+				update_option( 'wpshop_cart_option', $wpshop_cart_option );
+				return true;
+			break;
+
+			case '58' :
+				/** Turn customers publish into draft **/
+				$query = $wpdb->prepare( "UPDATE {$wpdb->posts} SET post_status = %s WHERE post_type = %s", "draft", WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS );
+				$wpdb->query( $query );
+
+				$attribute_def = wpshop_attributes::getElement('tx_tva', "'valid'", 'code');
+				/** Check if the 0% VAT Rate is not already created **/
+				$query = $wpdb->prepare('SELECT id FROM ' .WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS. ' WHERE attribute_id = %d AND value = %s',  $attribute_def->id, '0');
+				$exist_vat_rate = $wpdb->get_results( $query );
+
+				if ( empty($exist_vat_rate) ) {
+					/** Get Max Position **/
+					$query = $wpdb->prepare('SELECT MAX(position) as max_position FROM ' .WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS. ' WHERE attribute_id = %d', $attribute_def->id);
+					$max_position = $wpdb->get_var( $query );
+
+					if ( !empty( $attribute_def) && !empty($attribute_def->id)  ) {
+						$wpdb->insert( WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'attribute_id' =>  $attribute_def->id, 'position' => (int)$max_position + 1, 'value' => '0', 'label' => '0') );
+					}
+				}
+				return true;
+			break;
+
+			case '59' :
+				/** Move old images gallery to the new gallery, and remove old links **/
+				$allowed = get_allowed_mime_types();
+				$args = array(
+						'posts_per_page'   => -1,
+						'post_type'        => WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT,
+						'post_status'	   => array( 'publish', 'draft', 'trash' ),
+				);
+				$posts = get_posts( $args );
+				$result = array();
+				foreach( $posts as $post ) {
+					$array = array();
+					$array['Post'] = $post;
+					$array['PrincipalThumbnailID'] = get_post_meta( $post->ID, '_thumbnail_id', true);
+					$array['Attachments'] = get_attached_media( $allowed, $post->ID );
+					$array['TrueAttachmentsString'] = get_post_meta( $post->ID, '_wps_product_media', true );
+					if( !empty( $array['TrueAttachmentsString'] ) ) {
+						$TrueAttachments_id = explode( ',', $array['TrueAttachmentsString'] );
+					}
+					$array['OldAttachmentsString'] = '';
+					foreach( $array['Attachments'] as $attachment ) {
+						$filename =  basename( get_attached_file( $attachment->ID ) );
+						$pos_ext = strrpos( $filename, '.' );
+						$filename_no_ext = substr( $filename, 0, $pos_ext );
+						if( ( empty($TrueAttachments_id) || !in_array( $attachment->ID, $TrueAttachments_id ) ) && !( preg_match('#'.$filename_no_ext.'#', $post->post_content) ) && ( ( empty( $array['PrincipalThumbnailID'] ) || $attachment->ID != $array['PrincipalThumbnailID'] ) ) ) {
+							$array['OldAttachmentsString'] .= $attachment->ID . ',';
+						}
+					}
+					unset($TrueAttachments_id);
+					$result[$post->ID] = $array['TrueAttachmentsString'] . $array['OldAttachmentsString'];
+					update_post_meta( $post->ID, '_wps_product_media', $result[$post->ID] );
+				}
+				return true;
+			break;
+
+			case '60' :
+				/* Create default emails */
+				wps_message_ctr::create_default_message();
+
+				/** Update entries for quick add */
+				$query = $wpdb->query('UPDATE ' .WPSHOP_DBT_ATTRIBUTE.' SET is_required = "yes", is_used_in_quick_add_form = "yes" WHERE code = "barcode"');
+				$query = $wpdb->query('UPDATE ' .WPSHOP_DBT_ATTRIBUTE.' SET is_used_in_quick_add_form = "yes" WHERE code = "product_stock"');
+				$query = $wpdb->query('UPDATE ' .WPSHOP_DBT_ATTRIBUTE.' SET is_used_in_quick_add_form = "yes" WHERE code = "manage_stock"');
+				switch( WPSHOP_PRODUCT_PRICE_PILOT ) {
+					case 'HT':
+						$query = $wpdb->query('UPDATE ' .WPSHOP_DBT_ATTRIBUTE.' SET is_used_in_quick_add_form = "yes", is_used_in_variation = "yes" WHERE code = "price_ht"');
+						$query = $wpdb->query('UPDATE ' .WPSHOP_DBT_ATTRIBUTE.' SET is_used_in_quick_add_form = "no" WHERE code = "tx_tva"');
+						$query = $wpdb->query('UPDATE ' .WPSHOP_DBT_ATTRIBUTE.' SET is_used_in_quick_add_form = "no", is_used_in_variation = "no" WHERE code = "product_price"');
+						break;
+					default:
+						$query = $wpdb->query('UPDATE ' .WPSHOP_DBT_ATTRIBUTE.' SET is_used_in_quick_add_form = "yes", is_used_in_variation = "yes" WHERE code = "product_price"');
+						$query = $wpdb->query('UPDATE ' .WPSHOP_DBT_ATTRIBUTE.' SET is_used_in_quick_add_form = "yes" WHERE code = "tx_tva"');
+						$query = $wpdb->query('UPDATE ' .WPSHOP_DBT_ATTRIBUTE.' SET is_used_in_quick_add_form = "no", is_used_in_variation = "no" WHERE code = "price_ht"');
+						break;
+				}
+
+				/* Default country with WP language */
+				$wpshop_country_default_choice_option = get_option('wpshop_country_default_choice');
+				if ( empty($wpshop_country_default_choice_option) ) {
+					update_option( 'wpshop_country_default_choice', substr( get_bloginfo( 'language' ), 3) );
+				}
+				return true;
+			break;
+
+			case '61':
+				/** Import the xml for guided tour */
+ 				wpsBubble_ctr::import_xml();
+
+ 				/* Hide admin bar */
+ 				$wpshop_display_option = get_option('wpshop_display_option');
+ 				if( !empty($wpshop_display_option) && empty($wpshop_display_option['wpshop_hide_admin_bar']) ) {
+ 					$wpshop_display_option['wpshop_hide_admin_bar'] = 'on';
+ 					update_option( 'wpshop_display_option', $wpshop_display_option );
+ 				}
+
+				return true;
+			break;
+
+			case '62':
+				/** Install user default for POS */
+				wps_pos_addon::action_to_do_on_activation();
+
+				return true;
+			break;
+
+			case '63':
+				$data = get_option( 'wps_shipping_mode' );
+				if ( empty($data['modes']['default_shipping_mode_for_pos']) ) {
+					$data['modes']['default_shipping_mode_for_pos']['name'] = __('No Delivery', 'wpshop');
+					$data['modes']['default_shipping_mode_for_pos']['explanation'] = __('Delivery method for point of sale.', 'wpshop');
+					update_option( 'wps_shipping_mode', $data );
+				}
+				return true;
+			break;
+
+			case '64':
+				$options = get_option( 'wpshop_catalog_product_option' );
+				if ( !empty( $options['wpshop_catalog_product_slug_with_category'] ) ) {
+					unset( $options['wpshop_catalog_product_slug_with_category'] );
+					update_option( 'wpshop_catalog_product_option', $options );
+				}
+				return true;
+			break;
+			
+			case '65':
+				$entity_id = wpshop_entities::get_entity_identifier_from_code( WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS );
+				$query = $wpdb->prepare( 'SELECT id FROM ' . WPSHOP_DBT_ATTRIBUTE . ' WHERE code = %s AND entity_id = %d', 'company_customer', $entity_id );
+				$company_id = $wpdb->get_var( $query );
+				if( !isset( $company_id ) ) {
+					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE, array(
+						'is_visible_in_front' => 'no',
+						'is_visible_in_front_listing' => 'yes',
+						'is_global' => 'no',
+						'is_user_defined' => 'no',
+						'is_required' => 'no',
+						'is_visible_in_advanced_search' => 'no',
+						'is_searchable' => 'no',
+						'is_filterable' => 'no',
+						'is_comparable' => 'no',
+						'is_html_allowed_on_front' => 'no',
+						'is_unique' => 'no',
+						'is_filterable_in_search' => 'no',
+						'is_used_for_sort_by' => 'no',
+						'is_configurable' => 'no',
+						'is_requiring_unit' => 'no',
+						'is_recordable_in_cart_meta' => 'no',
+						'is_used_in_admin_listing_column' => 'no',
+						'is_used_in_quick_add_form' => 'no',
+						'is_used_for_variation' => 'no',
+						'is_used_in_variation' => 'no',
+						'_display_informations_about_value' => 'no',
+						'_need_verification' => 'no',
+						'_unit_group_id' => NULL,
+						'_default_unit' => NULL,
+						'is_historisable' => 'yes',
+						'is_intrinsic' => 'no',
+						'data_type_to_use' => 'custom',
+						'use_ajax_for_filling_field' => 'no',
+						'data_type' => 'varchar',
+						'backend_table' => NULL,
+						'backend_label' => 'Company',
+						'backend_input' => 'text',
+						'frontend_label' => 'Company',
+						'frontend_input' => 'text',
+						'frontend_verification' => NULL,
+						'code' => 'company_customer',
+						'note' => '',
+						'default_value' => '',
+						'frontend_css_class' => 'company_customer',
+						'backend_css_class' => NULL,
+						'frontend_help_message' => NULL,
+						'entity_id' => $entity_id
+					) );
+					$company_id = $wpdb->insert_id;
+				}
+				
+				$query = $wpdb->prepare( 'SELECT id FROM ' . WPSHOP_DBT_ATTRIBUTE . ' WHERE code = %s AND entity_id = %d', 'is_provider', $entity_id );
+				$is_provider_id = $wpdb->get_var( $query );
+				if( !isset( $is_provider_id ) ) {
+					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE, array(
+						'is_visible_in_front' => 'no',
+						'is_visible_in_front_listing' => 'yes',
+						'is_global' => 'no',
+						'is_user_defined' => 'no',
+						'is_required' => 'yes',
+						'is_visible_in_advanced_search' => 'no',
+						'is_searchable' => 'no',
+						'is_filterable' => 'no',
+						'is_comparable' => 'no',
+						'is_html_allowed_on_front' => 'no',
+						'is_unique' => 'no',
+						'is_filterable_in_search' => 'no',
+						'is_used_for_sort_by' => 'no',
+						'is_configurable' => 'no',
+						'is_requiring_unit' => 'no',
+						'is_recordable_in_cart_meta' => 'no',
+						'is_used_in_admin_listing_column' => 'no',
+						'is_used_in_quick_add_form' => 'no',
+						'is_used_for_variation' => 'no',
+						'is_used_in_variation' => 'no',
+						'_display_informations_about_value' => 'no',
+						'_need_verification' => 'no',
+						'_unit_group_id' => NULL,
+						'_default_unit' => NULL,
+						'is_historisable' => 'yes',
+						'is_intrinsic' => 'no',
+						'data_type_to_use' => 'custom',
+						'use_ajax_for_filling_field' => 'no',
+						'data_type' => 'integer',
+						'backend_table' => NULL,
+						'backend_label' => 'Provider',
+						'backend_input' => 'select',
+						'frontend_label' => 'Provider',
+						'frontend_input' => 'select',
+						'frontend_verification' => NULL,
+						'code' => 'is_provider',
+						'note' => '',
+						'default_value' => 'no',
+						'frontend_css_class' => 'is_provider',
+						'backend_css_class' => NULL,
+						'frontend_help_message' => NULL,
+						'entity_id' => $entity_id
+					) );
+					$is_provider_id = $wpdb->insert_id;
+					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS, array(
+						'status'				=> 'valid',
+						'attribute_id' 			=> $is_provider_id,
+						'creation_date_value' 	=> current_time('mysql'),
+						'value' 				=> 'yes',
+						'label' 				=> 'Yes',
+					) );
+					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS, array(
+						'status'				=> 'valid',
+						'attribute_id' 			=> $is_provider_id,
+						'creation_date_value' 	=> current_time('mysql'),
+						'value' 				=> 'no',
+						'label' 				=> 'No',
+					) );
+					$default_value = $wpdb->insert_id;
+					$wpdb->update(WPSHOP_DBT_ATTRIBUTE, array( 'default_value' => $default_value ), array( 'id' => $is_provider_id ) );
+				}
+				
+				$query = $wpdb->prepare('SELECT id FROM ' . WPSHOP_DBT_ATTRIBUTE_DETAILS . ' WHERE attribute_id = %s', $company_id );
+				$company_section_detail_id = $wpdb->get_var($query);
+				
+				$query = $wpdb->prepare('SELECT id FROM ' . WPSHOP_DBT_ATTRIBUTE_DETAILS . ' WHERE attribute_id = %s', $is_provider_id );
+				$is_provider_section_detail_id = $wpdb->get_var($query);
+				
+				if( !isset( $is_provider_section_detail_id ) || !isset( $company_section_detail_id ) ) {
+					$query = $wpdb->prepare('SELECT id FROM ' . WPSHOP_DBT_ATTRIBUTE_SET . ' WHERE entity_id = %d', $entity_id );
+					$attribute_set_id = $wpdb->get_var($query);
+					
+					$query = $wpdb->prepare("SELECT id FROM " . WPSHOP_DBT_ATTRIBUTE_GROUP . " WHERE attribute_set_id = %d AND code = LOWER(%s)", $attribute_set_id, 'account');
+					$attribute_set_section_id = $wpdb->get_var($query);
+					
+					$query = $wpdb->prepare( 'SELECT * FROM ' . WPSHOP_DBT_ATTRIBUTE_DETAILS . ' WHERE entity_type_id = %d AND attribute_set_id = %d AND attribute_group_id = %d', $entity_id, $attribute_set_id, $attribute_set_section_id );
+					$attributes_set_details = $wpdb->get_results( $query );
+					$set_details_id_postion_order = array();
+					foreach( $attributes_set_details as $attribute_set_detail ) {
+						$query = $wpdb->prepare( 'SELECT code FROM ' . WPSHOP_DBT_ATTRIBUTE . ' WHERE id = %d', $attribute_set_detail->attribute_id );
+						$attribute_set_detail_code = $wpdb->get_var( $query );
+						if( $attribute_set_detail_code == 'last_name' ) {
+							$set_details_id_postion_order[1] = $attribute_set_detail->attribute_id;
+						}
+						if( $attribute_set_detail_code == 'first_name' ) {
+							$set_details_id_postion_order[2] = $attribute_set_detail->attribute_id;
+						}
+						if( $attribute_set_detail_code == 'user_email' ) {
+							$set_details_id_postion_order[3] = $attribute_set_detail->attribute_id;
+						}
+						if( $attribute_set_detail_code == 'user_pass' ) {
+							$set_details_id_postion_order[4] = $attribute_set_detail->attribute_id;
+						}
+					}
+					$max_position = count( $set_details_id_postion_order );
+					
+					if( !isset( $company_section_detail_id ) ) {
+						$max_position = $max_position + 1;
+						$wpdb->insert( WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $entity_id, 'attribute_set_id' => $attribute_set_id, 'attribute_group_id' => $attribute_set_section_id, 'attribute_id' => $company_id, 'position' => (int)$max_position ) );
+						$set_details_id_postion_order[$max_position] = $company_id;
+						$company_section_detail_id = $wpdb->insert_id;
+					}
+					
+					if( !isset( $is_provider_section_detail_id ) ) {
+						$max_position = $max_position + 1;
+						$wpdb->insert( WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $entity_id, 'attribute_set_id' => $attribute_set_id, 'attribute_group_id' => $attribute_set_section_id, 'attribute_id' => $is_provider_id, 'position' => (int)$max_position ) );
+						$set_details_id_postion_order[$max_position] = $is_provider_id;
+						$is_provider_section_detail_id = $wpdb->insert_id;
+					}
+					
+					foreach( $set_details_id_postion_order as $pos => $attr_id ) {
+						$wpdb->update( WPSHOP_DBT_ATTRIBUTE_DETAILS, array( 'position' => $pos ), array( 'attribute_id' => $attr_id, 'attribute_set_id' => $attribute_set_id, 'entity_type_id' => $entity_id, 'attribute_group_id' => $attribute_set_section_id ), array( '%d' ), array( '%d', '%d', '%d', '%d' ) );
+					}
+				}
+				
+				$wpdb->update( WPSHOP_DBT_ATTRIBUTE_SET, array( 'name' => __( 'Free product', 'wpshop' ), 'slug' => 'free_product' ), array( 'name' => 'free_product' ), array( '%s', '%s' ), array( '%s' ) );
+				
 				return true;
 			break;
 
 			/*	Always add specific case before this bloc	*/
 			case 'dev':
+
 				wp_cache_flush();
+				// Newsletters options
 				$wp_rewrite->flush_rules();
 				return true;
 			break;
@@ -1270,7 +2312,7 @@ WHERE ATTR_DET.attribute_id IN (" . $attribute_ids . ")"
 
 		if(WPSHOP_DEBUG_MODE_ALLOW_DATA_DELETION && in_array(long2ip(ip2long($_SERVER['REMOTE_ADDR'])), unserialize(WPSHOP_DEBUG_MODE_ALLOWED_IP))){
 			$query = $wpdb->query("DROP TABLE `wp_wpshop__attribute`, `wp_wpshop__attributes_unit`, `wp_wpshop__attributes_unit_groups`, `wp_wpshop__attribute_set`, `wp_wpshop__attribute_set_section`, `wp_wpshop__attribute_set_section_details`, `wp_wpshop__attribute_value_datetime`, `wp_wpshop__attribute_value_decimal`, `wp_wpshop__attribute_value_integer`, `wp_wpshop__attribute_value_text`, `wp_wpshop__attribute_value_varchar`, `wp_wpshop__attribute_value__histo`, `wp_wpshop__cart`, `wp_wpshop__cart_contents`, `wp_wpshop__documentation`, `wp_wpshop__entity`, `wp_wpshop__historique`, `wp_wpshop__message`, `wp_wpshop__attribute_value_options`;");
-			$query = $wpdb->query("DELETE FROM `wp_options` WHERE `option_name` LIKE '%wpshop%';");
+			$query = $wpdb->query("DELETE FROM " . $wpdb->options . " WHERE `option_name` LIKE '%wpshop%';");
 
 			$wpshop_products_posts = $wpdb->get_results("SELECT ID FROM " . $wpdb->posts . " WHERE post_type LIKE 'wpshop_%';");
 			$list = '  ';
@@ -1305,3 +2347,5 @@ WHERE ATTR_DET.attribute_id IN (" . $attribute_ids . ")"
 	}
 
 }
+
+?>

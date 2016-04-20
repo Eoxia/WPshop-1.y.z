@@ -185,23 +185,6 @@ class CMCIC_Hmac {
 
 }
 
-// ----------------------------------------------------------------------------
-// function getMethode
-//
-// IN:
-// OUT: Donn�es soumises par GET ou POST / Data sent by GET or POST
-// description: Renvoie le tableau des donn�es / Send back the data array
-// ----------------------------------------------------------------------------
-
-function getMethode() {
-    if ($_SERVER["REQUEST_METHOD"] == "GET")
-        return $_GET;
-
-    if ($_SERVER["REQUEST_METHOD"] == "POST")
-	return $_POST;
-
-    die ('Invalid REQUEST_METHOD (not GET, not POST).');
-}
 
 // ----------------------------------------------------------------------------
 // function HtmlEncode
@@ -237,6 +220,17 @@ class wpshop_CIC {
 
 	public function __construct() {
 		global $wpshop;
+		$cic_option = get_option( 'wpshop_addons' );
+		if ( !empty($cic_option) && !empty($cic_option['WPSHOP_ADDONS_PAYMENT_GATEWAY_CB_CIC']) ) {
+			/** Check if SystemPay is registred in Payment Main Option **/
+			$payment_option = get_option( 'wps_payment_mode' );
+			if ( !empty($payment_option) && !empty($payment_option['mode']) && !array_key_exists('cic', $payment_option['mode']) ) {
+				$payment_option['mode']['cic']['name'] = __('CIC', 'wpshop');
+				$payment_option['mode']['cic']['logo'] = WPSHOP_TEMPLATES_URL.'wpshop/medias/cic_payment_logo.jpg';
+				$payment_option['mode']['cic']['description'] = __('Reservation of products upon confirmation of payment.', 'wpshop');
+				update_option( 'wps_payment_mode', $payment_option );
+			}
+		}
 		if(!empty($_GET['paymentListener']) && $_GET['paymentListener']=='cic') {
 			header("Pragma: no-cache");
 			header("Content-type: text/plain");
@@ -248,56 +242,57 @@ class wpshop_CIC {
 	function display_response() {
 
 		// Begin Main : Retrieve Variables posted by CMCIC Payment Server
-		$CMCIC_bruteVars = getMethode();
+		$CMCIC_bruteVars = wpshop_tools::getMethode();
 
 		// TPE init variables
 		$oTpe = new CMCIC_Tpe();
 		$oHmac = new CMCIC_Hmac($oTpe);
 
 		// Message Authentication
-		$cgi2_fields = sprintf(CMCIC_CGI2_FIELDS, $oTpe->sNumero,
-							  $CMCIC_bruteVars["date"],
-								  $CMCIC_bruteVars['montant'],
-								  $CMCIC_bruteVars['reference'],
-								  $CMCIC_bruteVars['texte-libre'],
-								  $oTpe->sVersion,
-								  $CMCIC_bruteVars['code-retour'],
-							  $CMCIC_bruteVars['cvx'],
-							  $CMCIC_bruteVars['vld'],
-							  $CMCIC_bruteVars['brand'],
-							  $CMCIC_bruteVars['status3ds'],
-							  $CMCIC_bruteVars['numauto'],
-							  $CMCIC_bruteVars['motifrefus'],
-							  $CMCIC_bruteVars['originecb'],
-							  $CMCIC_bruteVars['bincb'],
-							  $CMCIC_bruteVars['hpancb'],
-							  $CMCIC_bruteVars['ipclient'],
-							  $CMCIC_bruteVars['originetr'],
-							  $CMCIC_bruteVars['veres'],
-							  $CMCIC_bruteVars['pares']
-							);
+		$cgi2_fields = sprintf(CMCIC_CGI2_FIELDS,
+			$oTpe->sNumero,
+			$CMCIC_bruteVars["date"],
+			$CMCIC_bruteVars['montant'],
+			$CMCIC_bruteVars['reference'],
+			$CMCIC_bruteVars['texte-libre'],
+			$oTpe->sVersion,
+			$CMCIC_bruteVars['code-retour'],
+			$CMCIC_bruteVars['cvx'],
+			$CMCIC_bruteVars['vld'],
+			$CMCIC_bruteVars['brand'],
+			$CMCIC_bruteVars['status3ds'],
+			$CMCIC_bruteVars['numauto'],
+			$CMCIC_bruteVars['motifrefus'],
+			$CMCIC_bruteVars['originecb'],
+			$CMCIC_bruteVars['bincb'],
+			$CMCIC_bruteVars['hpancb'],
+			$CMCIC_bruteVars['ipclient'],
+			$CMCIC_bruteVars['originetr'],
+			$CMCIC_bruteVars['veres'],
+			$CMCIC_bruteVars['pares']
+		);
 
-		if ($oHmac->computeHmac($cgi2_fields) == strtolower($CMCIC_bruteVars['MAC']))
-		{
+		if ($oHmac->computeHmac($cgi2_fields) == strtolower($CMCIC_bruteVars['MAC'])) {
 			wpshop_payment::save_payment_return_data($CMCIC_bruteVars['reference']);
-
+			$payment_status = 'denied';
 			switch($CMCIC_bruteVars['code-retour']) {
 				case "Annulation" :
 					// Attention : an autorization may still be delivered for this payment
-					wpshop_payment::setOrderPaymentStatus($CMCIC_bruteVars['reference'], 'denied');
+					//wpshop_payment::setOrderPaymentStatus($CMCIC_bruteVars['reference'], 'denied');
+					$payment_status = 'denied';
 				break;
 
 				case "payetest": // test
-					wpshop_payment::setOrderPaymentStatus($CMCIC_bruteVars['reference'], 'completed');
-					wpshop_payment::the_order_payment_is_completed($CMCIC_bruteVars['reference']);
+					//wpshop_payment::setOrderPaymentStatus($CMCIC_bruteVars['reference'], 'completed');
+					$payment_status = 'completed';
 				break;
 
 				case "paiement": // prod
 					// Save cic txn_id
-					update_post_meta($CMCIC_bruteVars['reference'], '_order_cic_txn_id', $CMCIC_bruteVars['numauto']);
-
-					wpshop_payment::setOrderPaymentStatus($CMCIC_bruteVars['reference'], 'completed');
-					wpshop_payment::the_order_payment_is_completed($CMCIC_bruteVars['reference']);
+// 					update_post_meta($CMCIC_bruteVars['reference'], '_order_cic_txn_id', $CMCIC_bruteVars['numauto']);
+					//wpshop_payment::set_payment_transaction_number($CMCIC_bruteVars['reference'], $CMCIC_bruteVars['numauto']);
+					//wpshop_payment::setOrderPaymentStatus($CMCIC_bruteVars['reference'], 'completed');
+					$payment_status = 'completed';
 				break;
 
 
@@ -319,14 +314,23 @@ class wpshop_CIC {
 					// put your code here (email sending / Database update)
 					// You have the amount of the payment part in $CMCIC_bruteVars['montantech']
 				break;
-
 			}
 
-			$receipt = CMCIC_CGI2_MACOK;
+			$order_meta = get_post_meta( $CMCIC_bruteVars['reference'], '_order_postmeta', true);
+			$params_array = array(
+				'method' => 'cic',
+				'waited_amount' => number_format( (float)$order_meta['order_amount_to_pay_now'], 2, '.', ''),
+				'status' => (($payment_status == 'completed') ? ( ( number_format( (float)$order_meta['order_amount_to_pay_now'], 2, '.', '') == number_format( (float)substr($CMCIC_bruteVars['montant'], 0, -3), 2, '.', '' ) ) ? 'payment_received' : 'incorrect_amount' ) : $payment_status),
+				'author' => $order_meta['customer_id'],
+				'payment_reference' => $CMCIC_bruteVars['numauto'],
+				'date' => current_time('mysql', 0),
+				'received_amount' => number_format( (float)substr($CMCIC_bruteVars['montant'], 0, -3), 2, '.', '' )
+			);
+			wpshop_payment::check_order_payment_total_amount($CMCIC_bruteVars['reference'], $params_array, $payment_status);
 
+			$receipt = CMCIC_CGI2_MACOK;
 		}
-		else
-		{
+		else {
 			// your code if the HMAC doesn't match
 			$receipt = CMCIC_CGI2_MACNOTOK.$cgi2_fields;
 		}
@@ -335,11 +339,15 @@ class wpshop_CIC {
 		printf (CMCIC_CGI2_RECEIPT, $receipt);
 	}
 
-	function display_form($oid) {
-
+	public static function display_form($oid) {
+		global $wpdb;
+		$output = '';
 		$order = get_post_meta($oid, '_order_postmeta', true);
 		$order_customer_info = get_post_meta($oid, '_order_info', true);
-		$currency_code = wpshop_tools::wpshop_get_currency($code=true);
+		//$currency_code = wpshop_tools::wpshop_get_currency($code=true);
+		$current_currency = get_option('wpshop_shop_default_currency');
+		$query = $wpdb->prepare('SELECT code_iso FROM ' .WPSHOP_DBT_ATTRIBUTE_UNIT. ' WHERE id =%d ', $current_currency );
+		$currency_code = $wpdb->get_var( $query );
 
 		if(!empty($order) && !empty($currency_code)) {
 
@@ -354,7 +362,7 @@ class wpshop_CIC {
 			$sTexteLibre = ""; // free texte : a bigger reference, session context for the return on the merchant website
 			$sDate = date("d/m/Y:H:i:s"); // transaction date : format d/m/y:h:m:s
 			$sLangue = "FR"; // Language of the company code
-			$sEmail = $order_customer_info['billing']['email'];//"dev@eoxia.com"; // customer email
+			$sEmail = $order_customer_info['billing']['address']['address_user_email'];//"dev@eoxia.com"; // customer email
 			///////////////////////////////////////////////////////////////////////////////////////////
 			$sNbrEch = ""; //$sNbrEch = "4"; // between 2 and 4
 			$sDateEcheance1 = ""; // date echeance 1 - format dd/mm/yyyy //$sDateEcheance1 = date("d/m/Y");
@@ -398,6 +406,7 @@ class wpshop_CIC {
 
 			// MAC computation
 			$sMAC = $oHmac->computeHmac($PHP1_FIELDS);
+			ob_start();
 		?>
 		<script type="text/javascript">jQuery(document).ready(function(){ jQuery('#PaymentRequest_cic').submit(); });</script>
 		<div class="paypalPaymentLoading"><span><?php _e('Redirect to the CIC site in progress, please wait...', 'wpshop'); ?></span></div>
@@ -429,7 +438,26 @@ class wpshop_CIC {
 			<noscript><input type="submit" name="bouton"              id="bouton"         value="Connexion / Connection" /></noscript>
 		</form>
 <?php
+		$output = ob_get_contents();
+		ob_end_clean();
 		}
+		return $output;
+	}
+
+
+	function display_admin_part( $k ) {
+		$cmcic_params = get_option('wpshop_cmcic_params', array());
+		$output = '';
+		$output .= '<h2>' .__('CIC configurations', 'wpshop'). '</h2>';
+		$output .= '<div class="wps_shipping_mode_configuration_part">';
+		$output .= '<label class="simple_right">'.__('Key', 'wpshop').'</label><br/><input name="wpshop_cmcic_params[cle]" type="text" value="'.$cmcic_params['cle'].'" /><br />';
+		$output .= '<label class="simple_right">'.__('TPE', 'wpshop').'</label><br/><input name="wpshop_cmcic_params[tpe]" type="text" value="'.$cmcic_params['tpe'].'" /><br />';
+		$output .= '<label class="simple_right">'.__('Version', 'wpshop').'</label><br/><input name="wpshop_cmcic_params[version]" type="text" value="'.$cmcic_params['version'].'" /> => 3.0<br />';
+		$output .= '<label class="simple_right">'.__('Serveur', 'wpshop').'</label><br/><input name="wpshop_cmcic_params[serveur]" type="text" value="'.$cmcic_params['serveur'].'" /><br />';
+		$output .= '<label class="simple_right">'.__('Company code', 'wpshop').'</label><br/><input name="wpshop_cmcic_params[codesociete]" type="text" value="'.$cmcic_params['codesociete'].'" /><br />';
+		$output .= '</div>';
+
+		return $output;
 	}
 }
 ?>

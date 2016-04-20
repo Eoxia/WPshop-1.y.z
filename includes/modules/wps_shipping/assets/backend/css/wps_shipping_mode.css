@@ -1,0 +1,107 @@
+@CHARSET "ISO-8859-1";
+.wps_shipping_mode_container {
+	position : relative;
+	width : 850px;
+	height : auto ; 
+	border : 1px solid #BDD5DD;
+	background : #E3EDFA;
+	padding : 10px;
+	overflow : auto;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	margin-bottom : 10px;
+	cursor : move;
+}
+.shipping_mode_titre {
+	position : relative;
+	float : left;
+	width : auto;
+	height : auto;
+}
+.shipping_mode_little_configuration {
+	position : relative;
+	float : right;
+	width : 830px;
+	height : auto;
+	text-align : right;
+}
+.wps_shipping_mode_configuration_interface {
+	display : none;
+	margin : 5px 0;
+	/*border-top : 2px dashed #3C98AF;
+	border-left : 1px solid #3C98AF;
+	border-right : 1px solid #3C98AF;
+	border-bottom : 1px solid #3C98AF;*/
+	padding : 10px;
+	text-align : left;
+	background : #F4F9FF;
+}
+.wps_little_input {
+	width : 90px;
+}
+.wps_shipping_mode_configuration_part {
+	padding : 10px;
+	background : #FAFAFA;
+	border : 1px solid #DDDDDD;
+	margin : 10px 0;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	height : auto;
+}
+.wps_shipping_mode_configuration_interface h2 {
+	color : #3C98AF;
+}
+.wps_shipping_mode_configuration_part table {
+	text-align : center;
+}
+.wps_shipping_mode_configuration_part tr {
+	height : 30px;
+}
+.wps_shipping_mode_configuration_part th {
+	background-color : #3C98AF;
+	color : #FFFFFF;
+}
+.wps_shipping_mode_configuration_part label{
+	width : 100%;
+}
+.wps_shipping_mode_configuration_part input[type=text], .wps_shipping_mode_configuration_part select{
+	width : 100%;
+	height : 30px;
+	margin-bottom : 10px;
+}
+.min_max_fields {
+	float : left;
+	margin-right : 30px;
+	margin-top : 5px;
+	position : relative;
+}
+#default_shipping_mode_min_max_shipping_rules_configuration {
+	width : 100%;
+	height : auto;
+	position : relative;
+	overflow : auto;
+}
+.shipping_mode_config_input{
+	height : 25px;
+}
+input#shipping_mode_name {
+	height : 35px;
+	width : 420px;
+}
+.min_max_interface {
+	height : auto;
+	overflow : auto;	
+}
+#shipping_mode_creation_error {
+	color : red;
+	font-weight : bold;
+	text-align : center;
+}
+.wps_shipping_mode_logo {
+	width : auto;
+	height : 50px;
+	margin-top : 5px;
+	border : 3px solid #FFFFFF;
+}

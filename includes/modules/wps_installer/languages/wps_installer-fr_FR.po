@@ -1,0 +1,706 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Wpshop installer\n"
+"POT-Creation-Date: 2015-04-29 09:49+0100\n"
+"PO-Revision-Date: 2015-04-29 09:51+0100\n"
+"Last-Translator: Equipe Eoxia <dev@eoxia.com>\n"
+"Language-Team: Eoxia Developpement team <dev@eoxia.com>\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.6\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: _e;__\n"
+"X-Poedit-SearchPath-0: ..\n"
+"X-Poedit-SearchPath-1: ../../../../assets\n"
+
+#: ../../../../assets/datas/default_datas_string.php:2
+msgid "Account creation confirmation"
+msgstr "Confirmation de création de compte"
+
+#: ../../../../assets/datas/default_datas_string.php:3
+msgid ""
+"Hello [customer_first_name] [customer_last_name], this email confirms that "
+"your account has just been created. Thank you for your loyalty. Have a good "
+"day."
+msgstr ""
+
+#: ../../../../assets/datas/default_datas_string.php:4
+msgid "User account creation confirmation message"
+msgstr "Confirmation de création de compte utilisateur"
+
+#: ../../../../assets/datas/default_datas_string.php:6
+msgid "Renewal of password"
+msgstr "Renouvellement du mot de passe"
+
+#: ../../../../assets/datas/default_datas_string.php:7
+msgid ""
+"Hello [customer_first_name] [customer_last_name], <br />Somebody has asked a "
+"renewal of password for your account.<br/><br/>To renew your password, click "
+"on this link : [forgot_password_link].<br/>If you are not at the origin of "
+"this request, please ignore this message."
+msgstr ""
+
+#: ../../../../assets/datas/default_datas_string.php:8
+msgid "Send to customer a link to renew its password"
+msgstr "Envoie d'un lien de renouvellement de mot de passe"
+
+#: ../../../../assets/datas/default_datas_string.php:10
+msgid "Order payment confirmation (Paypal id [paypal_order_key])"
+msgstr ""
+
+#: ../../../../assets/datas/default_datas_string.php:11
+msgid ""
+"Hello [customer_first_name] [customer_last_name], this email confirms that "
+"your payment about your recent order on our website has been completed "
+"(order date : [order_date]). Thank you for your loyalty. Have a good day."
+msgstr ""
+
+#: ../../../../assets/datas/default_datas_string.php:12
+msgid "User paypal payment reception confirmation"
+msgstr "Confirmation de réception d'un paiement par Paypal"
+
+#: ../../../../assets/datas/default_datas_string.php:14
+msgid "Pay and finalize your order"
+msgstr ""
+
+#: ../../../../assets/datas/default_datas_string.php:15
+msgid ""
+"Hello [customer_first_name] [customer_last_name], <br />An order is "
+"available for you on our website.<br/>You can click on this link to pay and "
+"finalize this order : [direct_payment_link]<br/><br/>[order_content]<br /"
+"><br />Thank you for your loyalty. Have a good day."
+msgstr ""
+
+#: ../../../../assets/datas/default_datas_string.php:16
+msgid "Send a link for finalize its order directly"
+msgstr "Envoi d'un lien permettant de finaliser une commande préparée"
+
+#: ../../../../assets/datas/default_datas_string.php:18
+msgid "Your payment has been received"
+msgstr ""
+
+#: ../../../../assets/datas/default_datas_string.php:19
+msgid ""
+"Hello [customer_first_name] [customer_last_name], this email confirms that "
+"your payment regarding your order ([order_key]) has just been received "
+"(order date : [order_date]). Thank you for your loyalty. Have a good day."
+msgstr ""
+
+#: ../../../../assets/datas/default_datas_string.php:20
+msgid "User payment reception confirmation"
+msgstr "Confirmation de réception d'un paiement"
+
+#: ../../../../assets/datas/default_datas_string.php:22
+msgid "Your order has been shipped"
+msgstr ""
+
+#: ../../../../assets/datas/default_datas_string.php:23
+msgid ""
+"Hello [customer_first_name] [customer_last_name], this email confirms that "
+"your order ([order_key]) has just been shipped (order date : [order_date], "
+"tracking number : [order_trackingNumber]). Thank you for your loyalty. Have "
+"a good day."
+msgstr ""
+
+#: ../../../../assets/datas/default_datas_string.php:24
+msgid "Order shipping message"
+msgstr "Message de confirmation d'envoie de la commande"
+
+#: ../../../../assets/datas/default_datas_string.php:26
+msgid "Your order has been recorded"
+msgstr ""
+
+#: ../../../../assets/datas/default_datas_string.php:27
+msgid ""
+"Hello [customer_first_name] [customer_last_name], this email confirms that "
+"your order has been recorded (order date : [order_date]). Thank you for your "
+"loyalty. Have a good day."
+msgstr ""
+
+#: ../../../../assets/datas/default_datas_string.php:28
+msgid "User order confirmation"
+msgstr "Confirmation de commande à l'utilisateur"
+
+#: ../../../../assets/datas/default_datas_string.php:30
+#: ../../../../assets/datas/default_datas_string.php:39
+msgid "Your order has been updated"
+msgstr ""
+
+#: ../../../../assets/datas/default_datas_string.php:31
+msgid ""
+"Hello [customer_first_name] [customer_last_name], your order ([order_key]) "
+"has just been updated. Please login to your account to view details. Thank "
+"you for your loyalty. Have a good day."
+msgstr ""
+
+#: ../../../../assets/datas/default_datas_string.php:32
+msgid "Notify a customer when order is updated"
+msgstr "Notification de mise à jour d'une commande"
+
+#: ../../../../assets/datas/default_datas_string.php:34
+msgid "Your order has been canceled"
+msgstr ""
+
+#: ../../../../assets/datas/default_datas_string.php:35
+msgid ""
+"Hello [customer_first_name] [customer_last_name], <br />this email confirms "
+"your order ( Order key : [order_key] - Date : [order_date] ) has been "
+"canceled.<br /><br /> Thank you for your loyalty. Have a good day."
+msgstr ""
+
+#: ../../../../assets/datas/default_datas_string.php:36
+msgid "Notify a customer when order is canceled"
+msgstr "Notification d'annulation d'une commande"
+
+#: ../../../../assets/datas/default_datas_string.php:38
+msgid "A comment has been added to your order"
+msgstr ""
+
+#: ../../../../assets/datas/default_datas_string.php:40
+msgid ""
+"Hello [customer_first_name] [customer_last_name], your order ([order_key]) "
+"has just been updated. A comment has been added:<br/><br/>[message].<br/><br/"
+"> Thank you for your loyalty. Have a good day."
+msgstr ""
+
+#: ../../../../assets/datas/default_datas_string.php:41
+msgid ""
+"Hello [customer_first_name] [customer_last_name], your order ([order_key]) "
+"has just been updated. A comment has been added:[message]. Thank you for "
+"your loyalty. Have a good day."
+msgstr ""
+
+#: ../../../../assets/datas/default_datas_string.php:42
+msgid "Private update on an order"
+msgstr "Mise à jour sur une commande"
+
+#: ../../../../assets/datas/default_datas_string.php:44
+msgid "New order on your shop"
+msgstr "Nouvelle commande sur votre boutique"
+
+#: ../../../../assets/datas/default_datas_string.php:45
+msgid ""
+"Hello, New order on your shop ! Order Key : [order_key], Order date : "
+"[order_date], Order payment method : [order_payment_method], [order_content] "
+"[order_addresses] [order_customer_comments]"
+msgstr ""
+
+#: ../../../../assets/datas/default_datas_string.php:46
+msgid "New order on shop sended to shop administrator"
+msgstr "Notification de nouvelle commande envoyée à l'administrateur"
+
+#: ../../../../assets/datas/default_datas_string.php:48
+msgid "New quotation on your shop"
+msgstr "Nouveau devis sur votre boutique"
+
+#: ../../../../assets/datas/default_datas_string.php:49
+msgid ""
+"Hello, New quotation on your shop ! Quotation Key : [order_temporary_key], "
+"Quotation date : [order_date], [order_content] [order_addresses] "
+"[order_customer_comments]"
+msgstr ""
+
+#: ../../../../assets/datas/default_datas_string.php:50
+msgid "New quotation on shop sended to shop administrator"
+msgstr "Notification de nouveau devis envoyée à l'administration"
+
+#: ../../../../assets/datas/default_datas_string.php:52
+msgid "Your quotation has been recorded"
+msgstr ""
+
+#: ../../../../assets/datas/default_datas_string.php:53
+msgid ""
+"Hello [customer_first_name] [customer_last_name], this email confirms that "
+"your order has been recorded (Quotation date : [order_date]). [order_content]"
+msgstr ""
+
+#: ../../../../assets/datas/default_datas_string.php:54
+msgid "User quotation confirmation"
+msgstr "Confirmation d'enregistrement du devis"
+
+#: ../../../../assets/datas/default_datas_string.php:56
+msgid "Your quotation has been updated"
+msgstr ""
+
+#: ../../../../assets/datas/default_datas_string.php:57
+msgid ""
+"Hello [customer_first_name] [customer_last_name], this email confirms that "
+"your quotation has been updated (Quotation date : [order_date]). "
+"[order_content]"
+msgstr ""
+
+#: ../../../../assets/datas/default_datas_string.php:58
+msgid "Notify a customer when quotation is updated"
+msgstr "Notification de mise à jour d'un devis envoyée au client"
+
+#: ../../../../assets/datas/default_datas_string.php:60
+msgid "Your downloadable product is available"
+msgstr ""
+
+#: ../../../../assets/datas/default_datas_string.php:61
+msgid ""
+"Hello [customer_first_name] [customer_last_name],<br/>this email confirms "
+"that your downloadable product is available : [download_product_link].<br/"
+"><br/>Thank you for your loyalty. Have a good day."
+msgstr ""
+
+#: ../../../../assets/datas/default_datas_string.php:62
+msgid "Notify a customer when downloadable file is available after an order"
+msgstr "Notification de mise à disposition du produit téléchargeable au client"
+
+#: ../../../../assets/datas/default_datas_string.php:65
+msgid "Shop"
+msgstr "Shop"
+
+#: ../../../../assets/datas/default_datas_string.php:66
+#, fuzzy
+msgid "shop"
+msgstr "Wpshop"
+
+#: ../../../../assets/datas/default_datas_string.php:67
+msgid "Display shop product list"
+msgstr "Affichage de la liste des produits"
+
+#: ../../../../assets/datas/default_datas_string.php:69
+msgid "Cart"
+msgstr "Panier"
+
+#: ../../../../assets/datas/default_datas_string.php:70
+msgid "cart"
+msgstr ""
+
+#: ../../../../assets/datas/default_datas_string.php:71
+msgid "Display the cart page"
+msgstr "Affichage de la page panier"
+
+#: ../../../../assets/datas/default_datas_string.php:73
+msgid "Checkout"
+msgstr "Commander"
+
+#: ../../../../assets/datas/default_datas_string.php:74
+#, fuzzy
+msgid "checkout"
+msgstr "Commander"
+
+#: ../../../../assets/datas/default_datas_string.php:75
+msgid "Display the checkout page"
+msgstr "Affichage de la page de commande"
+
+#: ../../../../assets/datas/default_datas_string.php:77
+msgid "My account"
+msgstr "Mon compte"
+
+#: ../../../../assets/datas/default_datas_string.php:78
+#, fuzzy
+msgid "myaccount"
+msgstr "Mon compte"
+
+#: ../../../../assets/datas/default_datas_string.php:79
+msgid "Display the user account page"
+msgstr "Affichage de la page du compte de l'utilisateur"
+
+#: ../../../../assets/datas/default_datas_string.php:81
+msgid "Signup"
+msgstr "Inscription"
+
+#: ../../../../assets/datas/default_datas_string.php:82
+#, fuzzy
+msgid "signup"
+msgstr "Inscription"
+
+#: ../../../../assets/datas/default_datas_string.php:83
+msgid "Display the signout page"
+msgstr "Affichage de la page de connexion"
+
+#: ../../../../assets/datas/default_datas_string.php:85
+msgid "Payment return successfull"
+msgstr "Paiement réussi"
+
+#: ../../../../assets/datas/default_datas_string.php:86
+msgid "return"
+msgstr ""
+
+#: ../../../../assets/datas/default_datas_string.php:87
+msgid "Page for succesfull payment return"
+msgstr "Page de retour pour un paiement réussi"
+
+#: ../../../../assets/datas/default_datas_string.php:89
+msgid "Payment return unsuccessfull"
+msgstr "Paiement échoué"
+
+#: ../../../../assets/datas/default_datas_string.php:90
+#, fuzzy
+msgid "unsuccessfull_payment_return"
+msgstr "Page de retour pour un paiement échoué"
+
+#: ../../../../assets/datas/default_datas_string.php:91
+msgid "Page for unsuccesfull payment return"
+msgstr "Page de retour pour un paiement échoué"
+
+#: ../../../../assets/datas/default_datas_string.php:93
+msgid "Terms of sale"
+msgstr "Condition générale d'utilisation"
+
+#: ../../../../assets/datas/default_datas_string.php:94
+#, fuzzy
+msgid "terms-of-sale"
+msgstr "Condition générale d'utilisation"
+
+#: ../../../../assets/datas/default_datas_string.php:95
+msgid "Define the page for terms of sale"
+msgstr "Définition de la page des conditions générales d'utilisation"
+
+#: ../config/config.php:13
+msgid "You are not allowed to use this service."
+msgstr "Vous ne pouvez pas accèder à ce service de cette manière."
+
+#: ../config/config.php:23
+msgid "Your society informations"
+msgstr "Votre société"
+
+#: ../config/config.php:23 ../templates/backend/step_two.php:3
+msgid "Shop type"
+msgstr "Votre boutique"
+
+#: ../config/config.php:23
+msgid "Have fun"
+msgstr "Lancez-vous!"
+
+#: ../controller/wps_installer_ctr.php:107
+msgid "About WPShop"
+msgstr "A propos de WPShop"
+
+#: ../controller/wps_installer_ctr.php:107
+msgid "WPShop - about"
+msgstr "WPShop - a propos"
+
+#: ../controller/wps_installer_ctr.php:110
+msgid "Wpshop installer"
+msgstr "Installation de WPShop"
+
+#: ../controller/wps_installer_ctr.php:110
+msgid "Wpshop"
+msgstr "Wpshop"
+
+#: ../templates/backend/about-credits.php:1
+msgid ""
+"WPShop is mainly maintained by a french web-agency based in Montpellier, "
+"south of France."
+msgstr ""
+"WPShop est principalement maintenu par une web-agency basée à Montpellier."
+
+#: ../templates/backend/about-credits.php:2
+msgid "Go on eoxia website"
+msgstr "Aller sur le site d'Eoxia"
+
+#: ../templates/backend/about-introduction.php:5
+#: ../templates/backend/about-introduction.php:6
+#: ../templates/backend/about-introduction.php:8
+msgid "Configure my shop"
+msgstr "Configurez votre boutique"
+
+#: ../templates/backend/about-introduction.php:7
+#, php-format
+msgid ""
+"We update WPShop in order to improve speed, accessibility and mobile usage. "
+"Go on %smain settings interface%s in order to configure your new shop, "
+"payment gateways or shipping methods"
+msgstr ""
+"Wpshop a été mis à jour pour gagner en vitesse, en accessibilité et en "
+"utilisation mobile. Pour configurer votre nouvelle boutique, gérer les "
+"options de livraison ou de paiement, rendez-vous dans les %soptions%s"
+
+#: ../templates/backend/about-introduction.php:11
+#: ../templates/backend/about-introduction.php:12
+#: ../templates/backend/about-introduction.php:14
+msgid "Create products"
+msgstr "Créez vos produits"
+
+#: ../templates/backend/about-introduction.php:13
+msgid ""
+"With WPshop plugin you can now create your product catalog on WordPress and "
+"market them. A catalog and clear product information, easy to create and "
+"fully customizable through shortcodes."
+msgstr ""
+
+#: ../templates/backend/about-introduction.php:17
+#: ../templates/backend/about-introduction.php:18
+#: ../templates/backend/about-introduction.php:20
+msgid "Manage orders"
+msgstr "Gérez vos commandes"
+
+#: ../templates/backend/about-introduction.php:19
+msgid "An overview on your orders, keep in touch with your customers."
+msgstr ""
+"Une vue d'ensemble sur les commandes de votre boutique, gardez contact avec "
+"vos clients, communiquez avec eux."
+
+#: ../templates/backend/about-introduction.php:26
+#: ../templates/backend/about-introduction.php:27
+msgid "Full content customization"
+msgstr "Contenu personnalisable"
+
+#: ../templates/backend/about-introduction.php:28
+#, php-format
+msgid ""
+"You can design all you %stransactionnal emails%s, change the different "
+"%spage layout%s (as cart page, checkout page, and so on)"
+msgstr ""
+"Vous avez la possibilité de mettre en page les %semails transactionnels%s, "
+"de changer le design des %spages%s ( panier, passer commande, boutique)"
+
+#: ../templates/backend/about-introduction.php:31
+#: ../templates/backend/about-introduction.php:32
+msgid "Payment methods"
+msgstr "Passerelle de paiement"
+
+#: ../templates/backend/about-introduction.php:33
+#, php-format
+msgid ""
+"When installing WPShop you will have included by default, checks and paypal "
+"payment gateway. However there are more %spayment method%s developped for "
+"WPShop. If you are interested by a non existant payment method. You can "
+"contact us on our forum (link below)"
+msgstr ""
+"Par défaut vous aurez accès aux méthodes de paiement par chèque et paypal. "
+"Vous en trouverez plus %ssur notre site%s. Si vous ne trouvez pas celui dont "
+"vous avez besoin, n'hésitez pas à nous contacter au travers le forum (lien "
+"en bas de page)"
+
+#: ../templates/backend/about-introduction.php:36
+#: ../templates/backend/about-introduction.php:37
+msgid "Shipping methods"
+msgstr "Méthode de livraisons"
+
+#: ../templates/backend/about-introduction.php:38
+#, php-format
+msgid ""
+"By default you have one shipping method available into WPShop. You can "
+"create as much as you want using %ssettings interface%s. You will also find "
+"on our %swebsite%s additionnals shipping methods."
+msgstr ""
+"Nous avons inclus des méthodes de livraisons. Cependant vous pouvez en créer "
+"autant en utilisant %sl'interface de configuration%s que vous souhaitez ou "
+"utiliser un des %smodules déjà existant%s."
+
+#: ../templates/backend/about-introduction.php:42
+msgid "Extend default WPShop functionnalities"
+msgstr "&Eacute;tendre les fonctionnalités pas défaut de WPShop"
+
+#: ../templates/backend/about-introduction.php:45
+msgid "External addons"
+msgstr "Modules complémentaires"
+
+#: ../templates/backend/about-introduction.php:46
+#, php-format
+msgid ""
+"Need a theme? or a payment gateway? or a shipping addons? Anythong else? "
+"Check %sour website%s in order to find the addons for WPShop that you need. "
+"If you don't find it please contact us through the forum with the link below."
+msgstr ""
+"Besoin d'un thème ? d'une passerelle de paiement ? d'un module de "
+"livraison ? d'autre chose, visitez %snotre site%s pour trouver l'addons dont "
+"vous avez besoin. Si vous ne trouvez pas ce dont vous avez besoin n'hésitez "
+"pas à nous contacter au travers le forum."
+
+#: ../templates/backend/about-introduction.php:49
+msgid "Custom hooks"
+msgstr "Hook personnalisés"
+
+#: ../templates/backend/about-introduction.php:50
+msgid ""
+"We inserted some custom hook through WPShop code. That will give you some "
+"possibilities to add functionnalities when it is already planned."
+msgstr ""
+"Nous avons placé des hooks personnalisés dans le code de WPShop, vous "
+"permettant d'étendre certaines fonctionnalités existantes."
+
+#: ../templates/backend/about-introduction.php:54
+#, php-format
+msgid "A question ? A comment ? A need ? Join us on %sWPShop forum%s"
+msgstr ""
+"Une question ? Un commentaire ? Un Besoin ? Rejoignez-nous sur le %sforum "
+"WPShop%s"
+
+#: ../templates/backend/about-introduction.php:57
+msgid "Go to your shop dashboard"
+msgstr "Aller sur le tableau bord de la boutique"
+
+#: ../templates/backend/about.php:2 ../templates/backend/welcome.php:6
+msgid "Welcome to WPShop"
+msgstr "Bienvenue sur WPShop"
+
+#: ../templates/backend/about.php:3
+msgid ""
+"Thanks for using WPShop as your online shop solution. We hope that you will "
+"enjoy the features we develop for you."
+msgstr ""
+"Merci d'utiliser WPShop pour la réalisation de votre boutique. Nous espèrons "
+"qu'il vous donnera entière satisfaction."
+
+#: ../templates/backend/about.php:4
+#, php-format
+msgid "Version %s"
+msgstr " Version %s"
+
+#: ../templates/backend/about.php:7
+msgid "Introduction to WPShop"
+msgstr "Présentation"
+
+#: ../templates/backend/about.php:9
+msgid "Credits"
+msgstr "Crédits"
+
+#: ../templates/backend/installer.php:1
+msgid "Welcome on wpshop"
+msgstr "Bienvenue sur WPShop"
+
+#: ../templates/backend/installer.php:2
+msgid ""
+"Before you start to use WPShop you will need to configure some parameters"
+msgstr ""
+"Avant de profiter des avantages de WPShop nous vous invitons à configurer "
+"votre boutique"
+
+#: ../templates/backend/installer.php:24
+msgid "Create my shop"
+msgstr "Créer ma boutique"
+
+#: ../templates/backend/installer.php:24 ../templates/backend/welcome.php:15
+msgid "Next step"
+msgstr "&Eacute;tape suivante"
+
+#: ../templates/backend/installer.php:26
+msgid "Ignore this step"
+msgstr "Ignorer cette étape"
+
+#: ../templates/backend/installer.php:29
+msgid "Main informations have been setted up."
+msgstr ""
+"Vous avez terminé la configuration principale de WPShop. Vous pouvez dès à "
+"présent profiter "
+
+#: ../templates/backend/notice.php:4
+msgid ""
+"You start to configure your shop, but there are still missing parameters"
+msgstr ""
+"Vous avez commencé la configuration de votre boutique, mais il vous reste "
+"quelques paramètres pour pouvoir profiter au maximum de votre boutique"
+
+#: ../templates/backend/notice.php:7
+msgid ""
+"Your shop is now installed. You will need some configuration before using it "
+"completely"
+msgstr ""
+"Votre boutique est maintenant installée. Il ne vous reste plus qu'à la "
+"configurer pour en profiter un maximum"
+
+#: ../templates/backend/notice.php:10
+msgid "Continue configuration"
+msgstr "Reprendre la configuration"
+
+#: ../templates/backend/notice.php:10 ../templates/backend/welcome.php:12
+msgid "Configure your shop"
+msgstr "Configurer ma boutique"
+
+#: ../templates/backend/notice.php:11
+msgid "Install without settings"
+msgstr "Installer sans configurer"
+
+#: ../templates/backend/step_one.php:1
+msgid ""
+"Those informations will be used into invoice and to display your contact "
+"informations"
+msgstr ""
+"Ces informations sont utilisées dans vos factures et dans la page contact"
+
+#: ../templates/backend/step_one.php:8
+msgid "The logo for emails and invoices"
+msgstr "Votre logo pour les emails et les factures"
+
+#: ../templates/backend/step_two.php:7
+msgid "Price piloting for the shop"
+msgstr "Pilotage des prix pour votre boutique"
+
+#: ../templates/backend/step_two.php:11
+msgid "Create necessary datas for wpshop (emails, pages)"
+msgstr "Créer les données internes à wpshop (Les emails, les pages)"
+
+#: ../templates/backend/step_two.php:15
+msgid "Create sample datas (products)"
+msgstr "Créer les données exemples (Nous avons préparé des produits pour vous)"
+
+#: ../templates/backend/welcome.php:3
+msgid "Close"
+msgstr "Fermer"
+
+#: ../templates/backend/welcome.php:7
+msgid "You will find some useful links in order to start using WPShop"
+msgstr "Voici quelques liens pour vous aiguiller dans l'utilisation de  WPShop"
+
+#: ../templates/backend/welcome.php:11
+msgid "Have fun with WPShop !"
+msgstr "Lancez-vous avec WPShop"
+
+#: ../templates/backend/welcome.php:18
+msgid "Create your first product"
+msgstr "Créez votre premier produit"
+
+#: ../templates/backend/welcome.php:22
+msgid "Configure a payment method"
+msgstr "Configurez vos moyens de paiement"
+
+#: ../templates/backend/welcome.php:25
+msgid "Configure emails"
+msgstr "Configurez vos emails"
+
+#: ../templates/backend/welcome.php:29
+msgid "Go further"
+msgstr "Allez plus loin"
+
+#: ../templates/backend/welcome.php:31
+msgid "View your shop"
+msgstr "Aller sur votre boutique"
+
+#: ../templates/backend/welcome.php:32
+#, php-format
+msgid "More about WPShop %s or %s"
+msgstr "Plus d'infos %s ou %s"
+
+#: ../templates/backend/welcome.php:32
+#, php-format
+msgid "with %sonline documentation%s"
+msgstr "avec %sla documentation en ligne%s"
+
+#: ../templates/backend/welcome.php:32
+#, php-format
+msgid "on %sthe forum%s"
+msgstr "sur %sle forum%s"
+
+#: ../templates/backend/welcome.php:33
+#, php-format
+msgid "Extend WPShop functionnalities with %saddons%s"
+msgstr "Ajouter des fonctionnalités en ajoutant des %smodules%s"
+
+#~ msgid "Create a catalog easily"
+#~ msgstr "Creéz votre catalogue produit en toute simplicité"
+
+#~ msgid ""
+#~ "You have installed WPShop succesfully. Now we recommand you to read our "
+#~ "recommandation below in order to use it fully"
+#~ msgstr ""
+#~ "L'installation de WPShop s'est déroulée avec succès. Vous trouverez ci-"
+#~ "dessous des informations vous permettant d'utiliser au mieux cet outil"
+
+#~ msgid "Personnalize the default content we have create for you"
+#~ msgstr "Personnalisez le contenu par défaut que nous avons créé pour vous"
+
+#~ msgid "Your shop installation"
+#~ msgstr "Votre installation"
+
+#~ msgid "More actions"
+#~ msgstr "Plus d'actions"

@@ -3,7 +3,7 @@ function kwsTriggerSave() {
 	var rich = (typeof tinyMCE != "undefined") && tinyMCE.activeEditor && !tinyMCE.activeEditor.isHidden();
 	if (rich) {
 		ed = tinyMCE.activeEditor;
-		if ( 'mce_fullscreen' == ed.id || 'wp_mce_fullscreen' == ed.id ) {
+		if ( ('mce_fullscreen' == ed.id) || ('wp_mce_fullscreen' == ed.id) ) {
 			tinyMCE.get(0).setContent(ed.getContent({format : 'raw'}), {format : 'raw'});
 		}
 		tinyMCE.triggerSave();
@@ -46,13 +46,17 @@ function display_customer_address_form ( customer_id ) {
 	var data = {
 		action: "order_customer_adress_load",
 		wpshop_ajax_nonce: jQuery("#input_wpshop_order_customer_adress_load").val(),
-		"customer_id":customer_id
+		customer_id : customer_id,
+		order_id: jQuery("#post_ID").val(),
+
 	};
 	jQuery.post(ajaxurl, data, function(response) {
 		if ( response[0] ) {
-			jQuery("#wpshop_customer_id").val(response[2]);
+			jQuery("#wpshop_customer_id").val(response[3]);
 			jQuery("#customer_address_form").empty();
 			jQuery("#customer_address_form").html(response[1]);
+			jQuery("#shipping_infos_bloc").empty();
+			jQuery("#shipping_infos_bloc").html(response[2]);
 		}
 	}, "json");
 }
@@ -72,12 +76,14 @@ function wpshop_go_to(ancre){
 }
 
 function calcul_price_from_ET(){
-	var ht_amount = jQuery(".wpshop_form_input_element .wpshop_product_attribute_" + WPSHOP_PRODUCT_PRICE_HT).val().replace(",", ".");
+	var ht_amount = parseFloat(jQuery(".wpshop_form_input_element .wpshop_product_attribute_" + WPSHOP_PRODUCT_PRICE_HT).val().replace(",", "."));
+	//console.log( jQuery('.wpshop_product_attribute_' + WPSHOP_PRODUCT_PRICE_HT).val() );
+	var value_tx = parseFloat( jQuery( '.wpshop_product_attribute_tx_tva>option:selected').text() );
 	if ( jQuery(".wpshop_form_input_element .wpshop_product_attribute_" + WPSHOP_PRODUCT_SPECIAL_PRICE).val() != 'undefined') {
 		//ht_amount = jQuery(".wpshop_form_input_element .wpshop_product_attribute_" + WPSHOP_PRODUCT_SPECIAL_PRICE).val().replace(",", ".");
 	}
 
-	var value_tx = jQuery("#wpshop_product_attribute_" + WPSHOP_PRODUCT_PRICE_TAX + "_value_" + jQuery(".wpshop_form_input_element .wpshop_product_attribute_" + WPSHOP_PRODUCT_PRICE_TAX).val()).val();
+	//var value_tx = parseFloat(jQuery("#wpshop_product_attribute_" + WPSHOP_PRODUCT_PRICE_TAX + "_value_" + jQuery(".wpshop_form_input_element .wpshop_product_attribute_" + WPSHOP_PRODUCT_PRICE_TAX).val()).val());
 
 	var tax_rate = 1 + (value_tx / 100);
 
@@ -88,12 +94,13 @@ function calcul_price_from_ET(){
 }
 
 function calcul_price_from_ATI(){
-	var ttc_amount = jQuery(".wpshop_form_input_element .wpshop_product_attribute_" + WPSHOP_PRODUCT_PRICE_TTC).val().replace(",", ".");
+	var value_tx = parseFloat( jQuery( '.wpshop_product_attribute_tx_tva>option:selected').text() );
+	var ttc_amount = parseFloat( jQuery(".wpshop_form_input_element .wpshop_product_attribute_" + WPSHOP_PRODUCT_PRICE_TTC).val().replace(",", ".") );
 	if ( jQuery(".wpshop_form_input_element .wpshop_product_attribute_" + WPSHOP_PRODUCT_SPECIAL_PRICE).val() != 'undefined') {
 		//var ttc_amount = jQuery(".wpshop_form_input_element .wpshop_product_attribute_" + WPSHOP_PRODUCT_SPECIAL_PRICE).val().replace(",", ".");
 	}
 
-	var value_tx = jQuery("#wpshop_product_attribute_" + WPSHOP_PRODUCT_PRICE_TAX + "_value_" + jQuery(".wpshop_form_input_element .wpshop_product_attribute_" + WPSHOP_PRODUCT_PRICE_TAX).val()).val();
+	//var value_tx = parseFloat( jQuery("#wpshop_product_attribute_" + WPSHOP_PRODUCT_PRICE_TAX + "_value_" + jQuery(".wpshop_form_input_element .wpshop_product_attribute_" + WPSHOP_PRODUCT_PRICE_TAX).val()).val() );
 
 	var tax_rate = 1 + (value_tx / 100);
 
@@ -107,14 +114,14 @@ function animate_container(container, sub_container) {
 	jQuery(sub_container, container).animate({opacity:0.3},500);
 
 	jQuery('#wpshop_loading').fadeIn('slow');
-	
+
 	var offset = jQuery(container).offset();
 	var bottom_visible_block = offset.top + jQuery(container).height();
-	
+
 	var top = jQuery(window).scrollTop() - offset.top + (bottom_visible_block-jQuery(window).scrollTop())/2 - 16;
 	if(offset.top > jQuery(window).scrollTop())
-		top = (jQuery(window).scrollTop()+jQuery(window).height()-offset.top)/2-16;		
-	
+		top = (jQuery(window).scrollTop()+jQuery(window).height()-offset.top)/2-16;
+
 	jQuery('#wpshop_loading').css({left:(jQuery(container).width()/2-16)+'px',top:top+'px'}).animate({'top':top});
 }
 function desanimate_container(container) {
@@ -285,6 +292,7 @@ function wpshopConvertAccentTojs(text){
 	text = text.replace(/&yuml;/g, "\377");
 	text = text.replace(/&oelig;/g, "\523");
 	text = text.replace(/&OElig;/g, "\522");
+	text = text.replace(/&euro;/g, "\128");
 	return text;
 }
 
@@ -327,6 +335,21 @@ function make_list_sortable(table){
 			wpshop("#wpshop_attribute_set_section_order").val(wpshop(".attribute_set_group_details").sortable("toArray"));
 		}
 	});
+	var element = '';
+	var count = 0;
+	wpshop( ".wps_attribute_set_end_line").sortable({
+		helper : 'clone',
+		connectWith: ".wpshop_attr_set_section_details",
+		tolerance:'intersect',
+		create: function( event, ui ) {
+			element = jQuery( '.wps_attribute_set_end_line' ).html();
+		},
+		stop : function( event, ui ) {
+			jQuery( '.wps_attribute_set_end_line' ).html( element );
+			jQuery( '.wps_attribute_set_end_line li').attr( 'id', 'wps-attribute-end-line' );
+		}
+	}).disableSelection();
+
 
 	/*	Add set section edition action	*/
 	jQuery(".wpshop_attr_tool_box_edit").click(function(){
@@ -354,6 +377,7 @@ function update_order_product_content(order_id, pdt_list_to_delete){
 	jQuery("input[name=productQty]").each(function(){
 		product_list_qty_to_update.push(jQuery(this).attr("id").replace("wpshop_product_order_", "") + "_x_" + jQuery(this).val());
 	});
+	/*
 	jQuery("#order_product_container").load(WPSHOP_AJAX_FILE_URL,{
 		"post":"true",
 		"elementCode":"ajax_refresh_order",
@@ -363,6 +387,20 @@ function update_order_product_content(order_id, pdt_list_to_delete){
 		"product_to_update_qty":product_list_qty_to_update,
 		"order_shipping_cost":jQuery(".wpshop_order_shipping_cost_custom_admin").val()
 	});
+	*/
+	var data = {
+			action: "wps_order_refresh",
+			order_id : order_id,
+			product_to_delete : product_to_delete,
+			product_to_update_qty : product_list_qty_to_update,
+			order_shipping_cost : jQuery(".wpshop_order_shipping_cost_custom_admin").val()
+		};
+		jQuery.post(ajaxurl, data, function(response){
+			if ( response['status'] ) {
+				jQuery('#wps_order_content_container').html( response['response'] );
+			}
+		}, 'json');
+
 }
 
 
@@ -376,6 +414,7 @@ function wpshop_variation_delete( variation_to_delete ) {
 		for( responseis in response ) {
 			jQuery("#wpshop_variation_metabox_" + response[responseis]).remove();
 		};
+		jQuery(".wpshop_variation_metabox_col_close").removeClass('wpshop_variation_metabox_col_close_current');
 		if ( jQuery(".variation_existing_main_container div.wpshop_variation_metabox").length <= 0 ) {
 			jQuery(".wpshop_variation_controller").hide();
 
@@ -385,7 +424,7 @@ function wpshop_variation_delete( variation_to_delete ) {
 				current_post_id: jQuery("#post_ID").val(),
 			};
 			jQuery.post(ajaxurl, data, function(response){
-				
+
 			});
 		}
 	}, 'json');
@@ -417,4 +456,41 @@ function wpshop_create_variation( action ) {
 	else {
 		alert( wpshopConvertAccentTojs( WPSHOP_NO_ATTRIBUTES_SELECT_FOR_VARIATION ) );
 	}
+}
+
+function create_customer_in_admin_return (responseText, statusText, xhr, $form)  {
+	if (responseText[0]) {
+		jQuery('#wpshop_customer_id').val(responseText[2]);
+		jQuery("#create_new_customer_dialog").dialog("close");
+		jQuery('#wpshop_order_user_customer_id').val(responseText[2]);
+		display_customer_address_form ( responseText[2] );
+		jQuery("#create_new_customer_in_admin_reponseBox").html('');
+	}
+	else {
+		jQuery("#create_new_customer_in_admin_reponseBox").html('<div class="error_bloc">'+responseText[1]+'</div>');
+	}
+	jQuery("#create_new_customer_loader_creation").hide();
+}
+
+
+
+/**
+ * Add an overlay to a container with a message or with a loader
+ *
+ * @param container The container that will receive the content
+ * @param content Optionnal. If not define the loader will be put by default
+ */
+function wpshop_add_loader( container, content ) {
+	if ( undefined == content ) {
+		content = '<img src="' + thickboxL10n.loadingAnimation + '" />';
+	}
+	jQuery( container ).append( '<div id="wpshop-loader-overlay" class="wpshop-loader-overlay-background" ></div><div id="wpshop-loader-overlay-load" style="top: 45%;" >' + content + '</div>' );
+}
+/**
+ * Remove the content previously added to the container
+ * @param container The container we want to remove the loader/message for
+ */
+function wpshop_remove_loader( container ) {
+	jQuery( container + " #wpshop-loader-overlay" ).remove();
+	jQuery( container + " #wpshop-loader-overlay-load" ).html( "" ).remove();
 }

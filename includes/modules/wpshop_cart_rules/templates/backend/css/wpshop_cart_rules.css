@@ -1,0 +1,89 @@
+@CHARSET "ISO-8859-1";
+
+
+.cart_rules_discount_interface {
+	width : 240px;
+	min-height : 100px;
+	height : auto;
+	margin : 0 10px 0 0;
+	float : left;
+	
+}
+.cart_rules_discount_interface_container {
+	float : left;
+	margin : 5px 20px 0 0;
+	width : 250px;
+	height : auto;
+}
+.cart_rules_container {
+	width : 883px;
+	height :auto;
+}
+.cart_rule_line {
+	float : left;
+	width : 843px;
+	height : auto;
+	border : 1px solid #E1E1E1;
+	background : #ffffff;
+	text-align : center
+}
+.cart_rule_cart_limen {
+	float : left;
+	width : 100px;
+	height : auto;
+	padding : 5px;
+	border-right : 1px solid #E1E1E1;
+}
+.cart_rule_cart_discount_type {
+	float : left;
+	width : 145px;
+	height : auto;
+	padding : 5px;
+	border-right : 1px solid #E1E1E1;
+}
+.cart_rule_cart_customer_group {
+	float : left;
+	width : 145px;
+	height : auto;
+	padding : 5px;
+	border-right : 1px solid #E1E1E1;
+}
+.cart_rule_cart_discount_value {
+	float : left;
+	width : 350px;
+	height : auto;
+	padding : 5px;
+	border-right : 1px solid #E1E1E1;
+}
+.cart_line_delete_rule {
+	float : left;
+	width : 30px;
+	height : auto;
+	padding : 5px;
+}
+.cart_line_delete_rule {
+	cursor : pointer	
+}
+
+
+
+#display_all_rules table {
+	border : 1px solid #DDDDDD;
+	background : #FFFFFF;	
+}
+#display_all_rules table tr {
+	border : 1px solid #DDDDDD;
+	padding : 3px;
+	text-align : center;
+}
+#display_all_rules table th {
+	background : #21759B;
+	color : #FFFFFF;
+	height : 20px;
+	text-align : center;
+	vertical-align : middle;
+}
+
+
+
+

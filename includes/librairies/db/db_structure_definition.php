@@ -21,7 +21,6 @@ $wpshop_db_table_list = array();
 $wpshop_db_table_operation_list = array();
 $wpshop_db_request = array();
 $wpshop_db_version = 0;
-
 /*	Define the different database table	*/
 	/*	Entities	*/
 	$t = WPSHOP_DBT_ENTITIES;
@@ -50,9 +49,11 @@ $wpshop_db_version = 0;
 	position INT(10) NOT NULL DEFAULT '0' ,
 	entity_id INT(10) UNSIGNED NOT NULL DEFAULT '0' ,
 	name VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_swedish_ci' NOT NULL DEFAULT '' ,
+	slug VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_swedish_ci' NOT NULL DEFAULT '' ,
 	PRIMARY KEY (id) ,
 	KEY position (position) ,
 	KEY status (status) ,
+	KEY slug (slug) ,
 	KEY entity_id (entity_id)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
 
@@ -91,6 +92,7 @@ $wpshop_db_version = 0;
   unit char(25) collate utf8_unicode_ci NOT NULL,
   name char(50) collate utf8_unicode_ci NOT NULL,
   change_rate decimal(12,5),
+  code_iso varchar(255) collate utf8_unicode_ci,
   PRIMARY KEY  (id),
   KEY status (status)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
@@ -152,7 +154,7 @@ $wpshop_db_version = 0;
   frontend_label varchar(255) collate utf8_unicode_ci default NULL,
   frontend_input enum('text', 'textarea', 'select', 'multiple-select', 'password', 'hidden','radio', 'checkbox') collate utf8_unicode_ci NOT NULL default 'text',
   frontend_verification enum('','username','email','postcode','country','state','phone') collate utf8_unicode_ci default NULL,
-  code varchar(255) collate utf8_unicode_ci NOT NULL default '',
+  code varchar(255) collate utf8_general_ci NOT NULL default '',
   note varchar(255) collate utf8_unicode_ci NOT NULL,
   default_value text collate utf8_unicode_ci,
   frontend_css_class varchar(255) collate utf8_unicode_ci default NULL,
@@ -213,7 +215,7 @@ $wpshop_db_version = 0;
   unit_id int(10) unsigned NOT NULL default '0',
 	user_id bigint(20) unsigned NOT NULL default '1',
 	creation_date_value datetime,
-  language char(10) collate utf8_unicode_ci NOT NULL default '" . WPSHOP_CURRENT_LOCALE . "',
+  language char(10) collate utf8_unicode_ci NOT NULL default '" . (defined('WPSHOP_CURRENT_LOCALE') ? WPSHOP_CURRENT_LOCALE : get_locale()) . "',
   value varchar(255) collate utf8_unicode_ci NOT NULL default '',
   PRIMARY KEY  (value_id),
   KEY entity_id (entity_id),
@@ -222,6 +224,7 @@ $wpshop_db_version = 0;
   KEY unit_id (unit_id),
   KEY language (language)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+
 	/*	Attribute	values (DATETIME) */
 	$t = WPSHOP_DBT_ATTRIBUTE_VALUES_DATETIME;
 	$wpshop_db_table[$t] =
@@ -233,7 +236,7 @@ $wpshop_db_version = 0;
   unit_id int(10) unsigned NOT NULL default '0',
 	user_id bigint(20) unsigned NOT NULL default '1',
 	creation_date_value datetime,
-  language char(10) collate utf8_unicode_ci NOT NULL default '" . WPSHOP_CURRENT_LOCALE . "',
+  language char(10) collate utf8_unicode_ci NOT NULL default '" . (defined('WPSHOP_CURRENT_LOCALE') ? WPSHOP_CURRENT_LOCALE : get_locale()) . "',
   value datetime default NULL,
   PRIMARY KEY  (value_id),
   KEY entity_id (entity_id),
@@ -253,7 +256,7 @@ $wpshop_db_version = 0;
   unit_id int(10) unsigned NOT NULL default '0',
 	user_id bigint(20) unsigned NOT NULL default '1',
 	creation_date_value datetime,
-  language char(10) collate utf8_unicode_ci NOT NULL default '" . WPSHOP_CURRENT_LOCALE . "',
+  language char(10) collate utf8_unicode_ci NOT NULL default '" . (defined('WPSHOP_CURRENT_LOCALE') ? WPSHOP_CURRENT_LOCALE : get_locale()) . "',
   value decimal(12,5) NOT NULL,
   PRIMARY KEY  (value_id),
   KEY entity_id (entity_id),
@@ -273,7 +276,7 @@ $wpshop_db_version = 0;
   unit_id int(10) unsigned NOT NULL default '0',
 	user_id bigint(20) unsigned NOT NULL default '1',
 	creation_date_value datetime,
-  language char(10) collate utf8_unicode_ci NOT NULL default '" . WPSHOP_CURRENT_LOCALE . "',
+  language char(10) collate utf8_unicode_ci NOT NULL default '" . (defined('WPSHOP_CURRENT_LOCALE') ? WPSHOP_CURRENT_LOCALE : get_locale()) . "',
   value int(10) NOT NULL,
   PRIMARY KEY  (value_id),
   KEY entity_id (entity_id),
@@ -293,7 +296,7 @@ $wpshop_db_version = 0;
   unit_id int(10) unsigned NOT NULL default '0',
 	user_id bigint(20) unsigned NOT NULL default '1',
 	creation_date_value datetime,
-  language char(10) collate utf8_unicode_ci NOT NULL default '" . WPSHOP_CURRENT_LOCALE . "',
+  language char(10) collate utf8_unicode_ci NOT NULL default '" . (defined('WPSHOP_CURRENT_LOCALE') ? WPSHOP_CURRENT_LOCALE : get_locale()) . "',
   value longtext collate utf8_unicode_ci NOT NULL,
   PRIMARY KEY  (value_id),
   KEY entity_id (entity_id),
@@ -318,7 +321,7 @@ $wpshop_db_version = 0;
   unit_id int(10) unsigned NOT NULL default '0',
 	user_id bigint(20) unsigned NOT NULL default '1',
 	creation_date_value datetime,
-  language char(10) collate utf8_unicode_ci NOT NULL default '" . WPSHOP_CURRENT_LOCALE . "',
+  language char(10) collate utf8_unicode_ci NOT NULL default '" . (defined('WPSHOP_CURRENT_LOCALE') ? WPSHOP_CURRENT_LOCALE : get_locale()) . "',
   value longtext collate utf8_unicode_ci NOT NULL,
   value_type char(70) collate utf8_unicode_ci NOT NULL default '',
   PRIMARY KEY  (value_id),
@@ -344,19 +347,6 @@ $wpshop_db_version = 0;
 	label VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci' NULL DEFAULT NULL,
 	PRIMARY KEY (id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
-
-	/*	Plugin documentation */
-	$t = $wpdb->prefix . wpshop_doc::prefix . '__documentation';
-	$wpshop_db_table[$t] =
-"CREATE TABLE {$t} (
-	doc_id int(11) unsigned NOT NULL AUTO_INCREMENT,
-	doc_active ENUM('active', 'deleted') default 'active',
-	doc_page_name varchar(255) NOT NULL,
-	doc_url varchar(255) NOT NULL,
-	doc_html text NOT NULL,
-	doc_creation_date datetime NOT NULL,
-	PRIMARY KEY ( doc_id )
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
 
 
 	/*	Users' cart */
@@ -414,7 +404,7 @@ $wpshop_db_version = 0;
 	$wpshop_db_version = 0;
 	$wpshop_update_way[$wpshop_db_version] = 'creation';
 
-	$wpshop_db_table_operation_list[$wpshop_db_version]['ADD_TABLE'] = array(WPSHOP_DBT_ENTITIES, WPSHOP_DBT_ATTRIBUTE_SET, WPSHOP_DBT_ATTRIBUTE_GROUP, WPSHOP_DBT_ATTRIBUTE_UNIT, WPSHOP_DBT_ATTRIBUTE, WPSHOP_DBT_ATTRIBUTE_DETAILS, WPSHOP_DBT_ATTRIBUTE_VALUES_VARCHAR, WPSHOP_DBT_ATTRIBUTE_VALUES_DATETIME, WPSHOP_DBT_ATTRIBUTE_VALUES_DECIMAL, WPSHOP_DBT_ATTRIBUTE_VALUES_INTEGER, WPSHOP_DBT_ATTRIBUTE_VALUES_TEXT);
+	$wpshop_db_table_operation_list[$wpshop_db_version]['ADD_TABLE'] = array(/* WPSHOP_DBT_ENTITIES, */ WPSHOP_DBT_ATTRIBUTE_SET, WPSHOP_DBT_ATTRIBUTE_GROUP, WPSHOP_DBT_ATTRIBUTE_UNIT, WPSHOP_DBT_ATTRIBUTE, WPSHOP_DBT_ATTRIBUTE_DETAILS, WPSHOP_DBT_ATTRIBUTE_VALUES_VARCHAR, WPSHOP_DBT_ATTRIBUTE_VALUES_DATETIME, WPSHOP_DBT_ATTRIBUTE_VALUES_DECIMAL, WPSHOP_DBT_ATTRIBUTE_VALUES_INTEGER, WPSHOP_DBT_ATTRIBUTE_VALUES_TEXT);
 	$wpshop_db_table_list[$wpshop_db_version] = array(/*WPSHOP_DBT_ENTITIES, */WPSHOP_DBT_ATTRIBUTE_SET, WPSHOP_DBT_ATTRIBUTE_GROUP, WPSHOP_DBT_ATTRIBUTE_UNIT, WPSHOP_DBT_ATTRIBUTE, WPSHOP_DBT_ATTRIBUTE_DETAILS, WPSHOP_DBT_ATTRIBUTE_VALUES_VARCHAR, WPSHOP_DBT_ATTRIBUTE_VALUES_DATETIME, WPSHOP_DBT_ATTRIBUTE_VALUES_DECIMAL, WPSHOP_DBT_ATTRIBUTE_VALUES_INTEGER, WPSHOP_DBT_ATTRIBUTE_VALUES_TEXT);
 }
 
@@ -425,9 +415,8 @@ $wpshop_db_version = 0;
 	/*	Add some explanation in order to check done update	*/
 	$wpshop_db_table_operation_list[$wpshop_db_version]['FIELD_ADD'][WPSHOP_DBT_ATTRIBUTE_UNIT] = array('group_id', 'is_default_of_group');
 	$wpshop_db_table_operation_list[$wpshop_db_version]['FIELD_ADD'][WPSHOP_DBT_ATTRIBUTE] = array('_unit_group_id', '_default_unit', 'is_historisable');
-	$wpshop_db_table_operation_list[$wpshop_db_version]['ADD_TABLE'] = array($wpdb->prefix . wpshop_doc::prefix . '__documentation', WPSHOP_DBT_ATTRIBUTE_UNIT_GROUP, WPSHOP_DBT_ATTRIBUTE_VALUES_HISTO);
 
-	$wpshop_db_table_list[$wpshop_db_version] = array($wpdb->prefix . wpshop_doc::prefix . '__documentation', WPSHOP_DBT_ATTRIBUTE_UNIT, WPSHOP_DBT_ATTRIBUTE_UNIT_GROUP, WPSHOP_DBT_ATTRIBUTE_VALUES_HISTO, WPSHOP_DBT_ATTRIBUTE);
+	$wpshop_db_table_list[$wpshop_db_version] = array(WPSHOP_DBT_ATTRIBUTE_UNIT, WPSHOP_DBT_ATTRIBUTE_UNIT_GROUP, WPSHOP_DBT_ATTRIBUTE_VALUES_HISTO, WPSHOP_DBT_ATTRIBUTE);
 }
 
 {/*	Version 2	*/
@@ -532,7 +521,7 @@ $wpshop_db_version = 0;
 	$wpshop_db_version = 16;
 	$wpshop_update_way[$wpshop_db_version] = 'datas';
 
-	$wpshop_db_table_operation_list[$wpshop_db_version]['FIELD_CHANGE'][WPSHOP_DBT_ATTRIBUTE] = array(array('field' => 'backend_input', 'type' => "enum('text','textarea','select','multiple-select')"));
+	$wpshop_db_table_operation_list[$wpshop_db_version]['FIELD_CHANGE'][WPSHOP_DBT_ATTRIBUTE] = array(array('field' => 'backend_input', 'type' => "enum('text','textarea','select','multiple-select','password','hidden','radio','checkbox')"));
 	$wpshop_db_table_operation_list[$wpshop_db_version]['FIELD_ADD'][WPSHOP_DBT_ATTRIBUTE_GROUP] = array('backend_display_type');
 
 	$wpshop_db_table_list[$wpshop_db_version] = array(WPSHOP_DBT_ATTRIBUTE, WPSHOP_DBT_ATTRIBUTE_GROUP);
@@ -571,6 +560,8 @@ $wpshop_db_version = 0;
 	$wpshop_db_table_operation_list[$wpshop_db_version]['FIELD_ADD'][WPSHOP_DBT_ATTRIBUTE_GROUP] = array('display_on_frontend');
 
 	$wpshop_db_table_list[$wpshop_db_version] = array(WPSHOP_DBT_ATTRIBUTE, WPSHOP_DBT_ATTRIBUTE_GROUP);
+
+	$wpshop_db_request[$wpshop_db_version][] = "UPDATE ".WPSHOP_DBT_ATTRIBUTE." SET backend_input=frontend_input WHERE frontend_input!='text'";
 }
 
 {/*	Version 21  - 1.3.2.0	*/
@@ -629,19 +620,172 @@ $wpshop_db_version = 0;
 	$wpshop_db_version = 29;
 	$wpshop_update_way[$wpshop_db_version] = 'multiple';
 
-	$wpshop_db_table_operation_list[$wpshop_db_version]['FIELD_CHANGE'][WPSHOP_DBT_ATTRIBUTE] = array(array('field' => 'frontend_verification', 'type' => "enum('','email','postcode','country','state','phone')"));
+	$wpshop_db_table_operation_list[$wpshop_db_version]['FIELD_CHANGE'][WPSHOP_DBT_ATTRIBUTE] = array(array('field' => 'frontend_verification', 'type' => "enum('','username','email','postcode','country','state','phone')"));
 	$wpshop_db_table_operation_list[$wpshop_db_version]['FIELD_ADD'][WPSHOP_DBT_ATTRIBUTE] = array('is_used_for_variation', 'is_used_in_variation', '_display_informations_about_value');
 	$wpshop_db_table_operation_list[$wpshop_db_version]['FIELD_ADD'][WPSHOP_DBT_ATTRIBUTE_UNIT] = array('change_rate');
 
 	$wpshop_db_table_list[$wpshop_db_version] = array(WPSHOP_DBT_ATTRIBUTE, WPSHOP_DBT_ATTRIBUTE_UNIT);
 }
 
-{/*	Version 30  - 1.3.3.5	*/
+{/*	Version 30  - 1.3.3.6	*/
 	$wpshop_db_version = 30;
+	$wpshop_update_way[$wpshop_db_version] = 'data';
 }
 
+{/*	Version 31  - 1.3.3.7	*/
+	$wpshop_db_version = 31;
+	$wpshop_update_way[$wpshop_db_version] = 'data';
+	$wpshop_db_table_operation_list[$wpshop_db_version]['FIELD_ADD'][WPSHOP_DBT_ATTRIBUTE_UNIT] = array('code_iso');
+	$wpshop_db_table_list[$wpshop_db_version] = array(WPSHOP_DBT_ATTRIBUTE_UNIT);
+}
+
+{/*	Version 32  - 1.3.4.2	*/
+	$wpshop_db_version = 32;
+	$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+
+{/*	Version 33  - 1.3.4.5	*/
+	$wpshop_db_version = 33;
+	$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+
+{/*	Version 34  - 1.3.4.6	*/
+	$wpshop_db_version = 34;
+	$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+
+{/*	Version 35  - 1.3.4.7	*/
+	$wpshop_db_version = 35;
+	$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+
+{/*	Version 36  - 1.3.4.8	*/
+	$wpshop_db_version = 36;
+	$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+
+{/*	Version 37  - 1.3.4.9	*/
+	$wpshop_db_version = 37;
+	$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+
+{/*	Version 38  - 1.3.5.2	*/
+	$wpshop_db_version = 38;
+	$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+
+{/*	Version 39  - 1.3.5.3	*/
+	$wpshop_db_version = 39;
+	$wpshop_update_way[$wpshop_db_version] = 'data';
+	$wpshop_db_table_list[$wpshop_db_version] = array(WPSHOP_DBT_ATTRIBUTE);
+}
+
+{/*	Version 40  - 1.3.5.4	*/
+	$wpshop_db_version = 40;
+	$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+
+{/*	Version 41  - 1.3.5.5	*/
+	$wpshop_db_version = 41;
+	$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+
+{/*	Version 42  - 1.3.5.7	*/
+$wpshop_db_version = 42;
+$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+
+{/*	Version 43  - 1.3.6.0	*/
+$wpshop_db_version = 43;
+$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+
+{/*	Version 44  - 1.3.6.1	*/
+$wpshop_db_version = 44;
+$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+{/*	Version 45  - 1.3.6.3	*/
+$wpshop_db_version = 45;
+$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+{/*	Version 46  - 1.3.6.5	*/
+$wpshop_db_version = 46;
+$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+{/*	Version 47  - 1.3.6.5	*/
+$wpshop_db_version = 47;
+$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+{/*	Version 48  - 1.3.6.8	*/
+$wpshop_db_version = 48;
+$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+{/*	Version 49  - 1.3.6.9	*/
+$wpshop_db_version = 49;
+$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+{/*	Version 50  - 1.3.7.6	*/
+$wpshop_db_version = 50;
+$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+{/*	Version 51  - 1.3.7.9	*/
+$wpshop_db_version = 51;
+$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+{/*	Version 52  - 1.3.8.3	*/
+$wpshop_db_version = 52;
+$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+{/*	Version 53  - 1.3.8.9	*/
+$wpshop_db_version = 53;
+$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+{/*	Version 54  - 1.3.9.0	*/
+$wpshop_db_version = 54;
+$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+{/*	Version 55  - 1.3.9.1	*/
+$wpshop_db_version = 55;
+$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+{/*	Version 56  - 1.3.9.2	*/
+$wpshop_db_version = 56;
+$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+{/*	Version 57  - 1.3.9.4	*/
+$wpshop_db_version = 57;
+$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+{/*	Version 58  - 1.3.9.5	*/
+$wpshop_db_version = 58;
+$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+{/*	Version 59  - 1.3.9.7	*/
+$wpshop_db_version = 59;
+$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+{/*	Version 60  - 1.3.9.8	*/
+$wpshop_db_version = 60;
+$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+{/*	Version 61  - 1.3.9.9	*/
+$wpshop_db_version = 61;
+$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+{/*	Version 61  - 1.4.0.3	*/
+$wpshop_db_version = 62;
+$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+{/*	Version 64  - 1.4.0.9	*/
+$wpshop_db_version = 64;
+$wpshop_update_way[$wpshop_db_version] = 'data';
+}
+{/*	Version 65  - 1.4.1.6	*/
+$wpshop_db_version = 65;
+$wpshop_update_way[$wpshop_db_version] = 'data';
+	$wpshop_db_table_list[$wpshop_db_version] = array(WPSHOP_DBT_ATTRIBUTE_SET);
+}
 {/*	Version dev	- Call for every plugin db version	*/
 	$wpshop_db_version = 'dev';
 	$wpshop_update_way[$wpshop_db_version] = 'multiple';
-// 	$wpshop_db_table_list[$wpshop_db_version] = array(WPSHOP_DBT_ATTRIBUTE);
 }

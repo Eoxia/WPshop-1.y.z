@@ -1,0 +1,70 @@
+status;is_visible_in_front;is_visible_in_front_listing;is_global;is_user_defined;is_required;is_visible_in_advanced_search;is_searchable;is_filterable;is_comparable;is_html_allowed_on_front;is_unique;is_filterable_in_search;is_used_for_sort_by;is_configurable;is_requiring_unit;is_recordable_in_cart_meta;is_used_in_admin_listing_column;is_used_in_quick_add_form;is_used_for_variation;is_used_in_variation;_display_informations_about_value;_need_verification;_unit_group_id;_default_unit;is_historisable;is_intrinsic;data_type_to_use;use_ajax_for_filling_field;data_type;backend_table;backend_label;backend_input;frontend_label;frontend_input;frontend_verification;code;note;default_value;frontend_css_class;backend_css_class;frontend_help_message;available_values
+valid;yes;yes;no;no;yes;no;no;no;no;no;no;no;no;no;no;no;no;no;no;yes;no;no;NULL;NULL;yes;no;custom;no;varchar;NULL;NULL;text;Product reference;text;NULL;product_reference;;;NULL;NULL;NULL;
+valid;no;no;no;no;yes;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;text;Attribute set;text;NULL;product_attribute_set_id;;;NULL;NULL;NULL;
+valid;yes;yes;no;no;no;no;no;no;no;no;no;no;no;no;yes;no;no;no;no;no;no;no;3;6;yes;no;custom;no;decimal;NULL;NULL;text;Product weight;text;NULL;product_weight;;;NULL;NULL;NULL;
+valid;yes;yes;no;no;no;no;no;no;no;no;no;no;no;no;yes;no;no;no;no;no;no;no;1;2;yes;no;custom;no;decimal;NULL;NULL;text;Product height;text;NULL;product_height;;;NULL;NULL;NULL;
+valid;yes;yes;no;no;no;no;no;no;no;no;no;no;no;no;yes;no;no;no;no;no;no;no;1;2;yes;no;custom;no;decimal;NULL;NULL;text;Product width;text;NULL;product_width;;;NULL;NULL;NULL;
+vadid;yes;yes;no;no;no;no;no;no;no;no;no;no;yes;no;yes;no;yes;no;no;yes;no;no;4;0;yes;no;custom;no;decimal;NULL;NULL;text;Price ATI;text;NULL;product_price;;;NULL;NULL;NULL;
+valid;no;no;no;no;no;no;no;no;no;no;no;no;yes;no;no;no;yes;no;no;no;no;no;NULL;NULL;yes;no;custom;no;decimal;NULL;NULL;text;Stock;text;NULL;product_stock;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;varchar;NULL;NULL;text;Model;text;NULL;model;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;select;Visibilty;select;NULL;visibility;;catalog_and_search;NULL;NULL;NULL;Catalog,Search,Catalog & Search!:!:!catalog_and_search
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;select;Manufacturer;select;NULL;manufacturer;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;select;Color;select;NULL;color;;;NULL;NULL;NULL;Blue,Green,Red
+valid;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;varchar;NULL;NULL;text;Barcode;text;NULL;barcode;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;varchar;NULL;NULL;text;Tarif Code;text;NULL;tarif_code;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;varchar;NULL;NULL;text;Country of Manufacture;text;NULL;country_of_manufacture;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;varchar;NULL;NULL;text;ISBN;text;NULL;isbn;;;NULL;NULL;NULL;
+moderated;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;select;Declare this product as new;select;NULL;declare_new;;no;NULL;NULL;NULL;Yes!:!:!yes,No!:!:!no
+moderated;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;datetime;NULL;NULL;text;Set product as new from date;text;NULL;set_new_from;;;NULL;NULL;NULL;
+moderated;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;datetime;NULL;NULL;text;Set product as new to date;text;NULL;set_new_to;;;NULL;NULL;NULL;
+valid;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;select;Manage Stock;select;NULL;manage_stock;;no;NULL;NULL;NULL;No!:!:!no,Yes!:!:!yes
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;radio;Allow Decimals;text;NULL;qty_uses_decimals;;no;NULL;NULL;NULL;Yes!:!:!yes,No!:!:!no
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;varchar;NULL;NULL;text;Maximum authorized quantity in cart;text;NULL;maxi_authorized_quantity;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;varchar;NULL;NULL;text;Minimum authorized quantity in cart;text;NULL;mini_authorized_quantity;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;radio;Use quantity increments;text;NULL;qty_increments;;no;NULL;NULL;NULL;Yes!:!:!yes,No!:!:!no
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;decimal;NULL;NULL;text;Set product as out at ;text;NULL;set_as_out_at;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;decimal;NULL;NULL;text;Set product as out of stock;text;NULL;set_as_out_of_stock;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;decimal;NULL;NULL;text;Notify when quantity goes below;text;NULL;notify_quantity_goes_below;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;yes;no;no;no;no;no;no;no;4;7;yes;no;custom;no;varchar;NULL;NULL;text;Cost;text;NULL;cost;;;NULL;NULL;NULL;
+valid;no;no;no;no;no;no;no;no;no;no;no;no;no;no;yes;no;no;no;no;no;no;no;4;0;yes;no;custom;no;decimal;NULL;NULL;text;Price ET (HT);text;NULL;price_ht;;;NULL;NULL;NULL;
+valid;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;select;Rate Taxe (TVA);select;NULL;tx_tva;;20;NULL;NULL;NULL;2.1,5.5,20
+valid;no;no;no;no;no;no;no;no;no;no;no;no;no;no;yes;no;no;no;no;no;no;no;4;0;yes;no;custom;no;decimal;NULL;NULL;text;Taxe;text;NULL;tva;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;yes;no;no;no;no;no;no;no;4;7;yes;no;custom;no;decimal;NULL;NULL;text;Eco Taxe;text;NULL;eco_taxe;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;select;Rate TVA Eco Taxe;select;NULL;eco_taxe_rate_tva;;20;NULL;NULL;NULL;2.1,5.5,20
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;yes;no;no;no;no;no;no;no;4;7;yes;no;custom;no;decimal;NULL;NULL;text;TVA Eco Taxe;text;NULL;eco_taxe_tva;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;decimal;NULL;NULL;text;Discount rate;text;NULL;discount_rate;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;yes;no;no;no;no;no;no;no;4;7;yes;no;custom;no;decimal;NULL;NULL;text;Discount amount;text;NULL;discount_amount;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;yes;no;no;no;no;no;no;no;4;7;yes;no;custom;no;decimal;NULL;NULL;text;Special Price;text;NULL;special_price;;;NULL;NULL;NULL;
+valid;no;no;no;no;no;no;no;no;no;no;no;no;no;no;yes;no;no;no;no;no;no;no;4;0;yes;no;custom;no;decimal;NULL;NULL;text;Cost Of Postage;text;NULL;cost_of_postage;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;datetime;NULL;NULL;text;Special Price From Date;text;NULL;special_from;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;datetime;NULL;NULL;text;Special Price To Date;text;NULL;special_to;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;yes;no;no;no;no;no;no;no;4;7;yes;no;custom;no;decimal;NULL;NULL;text;Apply minimum advertised price;text;NULL;apply_map;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;yes;no;no;no;no;no;no;no;4;7;yes;no;custom;no;decimal;NULL;NULL;text;Manufacturer's Sugessted Retail Price;text;NULL;suggested_price;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;radio;Return merchandise authorization;text;NULL;rma;;no;NULL;NULL;NULL;Yes!:!:!yes,No!:!:!no
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;radio;Allow Gift Message;text;NULL;allow_gift_message;;no;NULL;NULL;NULL;Yes!:!:!yes,No!:!:!no
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;radio;Allow Gift Wrapping;text;NULL;allow_gift_wrapping;;no;NULL;NULL;NULL;Yes!:!:!yes,No!:!:!no
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;yes;no;no;no;no;no;no;no;4;7;yes;no;custom;no;decimal;NULL;NULL;text;Price For Gift Option;text;NULL;price_gift_options;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;varchar;NULL;NULL;text;Product tag;text;NULL;product_tag;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;select;Up Sells;select;NULL;up_sells;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;select;Cross Sells;select;NULL;cross_sells;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;checkbox;Chemical Product;text;NULL;chemical_product;;no;NULL;NULL;NULL;Yes!:!:!yes,No!:!:!no
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;checkbox;Danger's Pictogram;text;NULL;pictogram;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;select;Risk Phrases;select;NULL;risk_phrases;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;select;Safety Advices;select;NULL;safety_advices;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;radio;Security Datas;text;NULL;security_datas;;no;NULL;NULL;NULL;Yes!:!:!yes,No!:!:!no
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;datetime;NULL;NULL;text;Last Update Date;text;NULL;last_update_date;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;select;Product consumption;select;NULL;consumption;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;select;Frequency of use;select;NULL;frequency;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;radio;Cancerigene Mutagene Reprotoxique;text;NULL;cmr;;no;NULL;NULL;NULL;Yes!:!:!yes,No!:!:!no
+moderated;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;select;Highlight this product;select;NULL;highlight_product;;no;NULL;NULL;NULL;Yes!:!:!yes,No!:!:!no
+moderated;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;datetime;NULL;NULL;text;Highlight from date;text;NULL;highlight_from;;;NULL;NULL;NULL;
+moderated;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;datetime;NULL;NULL;text;Highlight to date;text;NULL;highlight_to;;;NULL;NULL;NULL;
+notused;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;select;Allows quotation for this product;select;NULL;quotation_allowed;;no;NULL;NULL;NULL;Yes!:!:!yes,No!:!:!no
+moderated;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;yes;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;select;Downloadable product;select;NULL;is_downloadable_;;no;NULL;NULL;NULL;Yes!:!:!yes,No!:!:!no
+valid;yes;yes;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;select;Provider;select;NULL;provider;;;NULL;NULL;NULL;
+valid;yes;yes;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;select;Brand;select;NULL;brand;;;NULL;NULL;NULL;
+valid;yes;yes;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;multiple-select;Size;select;NULL;size;;;NULL;NULL;NULL;
+valid;yes;yes;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;varchar;NULL;NULL;text;Provider reference;text;NULL;provider_reference;;;NULL;NULL;NULL;
+valid;yes;yes;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;varchar;NULL;NULL;text;Manufacturer reference;text;NULL;manufacturer_reference;;;NULL;NULL;NULL;
+valid;yes;yes;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;select;Warranty;select;NULL;warranty;;;NULL;NULL;NULL;
+valid;yes;yes;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;no;NULL;NULL;yes;no;custom;no;integer;NULL;NULL;select;Origin / Manufacturing country;select;country;origin_manufacturing_country;;;NULL;NULL;NULL;

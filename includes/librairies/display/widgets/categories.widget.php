@@ -19,16 +19,17 @@
 class WP_Widget_Wpshop_Product_categories extends WP_Widget {
 
 	/**
-	* Widget Constuctor
-	*
-	*	@return An instance of wp widget
-	*/
-	function WP_Widget_Wpshop_Product_categories(){
+	 * Widget Constructor
+	 */
+	public function __construct() {
+		add_action('widgets_init', create_function('', 'return register_widget("WP_Widget_Wpshop_Product_categories");' ) );
+		
 		$params = array(
 			'classname' => 'widget_wpshop_pdt_categories',
 			'description' => __('Wpshop product categories widget', 'wpshop')
 		);
-		$this->WP_Widget('wpshop_pdt_categories', __('Wpshop Categories', 'wpshop'), $params);
+		
+		parent::__construct( 'wpshop_pdt_categories', __('• Wpshop Categories', 'wpshop'), $params );
 	}
 
 	/**
@@ -70,8 +71,6 @@ class WP_Widget_Wpshop_Product_categories extends WP_Widget {
 <?php
 	}
 
-
-
 	/**
 	* Widget Output
 	*
@@ -95,8 +94,6 @@ class WP_Widget_Wpshop_Product_categories extends WP_Widget {
 
 		echo $widget_content;
 	}
-
-
 
 	/**
 	*	Get the sub categories of a given category
@@ -124,3 +121,5 @@ class WP_Widget_Wpshop_Product_categories extends WP_Widget {
 	}
 
 }
+
+new WP_Widget_Wpshop_Product_categories();

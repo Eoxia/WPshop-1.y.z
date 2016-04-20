@@ -26,15 +26,15 @@ class wpshop_addons_settings{
 	 * Déclaration des différentes options
 	 */
 	function declare_options(){
-		add_settings_section('wpshop_addons_options', __('Wpshop "addons"', 'wpshop'), array('wpshop_advanced_settings', 'plugin_section_text'), 'wpshop_addons_options');
-		register_setting('wpshop_options', 'wpshop_addons_options', array('wpshop_addons_settings', 'validate_options'));
-		add_settings_field('wpshop_addons_settings_field', '', array('wpshop_addons_settings', 'addons_definition_fields'), 'wpshop_addons_options', 'wpshop_addons_options');
+// 		add_settings_section('wpshop_addons_options', __('Wpshop "addons"', 'wpshop'), array('wpshop_advanced_settings', 'plugin_section_text'), 'wpshop_addons_options');
+// 		register_setting('wpshop_options', 'wpshop_addons_options', array('wpshop_addons_settings', 'validate_options'));
+// 		add_settings_field('wpshop_addons_settings_field', '', array('wpshop_addons_settings', 'addons_definition_fields'), 'wpshop_addons_options', 'wpshop_addons_options');
 	}
 
 	/**
 	 * Ajout d'un explication pour la page d'option
 	 */
-	function plugin_section_text() {
+	public static function plugin_section_text() {
 		_e('This options screen allows you to add additionnal functionnalities', 'wpshop');
 	}
 
@@ -42,7 +42,7 @@ class wpshop_addons_settings{
 	 *
 	 * @param unknown_type $input
 	 */
-	function validate_options($input){
+	public static function validate_options($input){
 
 	}
 

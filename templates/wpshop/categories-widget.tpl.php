@@ -36,7 +36,7 @@
 
 	if($category->parent != 0){
 		$category_class = 'wpshop_sub_category wpshop_sub_category' . $category->parent;
-		if($wp_query->get_queried_object()->term_id == $category->parent){
+		if(!empty($wp_query->get_queried_object()->term_id) && ($wp_query->get_queried_object()->term_id == $category->parent)) {
 			$category_container_class = '';
 		}
 	}

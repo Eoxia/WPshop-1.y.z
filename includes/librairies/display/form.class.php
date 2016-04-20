@@ -21,6 +21,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
  * @subpackage librairies
  */
 class wpshop_form {
+
 	/**
 	*	Create The complete form by defining the form open and close and call the different function that allows to create the different type of input
 	*
@@ -73,7 +74,8 @@ class wpshop_form {
 	*
 	*	@return string $the_input
 	*/
-	function check_input_type($input_def, $input_domain = '') {
+	public static function check_input_type($input_def, $input_domain = '') {
+
 		$input_option = '';
 		if(!empty($input_def['option']) && $input_def['option'])
 			$input_option = $input_def['option'];
@@ -89,17 +91,16 @@ class wpshop_form {
 		$input_name = $input_def['name'];
 		if($input_domain != '')
 			$input_name = $input_domain . '[' . $input_def['name'] . ']';
-
-		// Formatage des donn�es
+		/**	Format data for saving without special chars	*/
 		if(!empty($input_def['value']) && !is_array($input_def['value']) && preg_match("/^-?(?:\d+|\d*\.\d+)$/", $input_def['value']))
-			$input_value = str_replace('.',',',$input_def['value']/1); // format francais avec virgule
+			$input_value = str_replace('.',',',$input_def['value']/* /1 */); // format francais avec virgule
 		else $input_value = (!empty($input_def['value']) ? $input_def['value'] : '');
 
 		$input_type = $input_def['type'];
 		$the_input = '';
 
-		if($input_type == 'text')
-			$the_input .= self::form_input( $input_name, $input_id, $input_value, 'text', $input_option, (!empty($input_def['options']['label']) ? $input_def['options']['label'] : '') );
+		if( ( $input_type == 'text' ) || ( $input_type == 'email' ) || ( $input_type == 'tel' ) )
+			$the_input .= self::form_input( $input_name, $input_id, $input_value, 'text', $input_option, (!empty($input_def['options_label']) ? $input_def['options_label'] : '') );
 		elseif($input_type == 'password')
 			$the_input .= self::form_input($input_name, $input_id, $input_value, 'password', $input_option);
 		elseif($input_type == 'textarea')
@@ -111,7 +112,7 @@ class wpshop_form {
 		elseif($input_type == 'multiple-select')
 			$the_input .= self::form_input_multiple_select($input_name, $input_id, ( !empty($input_def['possible_value']) ? $input_def['possible_value'] : array() ), $input_value, $input_option, $valueToPut);
 		elseif(($input_type == 'radio') || ($input_type == 'checkbox'))
-			$the_input .= self::form_input_check($input_name, $input_id, ( !empty($input_def['possible_value']) ? $input_def['possible_value'] : array() ), $input_value, $input_type, $input_option, $valueToPut, (!empty($input_def['options']['label']) ? $input_def['options']['label'] : ''));
+			$the_input .= self::form_input_check($input_name, $input_id, ( !empty($input_def['possible_value']) ? $input_def['possible_value'] : array() ), $input_value, $input_type, $input_option, $valueToPut, (!empty($input_def['options_label']) ? $input_def['options_label'] : ''));
 		elseif($input_type == 'file')
 			$the_input .= self::form_input($input_name, $input_id, $input_value, 'file', $input_option);
 		elseif($input_type == 'gallery')
@@ -130,8 +131,7 @@ class wpshop_form {
 	*
 	*	@return mixed The output code to add to the form
 	*/
-	function form_input($name, $id, $value = '', $type = 'text', $option = '', $input_label = ''){
-
+	public static function form_input($name, $id, $value = '', $type = 'text', $option = '', $input_label = ''){
 		$allowedType = array('text', 'hidden', 'password', 'file');
 		if(in_array($type, $allowedType))
 		{
@@ -154,7 +154,7 @@ class wpshop_form {
 	*
 	*	@return mixed The output code to add to the form
 	*/
-	function form_input_textarea($name, $id, $value = '', $option = '')
+	public static function form_input_textarea($name, $id, $value = '', $option = '')
 	{
 		return '<textarea name="' . $name.'" id="' . $id . '" ' . $option . ' rows="4" cols="10" >' . $value . '</textarea>';
 	}
@@ -169,7 +169,7 @@ class wpshop_form {
 	*
 	*	@return mixed $output The output code to add to the form
 	*/
-	function form_input_select($name, $id, $content, $value = '', $option = '', $optionValue = ''){
+	public static function form_input_select($name, $id, $content, $value = '', $option = '', $optionValue = ''){
 		global $comboxOptionToHide;
 
 		$output = '<select id="' . $id . '" name="' . $name . '" ' . $option . ' data-placeholder="' . __('Select an Option', 'wpshop') . '" >';
@@ -177,6 +177,7 @@ class wpshop_form {
 		if(is_array($content) && (count($content) > 0)){
 			foreach($content as $index => $datas){
 				if(is_object($datas) && (!is_array($comboxOptionToHide) || !in_array($datas->id, $comboxOptionToHide))){
+
 					$selected = ($value == $datas->id) ? ' selected="selected" ' : '';
 
 					$dataText = __('Nothing to output' ,'wpshop');
@@ -216,10 +217,10 @@ class wpshop_form {
 	*
 	*	@return mixed $output The output code to add to the form
 	*/
-	function form_input_multiple_select($name, $id, $content, $value = array(), $option = '', $optionValue = '') {
+	public static function form_input_multiple_select($name, $id, $content, $value = array(), $option = '', $optionValue = '') {
 		global $comboxOptionToHide;
-
 		$values = array();
+
 		if (!empty($value) && (is_array($value))) {
 			foreach($value as $v) {
 				$values[] = $v->value;
@@ -234,29 +235,13 @@ class wpshop_form {
 			$output = '<select id="' . $id . '" name="' . $name . '[]" ' . $option . ' multiple size="4" data-placeholder="' . __('Select values from list', 'wpshop') . '" >';
 
 			foreach($content as $index => $datas) {
-				if (is_object($datas) && (!is_array($comboxOptionToHide) || !in_array($datas->id, $comboxOptionToHide))) {
-					//$selected = ($value == $datas->id) ? ' selected="selected" ' : '';
-					$selected = in_array($datas->id, $values) ? ' selected="selected" ' : '';
+				if ( !empty($datas) && !empty($index) ) {
+					$selected = in_array($index, $values) ? ' selected="selected" ' : '';
 
-					$dataText = __($datas->name ,'wpshop');
-					if (isset($datas->code)) {
-						$dataText = __($datas->code ,'wpshop');
-					}
-					$output .= '<option value="' . $datas->id . '" ' . $selected . ' >' . $dataText . '</option>';
+					$output .= '<option value="' . $index . '" ' . $selected . ' >' . $datas . '</option>';
 				}
-				elseif (!is_array($comboxOptionToHide) || !in_array($datas, $comboxOptionToHide)) {
-					$valueToPut = $datas;
-					//$selected = ($value == $datas) ? ' selected="selected" ' : '';
-					$selected = in_array($datas, $values) ? ' selected="selected" ' : '';
-					if($optionValue == 'index'){
-						$valueToPut = $index;
-						//$selected = ($value == $index) ? ' selected="selected" ' : '';
-						$selected = in_array($index, $values) ? ' selected="selected" ' : '';
-					}
-					$output .= '<option value="' . $valueToPut . '" ' . $selected . ' >' . __($datas ,'wpshop') . '</option>';
-				}
+
 			}
-
 			$output .= '</select>';
 		}
 
@@ -275,7 +260,7 @@ class wpshop_form {
 	*
 	*	@return mixed $output The output code to add to the form
 	*/
-	function form_input_check($name, $id, $content, $value = '', $type = 'checkbox', $option = '', $optionValue = '', $input_label=''){
+	public static function form_input_check($name, $id, $content, $value = '', $type = 'checkbox', $option = '', $optionValue = '', $input_label=''){
 		$output = '';
 		$allowedType = array('checkbox', 'radio');
 		$container_start = (isset($input_label['container']) && $input_label['container'] ? '<div class="wpshop_input_' . $type . ' wpshop_input_' . $type . '_' . $id . '" >' : '');
@@ -289,14 +274,16 @@ class wpshop_form {
 						$checked = ($value == $datas->id) ? ' checked="checked" ' : '';
 					}
 					else{
+
 						$valueToPut = $datas;
 						$checked = ( ($value == $datas) || (is_array($value) && in_array($valueToPut, $value))) ? ' checked="checked" ' : '';
 						if($optionValue == 'index'){
 							$valueToPut = $index;
 							$checked = ( ($value == $index) || (is_array($value) && in_array($valueToPut, $value))) ? ' checked="checked" ' : '';
 						}
+
 						$id = $id . '_' . sanitize_title($datas);
-						$checked = ( ($value == $datas) || (is_array($value) && in_array($valueToPut, $value))) ? ' checked="checked" ' : '';
+// 						$checked = ( ($value == $datas) || (is_array($value) && in_array($valueToPut, $value))) ? ' checked="checked" ' : '';
 						$output .= $container_start . '<input type="' . $type . '" name="' . $name . '" id="' . $id . '" value="' . $valueToPut . '" ' . $checked . ' ' . $option . ' />'.(!empty($input_label['original'])?'<label for="' . $id . '">'.__($datas,'wpshop').'</label>&nbsp;':'')  . $container_end ;
 					}
 				}
@@ -307,7 +294,7 @@ class wpshop_form {
 			}
 			$output.=(is_array($input_label) && !empty($input_label['custom']) ? '<label for="' . $id . '">'.$input_label['custom'].'</label> ':'');
 
-			if ( isset($input_label['container']) && $input_label['container'] ) $output .= '<div class="clear" ></div>';
+			if ( isset($input_label['container']) && $input_label['container'] ) $output .= '<div class="wpshop_cls" ></div>';
 			return $output;
 		}
 		else

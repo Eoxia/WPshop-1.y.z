@@ -1,0 +1,146 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: wps_export\n"
+"POT-Creation-Date: 2015-07-07 14:30+0200\n"
+"PO-Revision-Date: 2015-07-07 14:31+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.2\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Poedit-KeywordsList: _e;__\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../controller/wps_export_ctr.php:132
+msgid "No data selected"
+msgstr "Aucune donnée sélectionné"
+
+#: ../model/wps_export_mdl.php:42 ../model/wps_export_mdl.php:112
+msgid "Name"
+msgstr "Nom"
+
+#: ../model/wps_export_mdl.php:43 ../model/wps_export_mdl.php:113
+msgid "First name"
+msgstr "Prénom"
+
+#: ../model/wps_export_mdl.php:44 ../model/wps_export_mdl.php:114
+msgid "Mail"
+msgstr "Mail"
+
+#: ../model/wps_export_mdl.php:45 ../model/wps_export_mdl.php:115
+msgid "Phone"
+msgstr "Téléphone"
+
+#: ../model/wps_export_mdl.php:46
+msgid "Registered"
+msgstr "Inscription"
+
+#: ../model/wps_export_mdl.php:110
+msgid "Order type"
+msgstr "Type commande"
+
+#: ../model/wps_export_mdl.php:111
+msgid "Identifier"
+msgstr "Identifiant"
+
+#: ../model/wps_export_mdl.php:116
+msgid "Order date"
+msgstr "Date de la commande"
+
+#: ../model/wps_export_mdl.php:117
+msgid "Products ET"
+msgstr "Produits HT"
+
+#: ../model/wps_export_mdl.php:118
+msgid "Shipping ET"
+msgstr "Livraison HT"
+
+#: ../model/wps_export_mdl.php:119
+msgid "Shipping ATI"
+msgstr "Livraison TTC"
+
+#: ../model/wps_export_mdl.php:120
+msgid "Order discount"
+msgstr "Remise commande"
+
+#: ../model/wps_export_mdl.php:121
+msgid "Order ATI"
+msgstr "Commande TTC"
+
+#: ../model/wps_export_mdl.php:133
+msgid "Invoice"
+msgstr "Facture"
+
+#: ../model/wps_export_mdl.php:133
+msgid "Order"
+msgstr "Commande"
+
+#: ../model/wps_export_mdl.php:133
+msgid "Quotation"
+msgstr "Devis"
+
+#: ../templates/backend/wps_export_tpl.php:3
+msgid "Exports CSV"
+msgstr "Exportation CSV"
+
+#: ../templates/backend/wps_export_tpl.php:7
+msgid "Select file to download"
+msgstr "Selectionnez un fichier à télécharger"
+
+#: ../templates/backend/wps_export_tpl.php:10
+msgid "Select file"
+msgstr "Sélectionnez un fichier"
+
+#: ../templates/backend/wps_export_tpl.php:11
+msgid "List of customers registered between 2 dates"
+msgstr "Liste des clients enregistré entre deux dates"
+
+#: ../templates/backend/wps_export_tpl.php:12
+msgid "List of customers who ordered to at least"
+msgstr "Liste des clients avec ayant commandé pour un minimum"
+
+#: ../templates/backend/wps_export_tpl.php:13
+msgid "List of orders between 2 dates"
+msgstr "Liste des commandes entre deux dates"
+
+#: ../templates/backend/wps_export_tpl.php:20
+msgid "Price minimum"
+msgstr "Prix minimum"
+
+#: ../templates/backend/wps_export_tpl.php:24
+msgid "Free orders"
+msgstr "Commandes gratuites"
+
+#: ../templates/backend/wps_export_tpl.php:32
+msgid "Begin date"
+msgstr "Date de début"
+
+#: ../templates/backend/wps_export_tpl.php:38
+msgid "End date"
+msgstr "Date de fin"
+
+#: ../templates/backend/wps_export_tpl.php:44
+msgid "Download"
+msgstr "Télécharger"
+
+#~ msgid "List of all users"
+#~ msgstr "Liste de tous les utilisateurs"
+
+#~ msgid "List of all customers"
+#~ msgstr "Liste de tous les clients"
+
+#~ msgid "List of customers selected to receive newsletter"
+#~ msgstr "Liste des clients sélectionné pour recevoir la newsletter"
+
+#~ msgid "List of customers selected to receive newsletter partner"
+#~ msgstr "Liste des clients sélectionné pour recevoir la newsletter des partenaires"
+
+#~ msgid "Free order"
+#~ msgstr "Commande gratuite"
+
+#~ msgid "List of customers with an order higher than a price"
+#~ msgstr "Liste des clients avec ayant commandé au minimum"

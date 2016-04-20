@@ -1,0 +1,29 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WPShop media manager\n"
+"POT-Creation-Date: 2015-11-24 14:08+0100\n"
+"PO-Revision-Date: 2015-11-24 14:08+0100\n"
+"Last-Translator: Eoxia developement team <dev@eoxia.com>\n"
+"Language-Team: Eoxia Development <dev@eoxia.com>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.6\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: controller/wps_media_manager_backend_ctr.php:40
+msgid "Media Manager"
+msgstr "Gestion des médias associés aux produits"
+
+#: templates/backend/meta_box.php:1
+msgid "Download media"
+msgstr "Télécharger ce média"
+
+#: templates/frontend/associated-document.php:2
+msgid "Associated document"
+msgstr "Documents associés"

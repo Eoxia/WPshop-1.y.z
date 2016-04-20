@@ -1,0 +1,23 @@
+@CHARSET "ISO-8859-1";
+canvas#wps_orders_summary, canvas#wps_customers_account_creation {
+	width : 100% !important;
+	max-width: 800px;
+	height : auto !important;
+}
+.legend_indicator {
+	width : 10px; height : 10px; 
+	border : 1px solid #000000; 
+	float : left; 
+	position : relative; 
+	margin-right : 5px; 
+	margin-top : 4px
+}
+.wps_statistics_legend li {
+	width : 49%; display : inline-block; list-style : none;
+}
+.wps-statistics-container .postbox .handlediv {
+	display: none;
+}
+.wps-statistics-container .postbox h3.hndle {
+	cursor: auto;
+}

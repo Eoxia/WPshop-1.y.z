@@ -1,0 +1,23 @@
+#wpeo-bubble-metabox-position label, #wpeo-bubble-metabox-actions label,
+#wpeo-bubble-metabox-conditions label, #wpeo-bubble-metabox-advanced label,
+#wpeo-bubble-metabox-url label {
+	display: block;
+}
+#wpeo-bubble-metabox-position label span, #wpeo-bubble-metabox-actions label span,
+#wpeo-bubble-metabox-conditions label span, #wpeo-bubble-metabox-advanced label span,
+#wpeo-bubble-metabox-url label span {
+	display: block;
+	width: 15%;
+	float: left;
+}
+#wpeo-bubble-metabox-position input[type="text"], #wpeo-bubble-metabox-actions input[type="text"],
+#wpeo-bubble-metabox-conditions input[type="text"], #wpeo-bubble-metabox-advanced input[type="text"],
+#wpeo-bubble-metabox-url input[type="text"],
+#wpeo-bubble-metabox-position select, #wpeo-bubble-metabox-actions select,
+#wpeo-bubble-metabox-conditions select, #wpeo-bubble-metabox-advanced select,
+#wpeo-bubble-metabox-url select {
+	width: 80%;
+}
+.wpeo-bubble-next {
+	float: left;
+}

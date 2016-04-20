@@ -7,7 +7,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 
 /**
 * Plugin database librairies include file.
-* 
+*
 *	This file contains the different methods for database management
 * @author Eoxia <dev@eoxia.com>
 * @version 1.1
@@ -30,10 +30,10 @@ class wpshop_database
 	*
 	*	@return object $field_list A wordpress database object containing the different field of the table
 	*/
-	function get_field_list($table_name){
+	public static function get_field_list($table_name){
 		global $wpdb;
 
-		$query = $wpdb->prepare("SHOW COLUMNS FROM " . $table_name, '');
+		$query = "SHOW COLUMNS FROM " . $table_name;
 		$field_list = $wpdb->get_results($query);
 
 		return $field_list;
@@ -61,7 +61,7 @@ class wpshop_database
 	*
 	*	@return array $field_to_form An array with the list of field with its type, name and value
 	*/
-	function fields_to_input($table_name){
+	public static function fields_to_input($table_name){
 		$list_of_field_to_convert = wpshop_database::get_field_list($table_name);
 
 		$field_to_form = self::fields_type($list_of_field_to_convert);
@@ -76,7 +76,7 @@ class wpshop_database
 	*
 	*	@return array $field_to_form The field stored into an array
 	*/
-	function fields_type($list_of_field_to_convert){
+	public static function fields_type($list_of_field_to_convert){
 		$field_to_form = array();
 		$i = 0;
 		foreach ($list_of_field_to_convert as $Key => $field_definition){
@@ -123,7 +123,7 @@ class wpshop_database
 	*
 	*	@return string $requestResponse A message that allows to know if the creation has been done correctly or not
 	*/
-	function save($informationsToSet, $dataBaseTable){
+	public static function save($informationsToSet, $dataBaseTable){
 		global $wpdb;
 		$requestResponse = '';
 
@@ -144,7 +144,7 @@ class wpshop_database
 	*
 	*	@return string $requestResponse A message that allows to know if the update has been done correctly or not
 	*/
-	function update($informationsToSet, $id, $dataBaseTable){
+	public static function update($informationsToSet, $id, $dataBaseTable){
 		global $wpdb;
 		$requestResponse = '';
 

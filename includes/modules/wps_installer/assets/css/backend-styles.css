@@ -1,0 +1,111 @@
+/** Main administration button */
+#toplevel_page_wps-installer .wp-menu-image {
+    background: url("../../../../../templates/admin/medias/icones/wpshop_menu_icons.png") no-repeat scroll 0 -32px transparent !important;
+}
+#toplevel_page_wps-installer:hover .wp-menu-image {
+    background: url("../../../../../templates/admin/medias/icones/wpshop_menu_icons.png") no-repeat scroll 0 0 transparent !important;
+}
+#toplevel_page_wps-installer .wp-menu-image img {
+    display: none;
+}
+
+
+#wps_installer_form table {
+	border-spacing: 5px;
+	border-collapse: separate;
+}
+#wps_installer_form table tr th, #wps_installer_form table tr td {
+	padding: 0px;
+	vertical-align: middle;
+}
+#wps_installer_form table tr td input[type=text], #wps_installer_form table tr td select {
+	width: 250px;
+}
+
+.wps-installer-step-container {
+	width: 40%;
+	margin: 0 auto;
+}
+.wps-installer-step-content h3, a.wpshop_infobulle_marker {
+	display: none;
+}
+
+.wps-installer-sample-datas:after {
+	content: "";
+	display: block;
+}
+
+.wps-installer-logo {
+	width: 100px;
+}
+
+.wps-installer-step-container-3 {
+	width: 75%;
+	margin: 0 auto;
+}
+.wps-installer-default-datas-title {
+	font-weight: normal;
+}
+#wps-installer-default-content-customization input[type="text"] {
+	width: 100%;
+}
+.wps-installer-step-content-3 div {
+	box-sizing: border-box;
+	width: 50%;
+}
+.wps-installer-step-content-3 table {
+	box-sizing: border-box;
+	width: 80%;
+}
+
+
+/* 
+.wps-installer-step-content-3 div {
+	float: left;
+	width: 45%;
+}
+.wps-installer-step-content-3 div:first-child {
+	border-right: 1px dashed #CCC;
+}
+.wps-installer-data-importer-explanation {
+	margin: 0 0 0 20px;
+}
+ */
+.wps-installer-default-pages li {
+	margin: 0 0 5px 0;
+}
+
+.wps-installer-default-emails ul li {
+	margin: 0 0 0 1.33em;
+}
+
+.wps-installer-step-container-4 {
+	width: 100%;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.welcome-panel-column li div.dashicons {
+	margin: 0 10px 5px 0;
+}
+
+.wps-about-wrap .wpeshop-install-ok-smiley {
+	font-size: 50px;
+	color: pink;
+}
+.wps-about-wrap .wp-badge {
+	background: #2f8cb5 url("../medias/picto_wpshop.png") no-repeat scroll center 24px / 85px 85px;
+}
+.about-wrap .feature-section p {
+  min-height: 130px;
+}
+
+.wpshop_admin_notice{
+	padding: 10px !important;
+}
+a.button-primary{
+	margin: 0 10px !important;
+}
+.last-feature .wpshop-about-btn-create-products {
+	margin-top: 25px !important;
+}

@@ -1,0 +1,24 @@
+.module-list {
+	display: table;
+	width: 100%;
+}
+.module-list li {
+	display: table-row !important;
+}
+.module-list li.odd {
+	background-color: #DEDEDE;
+}
+.module-list li.even { }
+.module-list li span {
+	display: table-cell;
+}
+
+.module-list-header {
+	height: 50px;
+	background-color: #CCC;
+}
+
+.module-cb {
+    text-align: center;
+    width: 50px;
+}

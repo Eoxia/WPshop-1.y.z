@@ -11,8 +11,6 @@
 
 /*	Wordpress - Ajax functionnality activation	*/
 DEFINE('DOING_AJAX', true);
-/*	Wordpress - Specify that we are in wordpress admin	*/
-DEFINE('WP_ADMIN', true);
 /*	Wordpress - Main bootstrap file that load wordpress basic files	*/
 require_once('../../../../wp-load.php');
 /*	Wordpress - Admin page that define some needed vars and include file	*/
@@ -46,6 +44,7 @@ $elementIdentifier = isset($_REQUEST['elementIdentifier']) ? wpshop_tools::varSa
 
 /*	Look at the element type we have to work on	*/
 switch ( $elementCode ) {
+
 	case 'ajax_refresh_order':{
 		/*	Get order current content	*/
 		$order_meta = get_post_meta($elementIdentifier, '_order_postmeta', true);
@@ -69,7 +68,7 @@ switch ( $elementCode ) {
 				}
 
 				$order_items = array();
-				if(is_array($order_meta['order_items']) && count($order_meta['order_items']) > 0){
+				if(!empty($order_meta['order_items']) && is_array($order_meta['order_items']) && count($order_meta['order_items']) > 0){
 					foreach($order_meta['order_items'] as $order_item_key => $order_item){
 						$order_items[$order_item['item_id']]['product_id'] = $order_item['item_id'];
 						$order_items[$order_item['item_id']]['product_qty'] = $order_item['item_qty'];
@@ -90,7 +89,8 @@ switch ( $elementCode ) {
 				if(isset($_REQUEST['order_shipping_cost']) && ($_REQUEST['order_shipping_cost']>=0)){
 					$order_custom_infos['custom_shipping_cost'] = $_REQUEST['order_shipping_cost'];
 				}
-				$order_meta = array_merge($order_meta, wpshop_cart::calcul_cart_information($order_items, $order_custom_infos));
+				$wps_cart = new $wps_cart();
+				$order_meta = array_merge($order_meta, $wps_cart->calcul_cart_information(array(), $order_custom_infos, $order_meta, $elementIdentifier, $order_items) );
 
 			}break;
 			// Set the shipping price to zero
@@ -111,8 +111,7 @@ switch ( $elementCode ) {
 
 		/*	Update order content	*/
 		update_post_meta($elementIdentifier, '_order_postmeta', $order_meta);
-
-		echo wpshop_orders::order_content(get_post($elementIdentifier));
+		echo wpshop_orders::order_content(get_post($elementIdentifier) );
 	}break;
 
 	//	Load product list
@@ -122,15 +121,7 @@ switch ( $elementCode ) {
 		$current_page = (isset($_POST['page']) && ($_POST['page'] > 0)) ? $_POST['page'] : 1;
 
 		if($current_order_id > 0){
-			$posts = query_posts(array(
-				'post_type' => WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT
-			));
-			foreach($posts as $post){
-				$post_meta = get_post_meta($post->ID, '_wpshop_product_metadata');
-				$post_info = get_post($post->ID, ARRAY_A);
-				$post = !empty($post_meta[0]) ? array_merge($post_info, (array)$post_meta[0]) : $post_info;
-				$data[] = $post;
-			}
+
 
 			$product_list_for_selection_pagination = '<div class="dialog_listing_pagination_container alignright" >' . paginate_links(array(
 				'base' => '#',
@@ -139,7 +130,7 @@ switch ( $elementCode ) {
 				'type' => 'list',
 				'prev_next' => false
 			)) . '</div>';
-			wp_reset_query(); // important
+			wp_reset_query();
 
 			$product_association_box = '<div id="product_selection_dialog_msg" class="wpshopHide wpshopPageMessage wpshopPageMessage_Updated" >&nbsp;</div><div id="product_listing_container" ><form action="' . WPSHOP_AJAX_FILE_URL . '" id="wpshop_order_selector_product_form" ><input type="hidden" name="list_has_been_modified" id="list_has_been_modified" value="" /><input type="hidden" name="post" value="true" /><input type="hidden" name="order_id" value="' . $current_order_id . '" /><input type="hidden" name="elementCode" value="ajax_add_product_to_order" />' . wpshop_products::custom_product_list() . '</form></div>
 <script type="text/javascript" >
@@ -225,28 +216,29 @@ jQuery("#product_chooser_container").show();
 			}
 		}
 
-		$order_meta = wpshop_cart::calcul_cart_information($order_items);
+		$wps_cart  = new $wps_cart();
+		$order_meta = $wps_cart->calcul_cart_information($order_items);
 
 		/*	Update order content	*/
 		update_post_meta($current_order_id, '_order_postmeta', $order_meta);
 
 		echo '
-<script type="text/javascript" >
-wpshop(document).ready(function(){
-jQuery("#product_selection_dialog_msg").html(wpshopConvertAccentTojs("' . __('Order has been updated', 'wpshop') . '"));
-jQuery("#product_selection_dialog_msg").show();
-setTimeout(function(){
-	wpshop("#product_selection_dialog_msg").removeClass("wpshopPageMessage_Updated");
-	wpshop("#product_selection_dialog_msg").html("");
-}, 7000);
-jQuery("#order_product_container").load(WPSHOP_AJAX_FILE_URL,{
-	"post":"true",
-	"elementCode":"ajax_refresh_order",
-	"action":"order_product_content",
-	"elementIdentifier":"' . $current_order_id . '"
-});
-});
-</script>';
+			<script type="text/javascript" >
+			wpshop(document).ready(function(){
+					jQuery("#product_selection_dialog_msg").html(wpshopConvertAccentTojs("' . __('Order has been updated', 'wpshop') . '"));
+					jQuery("#product_selection_dialog_msg").show();
+				setTimeout(function(){
+					wpshop("#product_selection_dialog_msg").removeClass("wpshopPageMessage_Updated");
+					wpshop("#product_selection_dialog_msg").html("");
+				}, 7000);
+				jQuery("#order_product_container").load(WPSHOP_AJAX_FILE_URL,{
+					"post":"true",
+					"elementCode":"ajax_refresh_order",
+					"action":"order_product_content",
+					"elementIdentifier":"' . $current_order_id . '"
+				});
+			});
+			</script>';
 	}break;
 
 	case 'attribute_set':
@@ -393,6 +385,7 @@ jQuery("#order_product_container").load(WPSHOP_AJAX_FILE_URL,{
 				$attribute_unit_informations['group_id'] = wpshop_tools::varSanitizer($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['group_id']);
 				$attribute_unit_informations['is_default_of_group'] = wpshop_tools::varSanitizer($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['is_default_of_group']);
 				$attribute_unit_informations['change_rate'] = wpshop_tools::varSanitizer($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['change_rate']);
+				$attribute_unit_informations['code_iso'] = wpshop_tools::varSanitizer($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['code_iso']);
 
 				if ( $attribute_unit_informations['is_default_of_group'] == 'yes' ) {
 					$wpdb->update(WPSHOP_DBT_ATTRIBUTE_UNIT, array(
@@ -510,124 +503,25 @@ jQuery("#order_product_container").load(WPSHOP_AJAX_FILE_URL,{
 		}
 	break;
 
-	case 'tools':{
-		switch($action){
-			case 'db_manager':{
-				/*	Display a list of operation made for the different version	*/
-				$plugin_db_modification_content = '';
-				foreach($wpshop_db_table_operation_list as $plugin_db_version => $plugin_db_modification){
-					$plugin_db_modification_content .= '
-<div class="tools_db_modif_list_version_number" >
-' . __('Version', 'evarisk') . '&nbsp;' . $plugin_db_version . '
-</div>
-<div class="tools_db_modif_list_version_details" >
-<ul>';
-					foreach($plugin_db_modification as $modif_name => $modif_list){
-						switch($modif_name){
-							case 'FIELD_ADD':{
-								foreach($modif_list as $table_name => $field_list){
-									$sub_modif = '  ';
-									foreach($field_list as $column_name){
-										$query = $wpdb->prepare("SHOW COLUMNS FROM " .$table_name . " WHERE Field = %s", $column_name);
-										$columns = $wpdb->get_row($query);
-										$sub_modif .= $column_name;
-										if(isset($columns->Field) && ($columns->Field == $column_name)){
-											$sub_modif .= '<img src="' . admin_url('images/yes.png') . '" alt="' . __('Field has been created', 'wpshop') . '" title="' . __('Field has been created', 'wpshop') . '" class="db_added_field_check" />';
-										}
-										else{
-											$sub_modif .= '<img src="' . admin_url('images/no.png') . '" alt="' . __('Field does not exist', 'wpshop') . '" title="' . __('Field does not exist', 'wpshop') . '" class="db_added_field_check" />';
-										}
-										$sub_modif .= ' / ';
-									}
-									$plugin_db_modification_content .= '<li class="added_field" >' . sprintf(__('Added field list for %s', 'wpshop'), $table_name) . '&nbsp;:&nbsp;' .  substr($sub_modif, 0, -2) . '</li>';
-								}
-							}break;
-							case 'FIELD_CHANGE':{
-								foreach($modif_list as $table_name => $field_list){
-									$sub_modif = '  ';
-									foreach($field_list as $field_infos){
-										$query = $wpdb->prepare("SHOW COLUMNS FROM " .$table_name . " WHERE Field = %s", $field_infos['field']);
-										$columns = $wpdb->get_row($query);
-										$what_is_changed = '';
-										if(isset($field_infos['type'])){
-											$what_is_changed = __('field type', 'wpshop');
-											$changed_key = 'type';
-											if($columns->Type == $field_infos['type']){
-												$sub_modif .= '<img src="' . admin_url('images/yes.png') . '" alt="' . __('Field has been created', 'wpshop') . '" title="' . __('Field has been created', 'wpshop') . '" class="db_added_field_check" />';
-											}
-											else{
-												$sub_modif .= '<img src="' . admin_url('images/no.png') . '" alt="' . __('Field does not exist', 'wpshop') . '" title="' . __('Field does not exist', 'wpshop') . '" class="db_added_field_check" />';
-											}
-										}
-										$sub_modif .= ' / ';
-									}
-									$sub_modif = sprintf(__('Change %s for field %s to %s', 'wpshop'), $what_is_changed, $field_infos['field'], $field_infos[$changed_key]) . substr($sub_modif, 0, -2);
-									$plugin_db_modification_content .= '<li class="changed_field" >' . sprintf(__('Updated field list for %s', 'wpshop'), $table_name) . '&nbsp;:&nbsp;' . $sub_modif . '</li>';
-								}
-							}break;
-							case 'ADD_TABLE':{
-								$sub_modif = '  ';
-								foreach($modif_list as $table_name){
-									$sub_modif .= $table_name;
-									$query = $wpdb->prepare("SHOW TABLES FROM " . DB_NAME . " LIKE %s", $table_name);
-									$table_exists = $wpdb->query($query);
-									if($table_exists == 1){
-										$sub_modif .= '<img src="' . admin_url('images/yes.png') . '" alt="' . __('Table has been created', 'wpshop') . '" title="' . __('Table has been created', 'wpshop') . '" class="db_table_check" />';
-									}
-									else{
-										$sub_modif .= '<img src="' . admin_url('images/no.png') . '" alt="' . __('Table has been created', 'wpshop') . '" title="' . __('Table has been created', 'wpshop') . '" class="db_table_check" />';
-									}
-									$sub_modif .= ' / ';
-								}
-								$plugin_db_modification_content .= '<li class="added_table" >' . __('Added table list', 'wpshop') . '&nbsp;:&nbsp;' . substr($sub_modif, 0, -2);
-							}break;
-						}
-					}
-					$plugin_db_modification_content .= '
-</ul>
-</div>';
-				}
-				echo $plugin_db_modification_content;
-			}
-			break;
-		}
-	}
-	break;
-
 	case 'products_by_criteria':
-
 		// If a filter by attribute is found, recalcul the products that matching it
 		if(!empty($_REQUEST['attr'])) {
 			$att = explode(':',$_REQUEST['attr']);
 			$products_id = wpshop_products::get_products_matching_attribute($att[0],$att[1]);
 		}
 		$products_id = !empty($products_id) ? $products_id : $_REQUEST['pid'];
+		$page_number = $_REQUEST['page_number'];
 
+
+		if ( !empty($_GET['page_product']) ) {
+			$page_number = wpshop_tools::varSanitizer($_GET['page_product']);
+		}
 		$data = wpshop_products::wpshop_get_product_by_criteria(
-			$_REQUEST['criteria'], $_REQUEST['cid'], $products_id, $_REQUEST['display_type'], $_REQUEST['order'], $_REQUEST['page_number'], $_REQUEST['products_per_page']
+			$_REQUEST['criteria'], $_REQUEST['cid'], $products_id, $_REQUEST['display_type'], $_REQUEST['order'], $page_number, $_REQUEST['products_per_page']
 		);
 		if($data[0]) {
-			echo json_encode(array(true,$data[1]));
+			echo json_encode(array(true, do_shortcode($data[1])));
 		} else echo json_encode(array(false,__('No product found','wpshop')));
-	break;
-
-	case 'bill_order':
-		if (!empty($_REQUEST['oid'])):
-			$order_id = $_REQUEST['oid'];
-
-			// Get the order from the db
-			$order = get_post_meta($order_id, '_order_postmeta', true);
-			$order_key = wpshop_orders::get_new_order_reference();
-			$order['order_key'] = $order_key;
-			update_post_meta($order_id, '_order_postmeta', $order);
-			wpshop_orders::order_generate_billing_number($order_id, true);
-			echo json_encode(array(true,''));
-		endif;
-	break;
-
-	case 'duplicate_order':
-		$new_order = wpshop_orders::duplicate_order($_REQUEST['pid']);
-		echo json_encode(array(true,$new_order));
 	break;
 
 	case 'ajax_sendMessage':
@@ -637,13 +531,16 @@ jQuery("#order_product_container").load(WPSHOP_AJAX_FILE_URL,{
 			$user_info = get_userdata($_REQUEST['recipient']);
 			$first_name = $user_info->user_firstname;
 			$last_name = $user_info->user_lastname;
-			$data=array('customer_first_name'=>$first_name,'customer_last_name'=>$last_name);
+			$data = array('customer_first_name'=>$first_name,'customer_last_name'=>$last_name);
 
-			$title = wpshop_tools::customMessage($_REQUEST['title'], $data);
-			$message = wpshop_tools::customMessage($_REQUEST['message'], $data);
+			$wps_message_ctr = new wps_message_ctr();
+
+
+			$title = $wps_message_ctr->customMessage($_REQUEST['title'], $data);
+			$message = $wps_message_ctr->customMessage($_REQUEST['message'], $data);
 
 			if (!empty($user_info->user_email)) {
-				wpshop_tools::wpshop_email($user_info->user_email, $title, $message, $save=true, $model_id=$_REQUEST['postid'], $object=array());
+				$wps_message_ctr->wpshop_email($user_info->user_email, $title, $message, $save=true, $model_id=$_REQUEST['postid'], $object=array());
 				$array = array('result' => true, 'message' => '');
 			}
 			else $array = array('result' => true, 'message' => __('An error occured','wpshop'));
@@ -672,8 +569,8 @@ jQuery("#order_product_container").load(WPSHOP_AJAX_FILE_URL,{
 				update_post_meta($postid, 'wpshop_messages_histo_'.$date, $historic);
 
 				$data = $historic[$arraykey];
-
-				wpshop_tools::wpshop_email($data['mess_user_email'], $data['mess_title'], $data['mess_message'], $save=false, $object=array());
+				$wps_message_ctr = new wps_message_ctr();
+				$wps_message_ctr->wpshop_email($data['mess_user_email'], $data['mess_title'], $data['mess_message'], $save=false, $object=array());
 
 				$array = array('result' => true, 'message' => '');
 			}
@@ -689,15 +586,6 @@ jQuery("#order_product_container").load(WPSHOP_AJAX_FILE_URL,{
 
 	break;
 
-	case 'ajax_addPrivateComment':
-		$new_comment = wpshop_orders::add_private_comment($_REQUEST['oid'],$_REQUEST['comment'],$_REQUEST['send_email'],$_REQUEST['send_sms']);
-		if($new_comment) {
-			$content = '<hr /><b>'.__('Date','wpshop').':</b> '.mysql2date('d F Y, H:i:s',current_time('mysql',0), true).'<br /><b>'.__('Message','wpshop').':</b> '.nl2br($_REQUEST['comment']);
-			echo json_encode(array(true, $content));
-		}
-		else echo json_encode(array(false, __('An error occured, impossible to record the comment','wpshop')));
-	break;
-
 	case 'related_products':
 		$data = wpshop_products::product_list(false, $_REQUEST['search']);
 		$array=array();
@@ -711,39 +599,15 @@ jQuery("#order_product_container").load(WPSHOP_AJAX_FILE_URL,{
 		global $wpshop_cart;
 		switch ($_REQUEST['action']) {
 			case 'applyCoupon':
-				$result = wpshop_coupons::applyCoupon($_REQUEST['coupon_code']);
+				$wps_coupon_ctr = new wps_coupon_ctr();
+				$result = $wps_coupon_ctr->applyCoupon($_REQUEST['coupon_code']);
 				if ($result['status']===true) {
-					$order = wpshop_cart::calcul_cart_information(array());
-					wpshop_cart::store_cart_in_session($order);
+					$wps_cart_ctr = new wps_cart();
+					$order = $wps_cart_ctr->calcul_cart_information(array());
+					$wps_cart_ctr->store_cart_in_session($order);
 					echo json_encode(array(true, ''));
 				} else echo json_encode(array(false, $result['message']));
 			break;
 		}
-	break;
-
-	case 'reload_mini_cart':
-		echo wpshop_cart::mini_cart_content();
-	break;
-
-	case 'ajax_display_cart':
-		global $wpshop_cart;
-		echo $wpshop_cart->display_cart();
-	break;
-
-	case 'ajaxUpload':
-		if(!is_dir(WPSHOP_UPLOAD_DIR)){
-			mkdir(WPSHOP_UPLOAD_DIR, 0755, true);
-		}
-
-		$file = $_FILES['wpshop_file'];
-		$tmp_name = $file['tmp_name'];
-		$name = $file["name"];
-		@move_uploaded_file($tmp_name, WPSHOP_UPLOAD_DIR."$name");
-
-		$n = WPSHOP_UPLOAD_URL.'/'.$name;
-		$s = $file['size'];
-		if (!$n) continue;
-		echo $n;
-
 	break;
 }

@@ -1,0 +1,88 @@
+#wps-breadcrumb {
+	padding:1em 0 0.6em 0;
+	-webkit-perspective: 1000px;
+	-moz-perspective: 1000px;
+	-ms-perspective: 1000px;
+	-o-perspective: 1000px;
+	perspective: 1000px;
+}
+#wps-breadcrumb > li {
+	list-style: none;
+	position:relative;
+	margin-right:0.5em;	
+}
+#wps-breadcrumb li a {
+	display:block;	
+	white-space: pre;
+	line-height:1em;
+}
+#wps-breadcrumb ul {
+	/*display:none;*/
+	position:absolute;
+	top:2.7em;
+	left:-1em;
+	z-index:9;
+	width:auto;
+	overflow:hidden;
+	padding:0;
+	background : #fff;
+	border: solid #e6e6e6 1px;
+	font-size:.9em;
+	-webkit-opacity: 0;
+	-moz-opacity: 0;
+	-o-opacity: 0;
+	opacity: 0;
+	-webkit-transform: rotateX(-90deg);
+	-moz-transform: rotateX(-90deg);
+	-ms-transform: rotateX(-90deg);
+	-o-transform: rotateX(-90deg);
+	-webkit-transform-origin: top center;
+	-moz-transform-origin: top center;
+	-ms-transform-origin: top center;
+	-o-transform-origin: top center;
+	transform-origin: top center;
+	-webkit-transition: all 0.2s cubic-bezier(0.600, -0.280, 0.735, 0.045) .4s;
+	-moz-transition: all 0.2s cubic-bezier(0.600, -0.280, 0.735, 0.045) .4s;
+	-ms-transition: all 0.2s cubic-bezier(0.600, -0.280, 0.735, 0.045) .4s;
+	-o-transition: all 0.2s cubic-bezier(0.600, -0.280, 0.735, 0.045) .4s;
+	transition: all 0.2s cubic-bezier(0.600, -0.280, 0.735, 0.045) .4s;
+}
+#wps-breadcrumb ul li a {
+	padding:0.2em 1em 0.3em 1em;
+	width : 100%;
+	border-bottom: solid #f3f3f3 1px;
+	line-height: 30px;
+	height: 30px;
+}
+#wps-breadcrumb ul li:last-child a {
+	border-bottom: none;
+}
+#wps-breadcrumb li:hover > ul {
+	-webkit-opacity: 1;
+	-moz-opacity: 1;
+	-o-opacity: 1;
+	opacity: 1;
+	-webkit-transition: all 0.2s cubic-bezier(0.175, 0.885, 0.320, 1.275);
+	-moz-transition: all 0.2s cubic-bezier(0.175, 0.885, 0.320, 1.275);
+	-ms-transition: all 0.2s cubic-bezier(0.175, 0.885, 0.320, 1.275);
+	-o-transition: all 0.2s cubic-bezier(0.175, 0.885, 0.320, 1.275);
+	transition: all 0.2s cubic-bezier(0.175, 0.885, 0.320, 1.275);
+	-webkit-transform: rotateX(0);
+	-moz-transform: rotateX(0);
+	-ms-transform: rotateX(0);
+	-o-transform: rotateX(0);
+}
+#wps-breadcrumb li > a, #wps-breadcrumb li > strong {
+	margin-right:0.5em;
+	float:left;
+}
+#wps-breadcrumb i {
+	float:right;
+}
+#wps-breadcrumb li, #breadcrumb li a, #wps-breadcrumb li strong {
+	line-height:1em;
+	display:inline-block;
+}
+#wps-breadcrumb ul li {
+	display:block;
+}

@@ -13,10 +13,47 @@ DEFINE('USD', '$'); // Sigle $
 class wpshop_export_pdf extends wpshop_FPDF
 {
 	// CONSTRUCTEUR
-	function eoinvoice_export_pdf()
+	function wpshop_export_pdf()
 	{
 		// Appel du constructeur parent avant toute red�finition
 		parent::wpshop_FPDF();
+	}
+
+	function WordWrap(&$text, $maxwidth) {
+		$text = trim($text);
+		if ($text==='')
+			return 0;
+		$space = $this->GetStringWidth(' ');
+		$lines = explode("\n", $text);
+		$text = '';
+		$count = 0;
+
+		foreach ($lines as $line)
+		{
+			$words = preg_split('/ +/', $line);
+			$width = 0;
+
+			foreach ($words as $word)
+			{
+				$wordwidth = $this->GetStringWidth($word);
+				if ($width + $wordwidth <= $maxwidth)
+				{
+					$width += $wordwidth + $space;
+					$text .= $word.' ';
+				}
+				else
+				{
+					$width = $wordwidth + $space;
+					$text = rtrim($text)."\n".$word.' ';
+					$count++;
+				}
+			}
+			$text = rtrim($text)."\n";
+			$count++;
+		}
+		$text = rtrim($text);
+
+		return $text;
 	}
 
 	// Cr�ation r�cursive de dossiers
@@ -38,28 +75,27 @@ class wpshop_export_pdf extends wpshop_FPDF
 			}
 		}
 	}
-	function invoice_export($order_id) {
+
+	function invoice_export( $order_id, $invoice_id = null ) {
 
 		$current_user_id = get_current_user_id();
 		$order = get_post_meta($order_id, '_order_postmeta', true);
 
 		if($order['customer_id']==$current_user_id OR is_admin()) {
 
-			if(in_array($order['order_status'], array('completed', 'shipped'))) {
-
+			if (in_array($order['order_status'], array('completed', 'shipped', 'partially_paid'))) {
 				$invoice_dir = WP_CONTENT_DIR . "/uploads/wpshop_invoices/";
 				$filename = $this->get_invoice_filename($order_id);
 				$invoice_url = $invoice_dir.$filename;
 
 				// If the invoice has not been already generated
-				if(!file_exists($invoice_url)) {
-
+// 				if ( !file_exists($invoice_url) ) {
 					$invoice_ref = $order['order_invoice_ref'];
 
 					// Currency management
 					$currency = $order['order_currency'];
 					if($currency == 'EUR')$currency = EUR;
-					else $currency = wpshop_tools::wpshop_get_sigle($currency);
+					else $currency = html_entity_decode( wpshop_tools::wpshop_get_sigle($currency) );
 
 					// On d�finit un alias pour le nombre de pages total
 					$this->AliasNbPages();
@@ -74,9 +110,9 @@ class wpshop_export_pdf extends wpshop_FPDF
 					// Date de facturation et r�f�rence facture
 					$refdate = $this->invoice_refdate($order_id, $invoice_ref);
 					// Tableau des lignes de facture
-					$this->rows($order_id, $currency);
+					$this->rows($order_id, $currency, $invoice_id);
 					// Ligne de total
-					$this->total($order_id, $currency);
+					$this->total($order_id, $currency, $invoice_id);
 
 					// On affiche le rib du magasin
 					//$this->rib($store_selected);
@@ -91,8 +127,8 @@ class wpshop_export_pdf extends wpshop_FPDF
 					// On force le t�l�chargement de la facture
 					$Fichier_a_telecharger = $refdate.".pdf";
 					$this->forceDownload($Fichier_a_telecharger, $path, filesize($path));
-				}
-				else $this->forceDownload($filename, $invoice_url, filesize($invoice_url));
+// 				}
+// 				else $this->forceDownload($filename, $invoice_url, filesize($invoice_url));
 			}
 			else echo __('The payment regarding the invoice you requested isn\'t completed','wpshop');
 		}
@@ -159,19 +195,19 @@ class wpshop_export_pdf extends wpshop_FPDF
 	// En-t�te client
 	function client_head($order_id) {
 		$customer_data = get_post_meta($order_id, '_order_info', true);
-		$customer_data = $customer_data['billing'];
+		$customer_data = $customer_data['billing']['address'];
 
 		// FPDF ne d�codant pas l'UTF-8, on le fait via PHP
-		$customer_firstname = utf8_decode(utf8_encode($customer_data['first_name']));
-		$customer_lastname = utf8_decode(utf8_encode($customer_data['last_name']));
-		$customer_company = utf8_decode(utf8_encode($customer_data['company']));
-		$customer_street_adress = utf8_decode(utf8_encode($customer_data['address']));
-		$customer_city = utf8_decode(utf8_encode($customer_data['city']));
-		$customer_postcode = utf8_decode(utf8_encode($customer_data['postcode']));
-		$customer_state = utf8_decode(utf8_encode($customer_data['state']));
-		$customer_country = utf8_decode(utf8_encode($customer_data['country']));
+		$customer_firstname = ( !empty($customer_data['address_first_name']) ) ? utf8_decode(utf8_encode($customer_data['address_first_name'])) : null;
+		$customer_lastname = ( !empty($customer_data['address_last_name']) ) ? utf8_decode(utf8_encode($customer_data['address_last_name'])) : null;
+		$customer_company = ( !empty($customer_data['company']) ) ? utf8_decode(utf8_encode($customer_data['company'])) : null;
+		$customer_street_adress = ( !empty($customer_data['address']) ) ? utf8_decode(utf8_encode($customer_data['address'])) : null;
+		$customer_city = ( !empty($customer_data['city']) ) ? utf8_decode(utf8_encode($customer_data['city'])) : null;
+		$customer_postcode = ( !empty($customer_data['postcode']) ) ? utf8_decode(utf8_encode($customer_data['postcode'])) : null;
+		$customer_state = ( !empty($customer_data['state']) ) ? utf8_decode(utf8_encode($customer_data['state'])) : null;
+		$customer_country = ( !empty($customer_data['country']) ) ? utf8_decode(utf8_encode($customer_data['country'])) : null;
 
-		$customer_tva_intra = utf8_decode(utf8_encode($customer_data['company_tva_intra']));
+		$customer_tva_intra = ( !empty($customer_data['company_tva_intra']) ) ? utf8_decode(utf8_encode($customer_data['company_tva_intra'])) : null;
 
 		$xsize = 80;
 
@@ -232,9 +268,13 @@ class wpshop_export_pdf extends wpshop_FPDF
 		return $order_invoice_ref.'_'.$invoice_add_date.'.pdf';
 	}
 
-	// Affiche le tableau des lignes de la facture
-	function rows($order_id, $currency)
-	{
+	/**
+	 *
+	 * @param integer $order_id
+	 * @param string $currency
+	 * @param integer $invoice_id Optionnal An invoice ID, this parameter could be used to call an invoice for a partial payment
+	 */
+	function rows($order_id, $currency, $invoice_id = null) {
 		$title_ref = utf8_decode(__( 'Reference', 'wpshop' ));
 		$title_name = utf8_decode(__( 'Designation', 'wpshop' ));
 		$title_qty = utf8_decode(__( 'Qty', 'wpshop' ));
@@ -243,13 +283,11 @@ class wpshop_export_pdf extends wpshop_FPDF
 		$title_tax = utf8_decode(__( 'TVA (Tax)', 'wpshop' ));
 		$title_price = utf8_decode(__( 'Total ET', 'wpshop' ));
 
-		// Titre des colonnes
-		$header = array($title_ref,$title_name,$title_qty,$title_baseprice,$title_discount,$title_tax,$title_price);
-		// Largeur des colonnes
-		$w = array(26,75,10,15,15,30,20);
-		// On r�cup�re les id des lignes de cette facture
-		$order_data = get_post_meta($order_id, '_order_postmeta', true);
-		$order_items = $order_data['order_items'];
+		/**	Set title for invoice line table	*/
+		$header = array($title_ref, $title_name, $title_qty, $title_baseprice, $title_discount, $title_tax, $title_price);
+
+		/**	Set column size	*/
+		$w = array(26, 75, 10, 15, 15, 30, 20);
 
 		$this->setXY(10,100);
 		for($i=0;$i<count($header);$i++) {
@@ -257,9 +295,20 @@ class wpshop_export_pdf extends wpshop_FPDF
 		}
 		$this->Ln();
 
-		// Puis on affiche les lignes
-		foreach($order_items as $o) {
-			$this->row($o, $w, $currency);
+		/**	Get the order content	*/
+		$order_data = get_post_meta($order_id, '_order_postmeta', true);
+		if ( in_array($order_data['order_status'], array('completed', 'shipped') ) ) {
+			/**	Foreach item in order: add a row to invoice	*/
+			foreach ($order_data['order_items'] as $o) {
+				$this->row($o, $w, $currency);
+			}
+		}
+		else if (in_array($order_data['order_status'], array('partially_paid')) && !empty($order_data['order_payment']) && !empty($order_data['order_payment']['received']) ) {
+			foreach ( $order_data['order_payment']['received'] as $payment_info ) {
+				if ( !is_array($payment_info) ) {
+
+				}
+			}
 		}
 	}
 
@@ -287,7 +336,7 @@ class wpshop_export_pdf extends wpshop_FPDF
 		$this->Ln();
 	}
 
-	function total($order_id, $currency) {
+	function total($order_id, $currency, $invoice_id = null) {
 
 		/* Donn�es commande */
 		$order = get_post_meta($order_id, '_order_postmeta', true);
@@ -308,7 +357,6 @@ class wpshop_export_pdf extends wpshop_FPDF
 		$this->Cell(50,8,__('Shipping','wpshop'),1); $this->Cell(35,8,number_format($order['order_shipping_cost'],2,'.',' ') . ' ' . $currency,1,0,'C'); $this->Ln();
 
 		if(!empty($order['order_grand_total_before_discount']) && $order['order_grand_total_before_discount'] != $order['order_grand_total']){
-
 			$this->Cell(105,10);
 			$this->Cell(50,8,utf8_decode(__('Total ATI before discount','wpshop')),1);
 			$this->Cell(35,8,number_format($order['order_grand_total_before_discount'],2).' '.$currency,1,0,'C'); $this->Ln();
@@ -379,8 +427,7 @@ class wpshop_export_pdf extends wpshop_FPDF
 	}
 
 	//En-t�te
-	function Header()
-	{
+	function Header( ) {
 		$this->SetFont('Arial','B',15);
 		//D�calage � droite
 		$this->Cell(70);
@@ -389,8 +436,7 @@ class wpshop_export_pdf extends wpshop_FPDF
 	}
 
 	//Pied de page
-	function Footer()
-	{
+	function Footer() {
 		//Positionnement � 1,5 cm du bas
 		$this->SetY(-15);
 		//Police Arial italique 8
@@ -399,4 +445,5 @@ class wpshop_export_pdf extends wpshop_FPDF
 		$this->Cell(0,10,$this->PageNo() . '/{nb}',0,0,'C');
 	}
 }
+
 ?>

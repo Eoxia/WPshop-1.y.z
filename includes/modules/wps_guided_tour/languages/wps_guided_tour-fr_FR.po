@@ -1,0 +1,330 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: wps_guided_tour\n"
+"POT-Creation-Date: 2015-05-20 15:45+0100\n"
+"PO-Revision-Date: 2015-05-20 15:49+0100\n"
+"Last-Translator: \n"
+"Language-Team: Eoxia <dev@eoxia.com>\n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_x\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../assets/data/default-data-guided-tour-string.php:3
+msgid "Create a new product"
+msgstr "Créer un nouveau produit"
+
+#: ../assets/data/default-data-guided-tour-string.php:4
+msgid ""
+"As a Wordpress page or article, you must:\n"
+"-Enter the title of your product in the first field\n"
+"-Choose the permalink or URL of your sheet\n"
+"-Write a description to present your product"
+msgstr ""
+"Comme pour une page ou un article WordPress, vous devez :\n"
+"- Saisir le titre de votre produit dans le premier champs\n"
+"- Choisir le permalien ou l’url de votre fiche produit\n"
+"- Rédiger une description pour présenter votre produit."
+
+#: ../assets/data/default-data-guided-tour-string.php:10
+msgid "Product data"
+msgstr "Données du produit"
+
+#: ../assets/data/default-data-guided-tour-string.php:11
+msgid ""
+"Enter the corresponding data to the product price, stock, weight, "
+"height, ...\n"
+"To add or remove data types, go into management attributes"
+msgstr ""
+"Entrez les données correspondantes au produit: prix, stock, poids, "
+"hauteur, ...\n"
+"Pour ajouter ou supprimer des types de données, rendez-vous dans la gestion "
+"des attributs"
+
+#: ../assets/data/default-data-guided-tour-string.php:15
+msgid "Featured Image"
+msgstr "Image à la Une"
+
+#: ../assets/data/default-data-guided-tour-string.php:16
+msgid ""
+"Load image: from your computer, the Web or the library to set the image as "
+"the default image of your product."
+msgstr ""
+"Charger l'image : depuis votre ordinateur, le web ou la bibliothèque pour "
+"définir l’image comme la photo par défaut de votre produit."
+
+#: ../assets/data/default-data-guided-tour-string.php:19
+msgid "WPshop categories"
+msgstr "WPshop catégories"
+
+#: ../assets/data/default-data-guided-tour-string.php:20
+msgid ""
+"The block \"Categories Wpshop\" can add your product to one or more "
+"categories, previously created : products > Categories Wpshop"
+msgstr ""
+"Le bloc « Catégories Wpshop » permet d’ajouter votre produit à une ou "
+"plusieurs catégories, préalablement créées dans Produits > Catégorie wpshop"
+
+#: ../assets/data/default-data-guided-tour-string.php:23
+msgid "General"
+msgstr "Général"
+
+#: ../assets/data/default-data-guided-tour-string.php:24
+msgid ""
+"Main configuration of your store and your company (logo, address, currency, "
+"type of shop,...)"
+msgstr ""
+"Configuration principale de votre boutique et de votre société (logo, "
+"adresse, devise, type de boutique,...)"
+
+#: ../assets/data/default-data-guided-tour-string.php:27
+msgid "Catalog"
+msgstr "Catalogue"
+
+#: ../assets/data/default-data-guided-tour-string.php:28
+msgid ""
+"Change directories / urls bases of your shop and set the display of product "
+"prices."
+msgstr ""
+"Modifiez les répertoires/urls de bases de votre boutique et paramétrez "
+"l'affichage des prix des produits."
+
+#: ../assets/data/default-data-guided-tour-string.php:31
+msgid "Pages"
+msgstr "Pages"
+
+#: ../assets/data/default-data-guided-tour-string.php:32
+msgid "Management pages list your store (Account, CGV, Basket, control, ...)"
+msgstr ""
+"Liste des pages de gestion votre boutique (Compte, CGV, Panier, "
+"Commande, ...)"
+
+#: ../assets/data/default-data-guided-tour-string.php:35
+msgid "Display"
+msgstr "Affichage"
+
+#: ../assets/data/default-data-guided-tour-string.php:36
+msgid ""
+"Customize your shop: displaying the number of products displayed in a grid "
+"or list products, colors of your shop, ..."
+msgstr ""
+"Personnalisez votre boutique : affichage du nombre de produits, affichage "
+"des produits en grille ou liste, couleurs de votre boutique, ..."
+
+#: ../assets/data/default-data-guided-tour-string.php:39
+msgid "Emails"
+msgstr "Emails"
+
+#: ../assets/data/default-data-guided-tour-string.php:40
+msgid ""
+"Set the email addresses of your shop. And set the automatic emails sent "
+"during the buying cycle."
+msgstr ""
+"Définissez les adresses email de votre boutique. Et paramétrez les emails "
+"automatiques envoyés pendant le cycle d'achat."
+
+#: ../assets/data/default-data-guided-tour-string.php:43
+msgid "Cart"
+msgstr "Panier"
+
+#: ../assets/data/default-data-guided-tour-string.php:44
+msgid ""
+"Customize the display of your cart (cart type, action adding a product ...) "
+"and set your cart promotions"
+msgstr ""
+"Personnalisez l'affichage de votre panier (type de panier, action à l'ajout "
+"d'un produit...) et paramétrer vos promotions \"panier\"  "
+
+#: ../assets/data/default-data-guided-tour-string.php:47
+msgid "Payments"
+msgstr "Paiement"
+
+#: ../assets/data/default-data-guided-tour-string.php:48
+msgid ""
+"Add and configure your payment methods (check, paypal, bank transfer, ...), "
+"your payments and invoices"
+msgstr ""
+"Ajoutez et configurez vos modes de paiement (chèque, paypal, virement "
+"bancaire, ...), vos acomptes et vos factures"
+
+#: ../assets/data/default-data-guided-tour-string.php:51
+msgid "Shipping"
+msgstr "Livraison"
+
+#: ../assets/data/default-data-guided-tour-string.php:52
+msgid ""
+"Create as many shipping options you want and configure the shipping cost for "
+"each delivery method created."
+msgstr ""
+"Créez autant de modes de livraison que vous souhaitez et configurez les "
+"frais de port pour chaque mode de livraison créé."
+
+#: ../assets/data/default-data-guided-tour-string.php:55
+msgid "Addons"
+msgstr "Addons"
+
+#: ../assets/data/default-data-guided-tour-string.php:56
+msgid "Find your add-ons developed for WPShop"
+msgstr "Retrouvez vos modules complémentaires développés pour WPShop"
+
+#: ../assets/data/default-data-guided-tour-string.php:59
+msgid "Billing"
+msgstr "Facturation"
+
+#: ../assets/data/default-data-guided-tour-string.php:60
+msgid "Determine dialing and address of customer invoices."
+msgstr "Déterminez la numérotation et l'adresse client de vos factures. "
+
+#: ../assets/data/default-data-guided-tour-string.php:63
+msgid "Barcode"
+msgstr "Code-barres"
+
+#: ../assets/data/default-data-guided-tour-string.php:64
+msgid "Set your internal codes to generate automatic barcode"
+msgstr "Paramétrez vos codes internes pour générer automatique le code-barres"
+
+#: ../controller/wpsBubble_ctr.php:40 ../controller/wpsBubble_ctr.php:42
+msgid "Bubbles"
+msgstr "Bulles"
+
+#: ../controller/wpsBubble_ctr.php:41 ../controller/wpsBubble_ctr.php:43
+msgid "Bubble"
+msgstr "Bulle"
+
+#: ../controller/wpsBubble_ctr.php:44
+msgid "Add New"
+msgstr "Ajouter"
+
+#: ../controller/wpsBubble_ctr.php:45
+msgid "Add New Bubble"
+msgstr "Ajouter une nouvelle bulle"
+
+#: ../controller/wpsBubble_ctr.php:46
+msgid "New Bubble"
+msgstr "Nouvelle bulle"
+
+#: ../controller/wpsBubble_ctr.php:47
+msgid "Edit Bubble"
+msgstr "Modifier la bulle"
+
+#: ../controller/wpsBubble_ctr.php:48
+msgid "View Bubble"
+msgstr "Voir la bulle"
+
+#: ../controller/wpsBubble_ctr.php:49
+msgid "All Bubbles"
+msgstr "Toutes les bulles"
+
+#: ../controller/wpsBubble_ctr.php:50
+msgid "Search Bubbles"
+msgstr "Chercher dans les bulles"
+
+#: ../controller/wpsBubble_ctr.php:51
+msgid "Parent Bubbles:"
+msgstr "Bulle parent"
+
+#: ../controller/wpsBubble_ctr.php:52
+msgid "No bubble found."
+msgstr "Pas de bulle trouvée."
+
+#: ../controller/wpsBubble_ctr.php:53
+msgid "No bubble found in Trash."
+msgstr "Aucune bulle trouvée dans la corbeille."
+
+#: ../controller/wpsBubble_ctr.php:79
+msgid "Position"
+msgstr "Position"
+
+#: ../controller/wpsBubble_ctr.php:80
+msgid "Actions"
+msgstr "Actions"
+
+#: ../controller/wpsBubble_ctr.php:81
+msgid "Conditions"
+msgstr "Conditions"
+
+#: ../controller/wpsBubble_ctr.php:82
+#: ../templates/backend/metabox-url-input.php:2
+msgid "Url"
+msgstr "Url"
+
+#: ../controller/wpsBubble_ctr.php:83
+msgid "Advanced"
+msgstr "Avancée"
+
+#: ../controller/wpsBubble_ctr.php:121
+msgid "All pages"
+msgstr "Toutes les pages"
+
+#: ../templates/backend/metabox-actions.php:1
+msgid "Use next button"
+msgstr "Utiliser le bouton suivant"
+
+#: ../templates/backend/metabox-actions.php:5
+msgid "Type next"
+msgstr "Type du suivant"
+
+#: ../templates/backend/metabox-actions.php:15
+msgid "Next action"
+msgstr "Prochaine action"
+
+#: ../templates/backend/metabox-actions.php:27
+msgid "No bubble found"
+msgstr "Aucune bulle trouvée"
+
+#: ../templates/backend/metabox-advanced.php:1
+msgid "Reset this bubble for all users"
+msgstr "Réinitialiser cette bulle pour tous les utilisateurs"
+
+#: ../templates/backend/metabox-conditions.php:1
+msgid "Option name"
+msgstr "Nom de l'option"
+
+#: ../templates/backend/metabox-conditions.php:5
+msgid "Data name"
+msgstr "Nom de la metakey"
+
+#: ../templates/backend/metabox-conditions.php:9
+msgid "Option value"
+msgstr "Valeur de l'option"
+
+#: ../templates/backend/metabox-position.php:1
+msgid "Page"
+msgstr "Page"
+
+#: ../templates/backend/metabox-position.php:11
+msgid "Filter"
+msgstr "Filtre"
+
+#: ../templates/backend/metabox-position.php:15
+msgid "Anchor (ID or Class)"
+msgstr "Ancre (ID ou Class)"
+
+#: ../templates/backend/metabox-position.php:19
+msgid "Position x"
+msgstr "Position x"
+
+#: ../templates/backend/metabox-position.php:23
+msgid "Position y"
+msgstr "Position y"
+
+#: ../templates/backend/metabox-url-input.php:3
+msgid "Paramater"
+msgstr "Paramètre"
+
+#: ../templates/backend/metabox-url-input.php:7
+msgid "Value"
+msgstr "Valeur"
+
+#: ../templates/backend/pointer.php:11
+msgid "Next"
+msgstr "Suivant"
+
+#~ msgid "Unable to load translation file"
+#~ msgstr "Impossible de charger le fichier de traduction"

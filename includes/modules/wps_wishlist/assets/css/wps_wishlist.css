@@ -1,0 +1,15 @@
+@CHARSET "ISO-8859-1";
+
+.wps-button-wishlight {
+	position: relative;
+	left: 0;
+	top: 0;
+	color: red;
+}
+
+.clear { clear: both; }
+.margin-right-20 { margin-right: 20px; }
+.margin-top-20 { margin-top: 20px; }
+
+.wps-button-activ { background: none repeat scroll 0 0 #4c8fd4 !important; }
+.full-width { width: 100%; }

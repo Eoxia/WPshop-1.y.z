@@ -1,0 +1,65 @@
+/**
+ *
+ *
+ *	CUSTOMER LIST TABLE SPECIFIC STYLES
+ *
+ *
+ */
+#customer_identifier {
+	width: 90px;
+}
+#customer_date_subscription, #customer_date_lastlogin{
+	width: 115px;
+}
+.post-type-wpshop_customers.post-php .wrap > h2, .post-type-wpshop_customers.post-php .wrap #titlediv, .post-type-wpshop_customers.edit-php .wrap ul.subsubsub {
+/* 	display: none; */
+}
+.post-type-wpshop_customers.post-php .wrap {
+	clear: both;
+}
+#customer_name {
+	width: 350px;
+}
+#customer_email {
+	width: 150px;
+}
+.column-customer_orders ul {
+	margin: 0px !important;
+}
+.column-customer_orders div.wps-alert-info {
+	margin: 0px;
+	padding: 0px;
+	text-align: center;
+}
+.wp-shop-customers-list-orders-stats {
+	float: left;
+}
+.wp-shop-customers-list-ordered-product {
+	float: right;
+	width: 60%;
+	text-align: left;
+}
+.wp-shop-customers-list-ordered-product p {
+	margin: 0px !important;
+	font-style: italic;
+	text-decoration: underline;	
+}
+.wps-customer-name-container:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+.wps-customer-last_name {
+	float: left;
+	width: 50%;
+}
+.wps-customer-first_name {
+	float: right;
+	text-align: left;
+	width: 50%;
+}
+
+i.wps-icon-plus{
+	background: none !important;
+	color:#555555 !important;
+	padding: 0 !important;

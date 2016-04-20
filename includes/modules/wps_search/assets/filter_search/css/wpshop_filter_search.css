@@ -1,0 +1,42 @@
+@CHARSET "ISO-8859-1";
+
+#wpshop_filter_search_container {
+	width : 94%;
+	height : auto;
+	padding : 3%;
+	float : left;
+	position : relative;
+	background : #EAEAEA;
+	margin : 15px 0 15px 0;
+}
+.amount {
+	position : realtive;
+	float : left;
+	width : 100%;
+	height :auto;
+	margin : 8px 0 10px 0;
+}
+.amount_min {
+	position : realtive;
+	float : left;
+	width : auto;
+	height :auto;
+	color: #1C94C4;
+    font-weight: bold; 
+}
+.amount_max {
+	position : realtive;
+	float : right;
+	width : auto;
+	height :auto;
+	color: #1C94C4;
+    font-weight: bold; 
+}
+.wpshop_loading_picture {
+	position: relative;
+	height: 20px;
+	width: 20px;
+	background-image : url('../medias/icones/loading.gif');
+	background-repeat : no-repeat;
+	margin : 20px 0 0 0;
+}

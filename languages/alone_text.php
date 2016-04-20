@@ -55,6 +55,31 @@ __('checkbox', 'wpshop');
 __('pass_field', 'wpshop');
 __('hidden_field', 'wpshop');
 
+__('madam', 'wpshop');
+__('Madam', 'wpshop');
+__('mister', 'wpshop');
+__('Mister', 'wpshop');
+
+__('Yes', 'wpshop');
+__('yes', 'wpshop');
+__('no', 'wpshop');
+__('No', 'wpshop');
+
+__('blue', 'wpshop');
+__('Blue', 'wpshop');
+__('green', 'wpshop');
+__('Green', 'wpshop');
+__('red', 'wpshop');
+__('Red', 'wpshop');
+
+
+__('catalog', 'wpshop');
+__('Catalog', 'wpshop');
+__('search', 'wpshop');
+__('Search', 'wpshop');
+__('catalog_and_search', 'wpshop');
+__('Catalog & Search', 'wpshop');
+
 __('WP Shop options', 'wpshop');
 
 
@@ -69,7 +94,7 @@ __('data_type', 'wpshop');
 __('backend_table', 'wpshop');
 __('backend_input', 'wpshop');
 __('frontend_label', 'wpshop');
-__('frontent_verification', 'wpshop');
+__('frontend_verification', 'wpshop');
 __('code', 'wpshop');
 __('note', 'wpshop');
 __('default_value', 'wpshop');
@@ -145,3 +170,88 @@ __('Attributes groups', 'wpshop');
 __('Add an attribute group', 'wpshop');
 __('Edit the attribute group "%s" affected to entity %s', 'wpshop');
 
+__('Product reference', 'wpshop');
+__('Attribute set', 'wpshop');
+__('Product weight', 'wpshop');
+__('Product height', 'wpshop');
+__('Product width', 'wpshop');
+__('Price ATI', 'wpshop');
+__('Stock', 'wpshop');
+__('Model', 'wpshop');
+__('Visibilty', 'wpshop');
+__('Manufacturer', 'wpshop');
+__('Color', 'wpshop');
+__('Barcode', 'wpshop');
+__('Tarif Code', 'wpshop');
+__('Country of Manufacture', 'wpshop');
+__('ISBN', 'wpshop');
+__('Declare this product as new', 'wpshop');
+__('Set product as new from date', 'wpshop');
+__('Set product as new to date', 'wpshop');
+__('Manage Stock', 'wpshop');
+__('Allow Decimals', 'wpshop');
+__('Maximum authorized quantity in cart', 'wpshop');
+__('Minimum authorized quantity in cart', 'wpshop');
+__('Use quantity increments', 'wpshop');
+__('Set product as out at', 'wpshop');
+__('Set product as out of stock', 'wpshop');
+__('Notify when quantity goes below', 'wpshop');
+__('Cost', 'wpshop');
+__('Price ET (HT)', 'wpshop');
+__('Rate Taxe (TVA)', 'wpshop');
+__('Taxe', 'wpshop');
+__('Eco Taxe', 'wpshop');
+__('Rate TVA Eco Taxe', 'wpshop');
+__('TVA Eco Taxe', 'wpshop');
+__('Discount rate', 'wpshop');
+__('Discount amount', 'wpshop');
+__('Special Price', 'wpshop');
+__('Cost Of Postage', 'wpshop');
+__('Special Price From Date', 'wpshop');
+__('Special Price To Date', 'wpshop');
+__('Apply minimum advertised price', 'wpshop');
+__('Manufacturer\'s Sugessted Retail Price', 'wpshop');
+__('Return merchandise authorization', 'wpshop');
+__('Allow Gift Message', 'wpshop');
+__('Allow Gift Wrapping', 'wpshop');
+__('Price For Gift Option', 'wpshop');
+__('Product tag', 'wpshop');
+__('Up Sells', 'wpshop');
+__('Cross Sells', 'wpshop');
+__('Chemical Product', 'wpshop');
+__('Danger\'s Pictogram', 'wpshop');
+__('Risk Phrases', 'wpshop');
+__('Safety Advices', 'wpshop');
+__('Security Datas', 'wpshop');
+__('Last Update Date', 'wpshop');
+__('Product consumption', 'wpshop');
+__('Frequency of use', 'wpshop');
+__('Cancerigene Mutagene Reprotoxique', 'wpshop');
+__('Highlight this product', 'wpshop');
+__('Highlight from date', 'wpshop');
+__('Highlight to date', 'wpshop');
+__('Allows quotation for this product', 'wpshop');
+__('Downloadable product', 'wpshop');
+__('Provider', 'wpshop');
+__('Brand', 'wpshop');
+__('Size', 'wpshop');
+__('Provider reference', 'wpshop');
+__('Manufacturer reference', 'wpshop');
+__('Warranty', 'wpshop');
+__('Origin / Manufacturing country', 'wpshop');
+
+
+__('State', 'wpshop');
+__('Address', 'wpshop');
+__('Intra-community VAT', 'wpshop');
+__('Address title', 'wpshop');
+
+__('money', 'wpshop');
+__('credit_cart', 'wpshop');
+
+__('Thirds', 'wpshop');
+__('Third', 'wpshop');
+__('thirds', 'wpshop');
+__('third', 'wpshop');
+
+__('miss', 'wpshop');

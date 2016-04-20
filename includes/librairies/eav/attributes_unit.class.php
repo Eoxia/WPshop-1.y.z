@@ -79,7 +79,7 @@ class wpshop_attributes_unit
 	*
 	*	@return string The table of the class
 	*/
-	function getListingSlug()
+	public static function getListingSlug()
 	{
 		return self::urlSlugListing;
 	}
@@ -88,7 +88,7 @@ class wpshop_attributes_unit
 	*
 	*	@return string The table of the class
 	*/
-	function getEditionSlug()
+	public static function getEditionSlug()
 	{
 		return self::urlSlugEdition;
 	}
@@ -97,7 +97,7 @@ class wpshop_attributes_unit
 	*
 	*	@return string The table of the class
 	*/
-	function getDbTable()
+	public static function getDbTable()
 	{
 		return self::dbTable;
 	}
@@ -267,7 +267,7 @@ class wpshop_attributes_unit
 	*
 	*	@return string $listItemOutput The html code that output the item list
 	*/
-	function elementList()
+	public static function elementList()
 	{
 		$listItemOutput = '';
 
@@ -391,7 +391,7 @@ class wpshop_attributes_unit
 	*
 	*	@return string The html code that output the interface for adding a nem item
 	*/
-	function elementEdition($itemToEdit = ''){
+	public static function elementEdition($itemToEdit = ''){
 		global $attribute_displayed_field; global $wpdb;
 		$dbFieldList = wpshop_database::fields_to_input(self::getDbTable());
 
@@ -410,7 +410,7 @@ class wpshop_attributes_unit
 			$requestFormValue = isset($_REQUEST[self::currentPageCode][$input_def['name']]) ? wpshop_tools::varSanitizer($_REQUEST[self::currentPageCode][$input_def['name']]) : '';
 			$currentFieldValue = $input_def['value'];
 			if(is_object($editedItem)){
-				$currentFieldValue = $editedItem->$input_def['name'];
+				$currentFieldValue = $editedItem->{$input_def['name']};
 			}
 			elseif(($pageAction != '') && ($requestFormValue != '')){
 				$currentFieldValue = $requestFormValue;
@@ -434,7 +434,7 @@ class wpshop_attributes_unit
 				}
 
 				$the_form_general_content .= '
-				<div class="clear" >
+				<div class="wpshop_cls" >
 					<div class="wpshop_form_label wpshop_' . self::currentPageCode . '_' . $input_def['name'] . '_label alignleft" >
 						<label ' . $label . ' >' . __($input_def['name'], 'wpshop') . '</label>
 					</div>
@@ -461,7 +461,6 @@ class wpshop_attributes_unit
 	<input type="button" value="' . __('Back', 'wpshop') . '" class="button-primary alignright" name="cancel_unit_edition" id="cancel_unit_edition" />
 	<input type="submit" value="' . __('Save', 'wpshop') . '" class="button-primary alignright" name="save_new_unit" id="save_new_unit" />
 </form>
-<div class="wpshopHide" ><div id="default_value_content_default" >&nbsp;</div><div id="default_value_content_datetime" ><input type="checkbox" name="wp_wpshop__attribute[default_value]" value="date_of_current_day" />' . __('Date of the day', 'wpshop') . '</div></div>
 <script type="text/javascript" >
 	wpshop(document).ready(function(){
 		wpshopMainInterface("' . self::getDbTable() . '", "' . __('Are you sure you want to quit this page? You will loose all current modification', 'wpshop') . '", "' . __('Are you sure you want to delete this attribute?', 'wpshop') . '");
@@ -524,21 +523,23 @@ class wpshop_attributes_unit
 	*
 	*	@return object $element_list A wordpress database object containing the attribute list
 	*/
-	function getElement($element_id = '', $element_status = "'valid', 'moderated'", $field_to_search = 'id'){
+	public static function getElement($element_id = '', $element_status = "'valid', 'moderated'", $field_to_search = 'id'){
 		global $wpdb;
 		$element_list = array();
 		$moreQuery = "";
+		$moreQueryArgs = array( 1, );
 
 		if($element_id != ''){
 			$moreQuery = "
-			AND CURRENT_ELEMENT." . $field_to_search . " = '" . $element_id . "' ";
+			AND CURRENT_ELEMENT." . $field_to_search . " = %s ";
+			$moreQueryArgs[] = $element_id;
 		}
 
 		$query = $wpdb->prepare(
 		"SELECT CURRENT_ELEMENT.*, UNIT_GROUP.name as group_name
 		FROM " . self::getDbTable() . " AS CURRENT_ELEMENT
 			LEFT JOIN " . WPSHOP_DBT_ATTRIBUTE_UNIT_GROUP . " AS UNIT_GROUP ON (UNIT_GROUP.id = CURRENT_ELEMENT.group_id)
-		WHERE CURRENT_ELEMENT.status IN (".$element_status.") " . $moreQuery, ''
+		WHERE %d AND CURRENT_ELEMENT.status IN (".$element_status.") " . $moreQuery, $moreQueryArgs
 		);
 
 		/*	Get the query result regarding on the function parameters. If there must be only one result or a collection	*/
@@ -555,7 +556,7 @@ class wpshop_attributes_unit
 	/**
 	*
 	*/
-	function get_unit_list_for_group($group_id){
+	public static function get_unit_list_for_group($group_id){
 		global $wpdb;
 		$unit_list_for_group = '';
 
@@ -570,7 +571,7 @@ class wpshop_attributes_unit
 	/**
 	*
 	*/
-	function get_default_unit_for_group($group_id){
+	public static function get_default_unit_for_group($group_id){
 		global $wpdb;
 		$default_unit_for_group = '';
 
@@ -586,20 +587,22 @@ class wpshop_attributes_unit
 	*
 	*	@return object $attribute_unit_group_list The list of existing unit group
 	*/
-	function get_unit_group($element_id = '', $element_status = "'valid', 'moderated'", $field_to_search = 'id'){
+	public static function get_unit_group($element_id = '', $element_status = "'valid', 'moderated'", $field_to_search = 'id'){
 		global $wpdb;
 		$element_list = array();
 		$moreQuery = "";
+		$moreQueryArgs = array( 1, );
 
 		if($element_id != ''){
 			$moreQuery = "
-			AND CURRENT_ELEMENT." . $field_to_search . " = '" . $element_id . "' ";
+			AND CURRENT_ELEMENT." . $field_to_search . " = %d ";
+			$moreQueryArgs[] = $element_id;
 		}
 
 		$query = $wpdb->prepare(
 		"SELECT CURRENT_ELEMENT.*
 		FROM " . WPSHOP_DBT_ATTRIBUTE_UNIT_GROUP . " AS CURRENT_ELEMENT
-		WHERE CURRENT_ELEMENT.status IN (".$element_status.") " . $moreQuery, ''
+		WHERE %d AND CURRENT_ELEMENT.status IN (".$element_status.") " . $moreQuery, $moreQueryArgs
 		);
 
 		/*	Get the query result regarding on the function parameters. If there must be only one result or a collection	*/
@@ -620,7 +623,7 @@ class wpshop_attributes_unit
 	*
 	*	@return string $listItemOutput The html code that output the item list
 	*/
-	function unit_group_list(){
+	public static function unit_group_list(){
 		$listItemOutput = '';
 
 		/*	Start the table definition	*/
@@ -735,7 +738,7 @@ class wpshop_attributes_unit
 	*
 	*	@return string The html code that output the interface for adding a nem item
 	*/
-	function unit_group_edition($itemToEdit = ''){
+	public static function unit_group_edition($itemToEdit = ''){
 		global $attribute_displayed_field;
 		$dbFieldList = wpshop_database::fields_to_input(WPSHOP_DBT_ATTRIBUTE_UNIT_GROUP);
 
@@ -752,7 +755,7 @@ class wpshop_attributes_unit
 			$requestFormValue = isset($_REQUEST[self::currentPageCode][$input_def['name']]) ? wpshop_tools::varSanitizer($_REQUEST[self::currentPageCode][$input_def['name']]) : '';
 			$currentFieldValue = $input_def['value'];
 			if(is_object($editedItem)){
-				$currentFieldValue = $editedItem->$input_def['name'];
+				$currentFieldValue = $editedItem->{$input_def['name']};
 			}
 			elseif(($pageAction != '') && ($requestFormValue != '')){
 				$currentFieldValue = $requestFormValue;
@@ -769,7 +772,7 @@ class wpshop_attributes_unit
 					$label = '';
 				}
 				$input = '
-	<div class="clear" >
+	<div class="wpshop_cls" >
 		<div class="wpshop_form_label wpshop_' . self::currentPageCode . '_' . $input_def['name'] . '_label alignleft" >
 			<label ' . $label . ' >' . __($input_def['name'], 'wpshop') . '</label>
 		</div>
@@ -800,7 +803,6 @@ class wpshop_attributes_unit
 	<input type="button" value="' . __('Retour', 'wpshop') . '" class="button-primary alignright" name="cancel_unit_group_edition" id="cancel_unit_group_edition" />
 	<input type="submit" value="' . __('Save', 'wpshop') . '" class="button-primary alignright" name="save_new_unit_group" id="save_new_unit_group" />
 </form>
-<div class="wpshopHide" ><div id="default_value_content_default" >&nbsp;</div><div id="default_value_content_datetime" ><input type="checkbox" name="wp_wpshop__attribute[default_value]" value="date_of_current_day" />' . __('Date of the day', 'wpshop') . '</div></div>
 <script type="text/javascript" >
 	wpshop(document).ready(function(){
 		wpshopMainInterface("' . WPSHOP_DBT_ATTRIBUTE_UNIT_GROUP . '", "' . __('Are you sure you want to quit this page? You will loose all current modification', 'wpshop') . '", "' . __('Are you sure you want to delete this unit group?', 'wpshop') . '");
@@ -826,7 +828,7 @@ class wpshop_attributes_unit
 
 
 	/*	Default currecy for the entire shop	*/
-	function wpshop_shop_currency_list_field() {
+	public static function wpshop_shop_currency_list_field() {
 		global $wpdb;
 		$wpshop_shop_currencies = unserialize(WPSHOP_SHOP_CURRENCIES);
 		$currency_group = get_option('wpshop_shop_currency_group');
@@ -834,7 +836,7 @@ class wpshop_attributes_unit
 
 		$currencies_options = '';
 		if ( !empty ($currency_group) ) {
-			$query = $wpdb->prepare('SELECT * FROM ' .WPSHOP_DBT_ATTRIBUTE_UNIT. ' WHERE group_id = ' . $currency_group . '', '');
+			$query = $wpdb->prepare('SELECT * FROM ' .WPSHOP_DBT_ATTRIBUTE_UNIT. ' WHERE group_id = %d', $currency_group);
 			$currencies = $wpdb->get_results($query);
 			foreach ( $currencies as $currency) {
 				$currencies_options .= '<option value="'.$currency->id.'"'.(($currency->id == $current_currency) ? ' selected="selected"' : null).'>'.$currency->name.' ('.$currency->unit.')</option>';
@@ -848,5 +850,88 @@ class wpshop_attributes_unit
 		return '<select name="wpshop_shop_default_currency" class="wpshop_currency_field" >'.$currencies_options.'</select>';
 	}
 
+	/**
+	 * Get default unit attribute by attribute_code
+	 * 
+	 * @param string $attribute_code
+	 * @return stdClass (_unit_group_id, _default_unit)
+	 */
+	public static function get_default_unit_attribute($attribute_code) {
+		global $wpdb;
 
+		/** Get the _unit_group_id and _default_unit */
+		return $wpdb->get_row( $wpdb->prepare( 'SELECT _unit_group_id, _default_unit FROM ' . WPSHOP_DBT_ATTRIBUTE . ' WHERE code=%s', array( $attribute_code ) ) );
+	}
+	
+	/**
+	 * Get attribute unit by code (attribute code) for the product by product_id and attribute_code
+	 * Check the default unit of the attribute code, and check if exist a custom unit for him 
+	 * 
+	 * @param int $product_id
+	 * @param string $attribute_code
+	 * @return stdClass Object [_unit_group_id], [_default_unit]
+	 */
+	public static function get_the_attribute_unit_by_code_for_product($product_id, $attribute_code) {
+		$unit = self::get_default_unit_attribute( $attribute_code );
+		
+		if(empty($unit))
+			return null;
+		
+		$post_meta = get_post_meta($product_id, '_wpshop_product_metadata', true);
+
+		/** Si on trouve une unité */
+		if(!empty($post_meta) && !empty($post_meta['unit']) && !empty($post_meta['unit'][$attribute_code]))
+			$unit->_default_unit = $post_meta['unit'][$attribute_code];
+
+		return $unit;
+	}
+	
+	/**
+	 * Same of get_the_attribute_unit_by_code_for_product except no return, just display it
+	 * 
+	 * @param int $product_id
+	 * @param string $attribute_code
+	 */
+	public static function the_attribute_unit_by_code_for_product($product_id, $attribute_code) {
+		$unit = self::get_the_attribute_unit_by_code_for_product($product_id, $attribute_code);
+		
+		if(empty($unit))
+			return null;
+		
+		echo self::get_the_subname_unit($unit->_unit_group_id, $unit->_default_unit);
+	}
+	
+	/**
+	 * Get the name unit by group_unit and unit_id
+	 * 
+	 * @param int $group_id
+	 * @param int $unit_id
+	 * @return string (Name of unit)
+	 */
+	public static function get_the_name_unit($group_id, $unit_id) {
+		global $wpdb;
+		
+		/** Si pas d'unité ou de groupe, null */
+		if(0 === $unit_id || 0 === $group_id)
+			return null;
+		
+		return $wpdb->get_var( $wpdb->prepare( 'SELECT name FROM ' . WPSHOP_DBT_ATTRIBUTE_UNIT . ' WHERE group_id=%d AND id=%d', array( $group_id, $unit_id ) ) );
+	}
+	
+	/**
+	 * Get the subname of unit by group_unit and unit_id
+	 * 
+	 * @param int $group_id
+	 * @param int $unit_id
+	 * @return string (Subname of unit)
+	 */
+	public static function get_the_subname_unit($group_id, $unit_id) {
+		global $wpdb;
+		
+		/** Si pas d'unité ou de groupe, null */
+		if(0 === $unit_id || 0 === $group_id)
+			return null;
+		
+		return $wpdb->get_var( $wpdb->prepare( 'SELECT unit FROM ' . WPSHOP_DBT_ATTRIBUTE_UNIT . ' WHERE group_id=%d AND id=%d', array( $group_id, $unit_id ) ) );
+	}
 }

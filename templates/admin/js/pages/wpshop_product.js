@@ -1,3 +1,4 @@
+wpshop(document).ready(function(){
 /*	Start custom display management	*/
 	jQuery("#wpshop_product_attribute_display_choice").click(function() {
 		if ( jQuery(this).is(":checked") ) {
@@ -221,8 +222,9 @@
 		var product_id = jQuery(this).attr("id").replace("wpshop_product_id_", "");
 
 		/*	Display loading picture	*/
-		jQuery("#wpshop_loading_duplicate_pdt_" + product_id).removeClass('success error');
-		jQuery("#wpshop_loading_duplicate_pdt_" + product_id).show();
+		//jQuery("#wpshop_loading_duplicate_pdt_" + product_id).removeClass('success error');
+		//jQuery("#wpshop_loading_duplicate_pdt_" + product_id).show();
+		jQuery( this ).addClass( 'wps-bton-loading');
 
 		/*	Launch ajax request	*/
 		var data = {
@@ -232,11 +234,14 @@
 		};
 		jQuery.post(ajaxurl, data, function(response){
 			if ( response[0] ) {
-				jQuery("#wpshop_loading_duplicate_pdt_" + product_id).addClass('success');
-				jQuery("#wpshop_loading_duplicate_pdt_" + product_id).after(response[1]);
+				
+				jQuery("#wpshop_loading_duplicate_pdt_" + product_id).html( response[1] );
+				jQuery("#wpshop_loading_duplicate_pdt_" + product_id).prepend('<span class="success"></span>');
+				jQuery( '#wpshop_product_id_' + product_id ).removeClass( 'wps-bton-loading');
 			}
 			else {
 				jQuery("#wpshop_loading_duplicate_pdt_" + product_id).addClass('error');
+				jQuery( '#wpshop_product_id_' + product_id ).removeClass( 'wps-bton-loading');
 			}
 		}, 'json');
 
@@ -246,7 +251,8 @@
 
 /*	Start product attachment management	*/
 	/*	Delete an attachment	*/
-	jQuery(".delete_post_thumbnail").live('click',function(){
+	jQuery(".delete_post_thumbnail").live('click',function(e){
+		e.preventDefault();
 		if (confirm(WPSHOP_MSG_CONFIRM_THUMBNAIL_DELETION)) {
 			var data = {
 				action: "delete_product_thumbnail",
@@ -321,3 +327,4 @@
 			data: data
 		});
 	});
+});

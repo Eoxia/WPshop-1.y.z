@@ -84,12 +84,15 @@ class wpshop_permissions {
 		$permission['wpshop_edit_attribute_group'] = array('set_by_default' => 'no', 'permission_type' => 'write', 'permission_sub_type' => 'edit', 'permission_module' => 'eav', 'permission_sub_module' => 'attributes_group');
 		$permission['wpshop_add_attribute_group'] = array('set_by_default' => 'no', 'permission_type' => 'write', 'permission_sub_type' => 'add', 'permission_module' => 'eav', 'permission_sub_module' => 'attributes_group');
 		$permission['wpshop_delete_attribute_group'] = array('set_by_default' => 'no', 'permission_type' => 'delete', 'permission_sub_type' => '', 'permission_module' => 'eav', 'permission_sub_module' => 'attributes_group');
-			$permission['wpshop_view_attribute_group_details'] = array('set_by_default' => 'no', 'permission_type' => 'read', 'permission_sub_type' => '', 'permission_module' => 'eav', 'permission_sub_module' => 'attributes_group');
-			$permission['wpshop_edit_attribute_group_details'] = array('set_by_default' => 'no', 'permission_type' => 'write', 'permission_sub_type' => 'edit', 'permission_module' => 'eav', 'permission_sub_module' => 'attributes_group');
+		$permission['wpshop_view_attribute_group_details'] = array('set_by_default' => 'no', 'permission_type' => 'read', 'permission_sub_type' => '', 'permission_module' => 'eav', 'permission_sub_module' => 'attributes_group');
+		$permission['wpshop_edit_attribute_group_details'] = array('set_by_default' => 'no', 'permission_type' => 'write', 'permission_sub_type' => 'edit', 'permission_module' => 'eav', 'permission_sub_module' => 'attributes_group');
 
 		$permission['wpshop_view_documentation_menu'] = array('set_by_default' => 'no', 'permission_type' => 'read', 'permission_sub_type' => '', 'permission_module' => 'documentation', 'permission_sub_module' => '');
 
+		$permission['wpshop_view_import_menu'] = array('set_by_default' => 'no', 'permission_type' => 'read', 'permission_sub_type' => '', 'permission_module' => 'import', 'permission_sub_module' => '');
+
 		$permission['wpshop_view_tools_menu'] = array('set_by_default' => 'no', 'permission_type' => 'read', 'permission_sub_type' => '', 'permission_module' => 'tools', 'permission_sub_module' => '');
+		$permission['wpshop_view_statistics'] = array('set_by_default' => 'no', 'permission_type' => 'read', 'permission_sub_type' => '', 'permission_module' => 'stats', 'permission_sub_module' => '');
 
 		return $permission;
 	}
@@ -99,7 +102,7 @@ class wpshop_permissions {
 	*	@see wpshop_permissions::permission_list()
 	*/
 	function set_administrator_role_permission() {
-		$adminRole = get_role('administrator');
+		$adminRole 	= get_role('administrator');
 		$permissionList = wpshop_permissions::permission_list();
 		foreach ($permissionList as $permissionName => $permissionDef) {
 			if ( ($adminRole != null) && !$adminRole->has_cap($permissionName) ) {

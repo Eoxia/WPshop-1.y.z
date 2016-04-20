@@ -1,0 +1,403 @@
+/**
+ *	Dashboard
+ */
+.wps-pos-dahboard-header:after {
+	content: "";
+	clear: both;
+	display: table;
+}
+
+/**
+ *	Main dashboard metaboxes layout
+ */
+#wpspos-dashboard-left-sortables {
+	float: left;
+	width: 45%;
+}
+#wpspos-dashboard-right-sortables {
+	float: right;
+	width: 54%;
+}
+#wpspos-dashboard-left-sortables .postbox .handlediv, #wpspos-dashboard-right-sortables .postbox .handlediv {
+	display: none;
+}
+#wpspos-dashboard-right-sortables .postbox > button, #wpspos-dashboard-right-sortables .postbox .toggle-indicator {
+	display: none;
+}
+/*#wpspos-dashboard-right-sortables .postbox .hndle #wps-pos-change-customer {
+	display: block;
+}*/
+#wpspos-dashboard-left-sortables .postbox  h2.hndle, #wpspos-dashboard-right-sortables .postbox  h2.hndle {
+	cursor: auto;
+}
+.wpspos-dashboard-contents:after {
+	content: "";
+	clear: both;
+	display: table;
+}
+.wpspos-dashboard-contents .meta-box-sortables .postbox h2 span a.thickbox {
+	top: 0px;
+}
+
+/**
+ * Dashboard metaboxes display
+ */
+.wpspos-current-step-1 #wpspos-dashboard-product-metabox .hndle span a, .wpspos-current-step-3 #wpspos-dashboard-product-metabox .hndle span a, .wpspos-current-step-3 #wpspos-dashboard-product-metabox .inside,
+	.wpspos-current-step-2 #wpspos-dashboard-order-customer-metabox .wpspos-customer-list, .wpspos-current-step-2 #wpspos-dashboard-order-customer-metabox .hndle span a, .wpspos-current-step-2 #wpspos-dashboard-order-customer-metabox .wpspos-continue-using-selected-customer, .wpspos-current-step-0 #wpspos-dashboard-order-customer-metabox .wpspos-continue-using-selected-customer, 
+		.wpspos-current-step-0 #wps-pos-change-customer, .wpspos-current-step-1 #wps-pos-change-customer, .wpspos-current-step-3 #wps-pos-change-customer, .wpspos-current-step-3 .wps-pos-addon-choose-customer, .wpspos-current-step-3 #wpspos-dashboard-order-customer-metabox .inside, .wpspos-current-step-3 #wpspos-dashboard-order-customer-metabox .hndle span a, .wpspos-current-step-3 #wpspos-dashboard-order-customer-metabox .hndle span button,
+			.wpspos-current-step-3 .wps-pos-add-to-cart-button, .wpspos-current-step-3 #wpspos-finalize-order, .wpspos-current-step-3 #wpspos-neworder, .wpspos-current-step-1 #wpspos-finalize-order, .wpspos-current-step-3 #wps_cart_container button {
+	display: none;
+}
+
+/**
+ *	Dashboard general
+ */
+.wps-pos-element-listing-container {
+	background: none repeat scroll 0 0 #ffffff;
+	border: 1px solid #cccccc;
+	height: 350px;
+	margin-top: 10px;
+	overflow-y: scroll;
+	width: 100%;
+}
+.wps-pos-letter-choice {
+	margin: 2px;
+}
+.wps-pos-element-table {
+	width: 100%;
+}
+.wps-pos-element-table tr:nth-child(2n+1) {
+	background-color: #f9f9f9;
+}
+.wps-pos-element-table tr th {
+	text-align: left;
+	height: 30px;
+	line-height: 30px;
+}
+.wps-pos-element-table tr th:last-child {
+	text-align: right;
+	padding-right: 12px;
+}
+.wps-pos-element-table tr td:last-child {
+	text-align: right;
+	width: 25%;
+}
+
+/**
+ *	Dashboard main actions button
+ */
+.wpspos-main-actions-buttons-container {
+	float: right;
+}
+
+/**
+ * Metaboxes common
+ */
+.wps-pos-element-metabox-selection input[type=text] {
+	padding: 12px 17px 13px 10px;
+	width: 92%;
+}
+.wps-pos-element-metabox-selection-customer input[type=text] {
+	padding-left: 50px;
+	width: 100%;
+	background: url( "../../../wpshop/templates/admin/medias/icones/icon_loupe.png" ) no-repeat scroll 10px center #fff;
+}
+
+/**
+ *	Customer metabox
+ */
+.wps-post-chozen-input {
+	width: 80%;
+}
+.wps-pos-element-table tr td:last-child .wps-bton-first-rounded i, .wps-pos-element-metabox-selection .wps-bton-first-rounded i {
+	margin: 0px;
+}
+#wps-pos-change-customer, .wpspos-continue-using-selected-customer {
+	padding: 4px 14px;
+}
+.wpspos-customer-list {
+	border-top: 1px solid #DDD;
+	margin: 10px 0 0 0;
+	padding: 10px 0 0 0;
+}
+.wpspos-customer-selected-container:after {
+	clear: both;
+	display: table;
+	content: "";
+}
+.wpspos-customer-selected-container div {
+	/* float: left;
+	width: 50%; */
+}
+tr.wps-pos-addon-customer-line {
+	cursor: pointer;
+}
+
+/**
+ *	Product metabox
+ */
+.wps-pos-element-metabox-selection:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+.wps-pos-element-selector {
+	width: 60%;
+	float: left;
+}
+.wps-pos-choose-product {
+	margin: 5px 10px;
+}
+.wps-pos-product-edition-link {
+	display: none;
+	text-decoration: none;
+}
+tr.wps-pos-addon-product:hover a.wps-pos-product-edition-link {
+	display: inline-block;
+}
+ul.wps-cart-item-variations {
+	margin: 2px 0 2px 20px;
+}
+tr.wps-pos-addon-product-line {
+	cursor: pointer;
+}
+
+
+/**
+ * Order metabox
+ */
+#wpspos-dashboard-order-metabox .wps-gridwrapper2-padded {
+	margin: 0 55px 0 0;
+}
+.wpspos-dashboard-order-summary_qty, .wpspos-dashboard-order-summary_unit_price {
+	width: 55px !important;
+	height: 30px !important;
+}
+.wps-cart-item-content {
+	width: 50%;
+}
+li.cart-item .wps-cart-item-content {
+	text-align: left;
+}
+
+/**
+ * Order finalization modal
+ */
+.wpspos-order-payment-method {
+	width: 100%;
+	margin: 0 auto;
+}
+.wpspos-order-payment-method li {
+	display: inline-block;
+	width: 30%;
+	text-align: center;
+	margin: 0 15px 5px 0;
+}
+.wpspos-order-payment-method li input[type=radio] {
+	/* display: none; */
+}
+.wpspos-order-payment-method li label {
+    background: none repeat scroll 0 0 #BDBDBD;
+    border: 1px solid #000000;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 30px 5px;
+    text-transform: uppercase;
+    width: 100%;
+	display: inline-block;
+}
+.wpspos-order-payment-method li label:hover {
+    background: none repeat scroll 0 0 #2e9acb;
+}
+.wpspos-order-payment-method li.wpspos-selected-payment-method label {
+    background: none repeat scroll 0 0 #2e9acb;
+}
+.wpspos-order-content-summary {
+	margin: 0 auto;
+	width: 40%;
+}
+.wpspos-order-content-summary li .wpspos-order-summary-title {
+	width: 65%;
+	display: inline-block;
+}
+.wpspos-order-content-summary li .wpspos-order-summary-content {
+	text-align: right;
+	font-weight: bold;
+	font-size: 20px;
+	display: inline-block;
+}
+.wpspos-order-cash-area {
+	position: absolute;
+	bottom: 15px;
+	width: 95%;
+}
+.wpspos-order-cash-area button {
+	margin: 0 0 0 10px;
+}
+.wpspos-payment-container {
+	position: absolute;
+	bottom: 70px;
+	width: 95%;
+	text-align: right;
+}
+.wpspos-order-received-amount {
+	width: 80px;
+	padding: 10px 15px;
+}
+#wps-pos-order-payment-summary {
+	width: 100%;
+}
+#wps-pos-order-payment-summary tr:first-child {
+	background-color: #DDD;
+}
+#wps-pos-order-payment-summary tr th, #wps-pos-order-payment-summary tr td {
+	padding: 0 10px;
+}
+
+.wps-pos-order-completion-button {
+	margin: 50px;
+}
+.wps-pos-order-completion-button a {
+	margin: 0 0 0 10px;
+}
+.wpspos-order-final-step-container #wpspos-back-cash  {
+	margin: 0 50px 0 !important;
+}
+#wpspos-back-cash  {
+	padding: 5px !important;
+	margin: 0 10px 0 !important;
+}
+.customer_info {
+	box-sizing: border-box;
+	float: left;
+	width: 30%;
+	display: inline-block;
+	margin: 0 1% 0 0;
+}
+.customer_address {
+	box-sizing: border-box;
+	width: 69%;
+	display: inline-block;
+	margin: 0;
+}
+.order_historic {
+	clear: both;
+}
+.order_historic .lnk_load_order {
+    float: left;
+    width: 150px;
+}
+.order_historic .price_order {
+	font-weight: bold;
+    float: left;
+    width: 90px;
+}
+.order_historic .date_order {
+}
+.order_historic .invoice_order {
+	margin: 0 0 0 15px;
+}
+.order_historic .invoice_order a {
+	display: inline-block;
+	text-align: center;
+	width: 55px;
+	margin: 0;
+	text-decoration: none;
+}
+.order_historic .toggle-historic-group {
+	display: none;
+}
+/* Bank deposit */
+#wpspos-bank-deposit-left-sortables {
+	float: left;
+	width: 69%;
+}
+#wpspos-bank-deposit-right-sortables {
+	float: right;
+	width: 30%;
+}
+#model_row, #model_histo_row {
+	display: none;
+}
+.inline {
+	display: inline-block;
+}
+.fullSize {
+	width: 100%;
+}
+.halfSize {
+	width: 48%;
+}
+.height-40p {
+	height: 40px;
+}
+.width-40p {
+	width: 40px;
+}
+.width-100p {
+	width: 100px;
+}
+.width-130p {
+	width: 130px;
+}
+.width-320p {
+	width: 320px;
+}
+.width-340p {
+	width: 340px;
+}
+.width-360p {
+	width: 360px;
+}
+.alignRight {
+    clear: right;
+    float: right;
+}
+.textRight {
+	text-align: right;
+}
+.clearFix {
+    overflow: auto;
+}
+.clearBoth {
+	clear: both;
+}
+.sortbydates {
+	width: calc(100% - 470px);
+}
+.historow {
+	width: calc(100% - 330px);
+}
+.searchInput {
+	width: calc(100% - 450px);
+}
+.bgGrey {
+	background: #F3F3F3;
+}
+.padd20 {
+	padding: 20px;
+}
+.paddLR20 {
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-top: 0.5%;
+	padding-bottom: 0.5%;
+}
+.alignCenter {
+	text-align: center;
+}
+.borderGrey {
+	border: 1px solid #E1E1E1;
+}
+.bold {
+	font-weight: bold;
+}
+.marginTop10p {
+	margin-top: 10px;
+}
+#wpspos-bank-deposit-metabox button.handlediv, #wpspos-bank-deposit-histo-metabox button.handlediv {
+	display: none;
+}
+#wpspos-bank-deposit-metabox h2.hndle, #wpspos-bank-deposit-histo-metabox h2.hndle {
+	cursor: auto;
+}
