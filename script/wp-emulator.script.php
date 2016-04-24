@@ -152,7 +152,7 @@
 	function plugin_dir_path($path)
 	{
 		echo "[+] Plugin path -> " . $path . PHP_EOL;
-		return trailingslashit( dirname( $file ) );
+		return trailingslashit( dirname( $path ) );
 	}
 	
 	function trailingslashit( $string ) 
