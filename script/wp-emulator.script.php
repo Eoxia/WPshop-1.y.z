@@ -278,5 +278,13 @@
 		}
 	}
 	
+	class eo_module_management
+	{
+		function __construct()
+		{
+			
+		}
+	}
+	
 	global $wpdb;
 	$wpdb = new WPDB(); 
