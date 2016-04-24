@@ -1,7 +1,8 @@
 before_install:
   - git clone https://github.com/WordPress/WordPress wordpress
   - cd wordpress/wp-content/plugins
-  - git clone --depth=50 --branch=master https://github.com/Eoxia/wpshop.git
+  - git clone --depth=50 --branch=master https://github.com/Eoxia/wpshop.git wpshop
+  - cd wpshop
 
 language: php
 php:
