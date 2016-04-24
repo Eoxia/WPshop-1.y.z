@@ -273,8 +273,12 @@
 			echo "[+] Requesting get charset collate -> " . $request . PHP_EOL;
 		}
 		
+		public $usermeta = "usermeta";
+		public $users = "user";
+		public $blogs = "blog";
 		public $prefix = "prefix";
 		public $posts = "post";
+		public $post = "postmeta";
 		public $terms = "term";
 		public $termmeta = "termmeta";
 		public $options = "option";
