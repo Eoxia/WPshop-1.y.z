@@ -2,7 +2,7 @@
 	define('ABSPATH', dirname(dirname(dirname(dirname(dirname(__FILE__))))) . DIRECTORY_SEPARATOR);
 	define('WP_PLUGIN_DIR', dirname(dirname(dirname(__FILE__))) );
 	define('WP_LANG_DIR', 'FR');
-	define(' WP_CONTENT_DIR', 'wp-content');
+	define('WP_CONTENT_DIR', 'wp-content');
 	
 	function __( $str )
 	{
@@ -273,15 +273,16 @@
 			echo "[+] Requesting get charset collate -> " . $request . PHP_EOL;
 		}
 		
-		public static $posts = "post";
-		public static $terms = "term";
-		public static $termmeta = "termmeta";
-		public static $options = "option";
-		public static $links = "link";
-		public static $comments = "comment";
-		public static $commentmeta = "commentmeta";
-		public static $term_relationships = "term_relationship";
-		public static $term_taxonomy = "term_taxonomy";
+		public $prefix = "prefix";
+		public $posts = "post";
+		public $terms = "term";
+		public $termmeta = "termmeta";
+		public $options = "option";
+		public $links = "link";
+		public $comments = "comment";
+		public $commentmeta = "commentmeta";
+		public $term_relationships = "term_relationship";
+		public $term_taxonomy = "term_taxonomy";
 		
     } 
 	
