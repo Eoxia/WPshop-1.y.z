@@ -151,7 +151,8 @@
 	
 	function plugin_dir_path($path)
 	{
-		echo "[+] Plugin path -> " . $path . PHP_EOL;	
+		echo "[+] Plugin path -> " . $path . PHP_EOL;
+		return WP_PLUGIN_DIR;
 	}
 	
 	function site_url()
