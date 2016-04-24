@@ -152,7 +152,17 @@
 	function plugin_dir_path($path)
 	{
 		echo "[+] Plugin path -> " . $path . PHP_EOL;
-		return WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . "wpshop" . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . module_management . DIRECTORY_SEPARATOR;
+		return trailingslashit( dirname( $file ) );
+	}
+	
+	function trailingslashit( $string ) 
+	{
+	    return untrailingslashit( $string ) . '/';
+	}
+	
+	function untrailingslashit( $string ) 
+	{
+	        return rtrim( $string, '/\\' );
 	}
 	
 	function site_url()
