@@ -1,7 +1,8 @@
 <?php 
 	define('ABSPATH', dirname(dirname(dirname(dirname(dirname(__FILE__))))) . DIRECTORY_SEPARATOR);
 	define('WP_PLUGIN_DIR', dirname(dirname(dirname(__FILE__))) );
-
+	define('WP_LANG_DIR', 'FR');
+	define(' WP_CONTENT_DIR', 'wp-content');
 	
 	function __( $str )
 	{
@@ -257,20 +258,31 @@
 	
 	class WPDB 
 	{     
-		function prepare( $request ) 
+		function prepare( $request = "" ) 
 		{ 
 			echo "[+] Preparing -> " . $request . PHP_EOL;
 		}
 		
-		static function get_var( $request ) 
+		public static function get_var( $request = "" ) 
 		{ 
 			echo "[+] Requesting get var -> " . $request . PHP_EOL;
 		}
 		
-		static function get_charset_collate( $request ) 
+		public static function get_charset_collate( $request = "" ) 
 		{ 
 			echo "[+] Requesting get charset collate -> " . $request . PHP_EOL;
 		}
+		
+		public static $posts = "post";
+		public static $terms = "term";
+		public static $termmeta = "termmeta";
+		public static $options = "option";
+		public static $links = "link";
+		public static $comments = "comment";
+		public static $commentmeta = "commentmeta";
+		public static $term_relationships = "term_relationship";
+		public static $term_taxonomy = "term_taxonomy";
+		
     } 
 	
 	class WP_Widget
