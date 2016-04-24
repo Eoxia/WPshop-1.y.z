@@ -1,6 +1,6 @@
 <?php 
 	define('ABSPATH', dirname(dirname(dirname(dirname(dirname(__FILE__))))) . DIRECTORY_SEPARATOR);
-	define('WP_PLUGIN_DIR', dirname(dirname(dirname(__FILE__))) );
+	define('WP_PLUGIN_DIR', dirname(dirname(__FILE__)) );
 
 	
 	function __( $str )
