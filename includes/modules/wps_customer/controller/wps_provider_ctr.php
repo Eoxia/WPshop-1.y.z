@@ -36,7 +36,7 @@ class wps_provider_ctr {
 			return;
 		}
 		if( isset( $_GET['post'] ) && $_GET['action'] == 'edit' ) {
-			$is_provider = $this->read( $_GET['post'] );
+			$is_provider = $this->read( sanitize_text_field($_GET['post']) );
 			if( isset( $is_provider ) ) {
 				wp_enqueue_script( 'wps_provider_products', WPS_ACCOUNT_URL . WPS_ACCOUNT_DIR . '/assets/backend/js/wps_provider_products.js' );
 			}

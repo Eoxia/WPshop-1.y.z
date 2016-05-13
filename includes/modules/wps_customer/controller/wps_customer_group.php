@@ -31,10 +31,10 @@ class wps_customer_group {
 
 						// On ajoute le role
 						$rights = $this->getRoleRights($_POST['group-parent']);
-						add_role($code, $_POST['group-name'], $rights);
+						add_role($code, sanitize_text_field($_POST['group-name']), $rights);
 
 						// On enregistre les metas du groupe
-						$this->setGroupMetas($code, $_POST['group-description'], $_POST['group-parent']);
+						$this->setGroupMetas($code, sanitize_text_field( $_POST['group-description'] ), sanitize_text_field( $_POST['group-parent'] ) );
 
 						// On affecte des utilisateurs au role
 						$this->affectUsersToGroup($code, $_POST['group-users']);
@@ -47,17 +47,17 @@ class wps_customer_group {
 				// EDITION
 				elseif (!empty($_POST['editrole']) && !empty($_GET['code'])) {
 
-					$code = $_GET['code'];
+					$code = sanitize_text_field( $_GET['code'] );
 
 					// Si le role existe
 					if (isset($roles[$code])) {
 
 						$current_role = $this->getRole($code);
 
-						$this->setNewRoleRights($code, $current_role['parent'], $_POST['group-parent']);
+						$this->setNewRoleRights($code, $current_role['parent'], sanitize_text_field( $_POST['group-parent'] ) );
 
 						// On enregistre les metas du groupe
-						$this->setGroupMetas($code, $_POST['group-description'], $_POST['group-parent']);
+						$this->setGroupMetas($code, sanitize_text_field( $_POST['group-description'] ) , sanitize_text_field( $_POST['group-parent'] ) );
 
 						// On affecte des utilisateurs au role
 						$this->unaffectUsersToGroup($code); // !important
@@ -228,21 +228,21 @@ class wps_customer_group {
 		ob_end_clean();
 		$wps_customer_mdl = new wps_customer_mdl();
 		// Si on re�oit une action
-		if (!empty($_GET['action'])) {
+		if (!empty(sanitize_text_field( $_GET['action']))) {
 
 			$readonly_name_field = '';
 
-			switch ($_GET['action']) {
+			switch (sanitize_text_field($_GET['action'])) {
 
 				case 'delete':
 
-					if (!empty($_GET['code'])) {
+					if (!empty(sanitize_text_field($_GET['code']))) {
 
 						$roles = get_option('wp_user_roles', array());
 
 						if (isset($roles[$_GET['code']]) && $_GET['code'] != 'customer' && $_GET['code'] != 'wpshop_customer') {
-							unset($roles[$_GET['code']]);
-							$this->unaffectUsersToGroup($_GET['code']);
+							unset($roles[sanitize_text_field($_GET['code']]));
+							$this->unaffectUsersToGroup(sanitize_text_field($_GET['code']));
 							update_option('wp_user_roles', $roles);
 						}
 					}
@@ -255,9 +255,9 @@ class wps_customer_group {
 
 					$readonly_name_field = 'readonly';
 
-					if (!empty($_GET['code'])) {
+					if (!empty(sanitize_text_field($_GET['code']))) {
 
-						$role = $this->getRole($_GET['code']);
+						$role = $this->getRole(sanitize_text_field($_GET['code']));
 
 						if (!empty($role)) {
 
@@ -272,7 +272,7 @@ class wps_customer_group {
 							$select_parent = '<option value="">--</option>';
 
 							foreach($roles as $code => $role) {
-								if ($code != $_GET['code']) {
+								if ($code != sanitize_text_field($_GET['code'])) {
 									$selected = $group_parent==$code ? 'selected' : '';
 									$select_parent .= '<option value="'.$code.'" '.$selected.'>'.$role['name'].'</option>';
 								}
@@ -285,7 +285,7 @@ class wps_customer_group {
 								foreach($users as $user) {
 									if ($user->ID != 1) {
 										$u = new WP_User($user->ID);
-										$selected = isset($u->roles[0]) && $u->roles[0]==$_GET['code'] ? 'selected' : '';
+										$selected = isset($u->roles[0]) && $u->roles[0]==sanitize_text_field($_GET['code']) ? 'selected' : '';
 										$select_users .= '<option value="'.$user->ID.'" '.$selected.'>'.$user->user_login.'</option>';
 									}
 								}

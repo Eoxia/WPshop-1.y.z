@@ -100,21 +100,22 @@ class wps_account_ctr {
 	}
 
 	/** LOG IN - AJAX - Action to connect **/
+	// @TODO : NONCE
 	function control_login_form_request() {
 		$result = '';
 		$status = false;
-		$origin = $_POST['wps-checking-origin'];
+		$origin = sanitize_text_field( $_POST['wps-checking-origin'] );
 		$page_account_id = wpshop_tools::get_page_id( get_option( 'wpshop_myaccount_page_id') );
 		if ( !empty($_POST['wps_login_user_login']) && !empty($_POST['wps_login_password']) ) {
 			$creds = array();
 			// Test if an user exist with this login
-			$user_checking = get_user_by( 'login', $_POST['wps_login_user_login']);
+			$user_checking = get_user_by( 'login', sanitize_text_field( $_POST['wps_login_user_login'] ) );
 			if( !empty($user_checking) ) {
 				$creds['user_login'] = sanitize_user($_POST['wps_login_user_login']);
 			}
 			else {
 				if ( is_email($_POST['wps_login_user_login']) ) {
-					$user_checking = get_user_by( 'email', $_POST['wps_login_user_login']);
+					$user_checking = get_user_by( 'email', sanitize_text_field( $_POST['wps_login_user_login'] ) );
 					$creds['user_login'] = $user_checking->user_login;
 				}
 			}
@@ -413,11 +414,11 @@ class wps_account_ctr {
 						$validate = $wpshop->validateForm($attribute_set_field['content'], $_POST['attribute'] );
 					}
 					if ( empty($wpshop->errors) ) {
-						$user_name = !empty($_POST['attribute']['varchar']['user_login']) ? $_POST['attribute']['varchar']['user_login'] : $_POST['attribute']['varchar']['user_email'];
-						$user_pass = ( !empty($_POST['attribute']['varchar']['user_pass']) && !empty($_POST['wps_signup_account_creation']) ) ? $_POST['attribute']['varchar']['user_pass'] : wp_generate_password( 12, false );
+						$user_name = !empty($_POST['attribute']['varchar']['user_login']) ? sanitize_text_field( $_POST['attribute']['varchar']['user_login'] ) : sanitize_email( $_POST['attribute']['varchar']['user_email'] );
+						$user_pass = ( !empty($_POST['attribute']['varchar']['user_pass']) && !empty($_POST['wps_signup_account_creation']) ) ? sanitize_text_field( $_POST['attribute']['varchar']['user_pass'] ) : wp_generate_password( 12, false );
 
 						if ( $user_id == 0  ) {
-							$user_id = wp_create_user($user_name, $user_pass, $_POST['attribute']['varchar']['user_email']);
+							$user_id = wp_create_user($user_name, $user_pass, sanitize_email( $_POST['attribute']['varchar']['user_email'] ) );
 							if ( !is_object( $user_id) ) {
 								$account_creation = true;
 								/** Update newsletter user preferences **/
@@ -440,7 +441,7 @@ class wps_account_ctr {
 							$user_info = array();
 							foreach( $_POST['attribute'] as $type => $attributes ) {
 								foreach( $attributes as $meta => $attribute ) {
-									$user_info[$meta] = $attribute;
+									$user_info[$meta] = sanitize_text_field( $attribute );
 								}
 							}
 							wps_customer_ctr::save_customer_synchronize( $customer_post_ID, $user_id, $user_info );
@@ -461,7 +462,7 @@ class wps_account_ctr {
 							$secure_cookie = is_ssl() ? true : false;
 							wp_set_auth_cookie($user_id, true, $secure_cookie);
 						}
-						$wps_message->wpshop_prepared_email($_POST['attribute']['varchar']['user_email'], 'WPSHOP_SIGNUP_MESSAGE', array('customer_first_name' => ( !empty($_POST['attribute']['varchar']['first_name']) ) ? $_POST['attribute']['varchar']['first_name'] : '', 'customer_last_name' => ( !empty($_POST['attribute']['varchar']['last_name']) ) ? $_POST['attribute']['varchar']['last_name'] : '', 'customer_user_email' => ( !empty($_POST['attribute']['varchar']['user_email']) ) ? $_POST['attribute']['varchar']['user_email'] : '') );
+						$wps_message->wpshop_prepared_email( sanitize_email($_POST['attribute']['varchar']['user_email']), 'WPSHOP_SIGNUP_MESSAGE', array('customer_first_name' => ( !empty($_POST['attribute']['varchar']['first_name']) ) ? sanitize_text_field( $_POST['attribute']['varchar']['first_name'] ) : '', 'customer_last_name' => ( !empty($_POST['attribute']['varchar']['last_name']) ) ? sanitize_text_field( $_POST['attribute']['varchar']['last_name'] ) : '', 'customer_user_email' => ( !empty($_POST['attribute']['varchar']['user_email']) ) ? sanitize_email( $_POST['attribute']['varchar']['user_email'] ) : '') );
 
 					}
 					else {

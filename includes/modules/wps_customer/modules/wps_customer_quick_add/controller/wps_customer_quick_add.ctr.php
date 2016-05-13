@@ -35,7 +35,7 @@ class wps_customer_quick_add {
 		$query = $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_author = %d", WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, get_current_user_id() );
 		$cid = $wpdb->get_var( $query );
 
-		$customer_attribute_set = !empty( $_GET ) && !empty( $_GET[ 'customer_set_id' ] ) ? $_GET[ 'customer_set_id' ] : null;
+		$customer_attribute_set = !empty( $_GET ) && !empty( $_GET[ 'customer_set_id' ] ) ? (int)$_GET[ 'customer_set_id' ] : null;
 
 		$customer_attributes = wpshop_attributes_set::getAttributeSetDetails( $customer_attribute_set, "'valid'");
 
@@ -56,7 +56,7 @@ class wps_customer_quick_add {
 		);
 
 		/**	Check if a attribute set id have been sended in order to check if therer are some check to do on sended input	*/
-		$customer_attributes = wpshop_attributes_set::getAttributeSetDetails( $_POST[ 'wps-customer-account-set-id' ], "'valid'");
+		$customer_attributes = wpshop_attributes_set::getAttributeSetDetails( (int)$_POST[ 'wps-customer-account-set-id' ], "'valid'");
 
 		/**	Read sended values for checking	*/
 		$email_founded = false;
@@ -85,9 +85,9 @@ class wps_customer_quick_add {
 		}
 
 		/**	Define customer email field value	*/
-		$customer_email = $_POST[ 'attribute' ][ $email_field_type ][ $email_field ];
-		$customer_last_name = !empty( $_POST ) && !empty( $_POST[ 'attribute' ] ) && !empty( $_POST[ 'attribute' ][ $last_name_field_type ] ) && !empty( $_POST[ 'attribute' ][ $last_name_field_type ][ $last_name_field ] ) ? $_POST[ 'attribute' ][ $last_name_field_type ][ $last_name_field ] : '';
-		$customer_first_name = !empty( $_POST ) && !empty( $_POST[ 'attribute' ] ) && !empty( $_POST[ 'attribute' ][ $first_name_field_type ] ) && !empty( $_POST[ 'attribute' ][ $first_name_field_type ][ $first_name_field ] ) ? $_POST[ 'attribute' ][ $first_name_field_type ][ $first_name_field ] : '';
+		$customer_email = sanitize_email( $_POST[ 'attribute' ][ $email_field_type ][ $email_field ] );
+		$customer_last_name = !empty( $_POST ) && !empty( $_POST[ 'attribute' ] ) && !empty( $_POST[ 'attribute' ][ $last_name_field_type ] ) && !empty( $_POST[ 'attribute' ][ $last_name_field_type ][ $last_name_field ] ) ? sanitize_text_field( $_POST[ 'attribute' ][ $last_name_field_type ][ $last_name_field ] ) : '';
+		$customer_first_name = !empty( $_POST ) && !empty( $_POST[ 'attribute' ] ) && !empty( $_POST[ 'attribute' ][ $first_name_field_type ] ) && !empty( $_POST[ 'attribute' ][ $first_name_field_type ][ $first_name_field ] ) ? sanitize_text_field( $_POST[ 'attribute' ][ $first_name_field_type ][ $first_name_field ] ) : '';
 
 		if ( $email_founded && is_email( $customer_email ) ) {
 			/**	Check if current e-mail address does not already exists	*/
@@ -119,11 +119,11 @@ class wps_customer_quick_add {
 					$response[ 'output' ] = __('Customer created succesfully', 'wpshop');
 
 					/** Create customer address from sended data **/
-					$_REQUEST['user']['customer_id'] = $user_id;
+					$_REQUEST['user']['customer_id'] = (int)$user_id;
 					$attribute_to_save = $_POST['attribute'];
 					unset( $_POST['attribute'] );
 					$_POST['attribute'][ $_POST[ 'wps-customer-account-set-id' ] ] = $attribute_to_save;
-					wps_address::save_address_infos( $_POST[ 'wps-customer-account-set-id' ] );
+					wps_address::save_address_infos( (int) $_POST[ 'wps-customer-account-set-id' ] );
 				}
 			}
 			else {

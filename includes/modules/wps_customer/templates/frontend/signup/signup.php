@@ -18,7 +18,7 @@
 			if( isset( $signup_field->code ) && $signup_field->code == 'is_provider' ) {
 				continue;
 			}
-			$value = ( !empty($signup_field->frontend_input) && $signup_field->frontend_input != 'password' && !empty($_POST) && !empty($_POST['attribute']) && !empty($_POST['attribute'][$signup_field->data_type]) && !empty( $_POST['attribute'][$signup_field->data_type][$signup_field->code]) ) ? $_POST['attribute'][$signup_field->data_type][$signup_field->code] : '';
+			$value = ( !empty($signup_field->frontend_input) && $signup_field->frontend_input != 'password' && !empty($_POST) && !empty($_POST['attribute']) && !empty($_POST['attribute'][$signup_field->data_type]) && !empty( $_POST['attribute'][$signup_field->data_type][$signup_field->code]) ) ? sanitize_text_field( $_POST['attribute'][$signup_field->data_type][$signup_field->code] ) : '';
 			$attribute_output_def = wpshop_attributes::get_attribute_field_definition( $signup_field, $value, array( 'from' => 'frontend', ) );
 		?>
 			<div class="wps-form-group">
