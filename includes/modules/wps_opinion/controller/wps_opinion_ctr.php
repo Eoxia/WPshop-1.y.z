@@ -1,6 +1,6 @@
 <?php if ( !defined( 'ABSPATH' ) ) exit;
 class wps_opinion_ctr {
-	
+
 	/** Define the main directory containing the template for the current plugin
 	 * @var string
 	 */
@@ -10,7 +10,7 @@ class wps_opinion_ctr {
 	 * @var string
 	 */
 	private $plugin_dirname = WPS_OPINION_DIR;
-	
+
 	function __construct() {
 		$this->template_dir = WPS_OPINION_PATH . WPS_OPINION_DIR . "/templates/";
 		add_action( 'admin_init', array( $this, 'declare_options' ) );
@@ -18,7 +18,7 @@ class wps_opinion_ctr {
 		add_shortcode( 'wps_star_rate_product', array( $this, 'display_star_rate_in_product') );
 		add_shortcode( 'wps_opinion_product', array( $this, 'display_opinion_in_product') );
 		add_action( 'wp_enqueue_scripts', array( $this, 'add_scripts' ) );
-		
+
 		/** Ajax actions **/
 		add_action( 'wp_ajax_wps-opinion-save-form', array( $this, 'wps_opinion_save_form') );
 		add_action( 'wp_ajax_nopriv_wps-opinion-save-form', array( $this, 'wps_opinion_save_form') );
@@ -26,7 +26,7 @@ class wps_opinion_ctr {
 		add_action( 'wp_ajax_wps-refresh-add-opinion-list', array( $this, 'wps_refresh_add_opinion_list') );
 		add_action( 'wp_ajax_wps_fill_opinion_modal', array( $this, 'wps_fill_opinion_modal') );
 	}
-	
+
 	/**
 	 * Add JS Files
 	 */
@@ -35,7 +35,7 @@ class wps_opinion_ctr {
 		wp_enqueue_script( 'jquery-form' );
 		wp_enqueue_script( 'wps-opinion-js', WPS_OPINION_URL . WPS_OPINION_DIR .'/assets/js/wps_opinion.js', false );
 	}
-	
+
 	/**
 	 * OPTIONS - Declare add-on configuration panel
 	 */
@@ -44,7 +44,7 @@ class wps_opinion_ctr {
 		register_setting('wpshop_options', 'wps_opinion', array( $this, 'validate_options'));
 		add_settings_field('wpshop_opinions_field', __( 'Activate possibility to add opinions on products', 'wpshop'), array( $this, 'addons_definition_fields'), 'wpshop_addons_options', 'wpshop_addons_opinions_options');
 	}
-	
+
 	/**
 	 * Validate opinion option
 	 * @param array $input
@@ -53,14 +53,14 @@ class wps_opinion_ctr {
 	function validate_options( $input ) {
 		return $input;
 	}
-	
+
 	function addons_definition_fields() {
 		$opinion_option = get_option( 'wps_opinion' );
 		echo '<input type="checkbox" name="wps_opinion[active]" ' . ( ( !empty($opinion_option) && !empty($opinion_option['active']) ) ? 'checked="ckecked"' : '' ) . '/>';
 	}
-	
+
 	/**
-	 * Display opinions for an element 
+	 * Display opinions for an element
 	 * @param integer $element_id
 	 */
 	function display_opinions( $element_id ) {
@@ -75,8 +75,8 @@ class wps_opinion_ctr {
 			}
 		}
 	}
-	
-	/**  
+
+	/**
 	 * Display Star rate
 	 * @param decimal $rate
 	 * @return string
@@ -107,8 +107,8 @@ class wps_opinion_ctr {
 		}
 		return $output;
 	}
-	
-	/** 
+
+	/**
 	 * Display Opinion interface in administration
 	 * @return string
 	 */
@@ -128,23 +128,23 @@ class wps_opinion_ctr {
 					$output .= ob_get_contents();
 					ob_end_clean();
 				}
-				
+
 				/** Posted opinions **/
 				$posted_opinions = $this->wps_customer_posted_opinions( $customer_id );
 				ob_start();
 				require( wpshop_tools::get_template_part( WPS_OPINION_DIR, $this->template_dir, "frontend", "posted_opinions") );
 				$output .= ob_get_contents();
 				ob_end_clean();
-			} 
+			}
 		}
 		return $output;
 	}
-	
+
 	/**
 	 * Return customer posted opinions
 	 * @param int $customer_id
 	 * @return array wps_opinion_model
-	 */	
+	 */
 	function wps_customer_posted_opinions( $customer_id ) {
 		$posted_opinions = array();
 		$opinion_option = get_option( 'wps_opinion' );
@@ -153,18 +153,18 @@ class wps_opinion_ctr {
 				$wps_opinion_mdl = new wps_opinion_model();
 				/** Customer opinions **/
 				$send_opinions = $wps_opinion_mdl->get_customer_opinions( $customer_id );
-				
+
 				foreach( $send_opinions as $send_opinion ) {
 					$rate = get_comment_meta( $send_opinion->comment_ID, '_wps_customer_rate', true );
-					$data = array( 'id' => $send_opinion->comment_ID, 
-								   'opinion_post_ID' => $send_opinion->comment_post_ID, 
+					$data = array( 'id' => $send_opinion->comment_ID,
+								   'opinion_post_ID' => $send_opinion->comment_post_ID,
 							       'author_IP' => $send_opinion->comment_author_IP,
 							       'author' => $send_opinion->comment_author,
 							       'author_email' => $send_opinion->comment_author_email,
 							       'opinion_content' => $send_opinion->comment_content,
 							       'opinion_date' => $send_opinion->comment_date,
 							       'author_id' => $send_opinion->user_id,
-							       'opinion_approved' => $send_opinion->comment_approved, 
+							       'opinion_approved' => $send_opinion->comment_approved,
 								   'opinion_rate' => $rate
 							);
 				 	$posted_opinions[] = new wps_opinion_model( $data );
@@ -194,7 +194,7 @@ class wps_opinion_ctr {
 		}
 		return $output;
 	}
-	
+
 	/**
 	 * Calcul star rate average
 	 * @param array $comments_for_product
@@ -209,12 +209,12 @@ class wps_opinion_ctr {
 					$i++;
 				}
 			}
-			
+
 			$rate_average = ( !empty($i) ) ? number_format( ( $r / $i ), 1, '.', '' ) : 0;
 		}
 		return $rate_average;
 	}
-	
+
 	function display_opinion_in_product( $args ) {
 		$output = '';
 		$opinion_option = get_option( 'wps_opinion' );
@@ -222,7 +222,7 @@ class wps_opinion_ctr {
 			if( !empty($args) && !empty($args['pid']) ) {
 				$wps_opinion_mdl = new wps_opinion_model();
 				$comments_for_product = $wps_opinion_mdl->get_opinions_for_product( $args['pid'], 'approve' );
-				
+
 				if( !empty($comments_for_product) ) {
 					ob_start();
 					require( wpshop_tools::get_template_part( WPS_OPINION_DIR, $this->template_dir, "frontend", "opinion_in_product") );
@@ -236,7 +236,7 @@ class wps_opinion_ctr {
 		}
 		return $output;
 	}
-	
+
 	function wps_update_opinion_star_rate() {
 		$status = false;
 		$output = '';
@@ -247,7 +247,7 @@ class wps_opinion_ctr {
 		echo json_encode( array( 'status' => $status, 'response' => $output) );
 		wp_die();
 	}
-	
+
 	/**
 	 * AJAX - Save opinions
 	 */
@@ -267,16 +267,16 @@ class wps_opinion_ctr {
 		}
 		if( !empty($user_id) && !$comment_exist ) {
 			$user_data = get_userdata( $user_id );
-			$data = array( 'opinion_post_ID' => intval($_POST['wps-opinion-product-id']), 
-						   'author_IP' => $_SERVER['REMOTE_ADDR'], 
+			$data = array( 'opinion_post_ID' => intval($_POST['wps-opinion-product-id']),
+						   'author_IP' => $_SERVER['REMOTE_ADDR'],
 						   'author' => get_user_meta( $user_id, 'first_name', true ).' '.get_user_meta( $user_id, 'last_name', true),
 						   'author_email' => ( !empty( $user_data->user_email) ) ? $user_data->user_email : '',
-						   'opinion_content' => strip_tags( $_POST['wps-opinion-comment'] ),
+						   'opinion_content' => strip_tags( sanitize_text_field ( $_POST['wps-opinion-comment'] ) ),
 						   'opinion_date' => current_time( 'mysql', 0 ),
-						   'author_id' => $user_id, 
+						   'author_id' => $user_id,
 						   'opinion_rate' => intval( $_POST['wps-opinion-rate'] )
 					);
-			
+
 			$wps_opinion_mdl->Create( $data );
 			$wps_opinion_mdl->Save();
 			$status = true;
@@ -288,7 +288,7 @@ class wps_opinion_ctr {
 		echo json_encode( array( 'status' => $status, 'response' => $response) );
 		wp_die();
 	}
-	
+
 	/**
 	 * AJAX - Refresh Opinion list
 	 */
@@ -298,7 +298,7 @@ class wps_opinion_ctr {
 		echo json_encode( array('status' => $status, 'response' => $response ) );
 		wp_die();
 	}
-	
+
 	/**
 	 * AJAX - Fill the opinion modal
 	 */
@@ -313,5 +313,5 @@ class wps_opinion_ctr {
 		echo json_encode( array( 'status' => $status, 'title' => $title, 'content' => $content ) );
 		wp_die();
 	}
-	
+
 }
