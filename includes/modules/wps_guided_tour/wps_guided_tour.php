@@ -1,13 +1,4 @@
 <?php if ( !defined( 'ABSPATH' ) ) exit;
-/*
- * Plugin Name: WPS Guided tour
- * Description: Create your guided tour / Créer votre visite guidée
- * Version: 1.0
- * Author: Eoxia dev team <dev@eoxia.com>
- * Author URI: http://www.eoxia.com/
- * License: GPL2
- */
-
 /**
  * Bootstrap file for plugin. Do main includes and create new instance for plugin components
  *

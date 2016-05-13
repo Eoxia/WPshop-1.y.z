@@ -55,9 +55,9 @@ class wpsBubble_ctr {
 
 		$args = array(
 			'labels'             	=> $labels,
-			'public'             	=> true,
+			'public'             	=> false,
 			'publicly_queryable' 	=> true,
-			'show_ui'            	=> true,
+			'show_ui'            	=> false,
 			'show_in_menu'       	=> false,
 			'query_var'         	=> true,
 			'rewrite'            	=> array( 'slug' => $this->post_type ),
@@ -68,7 +68,7 @@ class wpsBubble_ctr {
 			'menu_position'      	=> null,
 			'menu_icon'				=> 'dashicons-format-status',
 			'supports'          	=> array( 'title', 'editor' )
-			
+
 		);
 
 		register_post_type( $this->post_type, $args );
@@ -101,8 +101,8 @@ class wpsBubble_ctr {
 		$tmp_array_urls = array();
 		if(!empty($_POST['meta']['urls'])) {
 			for($i = 0; $i < count($_POST['meta']['urls']['paramater']); $i++) {
-				$tmp_array_urls[$i]['paramater'] = 	$_POST['meta']['urls']['paramater'][$i];
-				$tmp_array_urls[$i]['value'] = 			(!empty($_POST['meta']['urls']['value']) && !empty($_POST['meta']['urls']['value'][$i])) ? $_POST['meta']['urls']['value'][$i] : "";
+				$tmp_array_urls[$i]['paramater'] = 	sanitize_text_field( $_POST['meta']['urls']['paramater'][$i] );
+				$tmp_array_urls[$i]['value'] = 			(!empty($_POST['meta']['urls']['value']) && !empty($_POST['meta']['urls']['value'][$i])) ? sanitize_text_field( $_POST['meta']['urls']['value'][$i] ) : "";
 			}
 			$_POST['meta']['urls'] = array();
 			$_POST['meta']['urls'] = $tmp_array_urls;
@@ -252,7 +252,7 @@ class wpsBubble_ctr {
 	public function check_page_bubble($position) {
 		if(empty($position['page']))
 			return true;
-		
+
 		if("all" === $position['page'])
 			return true;
 
@@ -316,7 +316,7 @@ class wpsBubble_ctr {
 	* @param int post_ID - The bubble ID
 	*/
 	public function reset_bubble_all_user() {
-		$post = get_post($_POST['post_ID']);
+		$post = get_post((int)$_POST['post_ID']);
 		$post_name = $post->post_name;
 
 		$array_users = get_users();
@@ -341,7 +341,7 @@ class wpsBubble_ctr {
 	* @param string $_POST['pointer'] The sanitize name of the pointer
 	*/
 	public function dismiss_my_pointer() {
-		$pointer = $_POST['pointer'];
+		$pointer = sanitize_key( $_POST['pointer'] );
 		if ( $pointer != sanitize_key( $pointer ) )
 			wp_die(0);
 
@@ -371,7 +371,7 @@ class wpsBubble_ctr {
 	}
 
 	/**
-	 * Convertis un xml_object en array 
+	 * Convertis un xml_object en array
 	 * @param xml_object $xml_object
 	 * @param array $out
 	 * @return array
@@ -380,10 +380,10 @@ class wpsBubble_ctr {
 		foreach((array) $xml_object as $index => $node) {
 			$out[$index] = (is_object($node)) ? xml_2_array($node) : $node;
 		}
-		
+
 		return $out;
 	}
-	
+
 	/**
 	* For import the base XML when install or update wpshop
 	*/
@@ -426,7 +426,7 @@ class wpsBubble_ctr {
 			foreach ( $wp->postmeta as $meta ) {
 				$m = self::xml_2_array($meta->meta_value);
 				$m = maybe_unserialize($m[0]);
-				update_post_meta( $product_id, (string)$meta->meta_key, $m);			
+				update_post_meta( $product_id, (string)$meta->meta_key, $m);
 			}
 		}
 
