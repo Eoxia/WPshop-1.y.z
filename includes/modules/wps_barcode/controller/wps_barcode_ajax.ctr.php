@@ -5,17 +5,18 @@ class wps_barcode_ajax {
 		add_action( 'wp_ajax_barcode_img_product', array($this, 'imgProduct') );
 		add_action( 'wp_ajax_barcode_img_coupons', array($this, 'imgCoupons') );
 	}
-	
+
+	// @TODO : NONCE
 	public function imgProduct() {
 		global $meta, $barcode, $post_ID, $wpdb, $table_prefix, $gg;
 		require_once('wps_barcodegen.ctr.php');
-		
+
 		$barcode = new wps_barcodegen;
-		
-		$post_ID = $_REQUEST['postID'];
-		
+
+		$post_ID = (int)$_REQUEST['postID'];
+
 		$country = '000';
-		
+
 		/*Select value of barcode*/
 		$result = $wpdb->get_results(
 				'SELECT value FROM '.WPSHOP_DBT_ATTRIBUTE_VALUES_VARCHAR.
@@ -27,47 +28,47 @@ class wps_barcode_ajax {
 		$result = $wpdb->get_results('SELECT value FROM '.WPSHOP_DBT_ATTRIBUTE_VALUES_DECIMAL.
 				' WHERE attribute_id=(SELECT id FROM '.WPSHOP_DBT_ATTRIBUTE.
 				' WHERE code="'.WPSHOP_PRODUCT_PRICE_TTC.'") AND entity_id='.$post_ID, ARRAY_A);
-		
+
 		if ( !empty($result) && $result[0]['value'] >= 0) {
 			$price = $result[0]['value'];
-		
+
 			$post = get_post($post_ID, ARRAY_A);
 			$ref = substr($post['post_title'], 0, 10);
 		}
-		
+
 		$barcode = $this->generate_image($barcode, $meta, __('product', 'wps_barcode'), $price, $ref);
 		$array = array('img' => $barcode);
 		echo json_encode($array);
 		wp_die();
 	}
-	
+
 	public function imgCoupons() {
 		global $meta, $barcode, $post_ID, $wpdb, $table_prefix;
-		
-		$post_ID = $_REQUEST['postID'];
-	
+
+		$post_ID = (int)$_REQUEST['postID'];
+
 		$continue = false;
-	
+
 		require_once('wps_barcodegen.ctr.php');
-	
+
 		$barcode = new wps_barcodegen;
-	
+
 		$country = '000';
 		$result = get_post_meta($post_ID);
-	
+
 		if ( !empty($result) ) {
 			if ( empty($result['wpshop_coupon_barcode']) ) {
 				$conf = get_option('wps_barcode');
 				if ($conf['type'] === 'internal') {
 					$type = $conf['internal_coupons'];
-	
+
 					$query = $wpdb->get_results('SELECT post_date FROM '.
 							$table_prefix.'posts WHERE ID='.$post_ID, ARRAY_A);
-						
+
 					$pDate = new DateTime($query[0]['post_date']);
 					$date = $pDate->format('my');
 				}
-	
+
 				$len = strlen($post_ID);
 				$ref = '';
 				if ( $len < 5 ) {
@@ -83,12 +84,12 @@ class wps_barcode_ajax {
 			else {
 				$meta = $result['wpshop_coupon_barcode'][0];
 			}
-				
+
 			$query = $wpdb->get_results('SELECT post_title FROM '.
 					$table_prefix.'posts WHERE ID='.$post_ID, ARRAY_A);
-	
+
 			$post = get_post($post_ID, ARRAY_A);
-			
+
 			$barcode = $this->generate_image($barcode, $meta, __('coupon', 'wps_barcode'),
 				$result['wpshop_coupon_discount_value'][0], $query[0]['post_title'], $post_ID);
 			$array = array('img' => $barcode);
@@ -101,7 +102,7 @@ class wps_barcode_ajax {
 			wp_die();
 		}
 	}
-	
+
 	/**
 	 * Generate barcode image
 	 * @param object $barcode Instance of wps_barcodegen
@@ -243,23 +244,23 @@ class wps_barcode_ajax {
 				imagecolorallocate($im, 0, 0, 0), $font, $title);
 			imagettftext($im, $textSize, 0, ($x/2)+40, round(6*$px),
 				imagecolorallocate($im, 0, 0, 0), $font, $price);
-		
+
 			ob_start();
 			imagepng($im);
 			$img = ob_get_clean();
-				
+
 			return '<p><img src="data:image/png;base64,'.base64_encode($img).
 			'" id="barcode" width="160" height="90" /></p>'.
-				
+
 			'<p style="text-align: right"><button class="button '.
 					'button-primary button-large" type="button"'.
 					'id="print_barcode">'.
 					__('Print', 'wps_barcode').'</button></p>';
-		
+
 					/*wp_mkdir_p( WPS_BARCODE_UPLOAD );
-		
+
 					file_put_contents(WPS_BARCODE_UPLOAD.$meta.'.png', $img);*/
-		
+
 					/*Generate ODT File*/
 					/*try {
 						if( !class_exists('Odf') ) {
@@ -277,7 +278,7 @@ class wps_barcode_ajax {
 					'wps_barcode'), $type).'</p>';
 		}
 	}
-	
+
 	/**
 	 * Generate one bar for normal guard
 	 * @param resource $image Resource of barcode image generate with GD2 Lib
@@ -288,7 +289,7 @@ class wps_barcode_ajax {
 	private function imgNormalGuard(&$image, $pos, $size, $color) {
 		imagefilledrectangle($image, $pos, 180*0.25,$size, 180-10, $color );
 	}
-	
+
 	/**
 	 * Generate one bar for barcode
 	 * @param resource $image Resource of barcode image generate with GD2 Lib
