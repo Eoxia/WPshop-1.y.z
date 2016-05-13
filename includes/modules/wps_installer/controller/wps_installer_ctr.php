@@ -52,7 +52,7 @@ class wps_installer_ctr {
 
 		/**	Check the configuration state	*/
 		if ( isset( $_GET[ 'installation_state' ] ) && !empty( $_GET[ 'installation_state' ] ) && !empty( $wps_current_db_version ) && (empty( $wps_current_db_version[ 'installation_state' ] ) || ( $wps_current_db_version[ 'installation_state' ] != 'completed' ) ) ) {
-			$wps_current_db_version = $wps_installer_model->installer_state_saver( $_GET[ 'installation_state' ], $wps_current_db_version );
+			$wps_current_db_version = $wps_installer_model->installer_state_saver( sanitize_text_field( $_GET[ 'installation_state' ] ), $wps_current_db_version );
 		}
 
 		/**	Do verification for shop who are configured for being sale shop	*/

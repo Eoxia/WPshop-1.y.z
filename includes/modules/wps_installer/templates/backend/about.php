@@ -14,7 +14,7 @@
 
 <?php $about_sub_page = ''; ?>
 <?php if ( !empty( $_GET ) && !empty( $_GET[ 'sub-page' ] ) ) : ?>
-	<?php $about_sub_page = $_GET[ 'sub-page' ]; ?>
+	<?php $about_sub_page = sanitize_text_field( $_GET[ 'sub-page' ] ); ?>
 <?php else : ?>
 	<?php $about_sub_page = 'introduction'; ?>
 <?php endif; ?>

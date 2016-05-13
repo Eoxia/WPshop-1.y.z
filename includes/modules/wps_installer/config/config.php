@@ -8,11 +8,6 @@
  * @subpackage config
  */
 
-/** Check if the plugin version is defined. If not defined script will be stopped here	*/
-if ( !defined( 'WPS_INSTALLER_VERSION' ) ) {
-	die( __("You are not allowed to use this service.", 'wps_installer') );
-}
-
 /** Define librairies directory */
 DEFINE( 'WPSINSTALLER_LIBS_DIR', plugin_dir_path( __FILE__ ) . '/' . WPS_INSTALLER_DIR . '/');
 
