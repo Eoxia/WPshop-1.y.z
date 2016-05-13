@@ -70,8 +70,8 @@ class wps_quotation_backend_ctr {
 		$output = __('Error at product creation!', 'wpshop');
 		$new_product_id = -1;
 
-		$post_title = ( !empty($_POST['post_title']) ) ? $_POST['post_title'] : -1;
-		$post_content = ( !empty($_POST['post_content']) ) ? $_POST['post_content'] : '';
+		$post_title = ( !empty($_POST['post_title']) ) ? sanitize_text_field( $_POST['post_title'] ) : -1;
+		$post_content = ( !empty($_POST['post_content']) ) ? sanitize_text_field( $_POST['post_content'] ) : '';
 		$attributes = ( !empty($_POST['attribute']) ) ? $_POST['attribute'] : -1;
 
 		if( $post_title != -1 ) {
@@ -138,7 +138,8 @@ class wps_quotation_backend_ctr {
 			'message' => __( 'Activation code for quotation addon is invalid, please check it and try again.', 'wpshop' ),
 		);
 		$required_code = wpshop_tools::get_plugin_validation_code( WPS_QUOTATION_DIR, site_url() );
-		if ( $_POST[ 'code' ] === $required_code ) {
+		$code = sanitize_text_field( $_POST[ 'code' ] );
+		if ( $code === $required_code ) {
 			$this->action_to_do_to_activate();
 			$response = array(
 				'status' => true,
