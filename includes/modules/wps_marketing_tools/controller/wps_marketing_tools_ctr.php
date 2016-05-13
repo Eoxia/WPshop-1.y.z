@@ -25,12 +25,19 @@ class wps_marketing_tools_ctr {
 	 * OPTIONS - Declare options
 	 */
 	function declare_options () {
-		if((WPSHOP_DEFINED_SHOP_TYPE == 'sale') && !isset($_POST['wpshop_shop_type']) || (isset($_POST['wpshop_shop_type']) && ($_POST['wpshop_shop_type'] != 'presentation')) && !isset($_POST['old_wpshop_shop_type']) || (isset($_POST['old_wpshop_shop_type']) && ($_POST['old_wpshop_shop_type'] != 'presentation')) ){
-			register_setting('wpshop_options', 'wpshop_cart_option', array($this, 'wpshop_options_validate_free_shipping_cost_alert'));
-			add_settings_field('wpshop_free_shipping_cost_alert', __('Display a free shipping cost alert in the cart', 'wpshop'), array( $this, 'wpshop_free_shipping_cost_alert_field'), 'wpshop_cart_info', 'wpshop_cart_info');
-			// Low stock alert option
-			register_setting('wpshop_options', 'wpshop_low_stock_alert_options', array($this, 'wpshop_low_stock_alert_validator'));
-			add_settings_field('wpshop_display_low_stock', __('Display Low stock Alert message', 'wpshop'), array($this, 'wpshop_display_low_stock_alert_interface'), 'wpshop_display_option', 'wpshop_display_options_sections');
+		if ( WPSHOP_DEFINED_SHOP_TYPE == 'sale' ) {
+			$wpshop_shop_type = !empty( $_POST['wpshop_shop_type'] ) ? sanitize_text_field( $_POST['wpshop_shop_type'] ) : '';
+			$old_wpshop_shop_type = !empty( $_POST['old_wpshop_shop_type'] ) ? sanitize_text_field( $_POST['old_wpshop_shop_type'] ) : '';
+
+			if ( ( $wpshop_shop_type == '' || $wpshop_shop_type != 'presentation' )
+				&& ( $old_wpshop_shop_type == '' && $old_wpshop_shop_type != 'presentation' ) ) {
+					register_setting('wpshop_options', 'wpshop_cart_option', array($this, 'wpshop_options_validate_free_shipping_cost_alert'));
+					add_settings_field('wpshop_free_shipping_cost_alert', __('Display a free shipping cost alert in the cart', 'wpshop'), array( $this, 'wpshop_free_shipping_cost_alert_field'), 'wpshop_cart_info', 'wpshop_cart_info');
+					// Low stock alert option
+					register_setting('wpshop_options', 'wpshop_low_stock_alert_options', array($this, 'wpshop_low_stock_alert_validator'));
+					add_settings_field('wpshop_display_low_stock', __('Display Low stock Alert message', 'wpshop'), array($this, 'wpshop_display_low_stock_alert_interface'), 'wpshop_display_option', 'wpshop_display_options_sections');
+
+				}
 		}
 	}
 
@@ -92,7 +99,7 @@ class wps_marketing_tools_ctr {
 		$cart = ( !empty($_SESSION['cart']) && is_array($_SESSION['cart']) ) ? $_SESSION['cart'] : null;
 		$cart_option = get_option('wpshop_cart_option');
 		$price_piloting_option = get_option('wpshop_shop_price_piloting');
-		
+
 		// Get a shipping mode, in order : selected, else default, else first, else shipping_rules.
 		$shipping_modes = get_option( 'wps_shipping_mode' );
 		if( !empty($shipping_modes) && !empty($shipping_modes['modes']) ) {
@@ -106,7 +113,7 @@ class wps_marketing_tools_ctr {
 		} else {
 			$shipping_rules_option = get_option( 'wpshop_shipping_rules' );
 		}
-		
+
 		if ( !empty($shipping_rules_option) && !empty($shipping_rules_option['free_from']) && $shipping_rules_option['free_from'] > 0 )
 			$free_shipping_cost_limit = $shipping_rules_option['free_from'];
 		if ( !empty($cart_option) && !empty($cart_option['free_shipping_cost_alert']) ) {
