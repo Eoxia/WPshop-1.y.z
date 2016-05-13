@@ -1,13 +1,5 @@
 <?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
- * Plugin Name: WPShop dashboard
- * Description: Display wpshop dashboard
- * Version: 1.0
- * Author: Eoxia
- * Author URI: http://eoxia.com/
- */
-
-/**
  * Module bootstrap file
  * @author Development team <dev@eoxia.com>
  * @version 1.0

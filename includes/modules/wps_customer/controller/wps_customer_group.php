@@ -241,7 +241,7 @@ class wps_customer_group {
 						$roles = get_option('wp_user_roles', array());
 
 						if (isset($roles[$_GET['code']]) && $_GET['code'] != 'customer' && $_GET['code'] != 'wpshop_customer') {
-							unset($roles[sanitize_text_field($_GET['code']]));
+							unset($roles[sanitize_text_field($_GET['code'])]);
 							$this->unaffectUsersToGroup(sanitize_text_field($_GET['code']));
 							update_option('wp_user_roles', $roles);
 						}
