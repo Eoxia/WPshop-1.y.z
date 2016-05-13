@@ -62,7 +62,7 @@ class wps_media_manager_backend_ctr {
 	 */
 	function wp_ajax_display_pictures_in_backend() {
 		$status = true; $response = '';
-		$media_indicator = !empty($_POST['media_id']) ? $_POST['media_id'] : null;
+		$media_indicator = !empty($_POST['media_id']) ? (int)$_POST['media_id'] : null;
 		if( !empty($media_indicator) ) {
 			$media_id = explode( ',', $media_indicator );
 			if( !empty($media_id) ) {
@@ -76,9 +76,10 @@ class wps_media_manager_backend_ctr {
 		wp_die();
 	}
 
+	// @TODO: NONCE et vérifier product_media
 	function save_post_actions() {
 		if ( !empty($_POST['post_type']) && !empty($_POST['product_media_form']) && $_POST['product_media_form'] == 'post' && $_POST['post_type'] == WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT && !empty( $_POST['action'] ) && $_POST['action'] != 'autosave' ) {
-			update_post_meta( $_POST['post_ID'], '_wps_product_media', $_POST['product_media'] );
+			update_post_meta( (int)$_POST['post_ID'], '_wps_product_media', $_POST['product_media'] );
 		}
 	}
 
