@@ -9,14 +9,14 @@
 			<div>
 				<div class="wps-form_group">
 					<label><?php _e( 'Begin date', 'wpshop'); ?></label>
-					<div class="wps-form"><input type="text" id="wps_statistics_begin_date" name="begin_date" class="date" value="<?php echo ( ( !empty($_POST['begin_date']) )  ? $_POST['begin_date'] : date( 'Y-m-d', strtotime( '1 months ago') ) ); ?>"/></div>
+					<div class="wps-form"><input type="text" id="wps_statistics_begin_date" name="begin_date" class="date" value="<?php echo ( ( !empty($_POST['begin_date']) )  ? sanitize_text_field( $_POST['begin_date'] ) : date( 'Y-m-d', strtotime( '1 months ago') ) ); ?>"/></div>
 				</div>
 			</div>
 
 			<div>
 				<div class="wps-form_group">
 					<label><?php _e( 'End date', 'wpshop'); ?></label>
-					<div class="wps-form"><input type="text" id="wps_statistics_end_date" name="end_date" class="date" value="<?php echo ( ( !empty($_POST['end_date']) )  ? $_POST['end_date'] : date( 'Y-m-d') ); ?>"/></div>
+					<div class="wps-form"><input type="text" id="wps_statistics_end_date" name="end_date" class="date" value="<?php echo ( ( !empty($_POST['end_date']) )  ? sanitize_text_field( $_POST['end_date'] ) : date( 'Y-m-d') ); ?>"/></div>
 				</div>
 			</div>
 

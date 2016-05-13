@@ -19,7 +19,7 @@ class wps_statistics_ctr {
 		// Ajax Actions
 		add_action('wp_ajax_wps_reload_statistics', array( &$this, 'wps_reload_statistics') );
 		add_action('wp_ajax_wps_hourly_order_day', array( &$this, 'wps_hourly_order_day') );
-		
+
 		$this->wps_stats_mdl = new wps_statistics_mdl();
 	}
 
@@ -91,7 +91,7 @@ class wps_statistics_ctr {
 	 */
 	function wps_statistics_save_customer_infos() {
 		if ( !empty($_POST['action']) && $_POST['action'] != 'autosave' && !empty($_POST['post_type']) && $_POST['post_type'] == WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ) {
-			$customer_def = get_post( $_POST['post_ID'] );
+			$customer_def = get_post( (int)$_POST['post_ID'] );
 			if( isset( $_POST['wps_statistics_exclude_customer'] ) ) {
 				update_user_meta( $customer_def->post_author, 'wps_statistics_exclude_customer', $_POST['wps_statistics_exclude_customer'] );
 			}
@@ -216,8 +216,8 @@ class wps_statistics_ctr {
 	 */
 	function wps_hourly_order_day() {
 		$status = false; $response = '';
-		$day = ( !empty($_POST['day']) ) ? $_POST['day'] : null;
-		$response = $this->wps_statistics_orders_moment( array( 'choosen_day' => $day, 'return' => true, 'width' => $_POST['width'], 'height' => $_POST['height'] ) );
+		$day = ( !empty($_POST['day']) ) ? sanitize_text_field( $_POST['day'] ) : null;
+		$response = $this->wps_statistics_orders_moment( array( 'choosen_day' => $day, 'return' => true, 'width' => (int)$_POST['width'], 'height' => (int)$_POST['height'] ) );
 		$status = true;
 		echo json_encode( array( 'status' => $status, 'response' => $response ) );
 		wp_die();
