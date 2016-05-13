@@ -18,6 +18,7 @@ class wps_barcode {
 		$conf = get_option('wps_barcode');
 		
 		if ( empty($conf) ) {
+			$conf['generate_barcode'] = false;
 			$conf['type'] = 'internal';
 			$conf['internal_client'] = '040';
 			$conf['internal_provider'] = '041';

@@ -1,60 +1,19 @@
 <?php
 
-class wps_barcode_metabox {
+class wps_barcode_ajax {
 	public function __construct() {
-		add_action( 'add_meta_boxes', array($this, 'add_meta_box'), 10, 10 );
+		add_action( 'wp_ajax_barcode_img_product', array($this, 'imgProduct') );
+		add_action( 'wp_ajax_barcode_img_coupons', array($this, 'imgCoupons') );
 	}
-
-	/**
-	 * Adding metabox for wps_barcode
-	 */
-	public function add_meta_box() {
-		global $wpdb, $table_prefix;
-
-		$conf = get_option('wps_barcode');
-
-		$post = get_post( get_the_ID() );
-		if ( !empty($post) ) {
-			$query = $wpdb->prepare( "
-				SELECT *
-				FROM " . WPSHOP_DBT_ATTRIBUTE_VALUES_VARCHAR . "
-				WHERE entity_id = %d
-					AND attribute_id = (
-						SELECT id
-						FROM " . WPSHOP_DBT_ATTRIBUTE . "
-						WHERE code = %s
-					)" , $post->ID, 'barcode' );
-				$result = $wpdb->get_results( $query, ARRAY_A );
-
-				add_meta_box('wps_barcode_product', __('Barcode Manager', 'wps_barcode' ),
-				array( $this, 'meta_box_product' ), WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT,
-				'side','default');
-		}
-
-		if ($conf['type'] === 'internal') {
-			add_meta_box('wps_barcode_invoice_client', __('Barcode Manager', 'wps_barcode' ),
-			array( $this, 'meta_box_invoice_client' ), WPSHOP_NEWTYPE_IDENTIFIER_ORDER,
-			'side','default');
-
-			add_meta_box('wps_barcode_coupons', __('Barcode Manager', 'wps_barcode' ),
-			array( $this, 'meta_box_coupons' ), WPSHOP_NEWTYPE_IDENTIFIER_COUPON,
-			'side','default');
-		}
-	}
-
-	/**
-	 * Metabox for product page
-	 */
-	public function meta_box_product() {
-		global $meta, $barcode, $post_ID, $wpdb, $table_prefix, $ajax;
-		
+	
+	public function imgProduct() {
+		global $meta, $barcode, $post_ID, $wpdb, $table_prefix, $gg;
 		require_once('wps_barcodegen.ctr.php');
-
+		
 		$barcode = new wps_barcodegen;
 		
-		$ajaxurl = admin_url('admin-ajax.php');
-		$ajaxid = $post_ID;
-
+		$post_ID = $_REQUEST['postID'];
+		
 		$country = '000';
 		
 		/*Select value of barcode*/
@@ -68,147 +27,47 @@ class wps_barcode_metabox {
 		$result = $wpdb->get_results('SELECT value FROM '.WPSHOP_DBT_ATTRIBUTE_VALUES_DECIMAL.
 				' WHERE attribute_id=(SELECT id FROM '.WPSHOP_DBT_ATTRIBUTE.
 				' WHERE code="'.WPSHOP_PRODUCT_PRICE_TTC.'") AND entity_id='.$post_ID, ARRAY_A);
-
+		
 		if ( !empty($result) && $result[0]['value'] >= 0) {
 			$price = $result[0]['value'];
-
-			/*Get title of product*/
+		
 			$post = get_post($post_ID, ARRAY_A);
 			$ref = substr($post['post_title'], 0, 10);
-
-			chdir('..');
-			chdir( plugin_dir_path(__FILE__) );
-			chdir('..');
-			
-			$conf = get_option('wps_barcode');
-			
-			if ( isset($conf['generate_barcode']) && $conf['generate_barcode'] === 'on' ) {
-				echo $ajax->generate_image($barcode, $meta, __('product', 'wps_barcode'),
-						$price, $ref);
-			}
-			else {
-				echo '<p style="text-align: center"><button class="button '.
-					'button-primary button-large" type="button"'.
-					'id="display_barcode">'.
-					__('Display', 'wps_barcode').'</button></p>';
-			}
 		}
-		else {
-			$conf = get_option('wps_barcode');
-				
-			if ( $conf['generate_barcode'] === 'true' ) {
-				echo '<p>'.sprintf( __('None bardcode generated as you did create %s.',
-					'wps_barcode'), __('product', 'wps_barcode')).'</p>';
-			}
-		}
+		
+		$barcode = $this->generate_image($barcode, $meta, __('product', 'wps_barcode'), $price, $ref);
+		$array = array('img' => $barcode);
+		echo json_encode($array);
+		wp_die();
 	}
-
-	/**
-	 * Metabox for command and invoice client
-	 */
-	public function meta_box_invoice_client() {
+	
+	public function imgCoupons() {
 		global $meta, $barcode, $post_ID, $wpdb, $table_prefix;
-
+		
+		$post_ID = $_REQUEST['postID'];
+	
 		$continue = false;
-
+	
 		require_once('wps_barcodegen.ctr.php');
-
+	
 		$barcode = new wps_barcodegen;
-
+	
 		$country = '000';
 		$result = get_post_meta($post_ID);
-
-		if ( !empty($result) ) {
-			$order_postmeta = unserialize($result['_order_postmeta'][0]);
-
-			if ( !empty($order_postmeta['order_invoice_date']) ) {
-				$conf = get_option('wps_barcode');
-				if ($conf['type'] === 'internal') {
-					$type = $conf['internal_invoice_client'];
-
-					$order_date = isset($order_postmeta['order_invoice_date']) ?
-						$order_postmeta['order_invoice_date'] :
-						$order_postmeta['order_date'];
-					$pDate = new DateTime($order_date);
-					$date = $pDate->format('my');
-
-					if ( empty($order_postmeta['order_invoice_ref']) ) {
-						$continue = false;
-					}
-					else {
-						$continue = true;
-						$id = substr($order_postmeta['order_invoice_ref'], 2);
-					}
-				}
-				if ($continue === true) {
-					$code = $type.$date.$id;
-
-					if ( empty($result['_order_barcode']) ) {
-						$meta = $barcode->checksum($code);
-						add_post_meta($post_ID, '_order_barcode', $meta);
-					}
-					else {
-						$meta = $result['_order_barcode'];
-					}
-
-					chdir('..');
-					chdir( plugin_dir_path(__FILE__) );
-					chdir('..');
-					$order_meta = unserialize($result['_order_postmeta'][0]);
-					$title = ( !empty($order_meta['order_invoice_ref']) ) ? $order_meta['order_invoice_ref'] : $order_meta['order_key'];
-					$price = $order_meta['order_grand_total'];
-					
-					
-					if ( isset($conf['generate_barcode']) && $conf['generate_barcode'] === 'on' ) {
-						$this->generate_image($barcode, $meta[0], __('order client', 'wps_barcode'),
-							$price, $title );
-					}
-				}
-				else {
-					echo '<p>'.__('None bardcode generated as customer can not get his bill.',
-							'wps_barcode').'</p>';
-				}
-
-			}
-			else {
-				echo '<p>'.__('None bardcode generated as customer can not get his bill.',
-						'wps_barcode').'</p>';
-			}
-		}
-		else {
-			echo '<p>'.sprintf( __('None bardcode generated as you did create %s.',
-					'wps_barcode'), 'order client').'</p>';
-		}
-	}
-
-	/**
-	 * Metabox for coupons client
-	 */
-	public function meta_box_coupons() {
-		global $meta, $barcode, $post_ID, $wpdb, $table_prefix;
-
-		$continue = false;
-
-		require_once('wps_barcodegen.ctr.php');
-
-		$barcode = new wps_barcodegen;
-
-		$country = '000';
-		$result = get_post_meta($post_ID);
-
+	
 		if ( !empty($result) ) {
 			if ( empty($result['wpshop_coupon_barcode']) ) {
 				$conf = get_option('wps_barcode');
 				if ($conf['type'] === 'internal') {
 					$type = $conf['internal_coupons'];
-
+	
 					$query = $wpdb->get_results('SELECT post_date FROM '.
 							$table_prefix.'posts WHERE ID='.$post_ID, ARRAY_A);
-					
+						
 					$pDate = new DateTime($query[0]['post_date']);
 					$date = $pDate->format('my');
 				}
-
+	
 				$len = strlen($post_ID);
 				$ref = '';
 				if ( $len < 5 ) {
@@ -224,28 +83,25 @@ class wps_barcode_metabox {
 			else {
 				$meta = $result['wpshop_coupon_barcode'][0];
 			}
-			
+				
 			$query = $wpdb->get_results('SELECT post_title FROM '.
 					$table_prefix.'posts WHERE ID='.$post_ID, ARRAY_A);
-
+	
 			$post = get_post($post_ID, ARRAY_A);
-			if ( isset($conf['generate_barcode']) && $conf['generate_barcode'] === 'on' ) {
-				$ajax->generate_image($barcode, $meta, __('coupon', 'wps_barcode'),
-					$result['wpshop_coupon_discount_value'][0], $query[0]['post_title'], $post_ID);
-			}
-			else {
-				echo '<p style="text-align: center"><button class="button '.
-					'button-primary button-large" type="button"'.
-					'id="display_barcode">'.
-					__('Display', 'wps_barcode').'</button></p>';
-			}
+			
+			$barcode = $this->generate_image($barcode, $meta, __('coupon', 'wps_barcode'),
+				$result['wpshop_coupon_discount_value'][0], $query[0]['post_title'], $post_ID);
+			$array = array('img' => $barcode);
+			echo json_encode($array);
+			wp_die();
 		}
 		else {
 			echo '<p>'.__('None bardcode generated as coupon has not created.',
 					'wps_barcode').'</p>';
+			wp_die();
 		}
 	}
-
+	
 	/**
 	 * Generate barcode image
 	 * @param object $barcode Instance of wps_barcodegen
@@ -341,7 +197,7 @@ class wps_barcode_metabox {
 					$pos+($bar_size*5), imagecolorallocate($im, 0, 0, 0));
 
 			$textSize = 16;
-			$font = 'assets/fonts/arialbd.ttf';
+			$font = WPS_BARCODE_FONTS.'/arialbd.ttf';
 			imagettftext($im, $textSize, 0, 8, $y-$start-5,
 			imagecolorallocate($im, 0, 0, 0), $font, substr($meta, 0, 1));
 
@@ -387,45 +243,41 @@ class wps_barcode_metabox {
 				imagecolorallocate($im, 0, 0, 0), $font, $title);
 			imagettftext($im, $textSize, 0, ($x/2)+40, round(6*$px),
 				imagecolorallocate($im, 0, 0, 0), $font, $price);
-
+		
 			ob_start();
 			imagepng($im);
 			$img = ob_get_clean();
-			
-			echo '<p><img src="data:image/png;base64,'.base64_encode($img).
-				'" id="barcode" width="160" height="90" /></p>';
-			
-			echo '<p style="text-align: right"><button class="button '.
+				
+			return '<p><img src="data:image/png;base64,'.base64_encode($img).
+			'" id="barcode" width="160" height="90" /></p>'.
+				
+			'<p style="text-align: right"><button class="button '.
 					'button-primary button-large" type="button"'.
 					'id="print_barcode">'.
 					__('Print', 'wps_barcode').'</button></p>';
-
-			wp_mkdir_p( WPS_BARCODE_UPLOAD );
-
-			file_put_contents(WPS_BARCODE_UPLOAD.$meta.'.png', $img);
-
-			/*Generate ODT File*/
-			try {
-				if( !class_exists('Odf') ) {
-					require_once(WPS_BARCODE_PATH.'/librairies/odtphp/odf.php');
-				}
-				$odf = new Odf(WPS_BARCODE_PATH.'assets/medias/avery_a4_991_677.ott');
-				$odf->setImage('barcode', WPS_BARCODE_UPLOAD.$meta.'.png');
-				$odf->saveToDisk(WPS_BARCODE_UPLOAD.$meta.'.odt');
-			} catch (Exception $e) {
-				echo __('Generation problem', 'wps_barcode');
-			}
+		
+					/*wp_mkdir_p( WPS_BARCODE_UPLOAD );
+		
+					file_put_contents(WPS_BARCODE_UPLOAD.$meta.'.png', $img);*/
+		
+					/*Generate ODT File*/
+					/*try {
+						if( !class_exists('Odf') ) {
+							require_once(WPS_BARCODE_PATH.'/librairies/odtphp/odf.php');
+						}
+						$odf = new Odf(WPS_BARCODE_PATH.'assets/medias/avery_a4_991_677.ott');
+						$odf->setImage('barcode', WPS_BARCODE_UPLOAD.$meta.'.png');
+						$odf->saveToDisk(WPS_BARCODE_UPLOAD.$meta.'.odt');
+					} catch (Exception $e) {
+						echo __('Generation problem', 'wps_barcode');
+					}*/
 		}
 		else {
-			echo '<p>'.sprintf( __('None bardcode generated as you did create %s.',
+			return '<p>'.sprintf( __('None bardcode generated as you did create %s.',
 					'wps_barcode'), $type).'</p>';
 		}
 	}
 	
-	private function generateODT($img) {
-		
-	}
-
 	/**
 	 * Generate one bar for normal guard
 	 * @param resource $image Resource of barcode image generate with GD2 Lib
@@ -436,7 +288,7 @@ class wps_barcode_metabox {
 	private function imgNormalGuard(&$image, $pos, $size, $color) {
 		imagefilledrectangle($image, $pos, 180*0.25,$size, 180-10, $color );
 	}
-
+	
 	/**
 	 * Generate one bar for barcode
 	 * @param resource $image Resource of barcode image generate with GD2 Lib
@@ -447,7 +299,4 @@ class wps_barcode_metabox {
 	private function imgSymbole(&$image, $pos, $size, $color) {
 		imagefilledrectangle($image, $pos, 180*0.25,$size, 180-40, $color );
 	}
-
 }
-
-?>

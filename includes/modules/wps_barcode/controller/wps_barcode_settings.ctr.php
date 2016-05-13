@@ -44,6 +44,11 @@ class wps_barcode_settings {
 			array( $this, 'add_type_field'), 'wpshop_barcode_options',
 			'wpshop_barcode_type_options');
 		
+		add_settings_field('wpshop_barcode_display_field',
+			__('Automatic display barcode', 'wps_barcode'),
+			array($this, 'add_display_field'), 'wpshop_barcode_options',
+			'wpshop_barcode_type_options');
+		
 		
 			add_settings_section('wpshop_barcode_internal_ccode_options',
 			'<span class="dashicons dashicons-format-chat"></span>'.
@@ -116,8 +121,9 @@ class wps_barcode_settings {
 	 * @return array options validate
 	 */
 	public function validate_options($input) {
-		
 		/*Verifity if exists vars*/
+		$internal['generate_barcode'] = isset($input["generate_barcode"]) ? $input["generate_barcode"] : '';
+		
 		$internal["internal_client"] = isset($input["internal_client"]) ? $input["internal_client"] : '';
 		
 		$internal["internal_provider"] = isset($input["internal_provider"]) ? $input["internal_provider"] : '';
@@ -282,6 +288,14 @@ class wps_barcode_settings {
 		_e("Configure normal informations for automatically generate barcode.", 'wps_barcode');
 	}
 	
+	public function add_display_field() {
+		$field = get_option('wps_barcode');
+		
+		$checked = ( isset($field['generate_barcode']) && $field['generate_barcode'] === 'on') ? 'checked' : '';
+		
+		echo '<input type="checkbox" name="wps_barcode[generate_barcode]" id="barcode_display"'.$checked.'>';
+	}
+	
 	/**
 	 * Add type field in form
 	 */
@@ -312,7 +326,7 @@ class wps_barcode_settings {
 	 */
 	public function welcome_msg() {
 		//include(WPS_BARCODE_TEMPLATES_MAIN_DIR.'backend/welcome.tpl.php');
-		require( wpshop_tools::get_template_part(WPS_BARCODE_DIR,
+		require( wpshop_tools::get_template_part(WPS_BARCODE_PATH,
 			WPS_BARCODE_TEMPLATES_TPL_DIR, 'backend', 'welcome/welcome') );
 	}
 	

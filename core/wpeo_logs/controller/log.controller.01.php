@@ -553,19 +553,17 @@ if ( !class_exists( "wpeologs_ctr" ) ) {
 
 			$new_array_service = array();
 
-			if( !empty( $array_service['my_services'] ) ) {
-				if ( !empty( $array_service['my_services'] ) ) {
-				  foreach ( $array_service['my_services'] as $element ) {
-						$new_array_service[] = array(
-							"active" => $element["service_active"] == 1 ? true : false,
-							"name" => $element["service_name"],
-							"size" => $element["service_size"],
-							"format" => $element["service_size_format"],
-							"rotate" => $element["service_rotate"] == 1 ? true : false,
-							"number" => $element["service_file"],
-							"created_date" => current_time( "mysql" )
-						);
-				  }
+			if( !empty( $array_service['my_services'] ) && is_array( $array_service['my_services'] ) ) {
+			  foreach ( $array_service['my_services'] as $element ) {
+					$new_array_service[] = array(
+						"active" => $element["service_active"] == 1 ? true : false,
+						"name" => $element["service_name"],
+						"size" => $element["service_size"],
+						"format" => $element["service_size_format"],
+						"rotate" => $element["service_rotate"] == 1 ? true : false,
+						"number" => $element["service_file"],
+						"created_date" => current_time( "mysql" )
+					);
 				}
 
 				update_option( '_wpeo_log_settings', json_encode( $new_array_service ) );

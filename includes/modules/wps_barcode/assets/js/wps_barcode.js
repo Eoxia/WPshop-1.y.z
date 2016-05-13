@@ -5,19 +5,6 @@ jQuery( document ).on( 'click', '#print_barcode', function(e) {
 	jQuery("img#barcode").printElement();
 } );
 
-
-jQuery( document ).on('click', '#display_barcode', function(e) {
-	post_ID = jQuery('#post_ID')[0].value;
-	
-	if ( jQuery('#wps_barcode_coupons').length ) {
-		display_barcode(post_ID, 'barcode_img_coupons');
-	}
-	else if ( jQuery('#wps_barcode_product').length ) {
-		display_barcode(post_ID, 'barcode_img_product');
-	}
-	
-});
-
 /*
  * Ready fonction for listen all event
  */
@@ -31,25 +18,6 @@ jQuery(document).ready(function(){
 		barcode_options_display( jQuery("select#barcode_type").val() );
 	} );
 } );
-
-function display_barcode(post_ID, action) {
-	console.log(action);
-	jQuery.post(ajaxurl, {
-			'action': action,
-			'postID': post_ID
-		}, function(data){
-			jQuery('#display_barcode').remove();
-			
-			if ( action === 'barcode_img_product' ) {
-				jQuery('#wps_barcode_product .inside').append(data.img);
-			}
-			
-			else if (action === 'barcode_img_coupons') {
-				jQuery('#wps_barcode_coupons .inside').append(data.img);
-			}
-			
-	       }, 'json');
-};
 
 /*
  * Change display section

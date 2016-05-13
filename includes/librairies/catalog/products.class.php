@@ -343,7 +343,7 @@ class wpshop_products {
 
 		return $content;
 	}
-	
+
 	/**
 	 * Output the content for related product metabox
 	 * @param object $post The current edited post
@@ -351,7 +351,7 @@ class wpshop_products {
 	 */
 	public static function provider_products_meta_box_content( $post ) {
 		$content = $existing_selection = '';
-	
+
 		if( !empty($post->ID) ) {
 			$providers_id = get_post_meta($post->ID, WPSHOP_PRODUCT_PROVIDER, true);
 			if( !empty($providers_id) && !empty($providers_id[0]) ) {
@@ -360,12 +360,12 @@ class wpshop_products {
 				}
 			}
 		}
-	
+
 		$content = '<p>' . __('Type the begin of a provider last name/first name in the field below to add', 'wpshop') . '</p>
 			<select name="provider_list[]" id="provider_list" class="ajax_chosen_select_provider_products" multiple >' . $existing_selection . '</select>
 			<input type="hidden" id="wpshop_ajax_search_element_type_provider_products" name="wpshop_ajax_search_element_type" value="' . WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS . '" />
 			<input type="hidden" id="wpshop_nonce_ajax_search_provider_products" name="wpshop_nonce_ajax_search" value="' . wp_create_nonce("wpshop_element_search") . '" />';
-	
+
 		return $content;
 	}
 
@@ -532,7 +532,7 @@ class wpshop_products {
 							INNER JOIN {$wpdb->posts} AS P ON ( ( P.ID = ".$table_name.".entity_id ) AND ( P.post_status = 'publish' ) )
 							LEFT JOIN ".WPSHOP_DBT_ATTRIBUTE." AS ATT ON ATT.id = ".$table_name.".attribute_id
 							LEFT JOIN ".WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS." AS ATT_OPT ON ".$table_name.".value = ATT_OPT.id
-							WHERE ATT.code=%s AND ATT_OPT.value=%s", $attr_name, strtolower( __( $attr_value, 'wpshop' ) )
+							WHERE ATT.code=%s AND ( ATT_OPT.value=%s OR ATT_OPT.value=%s )", $attr_name, strtolower( __( $attr_value, 'wpshop' ) ), $attr_value
 						);
 						$data = $wpdb->get_results($query);
 					}
@@ -1328,7 +1328,7 @@ class wpshop_products {
 			}
 			else if ( $data_to_save['action'] != 'autosave') {
 				delete_post_meta($data_to_save['post_ID'], WPSHOP_PRODUCT_RELATED_PRODUCTS);
-			}			
+			}
 			/*	Update the provider list*/
 			if ( !empty($data_to_save['provider_list']) ) {
 				update_post_meta($data_to_save['post_ID'], WPSHOP_PRODUCT_PROVIDER, $data_to_save['provider_list']);
