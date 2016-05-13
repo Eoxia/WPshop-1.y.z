@@ -1,14 +1,5 @@
 <?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
- * Plugin Name: WP Shop Credit
- * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/
- * Description: WP Shop Credit
- * Version: 0.1
- * Author: Eoxia
- * Author URI: http://eoxia.com/
- */
-
-/**
  * WP Shop Credit bootstrap file
  * @author Jérôme ALLEGRE - Eoxia dev team <dev@eoxia.com>
  * @version 0.1
@@ -17,9 +8,6 @@
  *
  */
 
-if ( !defined( 'WPSHOP_VERSION' ) ) {
-	die( __("You are not allowed to use this service.", 'wpshop') );
-}
 if ( !class_exists('wps_credit') ) {
 	class wps_credit {
 		function __construct() {
@@ -33,7 +21,7 @@ if ( !class_exists('wps_credit') ) {
 			add_action( 'wp_ajax_wps_credit_make_credit', array( &$this, 'wps_credit_make_credit_interface'));
 			add_action( 'wp_ajax_wps_make_credit_action', array( &$this, 'wps_make_credit_action') );
 			add_action( 'wp_ajax_wps_credit_change_status', array( &$this, 'wps_credit_change_status') );
-			
+
 			// Filter
 			add_filter( 'wps_order_saving_admin_extra_action', array( $this, 'wps_credit_actions_on_order_save'), 10, 2 );
 		}
@@ -307,8 +295,8 @@ if ( !class_exists('wps_credit') ) {
 							foreach( $_POST['wps_credit_return'] as $item_key => $returned_item ) {
 	 							if ( !empty( $_POST['wps_credit_item_quantity'][$item_key] ) && $_POST['wps_credit_item_quantity'][$item_key] <= $order_postmeta['order_items'][$item_key]['item_qty'] ) {
 	 								if ( !empty( $_POST['wps_credit_item_price'][$item_key] ) && $_POST['wps_credit_item_price'][$item_key] <= ( ( !empty($price_piloting_option) && $price_piloting_option == 'HT' ) ? $order_postmeta['order_items'][$item_key]['item_pu_ht'] : $order_postmeta['order_items'][$item_key]['item_pu_ttc'] ) ){
-	 									$product_list_to_return[ $item_key ]['qty'] = $_POST['wps_credit_item_quantity'][$item_key];
-	 									$product_list_to_return[ $item_key ]['price'] = $_POST['wps_credit_item_price'][$item_key];
+	 									$product_list_to_return[ $item_key ]['qty'] = sanitize_key( $_POST['wps_credit_item_quantity'][$item_key] );
+	 									$product_list_to_return[ $item_key ]['price'] = sanitize_key( $_POST['wps_credit_item_price'][$item_key] );
 	 								}
 	 								else {
 	 									$result = __( 'You try to return a product more expensive than what was purchased', 'wpshop' );
@@ -328,10 +316,10 @@ if ( !class_exists('wps_credit') ) {
 								/** Check restock Item **/
 								$products_list_to_restock = array();
 								if ( !empty($_POST['wps_credit_restock']) ) {
-									$products_list_to_restock = $_POST['wps_credit_restock'];
+									$products_list_to_restock = sanitize_text_field( $_POST['wps_credit_restock'] );
 								}
-								$credit_status = ( !empty($_POST['wps_credit_status']) ) ? $_POST['wps_credit_status'] : '';
-								$add_credit_value = ( !empty($_POST['wps_add_credit_value']) ) ? $_POST['wps_add_credit_value'] : '';
+								$credit_status = ( !empty($_POST['wps_credit_status']) ) ? sanitize_text_field( $_POST['wps_credit_status'] ) : '';
+								$add_credit_value = ( !empty($_POST['wps_add_credit_value']) ) ? sanitize_text_field( $_POST['wps_add_credit_value'] ) : '';
 								$status = self::create_an_credit( $order_id, $product_list_to_return, $credit_status, $add_credit_value, $products_list_to_restock );
 							}
 
@@ -552,7 +540,7 @@ if ( !class_exists('wps_credit') ) {
 			}
 			return $order_metadata;
 		}
-		
+
 	}
 }
 if ( class_exists('wps_credit') ) {
