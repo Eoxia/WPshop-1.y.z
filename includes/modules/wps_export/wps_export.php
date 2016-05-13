@@ -1,17 +1,11 @@
 <?php if ( !defined( 'ABSPATH' ) ) exit;
-/**
- Plugin Name: WPS Export
- Description: Manage Exports CSV
- Version: 1.0
- Author: Eoxia
- Author URI: http://eoxia.com/
- */
+
 /**
  * Bootstrap file
  * @author Development team <dev@eoxia.com>
  * @version 1.0
  */
- 
+
 DEFINE('WPS_EXPORT_DIR', basename(dirname(__FILE__)) );
 DEFINE('WPS_EXPORT_PATH', str_replace( "\\", "/", str_replace( WPS_EXPORT_DIR, "", dirname( __FILE__ ) ) ) );
 DEFINE('WPS_EXPORT_URL', str_replace( str_replace( "\\", "/", ABSPATH), site_url() . '/', WPS_EXPORT_PATH ) );
