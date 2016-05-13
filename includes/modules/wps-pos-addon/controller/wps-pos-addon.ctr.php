@@ -31,7 +31,7 @@ class wps_pos_addon {
 		} elseif( $_GET['tab'] == 'bank_deposit' ) {
 			$this->wps_pos_addon_bank_deposit = new wps_pos_addon_bank_deposit();
 			$this->wps_pos_addon_bank_deposit_histo = new wps_pos_addon_bank_deposit_histo();
-			
+
 			/** AJAX Bank Deposit **/
 			add_action( 'wp_ajax_save_historic_query', array( $this->wps_pos_addon_bank_deposit_histo, 'save_historic_ajax' ) );
 		}
@@ -51,7 +51,7 @@ class wps_pos_addon {
 		add_action( 'wp_ajax_wpspos_save_config_barcode_only', array( $this, 'ajax_save_config_barcode_only' ) );
 		add_action( 'wp_ajax_wpspos_state_is_quotation', array( $this, 'ajax_wpspos_state_is_quotation' ) );
 		add_action( 'wp_ajax_wpspos_state_is_receipt', array( $this, 'ajax_wpspos_state_is_receipt' ) );
-		
+
 	}
 
 	/**
@@ -138,22 +138,22 @@ class wps_pos_addon {
 	 */
 	function wps_pos_addon_session() {
 		@session_start();
-		
+
 		if ( !empty( $_GET ) && !empty( $_GET[ 'new_order' ] ) && ( 'yes' == $_GET[ 'new_order' ] ) ) {
 			unset( $_SESSION[ 'cart' ] );
 			unset( $_SESSION[ 'wps-pos-addon' ] );
 			delete_user_meta( get_current_user_id(), '_wpshop_persistent_cart' );
 			session_destroy();
-			
+
 			wp_safe_redirect( admin_url( 'admin.php?page=wps-pos' ) );
 		}
-		
+
 		if( empty( $_GET[ 'page' ] ) || ( 'wps-pos' != $_GET[ 'page' ] ) ) {
 			unset( $_SESSION[ 'wps-pos-addon' ] );
 		}
-		
+
 	}
-	
+
 	/**
 	 * Add or update options in DB
 	 */
@@ -170,7 +170,7 @@ class wps_pos_addon {
 			 * If want to treat options case by case */
 			/*
 			foreach( $options as $option ) {
-				
+
 			}
 			*/
 		}
@@ -227,7 +227,7 @@ class wps_pos_addon {
 		/* $customer_entity_id = wpshop_entities::get_entity_identifier_from_code( WPSHOP_NEWTYPE_IDENTIFIER_ADDRESS );
 		$query = $wpdb->prepare( 'SELECT id FROM ' .WPSHOP_DBT_ATTRIBUTE_SET. ' WHERE name = %s',  __('Shop Customer', 'wps-pos-i18n') );
 		$exist_attribute_group = $wpdb->get_var( $query ); */
-		
+
 		$exist_attribute_group = 'Nope';
 
 		if ( empty($exist_attribute_group) ) {
@@ -347,7 +347,7 @@ class wps_pos_addon {
 		if( is_dir( $module_folder ) ) {
 			$parent_folder_content = scandir( $module_folder );
 			foreach ( $parent_folder_content as $folder ) {
-				if ( $folder && substr( $folder, 0, 1) != '.' ) {
+				if ( $folder && substr( $folder, 0, 1) != '.' && is_dir( $folder ) ) {
 					$child_folder_content = scandir( $module_folder . $folder );
 					if ( file_exists( $module_folder . $folder . '/' . $folder . '.php') ) {
 						$f =  $module_folder . $folder . '/' . $folder . '.php';
@@ -427,7 +427,7 @@ class wps_pos_addon {
 	}
 
 	/**
-	 * AJAX - Save state of checkbox 
+	 * AJAX - Save state of checkbox
 	 */
 	function ajax_save_config_barcode_only() {
 		$option = 'wps_pos_options';
@@ -451,7 +451,7 @@ class wps_pos_addon {
 		}
 		wp_die();
 	}
-	
+
 	function ajax_wpspos_state_is_receipt() {
 		@session_start();
 		if( !empty( $_POST['value_checkbox'] ) && $_POST['value_checkbox'] == 'checked' ) {
@@ -461,7 +461,7 @@ class wps_pos_addon {
 		}
 		wp_die();
 	}
-	
+
 }
 
 ?>
