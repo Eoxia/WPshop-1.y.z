@@ -1,12 +1,4 @@
 <?php if ( !defined( 'ABSPATH' ) ) exit;
-/**
- * Plugin Name: WP-Shop-prices
- * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/
- * Description: WpShop Prices
- * Version: 0.1
- * Author: Eoxia
- * Author URI: http://eoxia.com/
- */
 
 /**
  * WPSHOP Prices bootstrap file
@@ -402,35 +394,35 @@ if ( !class_exists("wpshop_prices") ) {
 		}
 
 		/**
-		 * Récupère le taux de TVA du produit. Si il n'est pas trouvé retourne le taux 
-		 * par défaut. Si ces deux cas sont vides log et arrêtes le script. / Get the 
-		 * Product VAT rate. If it is not found return the default rate. If these 
+		 * Récupère le taux de TVA du produit. Si il n'est pas trouvé retourne le taux
+		 * par défaut. Si ces deux cas sont vides log et arrêtes le script. / Get the
+		 * Product VAT rate. If it is not found return the default rate. If these
 		 * two cases are empty, log and stop the script.
-		 * 
+		 *
 		 * @param integer $product_id L'id du produit / The product ID
 		 * @return stdClass ( value, id ) L'id de l'attribut et le taux de TVA /
 		 * Attribute ID and the VAT rate
 		 */
 		public static function get_rate_vat( $product_id ) {
 			global $wpdb;
-			
-			/** 
-			 * Cette requête récupère la valeur du taux de TVA / This query retrieves 
+
+			/**
+			 * Cette requête récupère la valeur du taux de TVA / This query retrieves
 			 * the value of the VAT rate
 			 */
 			$query = "
 					SELECT ATTR_VAL_OPTIONS.value, ATTR_VAL_OPTIONS.id
 					FROM " . WPSHOP_DBT_ATTRIBUTE . " as ATTR
 						INNER JOIN " . WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS . " as ATTR_VAL_OPTIONS ON ATTR_VAL_OPTIONS.attribute_id = ATTR.id
-						INNER JOIN " . WPSHOP_DBT_ATTRIBUTE_VALUES_INTEGER . " as ATTR_VAL_INT ON ( ATTR_VAL_INT.attribute_id = ATTR.id AND ATTR_VAL_OPTIONS.id=ATTR_VAL_INT.value )						
+						INNER JOIN " . WPSHOP_DBT_ATTRIBUTE_VALUES_INTEGER . " as ATTR_VAL_INT ON ( ATTR_VAL_INT.attribute_id = ATTR.id AND ATTR_VAL_OPTIONS.id=ATTR_VAL_INT.value )
 					WHERE ATTR.code=%s AND ATTR_VAL_INT.entity_id=%d";
-			
+
 			$request = $wpdb->prepare( $query, array( 'tx_tva',  $product_id ) );
 			$rate_vat = $wpdb->get_row( $request );
-									
-			/** 
-			 * Vérifie ensuite si elle est vide, si elle est vide met la valeur par 
-			 * défaut / Then checks if it is empty , if empty the value put the 
+
+			/**
+			 * Vérifie ensuite si elle est vide, si elle est vide met la valeur par
+			 * défaut / Then checks if it is empty , if empty the value put the
 			 * default value
 			 */
 			if( empty( $rate_vat ) ) {
@@ -438,20 +430,20 @@ if ( !class_exists("wpshop_prices") ) {
 					'object_id' 	=> $product_id,
 					'message' 		=> __( 'Use the default VAT rate', 'wpshop' ) ), 0
 				);
-				
+
 				$query = "
 						SELECT ATTR_VAL_OPTIONS.value, ATTR_VAL_OPTIONS.id
 						FROM " . WPSHOP_DBT_ATTRIBUTE . " as ATTR
 							INNER JOIN " . WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS . " as ATTR_VAL_OPTIONS ON ATTR_VAL_OPTIONS.attribute_id = ATTR.id
 						WHERE ATTR.code=%s AND ATTR_VAL_OPTIONS.id=ATTR.default_value";
-				
+
 				$request = $wpdb->prepare( $query, array( 'tx_tva' ) );
 				$rate_vat = $wpdb->get_row( $request );
 			}
-					
+
 			/**
 			 * Si c'est toujours vide, cela signifie qu'aucun taux de tva à été trouvé
-			 * dans ce cas la on utilise le log / If it is still empty , it means that no 
+			 * dans ce cas la on utilise le log / If it is still empty , it means that no
 			 * VAT rate found in this case the log is used
 			 */
 			if( empty( $rate_vat ) ) {
@@ -463,7 +455,7 @@ if ( !class_exists("wpshop_prices") ) {
 
 			return $rate_vat;
 		}
-		
+
 		/**
 		 * Check if isset Required attributes
 		 */
