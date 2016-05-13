@@ -1,11 +1,4 @@
 <?php if ( !defined( 'ABSPATH' ) ) exit;
-/**
- * Plugin Name: WPShop Rewrites
- * Description: Rewrites for WPShop
- * Version: 1.0
- * Author: Eoxia
- * Author URI: http://eoxia.com/
- */
 
 // Rewrite wpshop_categories
 $options = get_option( 'wpshop_catalog_categories_option', null );
