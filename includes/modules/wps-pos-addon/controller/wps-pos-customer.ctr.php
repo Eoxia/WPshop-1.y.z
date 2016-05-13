@@ -349,19 +349,19 @@ class wps_pos_addon_customer {
 		if ( false ) {
 			/**	Build the customer search	*/
 			$args = array(
-				'search'			=> "*" . $_POST[ 'term' ] . "*",
+				'search'			=> "*" . sanitize_text_field( $_POST[ 'term' ] ) . "*",
 				'search_columns'	=> array( 'user_login', 'user_email', 'user_nicename', ),
 
 				'meta_query'		=> array(
 					'relation'	=> 'OR',
 					array(
 						'key'		=> 'first_name',
-						'value'		=> $_POST[ 'term' ],
+						'value'		=> sanitize_text_field( $_POST[ 'term' ] ),
 						'compare'	=> 'LIKE',
 					),
 					array(
 						'key'		=> 'last_name',
-						'value'		=> $_POST[ 'term' ],
+						'value'		=> sanitize_text_field( $_POST[ 'term' ] ),
 						'compare'	=> 'LIKE',
 					),
 				),
@@ -413,7 +413,7 @@ class wps_pos_addon_customer {
 						AND UM.meta_value LIKE '%%%s%%'
 					)
 				GROUP BY U.ID
-			", array( $_POST[ 'term' ], $_POST[ 'term' ], $_POST[ 'term' ], $_POST[ 'term' ], $_POST[ 'term' ], ) );
+			", array( sanitize_text_field( $_POST[ 'term' ] ), sanitize_text_field( $_POST[ 'term' ] ), sanitize_text_field( $_POST[ 'term' ] ), sanitize_text_field( $_POST[ 'term' ] ), sanitize_text_field( $_POST[ 'term' ] ), ) );
 			$customer_search = $wpdb->get_results( $query );
 			if ( !empty( $customer_search ) ) {
 				foreach ( $customer_search as $customer ) {

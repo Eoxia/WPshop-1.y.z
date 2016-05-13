@@ -1,11 +1,4 @@
 <?php if ( !defined( 'ABSPATH' ) ) exit;
-/**
- * Plugin Name: WP-Shop - Ajout de produit rapide / Product quick creation
- * Version: 1.0
- * Description: Permet de créer des produits au travers d'une infterface d'ajout rapide / Allows to add a new product with quick interface
- * Author: Eoxia <dev@eoxia.com>
- * Author URI: http://www.eoxia.com
- */
 
 DEFINE( 'WPSPOSPDTQUICK_VERSION', 1.0 );
 DEFINE( 'WPSPOSPDTQUICK_DIR', basename( dirname( __FILE__ ) ) );

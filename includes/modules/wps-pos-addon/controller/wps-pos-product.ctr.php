@@ -178,7 +178,7 @@ class wps_pos_addon_product {
 	function ajax_pos_product_search() {
 		global $wpdb;
 
-		$term = !empty( $_POST ) && !empty( $_POST[ 'term' ] ) ? $_POST[ 'term' ] : null;
+		$term = !empty( $_POST ) && !empty( $_POST[ 'term' ] ) ? sanitize_text_field( $_POST[ 'term' ] ) : null;
 		$response = array(
 			'status' => false,
 			'action' => '',

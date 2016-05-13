@@ -66,12 +66,12 @@ class wps_pos_addon_order {
 			}
 			else  */
 			if( !empty( $_POST['order_id'] ) ) {
-				$order = get_post_meta( $_POST['order_id'], '_order_postmeta', true );
-				
+				$order = get_post_meta( (int)$_POST['order_id'], '_order_postmeta', true );
+
 				/**	Get current order content	*/
 				$cart_content = $order;
 				$order_items = $order['order_items'];
-				
+
 				/**	In case there are item into order, include the order content display	*/
 				require( wpshop_tools::get_template_part( WPSPOS_DIR, WPSPOS_TEMPLATES_MAIN_DIR, 'backend/order', 'order', 'content' ) );
 			} elseif ( !empty( $_SESSION['cart']['order_items'] ) ) {
@@ -111,7 +111,7 @@ class wps_pos_addon_order {
 		}
 		if( !empty( $cart_content['order_items'] ) ) {
 			$order_items = $cart_content['order_items'];
-			
+
 			/* if( !empty($_SESSION['wpspos_is_receipt']) || !empty($_SESSION['wpspos_is_quotation']) ) {
 				if( !empty($_SESSION['wpspos_is_quotation']) ) {
 					$payment_method = 'quotation';
@@ -123,7 +123,7 @@ class wps_pos_addon_order {
 				/**	In case there are item into order, include the order content display	*/
 				require( wpshop_tools::get_template_part( WPSPOS_DIR, WPSPOS_TEMPLATES_MAIN_DIR, 'backend/order', 'finalization' ) );
 			// }
-			
+
 		}
 		else {
 			$result = __( 'The order is currently empty', 'wps-pos-i18n' );

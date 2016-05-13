@@ -394,7 +394,7 @@ class wps_pos_addon {
 		);
 
 		$alphabet = unserialize( WPSPOS_ALPHABET_LETTERS );
-		$letter = !empty( $_POST['term'] ) && in_array( $_POST['term'], $alphabet )	? $_POST['term'] : null;
+		$letter = !empty( $_POST['term'] ) && in_array( $_POST['term'], $alphabet )	? sanitize_text_field( $_POST['term'] ) : null;
 		$element_type = !empty( $_POST['element_type'] ) ? wpshop_tools::varSanitizer( $_POST['element_type'] ) : 'customer';
 		$response[ 'element_type' ] = $element_type;
 
@@ -420,7 +420,7 @@ class wps_pos_addon {
 
 		}
 		else {
-			$response[ 'output' ] = sprintf( __( 'THe requested term (%s) to search is invalid. Please check your request and try again', 'wps-pos-i18n' ), $_POST['term'] );
+			$response[ 'output' ] = sprintf( __( 'THe requested term (%s) to search is invalid. Please check your request and try again', 'wps-pos-i18n' ), sanitize_text_field( $_POST['term'] ) );
 		}
 
 		wp_die( json_encode( $response ) );

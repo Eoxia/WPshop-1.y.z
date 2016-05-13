@@ -35,7 +35,7 @@ class wpspos_customer_quick_add {
 		$query = $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_author = %d", WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, get_current_user_id() );
 		$cid = $wpdb->get_var( $query );
 
-		$customer_attribute_set = !empty( $_GET ) && !empty( $_GET[ 'customer_set_id' ] ) ? $_GET[ 'customer_set_id' ] : null;
+		$customer_attribute_set = !empty( $_GET ) && !empty( $_GET[ 'customer_set_id' ] ) ? (int)$_GET[ 'customer_set_id' ] : null;
 
 		$customer_attributes = wpshop_attributes_set::getAttributeSetDetails( $customer_attribute_set, "'valid'");
 
@@ -56,7 +56,7 @@ class wpspos_customer_quick_add {
 		);
 
 		/**	Check if a attribute set id have been sended in order to check if therer are some check to do on sended input	*/
-		$customer_attributes = wpshop_attributes_set::getAttributeSetDetails( $_POST[ 'wps-customer-account-set-id' ], "'valid'");
+		$customer_attributes = wpshop_attributes_set::getAttributeSetDetails( (int)$_POST[ 'wps-customer-account-set-id' ], "'valid'");
 
 		/**	Read sended values for checking	*/
 		$email_founded = false;
@@ -89,11 +89,11 @@ class wpspos_customer_quick_add {
 				$response[ 'customer_id' ] = $quick_add_customer['integer']['ID'];
 
 				/** Create customer address from sended data **/
-				$_REQUEST['user']['customer_id'] = $quick_add_customer['integer']['ID'];
+				$_REQUEST['user']['customer_id'] = (int)$quick_add_customer['integer']['ID'];
 				$attribute_to_save = $_POST['attribute'];
 				unset( $_POST['attribute'] );
-				$_POST['attribute'][ $_POST[ 'wps-customer-account-set-id' ] ] = $attribute_to_save;
-				wps_address::save_address_infos( $_POST[ 'wps-customer-account-set-id' ] );
+				$_POST['attribute'][ (int)$_POST[ 'wps-customer-account-set-id' ] ] = $attribute_to_save;
+				wps_address::save_address_infos( (int)$_POST[ 'wps-customer-account-set-id' ] );
 				break;
 		}
 
