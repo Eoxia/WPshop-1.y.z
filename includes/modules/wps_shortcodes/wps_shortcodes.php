@@ -1,16 +1,4 @@
 <?php if ( !defined( 'ABSPATH' ) ) exit;
-/**
- * Plugin Name: WP Shop Shortcodes
- * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/
- * Description: WpShop Shortcodes
- * Version: 0.1
- * Author: Eoxia
- * Author URI: http://eoxia.com/
- */
-
-if ( !defined( 'WPSHOP_VERSION' ) ) {
-	die( __("You are not allowed to use this service.", 'wpshop') );
-}
 
 DEFINE( 'WPS_SHORTCODES_VERSION', '1.0.1' );
 DEFINE( 'WPS_SHORTCODES_DIR', basename(dirname(__FILE__)));
