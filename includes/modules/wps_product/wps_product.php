@@ -1,17 +1,4 @@
 <?php if ( !defined( 'ABSPATH' ) ) exit;
-/**
- * Plugin Name: WPShop Products
- * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/
- * Description: WpShop Products
- * Version: 0.1
- * Author: Eoxia
- * Author URI: http://eoxia.com/
- */
-
-
-if ( !defined( 'WPSHOP_VERSION' ) ) {
-	die( __("You are not allowed to use this service.", 'wpshop') );
-}
 
 DEFINE( 'WPS_PRODUCT_VERSION', '2.0' );
 DEFINE( 'WPS_PRODUCT_DIR', basename(dirname(__FILE__)));

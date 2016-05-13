@@ -72,7 +72,7 @@ class wps_product_mass_interface_ctr {
 	 * @return array
 	 */
 	function check_attribute_to_display_for_quick_add( $attribute_list, $quick_add_form_attributes = array() ) {
-		
+
 		if ( !empty( $attribute_list ) ) {
 			foreach( $attribute_list as $attributes_group ) {
 				foreach( $attributes_group as $attributes_sections ) {
@@ -276,8 +276,8 @@ class wps_product_mass_interface_ctr {
 				$data_to_save = array();
 				// Update post
 				$updated_post = wp_update_post( array( 'ID' => $product_to_save,
-						'post_title' => $_REQUEST['wps_mass_interface'][$product_to_save]['post_title'],
-						'post_content' => $_REQUEST['wps_mass_interface'][$product_to_save]['post_content'],
+						'post_title' => sanitize_text_field( $_REQUEST['wps_mass_interface'][$product_to_save]['post_title'] ),
+						'post_content' => sanitize_text_field( $_REQUEST['wps_mass_interface'][$product_to_save]['post_content'] ),
 						)
 				);
 				// Update attributes
@@ -286,8 +286,8 @@ class wps_product_mass_interface_ctr {
 					if( !empty($_REQUEST['wps_mass_interface'][$product_to_save]['picture']) ) {
 						$thumbnail_exist = get_post_meta( $updated_post, '_thumbnail_id', true );
 						if($_REQUEST['wps_mass_interface'][$product_to_save]['picture'] != 'deleted') {
-							wp_update_post( array('ID' => $_REQUEST['wps_mass_interface'][$product_to_save]['picture'], 'post_parent' => $updated_post) );
-							update_post_meta( $updated_post, '_thumbnail_id', $_REQUEST['wps_mass_interface'][$product_to_save]['picture'] );
+							wp_update_post( array('ID' => (int)$_REQUEST['wps_mass_interface'][$product_to_save]['picture'], 'post_parent' => $updated_post) );
+							update_post_meta( $updated_post, '_thumbnail_id', (int)$_REQUEST['wps_mass_interface'][$product_to_save]['picture'] );
 						}
 						elseif($_REQUEST['wps_mass_interface'][$product_to_save]['picture'] == 'deleted' && !empty($thumbnail_exist)) {
 							delete_post_meta( $updated_post, '_thumbnail_id' );
@@ -296,7 +296,7 @@ class wps_product_mass_interface_ctr {
 
 					// Update files datas
 					if( !empty($_REQUEST['wps_mass_interface'][$product_to_save]['files']) ) {
-						$files_data = explode( ',', $_REQUEST['wps_mass_interface'][$product_to_save]['files'] );
+						$files_data = explode( ',', sanitize_text_field( $_REQUEST['wps_mass_interface'][$product_to_save]['files'] ) );
 						if( !empty($files_data) && is_array($files_data) ) {
 							foreach( $files_data as $file_id ) {
 								if( !empty($file_id) ) {
@@ -308,7 +308,7 @@ class wps_product_mass_interface_ctr {
 
 					$data_to_save['post_ID'] = $data_to_save['product_id'] = intval( $product_to_save );
 					$data_to_save['wpshop_product_attribute'] = ( !empty($_REQUEST['wpshop_product_attribute'][ $product_to_save ]) ) ? $_REQUEST['wpshop_product_attribute'][ $product_to_save ] : array();
-					
+
 					if(empty($data_to_save['wpshop_product_attribute']['varchar']['barcode'])) {
 						// Get current barcode
 						$wps_product_mdl = new wps_product_mdl();
@@ -316,7 +316,7 @@ class wps_product_mass_interface_ctr {
 						$barcode_value = wpshop_attributes::wpshop_att_val_func(array('pid' => $data_to_save['post_ID'], 'attid' => $attid));
 						$data_to_save['wpshop_product_attribute']['varchar']['barcode'] = $barcode_value;
 					}
-					
+
 					$data_to_save['user_ID'] = get_current_user_id();
 					$data_to_save['action'] = 'editpost';
 

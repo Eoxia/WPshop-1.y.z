@@ -16,6 +16,7 @@ class wps_product_quick_add {
 
 	/**
 	 * Instanciation des différents composants pour le module / Main module components for quick produict creation module
+	 * @TODO : NONCE
 	 */
 	public function __construct() {
 		/**	Affiche un formulaire permettant de créer un produit / Display a form allowing to add a new product	*/
@@ -65,7 +66,7 @@ class wps_product_quick_add {
 		$post_content = ( !empty($_POST['post_content']) ) ? $_POST['post_content'] : '';
 		$attributes = ( !empty($_POST['attribute']) ) ? $_POST['attribute'] : -1;
 		$id_attribute_set = ( !empty($_POST['wps-product-attribute-set']) ) ? $_POST['wps-product-attribute-set'] : -1;
-		
+
 		$post_type = WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT;
 		$attribute_set_list = wpshop_attributes_set::get_attribute_set_list_for_entity( wpshop_entities::get_entity_identifier_from_code( 'wpshop_product' ) );
 		foreach( $attribute_set_list as $attribute_set ) {
