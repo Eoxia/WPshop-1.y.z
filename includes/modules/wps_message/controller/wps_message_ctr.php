@@ -598,7 +598,7 @@ class wps_message_ctr {
 		global $wpdb;
 		$meta_id = (int)$_GET['meta_id'];
 
-		$result = $wpdb->get_results($wpdb->prepare('SELECT meta_value FROM ' . $wpdb->postmeta . ' WHERE meta_id=%d', array(($meta_id));
+		$result = $wpdb->get_results($wpdb->prepare('SELECT meta_value FROM ' . $wpdb->postmeta . ' WHERE meta_id=%d', array(($meta_id))));
 		$result = unserialize($result[0]->meta_value);
 		$result = $result[0]['mess_message'];
 
