@@ -57,9 +57,16 @@ class wps_cart {
 	 * Declare Cart Options
 	 */
 	public static function declare_options () {
-		if((WPSHOP_DEFINED_SHOP_TYPE == 'sale') && !isset($_POST['wpshop_shop_type']) || (isset($_POST['wpshop_shop_type']) && ($_POST['wpshop_shop_type'] != 'presentation')) && !isset($_POST['old_wpshop_shop_type']) || (isset($_POST['old_wpshop_shop_type']) && ($_POST['old_wpshop_shop_type'] != 'presentation')) ){
-			register_setting('wpshop_options', 'wpshop_cart_option', array('wps_cart', 'wpshop_options_validate_cart_type'));
-			add_settings_field('wpshop_cart_type', __('Which type of cart do you want to display', 'wpshop'), array('wps_cart', 'wpshop_cart_type_field'), 'wpshop_cart_info', 'wpshop_cart_info');
+		if ( WPSHOP_DEFINED_SHOP_TYPE == 'sale' ) {
+			$wpshop_shop_type = !empty( $_POST['wpshop_shop_type'] ) ? sanitize_text_field( $_POST['wpshop_shop_type'] ) : '';
+			$old_wpshop_shop_type = !empty( $_POST['old_wpshop_shop_type'] ) ? sanitize_text_field( $_POST['old_wpshop_shop_type'] ) : '';
+
+			if ( ( $wpshop_shop_type == '' || $wpshop_shop_type != 'presentation' )
+				&& ( $old_wpshop_shop_type == '' && $old_wpshop_shop_type != 'presentation' ) ) {
+					/**	Add module option to wpshop general options	*/
+					register_setting('wpshop_options', 'wpshop_cart_option', array('wps_cart', 'wpshop_options_validate_cart_type'));
+					add_settings_field('wpshop_cart_type', __('Which type of cart do you want to display', 'wpshop'), array('wps_cart', 'wpshop_cart_type_field'), 'wpshop_cart_info', 'wpshop_cart_info');
+				}
 		}
 	}
 
@@ -891,7 +898,7 @@ class wps_cart {
 		$coupon = ( !empty($_POST['coupon_code']) ) ? wpshop_tools::varSanitizer( $_POST['coupon_code']) : null;
 		if( !empty($coupon) ) {
 			$wps_coupon_ctr = new wps_coupon_ctr();
-			$result = $wps_coupon_ctr->applyCoupon($_REQUEST['coupon_code']);
+			$result = $wps_coupon_ctr->applyCoupon($coupon);
 			if ($result['status']===true) {
 				$order = $this->calcul_cart_information(array());
 				$this->store_cart_in_session($order);

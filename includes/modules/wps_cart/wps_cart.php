@@ -1,12 +1,4 @@
 <?php if ( !defined( 'ABSPATH' ) ) exit;
-/**
- * Plugin Name: WPShop Cart
- * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/
- * Description: WpShop Cart Managment
- * Version: 0.1
- * Author: Eoxia
- * Author URI: http://eoxia.com/
- */
 
 /**
  * WpShop Cart bootstrap file
@@ -16,11 +8,6 @@
  * @subpackage modules
  *
  */
-
-
-if ( !defined( 'WPSHOP_VERSION' ) ) {
-	die( __("You are not allowed to use this service.", 'wpshop') );
-}
 
 /** Template Global vars **/
 DEFINE('WPS_CART_DIR', basename(dirname(__FILE__)));
@@ -34,5 +21,3 @@ include( plugin_dir_path( __FILE__ ).'controller/wps_cart_ctr.php' );
 
 // Init Controller
 $wps_cart = new wps_cart();
-
-
