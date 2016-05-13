@@ -1,12 +1,4 @@
 <?php if ( !defined( 'ABSPATH' ) ) exit;
-/**
- * Plugin Name: WP-Shop-cart_rules
- * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/
- * Description: WpShop Cart Rules
- * Version: 0.1
- * Author: Eoxia
- * Author URI: http://eoxia.com/
- */
 
 /**
  * Cart rules bootstrap file
@@ -89,10 +81,17 @@ if ( !class_exists("wpshop_cart_rules") ) {
 
 		/** Declare options for this module **/
 		function declare_options () {
-			if((WPSHOP_DEFINED_SHOP_TYPE == 'sale') && !isset($_POST['wpshop_shop_type']) || (isset($_POST['wpshop_shop_type']) && ($_POST['wpshop_shop_type'] != 'presentation')) && !isset($_POST['old_wpshop_shop_type']) || (isset($_POST['old_wpshop_shop_type']) && ($_POST['old_wpshop_shop_type'] != 'presentation'))){
-				add_settings_section('wpshop_cart_rules_option', '<span class="dashicons dashicons-cart"></span>'.__('Cart Rules', 'wpshop'), array(&$this, 'cart_rules_section_text'), 'wpshop_cart_rules_option');
-				register_setting('wpshop_options', 'wpshop_cart_rules_option', array(&$this, 'validate_cart_rules_options'));
-				add_settings_field('wpshop_cart_rules_option', __('Activate cart rules', 'wpshop'), array(&$this, 'wpshop_cart_rules_field'), 'wpshop_cart_rules_option', 'wpshop_cart_rules_option');
+			if ( WPSHOP_DEFINED_SHOP_TYPE == 'sale' ) {
+				$wpshop_shop_type = !empty( $_POST['wpshop_shop_type'] ) ? sanitize_text_field( $_POST['wpshop_shop_type'] ) : '';
+				$old_wpshop_shop_type = !empty( $_POST['old_wpshop_shop_type'] ) ? sanitize_text_field( $_POST['old_wpshop_shop_type'] ) : '';
+
+				if ( ( $wpshop_shop_type == '' || $wpshop_shop_type != 'presentation' )
+					&& ( $old_wpshop_shop_type == '' && $old_wpshop_shop_type != 'presentation' ) ) {
+						add_settings_section('wpshop_cart_rules_option', '<span class="dashicons dashicons-cart"></span>'.__('Cart Rules', 'wpshop'), array(&$this, 'cart_rules_section_text'), 'wpshop_cart_rules_option');
+						register_setting('wpshop_options', 'wpshop_cart_rules_option', array(&$this, 'validate_cart_rules_options'));
+						add_settings_field('wpshop_cart_rules_option', __('Activate cart rules', 'wpshop'), array(&$this, 'wpshop_cart_rules_field'), 'wpshop_cart_rules_option', 'wpshop_cart_rules_option');
+
+					}
 			}
 		}
 
@@ -385,18 +384,3 @@ if ( !class_exists("wpshop_cart_rules") ) {
 if ( class_exists("wpshop_cart_rules") ) {
 	$wpshop_prices = new wpshop_cart_rules();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
