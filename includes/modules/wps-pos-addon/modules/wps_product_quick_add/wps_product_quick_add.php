@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Plugin Name: WP-Shop - Ajout de produit rapide / Product quick creation
  * Version: 1.0

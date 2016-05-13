@@ -1,4 +1,5 @@
-<?php if( !empty($datadate) ) : 
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+if( !empty($datadate) ) : 
 krsort($datadate);
 $tmp_array = array();
 foreach( $datadate as $day_name => $day_data ) {

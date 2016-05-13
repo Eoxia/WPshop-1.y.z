@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <table class="table table-striped  wps-pos-element-table" >
 	<tr>
 		<th><?php _e('Customer infos', 'wps-pos-i18n'); ?></th>

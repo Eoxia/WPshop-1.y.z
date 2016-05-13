@@ -1,4 +1,5 @@
-<?php do_action( 'wpshop_account_custom_hook'); ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ do_action( 'wpshop_account_custom_hook'); ?>
 <div class="wps-gridwrapper">
 	<span class="wps-h3"><?php _e( 'Shipping method', 'wpshop'); ?></span>
 </div>

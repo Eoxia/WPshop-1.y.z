@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <label for="option_name"><span><?php _e("Option name", self::$name_i18n); ?></span>
   <input type="text" id="option_name" name="meta[conditions][option_name]" value="<?php echo !empty($meta['conditions']['option_name']) ? $meta['conditions']['option_name'] : ""; ?>" />
 </label>

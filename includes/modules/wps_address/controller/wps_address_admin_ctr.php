@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 class wps_address_admin {
 	function __construct() {
 		/**	Include the different javascript	*/

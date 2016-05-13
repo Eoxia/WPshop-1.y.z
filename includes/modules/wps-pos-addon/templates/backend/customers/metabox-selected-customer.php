@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wpspos-customer-selected" >
 	<?php if ( !empty( $customer_infos ) ) : ?>
 		<div class="customer_info wps-boxed">

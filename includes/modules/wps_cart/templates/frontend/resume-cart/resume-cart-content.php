@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <!-- <h3 class="wps-h3"><?php _e( 'Cart summary', 'wpshop' ); ?></h3> -->
 <ul class="wps-cart-resume-list">
 	<?php foreach( $cart_items as $item_id => $item ) :

@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <style type="text/css"> 
 table.page_header {
 	width : 100%;

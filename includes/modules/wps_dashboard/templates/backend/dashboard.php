@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wrap wpshopMainWrap" >
 	<div id="wpshopLoadingPicture" class="wpshopHide" ><img src="<?php echo WPSHOP_LOADING_ICON; ?>" alt="loading picture" class="wpshopPageMessage_Icon" /></div>
 	<div id="wpshopMessage" class="fade below-h2 wpshopPageMessage <?php echo ( !empty( $actionInformationMessage ) ? 'wpshopPageMessage_Updated' : ''); ?>" ><?php !empty( $actionInformationMessage ) ? _e( $actionInformationMessage, 'wpshop' ) : ''; ?></div>

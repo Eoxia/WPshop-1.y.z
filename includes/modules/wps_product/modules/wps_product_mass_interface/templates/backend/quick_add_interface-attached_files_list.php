@@ -1,4 +1,5 @@
-<?php if( !empty($files) ) : ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ if( !empty($files) ) : ?>
 <u><strong><?php _e( 'Uploaded files', 'wpshop' ); ?> :</strong></u>
 <ul>
 <?php foreach( $files as $file ) : ?>

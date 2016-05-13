@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 
 if(!empty($my_wishlist) && is_array($my_wishlist)):
 	?>

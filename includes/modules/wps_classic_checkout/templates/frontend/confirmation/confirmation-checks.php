@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 $company_infos = get_option( 'wpshop_company_info' );
 $amount = ( !empty($_SESSION['cart']['order_amount_to_pay_now']) ) ? wpshop_tools::formate_number( $_SESSION['cart']['order_amount_to_pay_now'] ) : 0;
 ?>

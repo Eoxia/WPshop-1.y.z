@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wps-boxed">
 	<?php echo $attributes_sections_tpl; ?>
 	<?php if( !$is_from_admin ) : ?>

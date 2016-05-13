@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="fullSize">
 	<div id="model_histo_row" class="fullSize marginTop10p">
 		<span class="width-100p inline"><?php _e( 'Number:', 'wps-pos-i18n' ); ?> %id%</span>

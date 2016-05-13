@@ -1,4 +1,5 @@
-<?php $order_private_comments = get_post_meta( $oid, '_order_private_comments', true); ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ $order_private_comments = get_post_meta( $oid, '_order_private_comments', true); ?>
 <?php if( !empty($order_private_comments) ) : ?>
 <?php $order_private_comments = array_reverse($order_private_comments); 
 ?>

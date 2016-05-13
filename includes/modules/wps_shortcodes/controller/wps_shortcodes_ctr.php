@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 
 class wps_shortcodes_ctr
 {

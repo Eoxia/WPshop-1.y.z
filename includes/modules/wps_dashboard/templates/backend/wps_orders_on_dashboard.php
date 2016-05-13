@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 if($orders) : 
 	$payment_status = unserialize( WPSHOP_ORDER_STATUS );
 ?>

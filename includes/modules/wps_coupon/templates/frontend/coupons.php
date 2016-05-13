@@ -1,4 +1,5 @@
-<?php if( !$is_from_admin ) : ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ if( !$is_from_admin ) : ?>
 <span class="wps-h5"><?php _e( 'My coupons', 'wpshop'); ?></span>
 <?php endif;  ?>
 

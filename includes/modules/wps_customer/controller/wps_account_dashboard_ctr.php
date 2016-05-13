@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 class wps_account_dashboard_ctr {
 	function __construct() {
 		add_shortcode( 'wps_account_dashboard', array( $this, 'display_account_dashboard') );

@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 class wps_barcode {
 	public function __construct() {
 		global $post_ID;

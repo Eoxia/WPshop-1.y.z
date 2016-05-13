@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <input type="checkbox" name="wpshop_low_stock_alert_options[active]" id="wpshop_low_stock_options_active" <?php echo $activate_low_stock_alert; ?> />
 <label for="wpshop_low_stock_options_active"><?php _e('Activate the low-stock alert display', 'wpshop'); ?></label>
 

@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <h3><?php _e( 'Order summary', 'wps-pos-i18n' ); ?></h3>
 <ul class="wpspos-order-content-summary" >
 	<li><span class="wpspos-order-summary-title"><?php _e( 'Number of product', 'wps-pos-i18n' ); ?></span><span class="wpspos-order-summary-content" ><?php echo count( $order_items ); ?></span></li>

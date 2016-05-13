@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Plugin Name: WP-Shop - Interface de caisse / Point Of Sale addon
  * Version: 2.0

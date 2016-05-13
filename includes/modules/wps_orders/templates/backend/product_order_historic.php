@@ -1,4 +1,5 @@
-<?php if( !empty($sales_informations) ): ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ if( !empty($sales_informations) ): ?>
 <div class="wps-table">
 	<div class="wps-table-header wps-table-row">
 		<div class="wps-table-cell"><?php _e( 'Date', 'wpshop'); ?></div>

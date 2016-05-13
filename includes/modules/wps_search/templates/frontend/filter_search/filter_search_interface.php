@@ -1,4 +1,5 @@
-
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wps-filters" id="wpshop_filter_search_container">
 <!-- 	<div class="wps-gridwrapper" >
 		<!-- <div class="wps-grid4x6" id="wpshop_filter_search_count_products"></div>

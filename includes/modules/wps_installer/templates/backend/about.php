@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wrap about-wrap wps-about-wrap">
 	<h1><?php _e( 'Welcome to WPShop', 'wpshop'); ?></h1>
 	<div class="about-text"><?php _e( 'Thanks for using WPShop as your online shop solution. We hope that you will enjoy the features we develop for you.', 'wpshop'); ?></div>

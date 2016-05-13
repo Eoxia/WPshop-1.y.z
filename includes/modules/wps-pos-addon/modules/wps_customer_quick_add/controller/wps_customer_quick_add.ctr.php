@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Fichier du controlleur principal du module de création de client rapide / Controller file for quick customer creation
  *

@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wps-checkout-wrapper">
 	<div class="wps-checkout-content">
 		<?php echo do_shortcode( '[wps_shipping_method]' ); ?>

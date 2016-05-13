@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wps-cart-cartouche">
 	<div class="wps-cart-message">
 		<?php if( $cart_type != 'admin-panel' ) : ?>

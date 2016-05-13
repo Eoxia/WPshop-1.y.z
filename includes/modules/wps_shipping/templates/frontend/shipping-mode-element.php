@@ -1,4 +1,5 @@
-<?php if( !empty( $shipping_mode['active'] ) ) : ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ if( !empty( $shipping_mode['active'] ) ) : ?>
 	<?php
 	$checked = $class = '';
 

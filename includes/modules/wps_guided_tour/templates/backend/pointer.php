@@ -1,4 +1,5 @@
-<?php if(!empty($this->array_bubble)): ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ if(!empty($this->array_bubble)): ?>
   <script type="text/javascript">
     /* <![CDATA[ */
     ( function($) {

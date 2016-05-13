@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 class wps_customer_group {
 	function __construct() {
 		add_action('admin_menu', array( $this, 'register_customer_groups_submenu' ) );

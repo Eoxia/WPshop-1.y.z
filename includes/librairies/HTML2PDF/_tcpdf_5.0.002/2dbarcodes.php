@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 //============================================================+
 // File name   : 2dbarcodes.php
 // Begin       : 2009-04-07

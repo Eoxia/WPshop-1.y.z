@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 class wps_customer_mdl {
 
 	function __construct() {

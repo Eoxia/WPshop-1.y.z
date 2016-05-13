@@ -1,4 +1,4 @@
-<?php 
+<?php if ( !defined( 'ABSPATH' ) ) exit; 
 /** Create a new product */
 __('Create a new product', $this->name_i18n);
 __('As a Wordpress page or article, you must:

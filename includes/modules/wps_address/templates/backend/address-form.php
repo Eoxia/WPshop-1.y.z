@@ -1,4 +1,4 @@
-<?php if ( empty($address_id) ) : ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit; if ( empty($address_id) ) : ?>
 <div class="wps-address-item-header wps-address-creation-header"><?php _e( 'New address', 'wpeo_geoloc' ); ?></div>
 <div class="wps-address-item-content">
 <?php endif; ?>

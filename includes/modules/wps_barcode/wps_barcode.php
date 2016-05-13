@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Plugin Name: WPSHOP Barcode
  * Version: 1.1

@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 $type='TrueTypeUnicode';
 $name='DejaVuSansCondensed';
 $desc=array('Ascent'=>928,'Descent'=>-236,'CapHeight'=>26,'Flags'=>96,'FontBBox'=>'[-918 -350 1513 1167]','ItalicAngle'=>-18.9,'StemV'=>70,'MissingWidth'=>540);

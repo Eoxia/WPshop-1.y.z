@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 class wps_pos_addon_bank_deposit_histo {
 	public $name_option = 'bank_deposit_historic';
 	public function __construct() {

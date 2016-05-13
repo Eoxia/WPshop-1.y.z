@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wps-customer-quick-add-alert-box wps-alert hidden" ></div>
 <form id="create_new_customer_pos_addon" action="<?php echo admin_url('admin-ajax.php'); ?>" method="post" >
 <?php

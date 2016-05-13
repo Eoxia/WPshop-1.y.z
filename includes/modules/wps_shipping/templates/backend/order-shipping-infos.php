@@ -1,4 +1,5 @@
-<?php if( !empty($shipping_method_name) ) : ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ if( !empty($shipping_method_name) ) : ?>
 	<div class="wps-alert-info"><strong><?php _e( 'Selected shipping method', 'wpshop'); ?></strong> : <?php echo $shipping_method_name; ?></div>
 <?php else : ?>
 	<div class="wps-alert-info"><?php _e( 'No selected shipping method', 'wpshop'); ?></div>

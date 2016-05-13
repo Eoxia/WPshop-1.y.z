@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Plugin Name: WPShop Statistics
  * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/

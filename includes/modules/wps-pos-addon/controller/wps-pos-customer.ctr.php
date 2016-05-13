@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Fichier du controlleur pour le module client du logiciel de caisse pour WP-Shop / Main controller file for customer into point of sale management plugin
  *

@@ -1,3 +1,4 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit; ?>
 <form id="wps_create_free_product" method="post" action="<?php echo admin_url('admin-ajax.php'); ?>">
 
 	<input type="hidden" name="action" value="wps_create_new_free_product">

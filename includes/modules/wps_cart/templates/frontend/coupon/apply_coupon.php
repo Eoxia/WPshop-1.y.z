@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <!--  <div class="wps-gridwrapper">-->
 <?php 
 $wps_coupon_ctr = new wps_coupon_ctr();

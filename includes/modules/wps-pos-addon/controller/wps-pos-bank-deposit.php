@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 class wps_pos_addon_bank_deposit {
 	public function __construct() {
 		/**	Call metaboxes	*/

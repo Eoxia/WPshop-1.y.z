@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wrap">
 	<h2><span class="dashicons dashicons-update" style="font-size : 30px; width : 30px; height : 30px"></span> <?php _e( 'Mass edit products interface', 'wpshop')?><button class="add-new-h2" id="wps-mass-interface-button-new-product"><i class="wps-icon-pencil"></i> <?php _e( 'Create a new product', 'wpshop'); ?></button></h2>
 

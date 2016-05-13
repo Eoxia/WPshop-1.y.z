@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div id="wps_renew_password_error_container_true"></div>
 <div class="wps-boxed" id="wps_password_renew">
 	<div id="wps_renew_password_error_container"></div>

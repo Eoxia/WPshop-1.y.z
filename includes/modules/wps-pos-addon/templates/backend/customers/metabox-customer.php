@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wpspos-customer wpspos-customer-selected-container" >
 <?php
 	/**	Vérification du choix d'un client pour la commande en cours / Check if there is a customer already selected for current order	*/

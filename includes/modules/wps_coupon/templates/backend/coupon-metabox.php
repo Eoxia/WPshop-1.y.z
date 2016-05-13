@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <table class="wpshop_coupon_definition_table" >
 	<tr class="wpshop_coupon_definition_table_code_coupon_line" >
 		<td class="wpshop_coupon_definition_table_label wpshop_coupon_definition_code_coupon_input_label" ><label for="coupon_code" ><?php _e('Coupon code','wpshop'); ?></label></td>

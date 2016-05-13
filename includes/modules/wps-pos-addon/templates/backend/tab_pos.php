@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <h2 class="nav-tab-wrapper"><?php
 	$current = isset( $_GET['tab'] ) ? $_GET['tab'] : 'dashboard';
 	$tabs = array( 'dashboard' => __( 'Order', 'wps-pos-i18n'), 'bank_deposit' => __( 'Bank deposit', 'wps-pos-i18n' ) );

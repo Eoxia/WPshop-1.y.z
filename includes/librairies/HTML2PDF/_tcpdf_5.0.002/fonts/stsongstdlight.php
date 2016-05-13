@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 $type = 'cidfont0';
 $name = 'STSongStd-Light-Acro';
 $displayname = 'STSong Light (Simp. Chinese)';

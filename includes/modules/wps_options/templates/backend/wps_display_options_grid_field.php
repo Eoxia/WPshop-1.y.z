@@ -1,4 +1,5 @@
-<?php if(current_user_can('wpshop_edit_options') ) : ?> 
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ if(current_user_can('wpshop_edit_options') ) : ?> 
 	<?php 
 		$value = ($wpshop_display_option[$field_identifier] <= 0 ? WPSHOP_DISPLAY_GRID_ELEMENT_NUMBER_PER_LINE_MIN_RANGE : $wpshop_display_option[$field_identifier]);
 	?>

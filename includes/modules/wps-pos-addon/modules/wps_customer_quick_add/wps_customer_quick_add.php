@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Plugin Name: WP-Shop - Ajout de client rapide / Customer quick creation
  * Version: 1.0

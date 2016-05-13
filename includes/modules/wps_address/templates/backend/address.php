@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 	<div class="wps-address-item-header">
 		<a href="#" class="<?php if (empty( $address_open )) : ?>wps-address-arrow-right<?php else: ?>wps-address-arrow-down<?php endif; ?>" >
 			<?php if ( array_key_exists( 'address_title', $address ) ) :?>

@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  Plugin Name: WPS Coupon
  Description: Manage coupons

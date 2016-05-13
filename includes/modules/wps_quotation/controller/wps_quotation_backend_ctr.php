@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 class wps_quotation_backend_ctr {
 	/*
 	 * Declare filter and actions

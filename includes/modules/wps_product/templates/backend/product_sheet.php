@@ -1,4 +1,5 @@
-<?php global $wpdb; ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ global $wpdb; ?>
 <page backtop="14mm" backbottom="14mm" backleft="10mm" backright="10mm" style="font-size: 12pt">
 	<page_header>
 		<table class="page_header">

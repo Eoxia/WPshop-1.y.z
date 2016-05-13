@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /*	Wordpress - Ajax functionnality activation	*/
 DEFINE('DOING_AJAX', true);
 /*	Wordpress - Main bootstrap file that load wordpress basic files	*/

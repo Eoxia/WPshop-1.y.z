@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  Plugin Name: WPShop Media Manager v3
  Description: Manage media for WPShop

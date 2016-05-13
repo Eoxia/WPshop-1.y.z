@@ -1,4 +1,5 @@
-<?php if ( !empty($order_postmeta['order_payment']) ) :
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ if ( !empty($order_postmeta['order_payment']) ) :
 $total_amount = ( !empty($order_postmeta['order_grand_total']) ) ? $order_postmeta['order_grand_total'] : '';
 $waited_amount_sum = $received_amount_sum = $i = 0;
 ?>

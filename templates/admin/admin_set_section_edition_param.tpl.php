@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="ui-state-disabled wpshop_att_set_section_edition_container wpshop_att_set_section_edition_container_<?php echo str_replace('-', '_', sanitize_title($attributeSetDetailsGroup['id'])); ?>" id="wpshop_att_set_section_edition_container_<?php echo $attributeSetDetailsGroup['id']; ?>" >
 	<div class="wpshop_cls" >
 		<input type="text" class="wpshop_att_set_section_edition_input wpshop_attribute_set_section_name" name="wpshop_attribute_set_section[<?php echo $attributeSetDetailsGroup['id']; ?>][name]" id="wpshop_attribute_set_section_name_set_<?php echo $attributeSetDetailsGroup['id']; ?>" value="<?php echo $area_name; ?>" />

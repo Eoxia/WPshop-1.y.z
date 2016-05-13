@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 $box_content = wps_address::display_address_interface_content($address_type_id, $address_title, '', $address_type, $customer_id, true, $order_id );
 ?>
 

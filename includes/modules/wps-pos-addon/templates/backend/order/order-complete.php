@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <h2><?php _e('Payments summary', 'wps-pos-i18n'); ?></h2>
 <?php if ( !empty( $order_postmeta ) && !empty( $order_postmeta['order_payment'] ) && !empty( $order_postmeta['order_payment']['received'] ) && is_array( $order_postmeta['order_payment']['received'] ) ) : ?>
 <table id="wps-pos-order-payment-summary" >

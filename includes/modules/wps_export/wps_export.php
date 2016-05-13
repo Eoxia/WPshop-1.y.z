@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  Plugin Name: WPS Export
  Description: Manage Exports CSV

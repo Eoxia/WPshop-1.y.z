@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <form id="wps-checkout-valid-step-five-form" method="post" action="<?php echo admin_url( 'admin-ajax.php' ); ?>" class="wps-checkout-wrapper">
 	<div class="wps-sidebar-resume">
 		<input type="hidden" name="action" value="wps-checkout_valid_step_five"/>

@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <label for="use_next_button"><span><?php _e("Use next button", self::$name_i18n); ?></span>
   <input type="checkbox" name="meta[actions][use_next_button]" id="use_next_button" <?php echo (!empty($meta['actions']['use_next_button'])) ? 'checked="checked"' : ''; ?> >
 </label>

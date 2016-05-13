@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wps-boxed">
 <span class="wps-h5"><span class="dashicons dashicons-search"></span> <?php _e( 'Search products by letter', 'wpshop' ); ?></span>
 <?php foreach( $letters as $letter ) : ?>

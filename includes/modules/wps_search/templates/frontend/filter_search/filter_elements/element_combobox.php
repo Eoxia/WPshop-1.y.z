@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wps-form-group">
 	<label for="filter_search_<?php echo $attribute_def->code; ?>"><?php _e($attribute_def->frontend_label, 'wpshop'); ?></label>
 	<div class="wps-form">

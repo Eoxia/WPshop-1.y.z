@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wps-boxed" id="wps_signup_form_container">
 <span class="wps-h5"><?php _e ('Sign up', 'wpshop'); ?></span>
 <div id="wps_signup_error_container"></div>

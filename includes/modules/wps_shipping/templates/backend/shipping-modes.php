@@ -1,4 +1,5 @@
-<?php if( !empty($shipping_mode_option) && !empty($shipping_mode_option['modes']) ) : ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ if( !empty($shipping_mode_option) && !empty($shipping_mode_option['modes']) ) : ?>
 <div class="wps-alert-error" id="wps_shipping_config_save_message" style="display : none"><span class="dashicons dashicons-info"></span> <?php _e( 'Process saving, please wait...', 'wpshop'); ?></div>
 <div class="wps-alert-info"><span class="dashicons dashicons-lightbulb"></span> <?php printf( __( 'Offer a new shipping service to your customer with <a href="%s" target="_blank">So Colissimo or another shipping mode</a>', 'wpshop'), 'http://shop.eoxia.com/boutique/shop/modules-wpshop/modules-de-livraison/'); ?></div>
 <div class="wps-table" id="wps_shipping_mode_list_container">

@@ -1,4 +1,5 @@
-<?php $order_post_meta = !empty($post) ? get_post_meta( $post->ID, '_wpshop_order_status', true ) : ""; ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ $order_post_meta = !empty($post) ? get_post_meta( $post->ID, '_wpshop_order_status', true ) : ""; ?>
 <div class="wps-table">
 	<div class="wps-table-header wps-table-row">
 		<div class="wps-table-cell"><?php _e( 'Picture', 'wpshop'); ?></div>

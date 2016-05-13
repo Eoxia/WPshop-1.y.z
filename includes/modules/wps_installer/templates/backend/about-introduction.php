@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="changelog" >
 
 	<div class="feature-section changelog three-col">

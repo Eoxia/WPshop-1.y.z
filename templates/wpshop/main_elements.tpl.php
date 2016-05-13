@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /*
  * General
 	{WPSHOP_CART_LINK}		=> Link for the cart page

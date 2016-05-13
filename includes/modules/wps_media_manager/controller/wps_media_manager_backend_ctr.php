@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 class wps_media_manager_backend_ctr {
 	/** Define the main directory containing the template for the current plugin
 	 * @var string

@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 $tpl_element = array();
 /**
  * WPS CREDIT LIST

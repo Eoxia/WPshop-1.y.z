@@ -1,4 +1,5 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+
 class wps_statistics_ctr {
 	private $wps_stats_mdl;
 	function __construct() {

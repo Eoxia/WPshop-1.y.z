@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <script type="text/javascript">
 	//<![CDATA[
 	jQuery(document).ready( function($) {

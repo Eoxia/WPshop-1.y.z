@@ -1,3 +1,4 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;?>
 <hr/>
 <div class="wps-quotation-addon-state-message-container" ></div>
 <div class="wps-quotation-addon-state-container" >

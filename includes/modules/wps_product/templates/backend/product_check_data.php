@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <p><?php _e( 'Number of inconsistent product : ', 'wps_product' ); echo $inconsistent_product_number; ?></p>
 
 

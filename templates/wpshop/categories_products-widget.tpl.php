@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 	/*	Define default classes	*/
 	$product_container_class = 'wpshop_hide';
 	$product_title_class = '';

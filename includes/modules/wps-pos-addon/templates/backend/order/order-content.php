@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 	<ul class="wps-fullcart">
 		<li class="wps-clearfix cart_header">
 			<div class="wps-cart-item-content"><?php _e( 'Product name', 'wpshop'); ?></div>

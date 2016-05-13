@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 class wps_filter_search {
 
 	/** Define the main directory containing the template for the current plugin

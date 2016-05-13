@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 //============================================================+
 // File name   : barcodes.php
 // Begin       : 2008-06-09

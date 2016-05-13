@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 $iban_infos = get_option( 'wpshop_paymentMethod_options' );
 $iban_infos = ( !empty($iban_infos) && !empty($iban_infos['banktransfer']) ) ?$iban_infos['banktransfer'] : array();
 ?>

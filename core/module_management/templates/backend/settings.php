@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <ul class="module-list" >
 	<li class="module-list-header" >
 		<!--

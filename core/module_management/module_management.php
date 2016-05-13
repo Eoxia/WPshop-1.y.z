@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Plugin Name: Gestion des modules internes / Internal module management
  * Description: Permet d'activer ou de désactiver les différents modules internes présents dans le dossier modules / Allow to activate or deactivate internal modules present into modules directory

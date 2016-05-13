@@ -1,4 +1,5 @@
-<?php 	global $wpdb; ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ 	global $wpdb; ?>
 <?php	$opinion_option = get_option( 'wps_opinion' ); ?>
 <?php 	$opinion_state = !empty($opinion_option) && !empty($opinion_option['active']) ? true : false ; ?>
 <?php

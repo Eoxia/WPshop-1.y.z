@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
 Plugin Name: WPS-Modal
 Description: Manage modal for WPShop

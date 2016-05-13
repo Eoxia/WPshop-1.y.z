@@ -1,4 +1,5 @@
-<?php if( !empty($products) ) : ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ if( !empty($products) ) : ?>
 	<?php $tab_def = array(); ?>
 	<?php
 		foreach( $quick_add_form_attributes as $id_att => $att ) {

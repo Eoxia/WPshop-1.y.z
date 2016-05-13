@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div><span class="wps-h2"><?php _e( 'Payment mode choice', 'wpshop' ); ?> :</span></div>
 <?php if( !empty($payment_modes) ) : ?>
 <?php $count_payment_mode = count( $payment_modes ); ?>

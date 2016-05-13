@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wps-opinion-error-container"></div>
 <form method="post" action="<?php echo admin_url( 'admin-ajax.php' ); ?>" id="wps-add-opinion-form">
 

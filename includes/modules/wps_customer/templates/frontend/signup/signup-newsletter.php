@@ -1,4 +1,5 @@
-<?php 
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?> 
 	if( !empty( $wpshop_cart_option['display_newsletter']['site_subscription'][0] ) && $wpshop_cart_option['display_newsletter']['site_subscription'][0] == 'yes' ) {
 ?>
 	<div class="wps-form-group">

@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wps-<?php echo $address_type; ?>-address" <?php if ( !empty( $first_address_checking ) && !$is_from_admin && ( $address_type == 'billing' ) ) { echo 'style="display: none;"'; } ?>>
 	<div class="wps-gridwrapper">
 		<div class="wps-grid4x6"><span class="wps-h3"><?php echo $address_title; ?></span></div>

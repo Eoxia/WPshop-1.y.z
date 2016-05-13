@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 	/** Get hourly orders ***/
 	class wps_statistics_mdl {
 		private $wps_orders_all = null;

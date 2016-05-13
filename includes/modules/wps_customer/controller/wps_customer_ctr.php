@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Manage Customer general and front-end functions
  * @author ALLEGRE Jérôme - EOXIA

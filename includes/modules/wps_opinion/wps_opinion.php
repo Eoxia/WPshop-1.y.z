@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  Plugin Name: WPS Opinion
  Description: Manage Opinions on products

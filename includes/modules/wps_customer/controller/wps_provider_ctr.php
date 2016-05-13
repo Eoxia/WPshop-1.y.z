@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Fichier du controleur des metaboxes pour l'administration des clients dans wpshop / Controller file for managing metaboxes into customer administration interface
  *

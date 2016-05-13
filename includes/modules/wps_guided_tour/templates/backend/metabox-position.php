@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <label for="page"><span><?php _e("Page", self::$name_i18n); ?></span>
   <select class="wpeo-bubble-select-page" name="meta[position][page]">
     <?php if(!empty($array_pages)): ?>

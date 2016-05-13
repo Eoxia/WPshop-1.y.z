@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <li class="wps-clearfix" id="wps_product_<?php echo $product_key; ?>">
 	<div class="wps-cart-item-img">
 		<?php if ( !$auto_added_product ) : ?><a href="<?php echo get_permalink( $item_id ); ?>" title="<?php echo $item_title; ?>"><?php endif; ?>

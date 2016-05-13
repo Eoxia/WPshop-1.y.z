@@ -1,4 +1,5 @@
-<?php if ( !$force_login ) : ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ if ( !$force_login ) : ?>
 <?php echo do_shortcode( '[wps_first_login]' ); ?>
 
 <?php endif; ?>

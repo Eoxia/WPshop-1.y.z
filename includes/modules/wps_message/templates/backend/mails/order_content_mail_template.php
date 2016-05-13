@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <table style="width:600px; border : 1px solid #000000; border-collapse : collapse; margin-top:20px; margin-bottom:20px;">
 	<tr bgcolor="#1D7DC1" height="80" valign="middle" align="center" style="color : #FFFFFF;">
 		<td width="90"><?php _e('Reference', 'wpshop'); ?> / <?php _e( 'Barcode', 'wpshop' ); ?></td>

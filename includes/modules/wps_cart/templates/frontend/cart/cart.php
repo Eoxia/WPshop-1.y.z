@@ -1,4 +1,5 @@
-<?php if( !$account_origin ) : ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ if( !$account_origin ) : ?>
 <div id="wps_cart_error_container" class="wps-alert-error"></div>
 <?php endif; ?>
 <ul class="wps-fullcart">

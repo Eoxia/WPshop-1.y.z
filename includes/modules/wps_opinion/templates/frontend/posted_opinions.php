@@ -1,4 +1,5 @@
-<?php if( !empty($posted_opinions) ) : ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ if( !empty($posted_opinions) ) : ?>
 <span class="wps-h5"><?php _e( 'My opinions', 'wpshop'); ?></span>
 <div class="wps-table">
 	<div class="wps-table-header wps-table-row">

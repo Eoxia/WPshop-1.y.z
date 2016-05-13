@@ -1,4 +1,4 @@
-<?php 
+<?php if ( !defined( 'ABSPATH' ) ) exit; 
 global $post_id;
 $post_id = ( !empty($order_id) ) ? $order_id : $post_id;
 $order_infos = get_post_meta( $post_id, '_order_info', true );

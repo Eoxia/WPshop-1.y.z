@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 class wps_coupon_ctr {
 	/** Define the main directory containing the template for the current plugin
 	 * @var string

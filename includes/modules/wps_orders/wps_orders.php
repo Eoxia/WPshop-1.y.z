@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 DEFINE('WPS_ORDERS_DIR', basename(dirname(__FILE__)));
 DEFINE('WPS_ORDERS_PATH', str_replace( "\\", "/", str_replace( WPS_ORDERS_DIR, "", dirname( __FILE__ ) ) ) );
 DEFINE('WPS_ORDERS_URL', str_replace( str_replace( "\\", "/", ABSPATH), site_url() . '/', WPS_ORDERS_PATH ) );

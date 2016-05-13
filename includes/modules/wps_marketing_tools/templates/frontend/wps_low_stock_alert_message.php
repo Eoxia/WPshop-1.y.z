@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 $extradata = '';
 if ( !empty($low_stock_alert_option['based_on_stock']) && $low_stock_alert_option['based_on_stock'] == 'yes' && !empty( $low_stock_alert_option['alert_limit']) ) : ?>
 	<?php if ( $product_stock <= $low_stock_alert_option['alert_limit'] ) : 

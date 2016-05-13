@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div id="wps_signup_error_container"></div>
 	<form action="<?php echo admin_url('admin-ajax.php'); ?>" method="post" id="wps_account_informations_form">
 		<input type="hidden" name="action" value="wps_save_account_informations" />

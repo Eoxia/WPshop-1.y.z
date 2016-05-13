@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div>
 	<?php 
 	echo wpshop_CIC::display_form($_SESSION['order_id']);

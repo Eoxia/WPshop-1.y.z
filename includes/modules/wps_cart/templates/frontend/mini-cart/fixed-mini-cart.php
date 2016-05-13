@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wps-fixed-tool-bar wps-cart-activator">
 	<div class="wps-mini-cart wps-cart-resume">
 		<div class="wps-mini-cart-header">

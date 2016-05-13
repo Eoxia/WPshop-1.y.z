@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wps-gridwrapper3-padded">
 	<div>
 		<div class="wps-boxed">

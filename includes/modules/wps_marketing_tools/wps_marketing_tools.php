@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Plugin Name: WPSHOP MArketing tools
  * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/

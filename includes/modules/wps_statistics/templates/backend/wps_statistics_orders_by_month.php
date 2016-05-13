@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <canvas id="wps_orders_summary" width="" height=""></canvas>
 <?php if( !empty($order_recap) ) : ?>
 <?php 

@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wpshop_product_variation wpshop_product_variation_metabox" id="wpshop_product_variation_metabox_<?php echo $variation_id; ?>" >
 	<h3 class="hndle" >
 		<span class="wpshop_variation_header_info" ><?php echo $variation_id; ?></span>

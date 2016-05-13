@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 class wps_product_ajax_ctr_01 {
 	public function __construct() {
 		add_action( 'wp_ajax_checking_products_values', array( &$this, 'ajax_render_inconsistent_product_price' ) );

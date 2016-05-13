@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 __('Account creation confirmation', 'wpshop' );
 __('Hello [customer_first_name] [customer_last_name], this email confirms that your account has just been created. Thank you for your loyalty. Have a good day.', 'wpshop' );
 __( 'User account creation confirmation message', 'wpshop' );

@@ -1,4 +1,4 @@
-<?php 
+<?php if ( !defined( 'ABSPATH' ) ) exit; 
 	define('ABSPATH', dirname(dirname(dirname(dirname(dirname(__FILE__))))) . DIRECTORY_SEPARATOR);
 	define('WP_PLUGIN_DIR', dirname(dirname(dirname(__FILE__))) );
 	define('WP_LANG_DIR', 'FR');

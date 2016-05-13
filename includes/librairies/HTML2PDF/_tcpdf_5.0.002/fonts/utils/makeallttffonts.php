@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 //============================================================+
 // File name   : makeallttffonts.php
 // Begin       : 2008-12-07

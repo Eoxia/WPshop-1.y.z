@@ -1,4 +1,5 @@
-<?php if( !empty($products) ) : ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ if( !empty($products) ) : ?>
 <canvas id="wps-statistics-most-viewed-statistics" width="" height=""></canvas>
 <script type="text/javascript">
 jQuery( document ).ready( function() {

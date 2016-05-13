@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /*	Wordpress - Main bootstrap file that load wordpress basic files	*/
 require_once('../../../../../wp-load.php');
 header('Content-Type: text/html; charset=' . get_bloginfo('charset'));

@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /*
 Plugin Name: Eoxia - Addresses management
 Description: Allows to manage addresses for a custom post type created into wordpress

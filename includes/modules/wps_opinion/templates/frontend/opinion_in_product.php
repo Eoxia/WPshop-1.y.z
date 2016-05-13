@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wps-table">
 <?php
 foreach( $comments_for_product as $comment_for_product ) : 

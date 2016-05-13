@@ -1,4 +1,5 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+
 	/**	Get customer orders list for statistic displaying	*/
 	$wps_orders_mdl = new wps_orders_mdl();
 	$orders = $wps_orders_mdl->get_customer_orders( $current_user_id_in_list );

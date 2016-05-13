@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /*
  * Plugin Name: WPS Guided tour
  * Description: Create your guided tour / Créer votre visite guidée

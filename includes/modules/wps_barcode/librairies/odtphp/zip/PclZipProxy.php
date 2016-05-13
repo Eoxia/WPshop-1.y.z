@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 require_once 'pclzip/pclzip.lib.php';
 require_once 'ZipInterface.php';
 class PclZipProxyException extends Exception

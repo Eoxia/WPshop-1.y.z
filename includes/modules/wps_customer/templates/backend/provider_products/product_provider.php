@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="product" data-id="<?php echo $post->ID; ?>">
 	<h1 data-id="<?php echo $post->ID; ?>"><a href="#"><?php echo $post->post_title; ?></a></h1><a data-id="<?php echo $post->ID; ?>" class="delete_provider_btn" href="#">delete</a><input type="hidden" data-id="<?php echo $post->ID; ?>" class="special_provider" name="wps_provider_product[<?php echo $post->ID; ?>][special_provider]" value="update">
 	<div class="values" data-id="<?php echo $post->ID; ?>">

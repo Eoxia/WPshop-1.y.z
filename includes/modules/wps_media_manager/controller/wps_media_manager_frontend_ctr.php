@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 class wps_media_manager_frontend_ctr {
 
 	public static function get_attachments( $pid, $type = 'gallery' ) {

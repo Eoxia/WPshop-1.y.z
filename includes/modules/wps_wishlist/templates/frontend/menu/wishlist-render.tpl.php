@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wps-gridwrapper">
 	<div class="wps-grid4x6">
 		<span class="wps-h3"><?php _e('My wishlist', 'wps_wishlist_i18n'); ?></span>

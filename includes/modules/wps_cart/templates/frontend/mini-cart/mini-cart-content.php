@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <span class="wps-mini-cart-body-title">
 <strong><?php echo $total_cart_item; ?></strong><?php _e( 'item(s)', 'wpshop'); ?><span><strong><?php echo number_format( $total_cart, 2, '.', ''); ?></strong><?php echo $currency; ?></span>
 </span>

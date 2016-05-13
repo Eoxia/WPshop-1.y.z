@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div><span class="wps-h3"><?php _e( 'My opinions', 'wps_opinion'); ?></span></div>
 <div class="wps-table">
 	<div class="wps-table-header wps-table-row">

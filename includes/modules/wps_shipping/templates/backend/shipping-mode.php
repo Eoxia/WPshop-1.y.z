@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wps-table-content wps-table-row wps_shipping_mode_container">
 		<div class="wps-table-cell wps-cart-item-img">
 			<div id="wps_shipping_mode_logo_container_<?php echo $k; ?>">

@@ -1,4 +1,5 @@
-<?php if( !empty($wpshop_customize_display_option) ) : ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ if( !empty($wpshop_customize_display_option) ) : ?>
 	<!--  WPSHOP CUSTOM CSS RULES -->
 	<style>
 		<?php if( !empty($wpshop_customize_display_option['first']) ) : ?>

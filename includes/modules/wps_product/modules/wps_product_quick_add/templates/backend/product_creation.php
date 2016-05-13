@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <form id="wps_product_quick_add_form" method="post" action="<?php echo admin_url( 'admin-ajax.php' ); ?>" >
 	<input type="hidden" name="action" value="wps-product-quick-add">
 	<div class="wps-boxed" style="margin-top:10px;" >

@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 $type = 'cidfont0';
 $name = 'KozGoPro-Medium-Acro';
 $displayname = 'Kozuka Gothic Pro (Japanese Sans-Serif)';

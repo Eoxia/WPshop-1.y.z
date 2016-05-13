@@ -1,4 +1,4 @@
-<?php 
+<?php if ( !defined( 'ABSPATH' ) ) exit; 
 $wps_shipping = new wps_shipping();
 $shipping_rules = $wps_shipping->shipping_fees_string_2_array( stripslashes($fees_data) );
 

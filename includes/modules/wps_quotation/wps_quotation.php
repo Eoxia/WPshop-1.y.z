@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Plugin Name: WPShop Quotation
  * Plugin URI: http://shop.eoxia.com/ecommerce/wpshop_product/addon-devis/

@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 	<tr class="wps-pos-addon-customer-line <?php echo ( ( $customer['last_name'] ==  __('Default', 'wps-pos-i18n') ) && ( $customer['first_name'] == __('Customer', 'wps-pos-i18n') ) ? 'info' : '' ); ?>" data-id="<?php echo $customer['ID']; ?>" >
 		<td>
 			<?php echo $customer['last_name']; ?> <?php echo $customer['first_name']; ?><br/>

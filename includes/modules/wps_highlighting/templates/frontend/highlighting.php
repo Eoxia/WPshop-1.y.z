@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div>
 	<a href="<?php echo ( ( !empty($data->link) ) ? $data->link : '#' ); ?>" title="<?php echo ( ($data->title) ? $data->title : '' ); ?>">
 		<?php if( !empty($data->id) ) : ?>

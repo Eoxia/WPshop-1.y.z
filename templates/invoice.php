@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 
 	/*	Wordpress - Ajax functionnality activation	*/
 	DEFINE('DOING_AJAX', true);

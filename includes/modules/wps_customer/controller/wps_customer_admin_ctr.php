@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Manage Customer administration functions
  * @author ALLEGRE Jérôme - EOXIA

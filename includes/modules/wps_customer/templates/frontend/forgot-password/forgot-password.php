@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wps-boxed">
 	<div id="wps_renew_password_error_container"></div>
 	<form action="<?php echo admin_url('admin-ajax.php'); ?>" method="post" id="wps_forgot_password_form" >

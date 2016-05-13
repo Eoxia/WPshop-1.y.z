@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wps-alert-info"><span class="dashicons dashicons-lightbulb"></span><?php printf( __( 'Need help to configure your shipping rules ? <a href="%s" target="_blank">Opt for assistance</a>', 'wpshop'), 'http://shop.eoxia.com/ecommerce/wpshop_product/assistance-wordpress/' ); ?></div>
 
 <div class="wps-boxed">
