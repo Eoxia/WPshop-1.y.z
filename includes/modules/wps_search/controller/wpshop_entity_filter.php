@@ -1,12 +1,4 @@
 <?php if ( !defined( 'ABSPATH' ) ) exit;
-/**
- * Plugin Name: WpShop - Entity Filter
- * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/
- * Description: List products by filter
- * Version: 0.1
- * Author: Eoxia
- * Author URI: http://eoxia.com/
- */
 
 /** Check if the plugin version is defined. If not defined script will be stopped here */
 if ( !defined( 'WPSHOP_VERSION' ) ) {
@@ -22,7 +14,7 @@ if ( !class_exists("wpshop_entity_filter") ) {
 
 		function wpshop_entity_filter() {
 			if (isset($_GET['post_type'])) {
-				$post_type = $_GET['post_type'];
+				$post_type = sanitize_text_field( $_GET['post_type'] );
 				if (post_type_exists($post_type) && ($post_type == WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT)) {
 					$filter_possibilities = array();
 					$filter_possibilities[''] = __('-- Select Filter --', 'wpshop');
@@ -31,7 +23,7 @@ if ( !class_exists("wpshop_entity_filter") ) {
 					$filter_possibilities['no_description'] = __('List products without description', 'wpshop');
 					$filter_possibilities['no_barcode_products'] = __('List products without barcode / with barcode not well formated', 'wpshop');
 					$filter_possibilities['no_barcode_variations'] = __('List products with options without barcode / with barcode not well formated', 'wpshop');
-					echo wpshop_form::form_input_select('entity_filter', 'entity_filter', $filter_possibilities, (!empty($_GET['entity_filter']) ? $_GET['entity_filter'] : ''), '', 'index');
+					echo wpshop_form::form_input_select('entity_filter', 'entity_filter', $filter_possibilities, (!empty($_GET['entity_filter']) ? sanitize_text_field( $_GET['entity_filter'] ) : ''), '', 'index');
 				}
 			}
 		}

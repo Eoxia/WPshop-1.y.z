@@ -439,8 +439,8 @@ class wps_filter_search {
 	 */
 	public static function save_displayed_price_meta( $product_id = 0 ) {
 		if ( !empty( $product_id ) || ( !empty($_POST) && !empty($_POST['ID']) && !empty($_POST['post_type']) && $_POST['post_type'] == WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT ) ) {
-			$product_id = !empty( $product_id ) ? $product_id : $_POST['ID'];
-			
+			$product_id = !empty( $product_id ) ? $product_id : (int)$_POST['ID'];
+
 			$price_piloting = get_option('wpshop_shop_price_piloting');
 			$product_data = wpshop_products::get_product_data($product_id);
 			$price_infos = wpshop_prices::check_product_price($product_data);
@@ -467,7 +467,7 @@ class wps_filter_search {
 	function stock_values_for_attribute( $categories_id = array() ) {
 		@set_time_limit( 900 );
 		if (  !empty($_POST['tax_input']) && !empty($_POST['tax_input']['wpshop_product_category']) && !empty($_POST['post_type']) && $_POST['post_type'] == WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT ) {
-			$categories_id = $_POST['tax_input']['wpshop_product_category'];
+			$categories_id = (int)$_POST['tax_input']['wpshop_product_category'];
 		}
 
 		if ( !empty( $categories_id )  ) {
@@ -581,7 +581,7 @@ class wps_filter_search {
 
 		/** Make the array **/
 		$array_for_query = implode(',', $categories_id);
-		
+
 		/** SQL request Construct for pick up all product with one of filter search element value **/
 		if ( !empty($filter_search_elements) && !empty($_REQUEST) ) {
 			foreach ( $filter_search_elements as $k=>$filter_search_element ) {

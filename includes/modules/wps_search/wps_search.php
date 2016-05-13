@@ -1,12 +1,4 @@
 <?php if ( !defined( 'ABSPATH' ) ) exit;
-/**
- * Plugin Name: WPShop Search
- * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/
- * Description: All Search type managment
- * Version: 0.1
- * Author: Eoxia
- * Author URI: http://eoxia.com/
- */
 
 /**
  * WpShop Search bootstrap file
@@ -16,10 +8,6 @@
  * @subpackage modules
  *
  */
-
-if ( !defined( 'WPSHOP_VERSION' ) ) {
-	die( __("You are not allowed to use this service.", 'wpshop') );
-}
 
 /** Template Global vars **/
 DEFINE('WPS_SEARCH_DIR', basename(dirname(__FILE__)));

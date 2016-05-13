@@ -25,16 +25,16 @@ class wpshop_order_search {
 
 	public function wpshop_search_where_in_order( $where ) {
 		global $wpdb;
-		
+
 		if ( !empty($_GET) && !empty( $_GET['s'] ) &&!empty($_GET['post_type']) && $_GET['post_type'] == WPSHOP_NEWTYPE_IDENTIFIER_ORDER ) {
-			
+
 			$where = "	AND {$wpdb->posts}.post_type = '" . WPSHOP_NEWTYPE_IDENTIFIER_ORDER . "'";
-			
+
 			if( !empty( $_GET['s'] ) ) {
-				$s_soundex = soundex( $_GET['s'] );
-				$s = strtoupper( $_GET['s'] );
+				$s_soundex = soundex( sanitize_text_field( $_GET['s'] ) );
+				$s = strtoupper( sanitize_text_field( $_GET['s'] ) );
 				$where .= "AND (
-									( 	
+									(
 										{$wpdb->posts}.ID IN (
 											SELECT PM.post_id AS ID
 											FROM {$wpdb->postmeta} AS PM
@@ -81,9 +81,9 @@ class wpshop_order_search {
 									)
 								)";
 			}
-			
-			
-			
+
+
+
 			/*$metas_to_inspect = array( '_order_postmeta', '_order_info');
 			$first = $first_word = true;
 
@@ -112,7 +112,7 @@ class wpshop_order_search {
 			add_filter('posts_join_request', array($this, 'wpshop_search_join'));
 		}*/
 		}
-		
+
 		//echo '<pre>'; print_r($where); echo '</pre>'; exit();
 
 		return $where;
