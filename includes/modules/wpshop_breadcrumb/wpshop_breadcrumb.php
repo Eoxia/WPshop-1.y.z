@@ -1,14 +1,5 @@
 <?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
- * Plugin Name: WPShop Breadcrumb
- * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/
- * Description: WpShop Breadcrumb
- * Version: 0.1
- * Author: Eoxia
- * Author URI: http://eoxia.com/
- */
-
-/**
  * WpShop Breadcrumb bootstrap file
  * @author Jérôme ALLEGRE - Eoxia dev team <dev@eoxia.com>
  * @version 0.1
