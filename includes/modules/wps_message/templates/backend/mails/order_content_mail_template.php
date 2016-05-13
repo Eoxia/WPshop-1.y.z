@@ -27,7 +27,7 @@
 				$item_name = $item['item_name'];
 				$item_barcode = get_post_meta( $item['item_id'], '_barcode', true );
 			}
-			
+
 			if ( !empty($item['item_id']) ) {
 				$product_attribute_order_detail = wpshop_attributes_set::getAttributeSetDetails( get_post_meta($item['item_id'], WPSHOP_PRODUCT_ATTRIBUTE_SET_ID_META_KEY, true)  ) ;
 				$output_order = array();
