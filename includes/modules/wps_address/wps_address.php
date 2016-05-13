@@ -1,21 +1,10 @@
 <?php if ( !defined( 'ABSPATH' ) ) exit;
-/*
-Plugin Name: Eoxia - Addresses management
-Description: Allows to manage addresses for a custom post type created into wordpress
-Version: 1.0
-Author: Eoxia
-Author URI: http://eoxia.com/
-*/
-
 /**
 * Bootstrap file
 *
 * @author Development team <dev@eoxia.com>
 * @version 1.0
 */
-if ( !defined( 'WPSHOP_VERSION' ) ) {
-	die( __("You are not allowed to use this service.", 'wpshop') );
-}
 
 DEFINE( 'WPS_LOCALISATION_VERSION', '1.' );
 DEFINE( 'WPS_LOCALISATION_DIR', basename(dirname(__FILE__)));
