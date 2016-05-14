@@ -46,14 +46,14 @@ class wps_address {
 		add_shortcode( 'wps_addresses_list', array( &$this, 'shortcode_display_addresses_list' ) );
 
 		/**	Add listener for ajax actions	*/
-		add_action( 'wp_ajax_wps_load_address_form', array( &$this, 'wps_load_address_form') );
-		add_action( 'wp_ajax_wps_save_address', array( &$this, 'wps_save_address') );
-		add_action( 'wp_ajax_wps-address-edition-form-load', array( &$this, 'load_address_edition_form' ) );
-		add_action( 'wp_ajax_wps-address-display-an-address', array( &$this, 'display_address' ) );
+		add_action( 'wp_ajax_wps_load_address_form', array( &$this, 'wps_load_address_form') ); // DONE
+		add_action( 'wp_ajax_wps_save_address', array( &$this, 'wps_save_address') ); // DONE
+		add_action( 'wp_ajax_wps-address-edition-form-load', array( &$this, 'load_address_edition_form' ) ); // DONE
+		add_action( 'wp_ajax_wps-address-display-an-address', array( &$this, 'display_address' ) ); // DONE
 // 		add_action( 'wp_ajax_wps-address-save-address', array( &$this, 'wps_save_address' ) );
-		add_action( 'wp_ajax_wps-address-display-list', array( &$this, 'display_addresses_list' ) );
-		add_action( 'wp_ajax_wps-address-add-new', array( &$this, 'display_address_adding_form' ) );
-		add_action( 'wp_ajax_wps_delete_an_address', array( &$this, 'wps_delete_an_address' ) );
+		add_action( 'wp_ajax_wps-address-display-list', array( &$this, 'display_addresses_list' ) ); // DONE
+		add_action( 'wp_ajax_wps-address-add-new', array( &$this, 'display_address_adding_form' ) ); // DONE
+		add_action( 'wp_ajax_wps_delete_an_address', array( &$this, 'wps_delete_an_address' ) ); // DONE
 		add_action( 'wp_ajax_wps_reload_address_interface', array( &$this, 'wps_reload_address_interface' ) );
 // 		add_action( 'wp_ajax_display_address_form', array( &$this, '') );
 // 		add_action( 'wp_ajax_wps-add-an-address-in-admin', array( $this, 'wps_add_an_address_in_admin' ) );
@@ -1205,6 +1205,11 @@ class wps_address {
 	 * @since 1.0 - WPShop 1.3.7.0
 	 */
 	function display_addresses_list() {
+		$_wpnonce = ( !empty( $_REQUEST['_wpnonce'] ) ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'display_addresses_list' ) )
+			die();
+
 		$post_id = (int) $_POST['post_id'];
 		$addresses = $this->get_addresses_list( $post_id );
 		require_once( wpshop_tools::get_template_part( WPS_ADDRESS_DIR, WPS_LOCALISATION_TEMPLATES_MAIN_DIR, "backend", "addresses" ) );
@@ -1217,6 +1222,11 @@ class wps_address {
 	 * @since 1.0 - WPShop 1.3.7.0
 	 */
 	function display_address() {
+		$_wpnonce = ( !empty( $_REQUEST['_wpnonce'] ) ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_address_display_an_address' ) )
+			die();
+
 		$adress_id = (int) $_POST['address_id'];
 		$address_post_meta = get_post_meta( $adress_id, '_wpshop_address_metadata', true);
 		$address_type_post_meta = get_post_meta( $adress_id, '_wpshop_address_attribute_set_id', true);
@@ -1240,6 +1250,11 @@ class wps_address {
 	 */
 	function display_address_adding_form() {
 		global $wpdb;
+
+		$_wpnonce = ( !empty( $_REQUEST['_wpnonce'] ) ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'display_address_adding_form' ) )
+			die();
 
 		$address_id = 0;
 		$post_ID = (int)$_POST[ 'post_id' ];
@@ -1270,6 +1285,11 @@ class wps_address {
 	 * @since 1.0 - WPShop 1.3.7.0
 	 */
 	function load_address_edition_form() {
+		$_wpnonce = ( !empty( $_REQUEST['_wpnonce'] ) ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_address_edition_form_load' ) )
+			die();
+
 		$address_id = (int)$_POST[ 'element_id' ];
 		$post_ID = (int)$_POST[ 'post_id' ];
 		$address_type_id = get_post_meta( $address_id, '_wpshop_address_attribute_set_id', true);
@@ -1285,6 +1305,11 @@ class wps_address {
 	 * AJAX - Delete an address
 	 */
 	function wps_delete_an_address() {
+		$_wpnonce = ( !empty( $_REQUEST['_wpnonce'] ) ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_delete_an_address' ) )
+			die();
+
 		$status = false; $response = '';
 		$address_id = ( !empty( $_POST['address_id']) ) ? (int) $_POST['address_id'] : null;
 		if( !empty($address_id) ) {
@@ -1333,6 +1358,12 @@ class wps_address {
 		$address_id = ( !empty( $_POST['address_id'] ) ) ? (int) $_POST['address_id'] : '';
 		$address_type_id = ( !empty( $_POST['address_type_id']) ) ? sanitize_text_field( $_POST['address_type_id'] ) : '';
 
+		$_wpnonce = ( !empty( $_REQUEST['_wpnonce'] ) ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_load_address_form_' . $address_type_id ) )
+			wp_die();
+
+
 		$form_data = self::loading_address_form( $address_type_id, $address_id, get_current_user_id() );
 		$response = $form_data[0];
 		$title = $form_data[1];
@@ -1345,6 +1376,11 @@ class wps_address {
 	 */
 	function wps_save_address() {
 		global $wpshop, $wpdb;
+
+		$_wpnonce = ( !empty( $_REQUEST['_wpnonce'] ) ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_save_address' ) )
+			wp_die();
 
 		$adress_save_the_first = !empty( $_POST['wps-address-save-the-first'] ) ? sanitize_text_field( $_POST['wps-address-save-the-first'] ) : '';
 		$attribute = !empty( $_POST['attribute'] ) ? $_POST['attribute'] : '';

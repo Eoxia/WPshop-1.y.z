@@ -1,5 +1,6 @@
 <form action="<?php echo admin_url( 'admin-ajax.php' ) ?>" method="POST" id="wps-address-type-chooser-form" >
 	<input type="hidden" name="action" value="wps-address-edition-form-load" />
+	<?php wp_nonce_field( 'wps_address_edition_form_load' ); ?>
 	<input type="hidden" name="element_id" value="0" />
 	<input type="hidden" name="post_id" value="<?php echo $post_ID; ?>" />
 	<select name="wpeogeo-address-type-chosen-for-creation" >

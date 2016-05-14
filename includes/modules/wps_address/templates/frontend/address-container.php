@@ -17,6 +17,7 @@
 		<div id="wps_address_error_container" ></div>
 		<form id="wps_address_form_save_first_address" action="<?php echo admin_url( 'admin-ajax.php' ); ?>" method="post">
 			<input type="hidden" name="action" value="wps_save_address" />
+			<?php wp_nonce_field( 'wps_save_address' ); ?>
 			<input type="hidden" name="wps-address-save-the-first" value="<?php echo $address_type; ?>" />
 			<?php echo self::display_form_fields( $address_type_id, '', 'first', '', array(), array(), array(), get_current_user_id() ); ?>
 
@@ -58,6 +59,6 @@
 <?php endif; ?>
 
 	<?php if( !$is_from_admin ) : ?>
-		<button id="wps-add-an-address-<?php echo $address_type_id; ?>" class="wps-bton-third wps-add-an-address<?php echo ( empty( $box_content ) && !$hide_add_btn ? ' hidden' : '' ); ?>" ><i class="wps-icon-plus"></i><?php printf( __('Add a %s', 'wpshop' ), strtolower($address_title) ); ?></button>
+		<button data-nonce="<?php echo wp_create_nonce( 'wps_load_address_form_' . $address_type_id ); ?>" id="wps-add-an-address-<?php echo $address_type_id; ?>" class="wps-bton-third wps-add-an-address<?php echo ( empty( $box_content ) && !$hide_add_btn ? ' hidden' : '' ); ?>" ><i class="wps-icon-plus"></i><?php printf( __('Add a %s', 'wpshop' ), strtolower($address_title) ); ?></button>
 	<?php endif; ?>
 </div>

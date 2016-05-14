@@ -2,12 +2,12 @@
 <div class="wps-address-item-header wps-address-creation-header"><?php _e( 'New address', 'wpeo_geoloc' ); ?></div>
 <div class="wps-address-item-content">
 <?php endif; ?>
-	<form action="<?php echo admin_url( "admin-ajax.php" ); ?>" method="POST" class="wps-address-form" >
+	<form data-nonce="<?php echo wp_create_nonce( 'wps_address_display_an_address' ); ?>" action="<?php echo admin_url( "admin-ajax.php" ); ?>" method="POST" class="wps-address-form" >
 		<input type="hidden" value="wps-address-save-address" name="action" />
 		<input type="hidden" value="<?php echo $post_ID; ?>" name="post_ID" />
 		<?php echo self::display_form_fields( $address_type_id, $address_id ); ?>
 		<button ><?php _e( 'Save address', 'wpeo_geoloc' ); ?></button>
-		<button type="reset" ><?php _e( 'Cancel', 'wpeo_geoloc' ); ?></button>
+		<button data-nonce="<?php echo wp_create_nonce( 'wps_address_display_an_address' ); ?>" type="reset" ><?php _e( 'Cancel', 'wpeo_geoloc' ); ?></button>
 	</form>
 <?php if ( empty($address_id) ) : ?>
 </div>
@@ -28,6 +28,7 @@
 						$form.closest( "div.wps-address-item-content" ).children( "#wps-overlay-load" ).html( '<div class="wps-alert wps-alert-success" ><?php _e( 'Address saved', 'wpeo_geoloc' ); ?></div>' );
 						var data = {
 							action: "wps-address-display-an-address",
+							_wpnonce: $form.data( "nonce" ),
 							address_id: $form.closest( "li" ).attr( "id" ).replace( "wps-address-item-", "" ),
 						};
 						setTimeout(function(){
@@ -58,6 +59,7 @@
 					jQuery( this ).closest( "div.wps-address-list-container" ).append( '<div id="wps-overlay" class="wps-overlay-background" ></div><div id="wps-overlay-load" ><img src="' + thickboxL10n.loadingAnimation + '" /></div>' );
 					var data = {
 						action: "wps-address-display-an-address",
+						_wpnonce: jQuery( this ).data( "nonce" ),
 						address_id: <?php echo $address_id; ?>,
 					};
 					jQuery( "#wps-address-item-<?php echo $address_id; ?>" ).load( ajaxurl, data, function() {

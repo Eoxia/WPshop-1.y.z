@@ -1,5 +1,5 @@
 jQuery( document ).ready( function() {
-	
+
 	if( (jQuery('#wps-shipping_to_billing').length > 0) && jQuery('#wps-shipping_to_billing').is(':checked') ) {
 		jQuery('.wps-billing-address').hide();
 	}
@@ -85,6 +85,7 @@ jQuery( document ).ready( function() {
 		address_infos = address_infos.split( '-' );
 		var data = {
 				action: "wps_load_address_form",
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 				address_type_id : address_infos[0]
 			};
 			jQuery.post(ajaxurl, data, function(response) {
@@ -116,6 +117,7 @@ jQuery( document ).ready( function() {
 		address_infos = address_infos.split( '-' );
 		var data = {
 				action: "wps_delete_an_address",
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 				address_id :  address_infos[0]
 			};
 			jQuery.post(ajaxurl, data, function(response) {
