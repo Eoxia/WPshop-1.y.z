@@ -17,6 +17,9 @@ foreach($unitList as $test)
 	include($test);
 }
 
+include_once( '../test/request.test.php' );
+include_once( '../test/nonce.test.php' );
+
 echo "[+] Unit Tests Finished" . PHP_EOL;
 
 /* Recursively search files 
