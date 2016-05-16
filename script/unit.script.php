@@ -1,5 +1,4 @@
-<?php if ( !defined( 'ABSPATH' ) ) exit;
-
+<?php
 // include wp emulation
 include('wp-emulator.script.php');
 
