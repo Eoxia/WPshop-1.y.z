@@ -14,12 +14,12 @@ class wps_customer_group {
 	 * Gérer les actions $_POST
 	 */
 	function manage_post() {
-		$addrole = !empty( $_POST['addrole'] ) ? sanitize_text_field( $_POST['addrole'] );
-		$editrole = !empty( $_POST['editrole'] ) ? sanitize_text_field( $_POST['editrole'] );
-		$group_name = !empty( $_POST['group-name'] ) ? sanitize_text_field( $_POST['group-name'] );
-		$group_parent = !empty( $_POST['group-parent'] ) ? sanitize_text_field( $_POST['group-parent'] );
-		$group_description = !empty( $_POST['group-description'] ) ? sanitize_text_field( $_POST['group-description'] );
-		$group_users = !empty( $_POST['group-users'] ) ? (array) $_POST['group-users'];
+		$addrole = !empty( $_POST['addrole'] ) ? sanitize_text_field( $_POST['addrole'] ) : '';
+		$editrole = !empty( $_POST['editrole'] ) ? sanitize_text_field( $_POST['editrole'] ) : '';
+		$group_name = !empty( $_POST['group-name'] ) ? sanitize_text_field( $_POST['group-name'] ) : '';
+		$group_parent = !empty( $_POST['group-parent'] ) ? sanitize_text_field( $_POST['group-parent'] ) : '';
+		$group_description = !empty( $_POST['group-description'] ) ? sanitize_text_field( $_POST['group-description'] ) : '';
+		$group_users = !empty( $_POST['group-users'] ) ? (array) $_POST['group-users'] : array();
 		$code = !empty( $_GET['code'] ) ? sanitize_text_field( $_GET['code'] ) : '';
 
 		if ((!empty($addrole) || !empty($editrole)) && !empty($group_name)) {
