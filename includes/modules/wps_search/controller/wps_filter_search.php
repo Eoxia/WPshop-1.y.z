@@ -551,15 +551,20 @@ class wps_filter_search {
 	 */
 	function wpshop_ajax_filter_search_action () {
 		global $wpdb;
-		$category_id =  !empty($_POST['wpshop_filter_search_category_id']) ? wpshop_tools::varSanitizer($_POST['wpshop_filter_search_category_id']) : 0;
+		$category_id =  !empty($_POST['wpshop_filter_search_category_id']) ? wpshop_tools::varSanitizer( $_POST['wpshop_filter_search_category_id'] ) : 0;
 		$filter_search_elements = $this->pick_up_filter_search_elements_type($category_id);
 		$page_id = ( !empty( $_POST['wpshop_filter_search_current_page_id']) ) ? wpshop_tools::varSanitizer( $_POST['wpshop_filter_search_current_page_id'] ) : 1;
 		$request_cmd = '';
 		$status = false;
 		$data = array();
 		foreach ( $filter_search_elements as $k=>$filter_search_element) {
+			$search = isset( $_REQUEST['filter_search'.$k] ) ? sanitize_text_field( $_REQUEST['filter_search'.$k] ) : '';
+			$amount_min = !isset( $_REQUEST['amount_min'.$k] ) : 0 : sanitize_text_field( $_REQUEST['amount_min'.$k] );
+			$amount_max = !isset( $_REQUEST['amount_max'.$k] ) : 0 : sanitize_text_field( $_REQUEST['amount_max'.$k] );
 			$datatype_element = array( 'select_value', 'multiple_select_value', 'fork_values');
-			if ( (in_array($filter_search_element['type'], $datatype_element) && ( isset($_REQUEST['filter_search'.$k]) && $_REQUEST['filter_search'.$k] == 'all_attribute_values' ) ) || ( ($filter_search_element['type'] == 'select_value' || $filter_search_element['type'] == 'multiple_select_value' ) &&  !isset($_REQUEST['filter_search'.$k]) ) || ( $filter_search_element['type'] == 'fork_values' && ( !isset($_REQUEST['amount_min'.$k]) || !isset($_REQUEST['amount_max'.$k]) ) ) ) {
+			if ( (in_array($filter_search_element['type'], $datatype_element) && ( isset($search) && $search == 'all_attribute_values' ) ) ||
+				( ($filter_search_element['type'] == 'select_value' || $filter_search_element['type'] == 'multiple_select_value' ) &&  $search == '' ) ||
+				( $filter_search_element['type'] == 'fork_values' && ( $amount_min == 0 || $amount_max == 0 ) ) ) {
 				unset( $filter_search_elements[$k]);
 			}
 		}
@@ -589,14 +594,18 @@ class wps_filter_search {
 		$array_for_query = implode(',', $categories_id);
 
 		/** SQL request Construct for pick up all product with one of filter search element value **/
-		if ( !empty($filter_search_elements) && !empty($_REQUEST) ) {
+		if ( !empty( $filter_search_elements ) {
 			foreach ( $filter_search_elements as $k=>$filter_search_element ) {
-				if ( !empty($filter_search_element['type']) && !empty($_REQUEST['filter_search'.$k]) && $filter_search_element['type'] == 'select_value' && $_REQUEST['filter_search'.$k] != 'all_attribute_values') {
-					$request_cmd .= 'SELECT meta_key, post_id FROM ' .$wpdb->postmeta. ' INNER JOIN ' .$wpdb->posts. ' ON  post_id = ID WHERE (meta_key = "'.$k.'" AND meta_value = "'.wpshop_tools::varSanitizer($_REQUEST['filter_search'.$k]).'") AND post_type = "'.WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT.'" AND post_status = "publish" ';
+				$search = isset( $_REQUEST['filter_search'.$k] ) ? sanitize_text_field( $_REQUEST['filter_search'.$k] ) : '';
+				$amount_min = !isset( $_REQUEST['amount_min'.$k] ) : 0 : sanitize_text_field( $_REQUEST['amount_min'.$k] );
+				$amount_max = !isset( $_REQUEST['amount_max'.$k] ) : 0 : sanitize_text_field( $_REQUEST['amount_max'.$k] );
+
+				if ( !empty($filter_search_element['type']) && !empty($search) && $filter_search_element['type'] == 'select_value' && $search != 'all_attribute_values') {
+					$request_cmd .= 'SELECT meta_key, post_id FROM ' .$wpdb->postmeta. ' INNER JOIN ' .$wpdb->posts. ' ON  post_id = ID WHERE (meta_key = "'.$k.'" AND meta_value = "'.$search.'") AND post_type = "'.WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT.'" AND post_status = "publish" ';
 					$request_cmd .= ' AND post_id IN (SELECT object_id FROM '.$wpdb->term_relationships.' WHERE term_taxonomy_id IN ('.$array_for_query.') ) ';
 				}
 				else if($filter_search_element['type'] == 'fork_values') {
-					$request_cmd .= 'SELECT meta_key, post_id FROM ' .$wpdb->postmeta. ' INNER JOIN ' .$wpdb->posts. ' ON  post_id = ID WHERE (meta_key = "'.( ( !empty($k) && $k == '_product_price' ) ? '_wpshop_displayed_price' : $k).'" AND meta_value BETWEEN '.wpshop_tools::varSanitizer($_REQUEST['amount_min'.$k]).' AND '.wpshop_tools::varSanitizer($_REQUEST['amount_max'.$k]).') AND post_type = "'.WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT.'" AND post_status = "publish"';
+					$request_cmd .= 'SELECT meta_key, post_id FROM ' .$wpdb->postmeta. ' INNER JOIN ' .$wpdb->posts. ' ON  post_id = ID WHERE (meta_key = "'.( ( !empty($k) && $k == '_product_price' ) ? '_wpshop_displayed_price' : $k).'" AND meta_value BETWEEN '.$amount_min.' AND '.$amount_max.') AND post_type = "'.WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT.'" AND post_status = "publish"';
 					$request_cmd .= ' AND post_id IN (SELECT object_id FROM '.$wpdb->term_relationships.' WHERE term_taxonomy_id IN ('.$array_for_query.') ) ';
 				}
 				else if( $filter_search_element['type'] == 'multiple_select_value' ) {
@@ -605,20 +614,20 @@ class wps_filter_search {
 					if ( !empty($attribute_def) ) {
 						$request_cmd .= 'SELECT CONCAT("_", code) AS meta_key, ATT_INT.entity_id AS post_id FROM ' .WPSHOP_DBT_ATTRIBUTE. ', '.WPSHOP_DBT_ATTRIBUTE_VALUES_INTEGER.' AS ATT_INT WHERE attribute_id = id AND attribute_id = '.$attribute_def->id;
 						$first = true;
-						if ( !empty($_REQUEST['filter_search'.$k]) && is_array($_REQUEST['filter_search'.$k]) ){
-							foreach ( $_REQUEST['filter_search'.$k] as $r ) {
+						if ( !empty($search) && is_array($search) ){
+							foreach ( $search as $r ) {
 								if ( $first) {
-									$request_cmd .= ' AND (value ="' . wpshop_tools::varSanitizer($r). '"';
+									$request_cmd .= ' AND (value ="' . $r. '"';
 									$first = false;
 								}
 								else {
-									$request_cmd .= ' OR value ="' . wpshop_tools::varSanitizer($r). '"';
+									$request_cmd .= ' OR value ="' . $r. '"';
 								}
 							}
 							$request_cmd .= ')';
 						}
-						elseif(  !empty($_REQUEST['filter_search'.$k]) )  {
-							$request_cmd .= ' AND (value ="' . wpshop_tools::varSanitizer($_REQUEST['filter_search'.$k]). '" )';
+						elseif(  !empty($search) )  {
+							$request_cmd .= ' AND (value ="' . $search . '" )';
 						}
 						$request_cmd .= ' AND ATT_INT.entity_id IN (SELECT object_id FROM '.$wpdb->term_relationships.' WHERE term_taxonomy_id IN ('.$array_for_query.') ) ';
 
