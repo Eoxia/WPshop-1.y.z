@@ -65,7 +65,7 @@ class wps_shipping_mode_ajax_actions {
 		global $wpdb;
 		$wps_shipping = new wps_shipping();
 		$fees_data = ( !empty($_POST['fees_data']) ) ? sanitize_text_field( $_POST['fees_data'] ) : null;
-		$country_and_weight =  ( !empty($_POST['country_and_weight']) ) ? $_POST['country_and_weight'] : null;
+		$country_and_weight =  ( !empty($_POST['country_and_weight']) ) ? (int) $_POST['country_and_weight'] : null;
 		$datas = explode("|", $country_and_weight);
 		$country = $datas[0];
 		$weight = $datas[1];
@@ -142,8 +142,9 @@ class wps_shipping_mode_ajax_actions {
 	function wps_reload_shipping_mode() {
 		$status = false; $allow_order = true;
 		$result = '';
-		if ( !empty($_POST['address_id']) ) {
-			$_SESSION['shipping_address'] = wpshop_tools::varSanitizer( $_POST['address_id'] );
+		$address_id = !empty( $_POST['address_id'] ) ? (int) $_POST['address_id'] : 0;
+		if ( !empty($address_id) ) {
+			$_SESSION['shipping_address'] = $address_id;
 		}
 		$shipping_address_id = ( !empty($_SESSION['shipping_address']) ) ? $_SESSION['shipping_address'] : '';
 		if ( !empty($shipping_address_id) ) {
