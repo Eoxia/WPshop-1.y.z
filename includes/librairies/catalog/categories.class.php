@@ -151,7 +151,7 @@ class wpshop_categories
 	*	Add additionnal fields to the category edition form
 	*/
 	public static function category_edit_fields(){
-		$category_id = wpshop_tools::varSanitizer($_REQUEST["tag_ID"]);
+		$category_id = (int) $_REQUEST["tag_ID"];
 		$category_meta_information = get_option(WPSHOP_NEWTYPE_IDENTIFIER_CATEGORIES . '_' . $category_id);
 		$tpl_component = array();
 		$category_thumbnail_preview = '<img src="' .WPSHOP_DEFAULT_CATEGORY_PICTURE. '" alt="No picture" class="category_thumbnail_preview" />';
@@ -170,10 +170,10 @@ class wpshop_categories
 		$tpl_component['CATEGORY_PICTURE_ID'] = ( ( !empty($category_meta_information['wpshop_category_picture']) ) ? $category_meta_information['wpshop_category_picture'] : '' );
 
 		$tpl_component['CATEGORY_THUMBNAIL_PREVIEW'] = $category_thumbnail_preview;
-		if(isset($_GET['tag_ID'])){
-			$tpl_component['CATEGORY_TAG_ID'] = $_GET['tag_ID'];
+		if(isset($category_id)){
+			$tpl_component['CATEGORY_TAG_ID'] = $category_id;
 			$tpl_component['CATEGORY_FILTERABLE_ATTRIBUTES'] = '';
-			$wpshop_category_products = wpshop_categories::get_product_of_category( $_GET['tag_ID'] );
+			$wpshop_category_products = wpshop_categories::get_product_of_category( $category_id );
 			$filterable_attributes_list = array();
 			foreach ( $wpshop_category_products as $wpshop_category_product ) {
 				$elementId = wpshop_entities::get_entity_identifier_from_code(WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT);
@@ -222,13 +222,16 @@ class wpshop_categories
 		$category_meta = array();
 		$category_option = get_option( WPSHOP_NEWTYPE_IDENTIFIER_CATEGORIES . '_' . $category_id);
 
-		if ( !empty($_POST['wps_category_picture_id']) ) {
-			$attach_id = intval( $_POST['wps_category_picture_id'] );
+		$wps_category_picture_id = !empty($_POST['wps_category_picture_id']) ? (int) $_POST['wps_category_picture_id'] : null;
+		$filterable_attribute_for_category = ( !empty($_POST['filterable_attribute_for_category']) && is_array($_POST['filterable_attribute_for_category']) ) ? $_POST['filterable_attribute_for_category'] : null;
+
+		if ( isset( $wps_category_picture_id ) ) {
+			$attach_id = intval( $wps_category_picture_id );
 			$category_option['wpshop_category_picture'] = $attach_id;
 		}
 
-		if ( !empty($_POST['filterable_attribute_for_category']) && is_array($_POST['filterable_attribute_for_category']) ) {
-			$category_option['wpshop_category_filterable_attributes'] = $_POST['filterable_attribute_for_category'];
+		if ( isset( $filterable_attribute_for_category ) ) {
+			$category_option['wpshop_category_filterable_attributes'] = $filterable_attribute_for_category;
 		}
 		else {
 			$category_option['wpshop_category_filterable_attributes'] = array();
