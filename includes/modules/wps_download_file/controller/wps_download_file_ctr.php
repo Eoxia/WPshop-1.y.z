@@ -7,7 +7,10 @@ class wps_download_file_ctr {
 
 	// Download product downloadable
 	public function wpshop_download_file() {
-		if ( !empty($_GET['download']) && $download = sanitize_text_field( $_GET['download'] ) && !empty($_GET['oid']) && $oid = (int) $_GET['oid'] ) {
+		$download = !empty( $_GET['download'] ) ? sanitize_text_field( $_GET['download'] ) : '';
+		$oid = !empty( $_GET['oid'] ) ? (int) $_GET['oid'] : 0;
+
+		if ( !empty( $download ) && !empty( $oid ) ) {
 			$variation_id = '';
 			if(is_user_logged_in()) {
 				$user_id = get_current_user_id();
@@ -19,7 +22,7 @@ class wps_download_file_ctr {
 							$is_encrypted = false;
 							if ( $d['download_code'] == $download ) {
 								wpshop_tools::create_custom_hook ('encrypt_actions_for_downloadable_product', array( 'order_id' => $oid, 'download_product_id' => $downloadable_product_id ) );
-								
+
 								if ( get_post_type( $downloadable_product_id ) == WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION ) {
 									$parent_def = wpshop_products::get_parent_variation( $downloadable_product_id );
 									if ( !empty($parent_def) && !empty($parent_def['parent_post']) ) {
@@ -27,14 +30,14 @@ class wps_download_file_ctr {
 										$variation_id = $downloadable_product_id;
 										$downloadable_product_id = $parent_post->ID;
 									}
-									
+
 								}
 
 								$link = wpshop_attributes::get_attribute_option_output(
 									array('item_id' => $downloadable_product_id, 'item_is_downloadable_'=>'yes'),
 									'is_downloadable_', 'file_url', $order
 								);
-							
+
 								if ( $link !== false ) {
 									$uploads = wp_upload_dir();
 									$basedir = $uploads['basedir'];
