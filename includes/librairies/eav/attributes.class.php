@@ -1400,10 +1400,11 @@ ob_end_clean();
 									endif;
 
 									/**	Enregistrement de toutes les valeurs des attributs dans une meta du produit	*/
-									if (!empty($_POST['attribute_option'][$attribute_code])) {
+									$attribute_option = (!empty($_POST['attribute_option'][$attribute_code])) ? (array) $_POST['attribute_option'][$attribute_code] : null;
+									if (isset($attribute_option)) {
 										$value = self::get_attribute_type_select_option_info($attributeTypeDetails[$attribute_code], 'value');
 										if (strtolower($value) == 'yes') :
-											update_post_meta($entityId, 'attribute_option_'.$attribute_code, $_POST['attribute_option'][$attribute_code]);
+											update_post_meta($entityId, 'attribute_option_'.$attribute_code, $attribute_option);
 										else :
 											delete_post_meta($entityId, 'attribute_option_'.$attribute_code);
 										endif;
@@ -2496,7 +2497,7 @@ GROUP BY ATT.id, chosen_val", $element_id, $attribute_code);
 						<div class="wpshop_form_input_element alignleft">
 						<div id="send_downloadable_file_dialog" class="wpshop_add_box" title="' .__('Send the downloadable file', 'wpshop'). '"></div>
 						<a id="send_downlodable_file" class="wps-bton-first-mini-rounded">' .__('Send a file', 'wpshop'). '</a>
-						<input type="hidden" id="product_identifer_field" value="' .( !empty($_GET['post']) ? $_GET['post'] : '') . '" /><br/><u>'.__('File url','wpshop').' :</u>
+						<input type="hidden" id="product_identifer_field" value="' .( !empty($_GET['post']) ? esc_attr( $_GET['post'] ) : '') . '" /><br/><u>'.__('File url','wpshop').' :</u>
 						<div class="statut"><a href="' .$data['file_url']. '" target="_blank" download>'.basename($data['file_url']).'</a></div>
 						</div>';
 				return $fields;

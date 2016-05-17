@@ -223,7 +223,7 @@ class wpshop_categories
 		$category_option = get_option( WPSHOP_NEWTYPE_IDENTIFIER_CATEGORIES . '_' . $category_id);
 
 		$wps_category_picture_id = !empty($_POST['wps_category_picture_id']) ? (int) $_POST['wps_category_picture_id'] : null;
-		$filterable_attribute_for_category = ( !empty($_POST['filterable_attribute_for_category']) && is_array($_POST['filterable_attribute_for_category']) ) ? $_POST['filterable_attribute_for_category'] : null;
+		$filterable_attribute_for_category = ( !empty($_POST['filterable_attribute_for_category']) && is_array($_POST['filterable_attribute_for_category']) ) ? (array) $_POST['filterable_attribute_for_category'] : null;
 
 		if ( isset( $wps_category_picture_id ) ) {
 			$attach_id = intval( $wps_category_picture_id );

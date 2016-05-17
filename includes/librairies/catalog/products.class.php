@@ -1183,7 +1183,7 @@ class wpshop_products {
 	function save_product_custom_informations( $post_id , $data_to_save = array() ) {
 		global $wpdb;
 
-		$data_to_save = ( !empty($data_to_save) ) ? $data_to_save : $_REQUEST;
+		$data_to_save = ( !empty($data_to_save) ) ? $data_to_save : (array) $_REQUEST;
 		// Apply a filter to extra actions
 		$data_to_save = apply_filters( 'wps_save_product_extra_filter', $data_to_save );
 
@@ -2012,8 +2012,8 @@ class wpshop_products {
 			$entity_type_id	= wpshop_entities::get_entity_identifier_from_code(WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT);
 			$language 		= WPSHOP_CURRENT_LOCALE;
 
-			if ( !empty($_REQUEST['icl_post_language']) && sanitize_text_field($_REQUEST['icl_post_language']) ) {
-				$query = $wpdb->prepare("SELECT locale FROM " . $wpdb->prefix . "icl_locale_map WHERE code = %s", $_REQUEST['icl_post_language']);
+			if ( !empty($_REQUEST['icl_post_language']) ) {
+				$query = $wpdb->prepare("SELECT locale FROM " . $wpdb->prefix . "icl_locale_map WHERE code = %s", sanitize_text_field($_REQUEST['icl_post_language']));
 				$language = $wpdb->get_var($query);
 			}
 
