@@ -460,7 +460,8 @@ class wps_address {
 		global $wpdb;
 		/**	Get current customer addresses list	*/
 		if ( is_admin() ) {
-			$post = get_post( $_GET['post']);
+			$post = !empty( $_GET['post'] ) ? (array) $_GET['post'] : array();
+			$post = get_post( $post );
 			if ( !empty($post->post_parent) ) {
 				$customer_id = $post->post_parent;
 			}
@@ -627,6 +628,7 @@ class wps_address {
 		$current_item_edited = isset($id) ? (int)wpshop_tools::varSanitizer($id) : null;
 		$address = array();
 		$all_addresses = '';
+		$attribute = !empty( $_POST['attribute'] ) ? (array) $_POST['attribute'] : array();
 		/*	Get the attribute set details in order to build the product interface	*/
 
 		$atribute_set_details = wpshop_attributes_set::getAttributeSetDetails($typeof, "'valid'");
@@ -639,7 +641,7 @@ class wps_address {
 					foreach($productAttributeSetDetail['attribut'] as $attribute) {
 						if(!empty($attribute->id)) {
 							if ( !empty( $submit_billing_and_shipping_info ) ) {
-								$value = $_POST['attribute'][$typeof][$attribute->data_type][$attribute->code];
+								$value = $attribute[$typeof][$attribute->data_type][$attribute->code];
 							}
 							else {
 								$value = wpshop_attributes::getAttributeValueForEntityInSet($attribute->data_type, $attribute->id, wpshop_entities::get_entity_identifier_from_code(WPSHOP_NEWTYPE_IDENTIFIER_ADDRESS), $current_item_edited, array('intrinsic' => $attribute->is_intrinsic, 'backend_input' => $attribute->backend_input));
@@ -669,7 +671,7 @@ class wps_address {
 	public static function save_address_infos( $attribute_set_id ) {
 		global $wpdb;
 		$adress_save_the_first = !empty( $_POST['wps-address-save-the-first'] ) ? sanitize_text_field( $_POST['wps-address-save-the-first'] ) : '';
-		$attribute = !empty( $_POST['attribute'] ) ? $_POST['attribute'] : '';
+		$attribute = !empty( $_POST['attribute'] ) ? (array)$_POST['attribute'] : '';
 		if ( !empty( $attribute[$attribute_set_id] ) ) {
 			$attribute[$attribute_set_id]['varchar']['address_title'] = sanitize_text_field( $attribute[$attribute_set_id]['varchar']['address_title'] );
 			$attribute[$attribute_set_id]['varchar']['address_last_name'] = sanitize_text_field( $attribute[$attribute_set_id]['varchar']['address_last_name'] );
@@ -701,12 +703,15 @@ class wps_address {
 		// @TODO : REQUEST
 		$post_parent = '';
 		$post_author = get_current_user_id();
-		if ( !empty($_REQUEST['user']['customer_id']) ) {
-			$post_parent = $_REQUEST['user']['customer_id'];
-			$post_author = $_REQUEST['user']['customer_id'];
+		$customer_id = !empty( $_REQUEST['user']['customer_id'] ) ? (int) $_REQUEST['user']['customer_id'] : 0;
+		$post_ID = !empty( $_REQUEST['post_ID'] ) ? (int) $_REQUEST['post_ID'] : 0;
+
+		if ( !empty($customer_id) ) {
+			$post_parent = $customer_id;
+			$post_author = $customer_id;
 		}
-		elseif ( !empty($_REQUEST['post_ID']) ) {
-			$post_parent = $_REQUEST['post_ID'];
+		elseif ( !empty( $post_ID ) ) {
+			$post_parent = $post_ID;
 		}
 		else {
 			$post_parent = get_current_user_id();
@@ -858,11 +863,9 @@ class wps_address {
 				if ( empty($options['field_to_hide']) || !is_array($options['field_to_hide']) || !in_array( $key, $options['field_to_hide'] ) ) {
 					$attributeInputDomain = 'attribute[' . $type . '][' . $field['data_type'] . ']';
 					// Test if there is POST var or if user have already fill his address infos and fill the fields with these infos
-					if( !empty($_POST) ) {
-						$referer = !empty($_POST['referer']) ? sanitize_text_field( $_POST['referer'] ) : '';
-						if ( !empty($form['id']) && !empty($field['name']) && isset($_POST[$form['id']."_".$field['name']]) ) {
-							$value = sanitize_text_field( $_POST[$form['id']."_".$field['name']] );
-						}
+					$referer = !empty($_POST['referer']) ? sanitize_text_field( $_POST['referer'] ) : '';
+					if( !empty($referer) ) {
+						$value = !empty( $_POST[$form['id']."_".$field['name']] ) ? sanitize_text_field( $_POST[$form['id']."_".$field['name']] ) : '';
 					}
 
 
@@ -919,7 +922,7 @@ class wps_address {
 
 
 					/** Fill fields if $_POST exist **/
-					if ( !empty( $_POST['attribute'][$type][$field['data_type']][$field['name']] ) ) {
+					if ( !empty( $attribute[$type][$field['data_type']][$field['name']] ) ) {
 						$field['value'] = sanitize_text_field( $_POST['attribute'][$type][$field['data_type']][$field['name']] );
 					}
 
@@ -1079,7 +1082,7 @@ class wps_address {
 	function shipping_to_billing( $shipping_address_type_id, $billing_address_type_id ) {
 		global $wpdb;
 		$tmp_array = array();
-		$tmp_array = $_REQUEST;
+		$tmp_array = !empty( $_REQUEST ) ? (array)$_REQUEST : array();
 
 		$billing_fields = array();
 		if( !empty($tmp_array) && !empty($tmp_array['attribute']) && !empty($tmp_array['attribute'][$shipping_address_type_id]) ) {
@@ -1097,7 +1100,8 @@ class wps_address {
 					}
 				}
 			}
-			$_POST = $tmp_array;
+			// @TODO Enlevez ce $_POST
+			//$_POST = $tmp_array;
 		}
 	}
 
@@ -1294,8 +1298,9 @@ class wps_address {
 		$address_id = (int)$_POST[ 'element_id' ];
 		$post_ID = (int)$_POST[ 'post_id' ];
 		$address_type_id = get_post_meta( $address_id, '_wpshop_address_attribute_set_id', true);
-		if ( empty( $address_id ) && empty( $address_type_id ) && !empty( $_POST[ 'wpeogeo-address-type-chosen-for-creation' ] ) ) {
-			$address_type_id = sanitize_text_field( $_POST[ 'wpeogeo-address-type-chosen-for-creation' ] );
+		$wpeogeo_adress = !empty( $_POST[ 'wpeogeo-address-type-chosen-for-creation' ] ) ? (int) $_POST[ 'wpeogeo-address-type-chosen-for-creation' ] : 0;
+		if ( empty( $address_id ) && empty( $address_type_id ) && !empty( $wpeogeo_adress ) ) {
+			$address_type_id = $wpeogeo_adress;
 		}
 
 		require( wpshop_tools::get_template_part( WPS_ADDRESS_DIR, WPS_LOCALISATION_TEMPLATES_MAIN_DIR, "backend", "address", "form" ) );
@@ -1384,7 +1389,7 @@ class wps_address {
 			wp_die();
 
 		$adress_save_the_first = !empty( $_POST['wps-address-save-the-first'] ) ? sanitize_text_field( $_POST['wps-address-save-the-first'] ) : '';
-		$attribute = !empty( $_POST['attribute'] ) ? $_POST['attribute'] : '';
+		$attribute = !empty( $_POST['attribute'] ) ? (array)$_POST['attribute'] : '';
 		if ( !empty( $attribute[$attribute_set_id] ) ) {
 			$attribute[$attribute_set_id]['varchar']['address_title'] = sanitize_text_field( $attribute[$attribute_set_id]['varchar']['address_title'] );
 			$attribute[$attribute_set_id]['varchar']['address_last_name'] = sanitize_text_field( $attribute[$attribute_set_id]['varchar']['address_last_name'] );
@@ -1424,8 +1429,10 @@ class wps_address {
 				if ( $validate ) {
 					$shipping_save = self::save_address_infos( $id_group );
 
-					if( !empty($_POST['wps-shipping-to-billing']) ) {
-						$_POST['wps-shipping-to-billing-id'] = $shipping_save['current_id'];
+					$wps_shipping_to_billing = !empty( $_POST['wps-shipping-to-billing'] ) ? sanitize_text_field( $_POST['wps-shipping-to-billing'] ) : '';
+					if( !empty( $wps_shipping_to_billing ) ) {
+						// @TODO
+						// $_POST['wps-shipping-to-billing-id'] = $shipping_save['current_id'];
 						$billing_option = get_option( 'wpshop_billing_address' );
 						$shipping_option = get_option( 'wpshop_shipping_address_choice' );
 						self::shipping_to_billing( $shipping_option['choice'], $billing_option['choice'] );
