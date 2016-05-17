@@ -28,7 +28,7 @@ if ( $test != '../test/request.test.php' ) {
 				$matched_string = str_replace( ')', '', $matched_string );
 				$matched_string = trim($matched_string);
 				preg_match( '#function *' . $matched_string . '(.+)?\}#isU', $file, $function );
-				
+
 				if ( !empty( $function[0] ) ) {
 					$function = $function[0];
 					if ( !preg_match( '#wp_verify_nonce#', $function ) ) {
@@ -39,7 +39,7 @@ if ( $test != '../test/request.test.php' ) {
 			}
 		}
 	}
-	
+
 }
 }
 
@@ -50,7 +50,7 @@ if ( !empty( $string_post_unsecured ) ) {
     if ( !empty( $file ) ) {
       echo "[+] File : " . $name_file . ' => Unsecured nonce ' . count( $file ) . PHP_EOL . '<br />';
       foreach ( $file as $fonction_name => $content ) {
-        echo "[+] Not found wp_verify_nonce on : " . $fonction_name . PHP_EOL . '<br />';
+        echo "[+] <span style='color: #ea6153'>Not found wp_verify_nonce on : " . $fonction_name . PHP_EOL . '</span><br />';
       }
     }
   }
