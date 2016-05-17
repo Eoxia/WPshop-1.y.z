@@ -27,7 +27,8 @@ foreach ( $unitList as $file_url )
 			  if ( !preg_match( '#sanitize_.+#', $lines[$key] ) &&
 				!preg_match( '#\*#', $lines[$key] ) &&
 				!preg_match( '#\\/\/#', $lines[$key] ) &&
-				!preg_match( '#( ?int ?)#', $lines[$key] ) ) {
+				!preg_match( '#( ?int ?)#', $lines[$key] ) && 
+				!preg_match( '#varSanitizer#', $lines[$key] ) ) {
 				  $string_post_unsecured[$file_url][$key + 1] = htmlentities( $lines[$key] );
 				  $total_unsecured_line++;
 			  }
