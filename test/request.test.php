@@ -9,7 +9,7 @@ echo "[+] Starting Request Tests" . PHP_EOL . PHP_EOL;
 $unitList = search_files('../', "/^.*\.php$/");
 $string_post_unsecured = array();
 $total_unsecured_line = 0;
-$pattern = '#\$_POST|\$_GET|\$_REQUEST\$_SESSION#';
+$pattern = '#\$_POST|\$_GET|\$_REQUEST|\$_SESSION#';
 
 // Loop on unitList
 foreach ( $unitList as $file_url )
@@ -33,7 +33,7 @@ foreach ( $unitList as $file_url )
 				  $total_unsecured_line++;
 			  }
 
-			  if ( preg_match( '#(\$_POST|\$_GET|\$_REQUEST|\$_SESSION)\[\'.+\'\].+?\=#isU', $lines[$key] ) ) {
+			  if ( preg_match( '#(\$_POST|\$_GET|\$_REQUEST)\[\'.+\'\].+?\=#isU', $lines[$key] ) ) {
   				$string_post_unsecured[$file_url][$key + 1] = htmlentities( $lines[$key] );
   				$total_unsecured_line++;
 			  }
@@ -59,6 +59,9 @@ if ( !empty( $string_post_unsecured ) ) {
         }
         else if( preg_match( '#\$_REQUEST#', trim($content) ) ) {
           $color = "#2ecc71";
+        }
+        else if( preg_match( '#\$_SESSION#', trim($content) ) ) {
+          $color = "#f1c40f";
         }
 
         echo "[+] <span style='color: " . $color . "'>Line : " . $line . " => " . trim($content) . PHP_EOL . '</span><br />';
