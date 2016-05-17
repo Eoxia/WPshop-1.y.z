@@ -125,11 +125,15 @@ class wps_highlighting_ctr {
 	 * Save action
 	 */
 	function save_post_action() {
-		if( !empty($_POST['post_type']) && !empty($_POST['post_type']) && $_POST['post_type'] == WPS_NEWTYPE_IDENTIFIER_HIGHLIGHTING ) {
-			if( !empty($_POST['wps_highlighting_hook']) ) {
-				update_post_meta( (int)$_POST['post_ID'], '_wps_highlighting_hook', sanitize_text_field( $_POST['wps_highlighting_hook'] ) );
+		$post_type = !empty( $_POST['post_type'] ) ? sanitize_text_field( $_POST['post_type'] ) : '';
+		if( !empty($post_type) && !empty($post_type) && $post_type == WPS_NEWTYPE_IDENTIFIER_HIGHLIGHTING ) {
+			$wps_highlighting_hook = !empty( $_POST['wps_highlighting_hook'] ) ? sanitize_text_field( $_POST['wps_highlighting_hook'] ) : '';
+			$wps_highlighting_link = !empty( $_POST['wps_highlighting_link'] ) ? sanitize_text_field( $_POST['wps_highlighting_link'] ) : '';
+			$post_ID = !empty( $_POST['post_ID'] ) ? (int) $_POST['post_ID'] : 0;
+			if( !empty($wps_highlighting_hook) ) {
+				update_post_meta( $post_ID, '_wps_highlighting_hook', $wps_highlighting_hook );
 			}
-			update_post_meta( (int)$_POST['post_ID'], '_wps_highlighting_link', sanitize_text_field ( $_POST['wps_highlighting_link'] ) );
+			update_post_meta( $post_ID, '_wps_highlighting_link', $wps_highlighting_link );
 		}
 	}
 
