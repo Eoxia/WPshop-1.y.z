@@ -152,8 +152,10 @@ class wps_orders_in_back_office {
 	 */
 	function save_order_custom_informations() {
 		global $wpdb;
+
+		$post_ID = !empty( $_REQUEST['post_ID'] ) ? (int) $_REQUEST['post_ID'] : 0;
 		// Check if it is an order save action
-		if ( !empty($_REQUEST['post_ID']) && ( get_post_type($_REQUEST['post_ID']) == WPSHOP_NEWTYPE_IDENTIFIER_ORDER) ) {
+		if ( !empty($post_ID) && ( get_post_type($post_ID) == WPSHOP_NEWTYPE_IDENTIFIER_ORDER) ) {
 			//Define Customer ID
 			$user_id = ( !empty($_REQUEST['wps_customer_id']) ) ? (int)$_REQUEST['wps_customer_id'] : get_current_user_id();
 
@@ -161,7 +163,7 @@ class wps_orders_in_back_office {
 			$order_meta = get_post_meta( intval($_REQUEST['post_ID']), '_order_postmeta', true);
 
 			// Save General information of order's attached customer
-			$wpdb->update($wpdb->posts, array('post_parent' => $user_id, 'post_status' => 'publish'),  array('ID' => (int)$_REQUEST['post_ID']) );
+			$wpdb->update($wpdb->posts, array('post_parent' => $user_id, 'post_status' => 'publish'),  array('ID' => $post_ID) );
 			update_post_meta((int)$_REQUEST['post_ID'], '_wpshop_order_customer_id', $user_id);
 			$order_meta['customer_id'] = $user_id;
 			if ( empty($order_meta['order_key']) ) {
@@ -172,10 +174,12 @@ class wps_orders_in_back_office {
 			$order_meta['order_date'] = (isset($order_meta['order_date']) && ($order_meta['order_date'] != '')) ? $order_meta['order_date'] : current_time('mysql', 0);
 			$order_meta['order_currency'] = wpshop_tools::wpshop_get_currency(true);
 
+
+
 			// Order Attached Addresses save
 			if( !empty($_REQUEST['wps_order_selected_address']['billing']) ) {
 				// Informations
-				$order_informations = get_post_meta( (int)$_REQUEST['post_ID'], '_order_info', true );
+				$order_informations = get_post_meta( $post_ID, '_order_info', true );
 				$order_informations = ( !empty($order_informations) ) ? $order_informations : array();
 				$billing_address_option = get_option( 'wpshop_billing_address' );
 				$billing_address_option = ( !empty($billing_address_option) && !empty($billing_address_option['choice']) ) ? $billing_address_option['choice'] : '';
@@ -194,7 +198,7 @@ class wps_orders_in_back_office {
 							'address' => get_post_meta( (int)$_REQUEST['wps_order_selected_address']['shipping'], '_wpshop_address_metadata', true )
 					);
 				}
-				update_post_meta( (int)$_REQUEST['post_ID'], '_order_info', $order_informations );
+				update_post_meta( $post_ID, '_order_info', $order_informations );
 			}
 
 
@@ -213,7 +217,7 @@ class wps_orders_in_back_office {
 						'date' 				=> current_time('mysql', 0),
 						'received_amount' 	=> $received_payment_amount
 				);
-				$order_meta = wpshop_payment::check_order_payment_total_amount((int)$_REQUEST['post_ID'], $params_array, 'completed', $order_meta, false );
+				$order_meta = wpshop_payment::check_order_payment_total_amount($post_ID, $params_array, 'completed', $order_meta, false );
 			}
 
 			//Round final amount
