@@ -61,6 +61,7 @@ class wps_shortcodes_ctr
 	function pageTitle(){
 		$action = isset($_REQUEST['action']) ? wpshop_tools::varSanitizer($_REQUEST['action']) : '';
 		$objectInEdition = isset($_REQUEST['id']) ? wpshop_tools::varSanitizer($_REQUEST['id']) : '';
+		$page = !empty( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : '';
 
 		$title = __(self::pageTitle, 'wpshop' );
 		if($action != ''){
@@ -72,7 +73,7 @@ class wps_shortcodes_ctr
 				$title = __(self::pageAddingTitle, 'wpshop');
 			}
 		}
-		elseif((self::getEditionSlug() != self::getListingSlug()) && ($_GET['page'] == self::getEditionSlug())){
+		elseif((self::getEditionSlug() != self::getListingSlug()) && ($page == self::getEditionSlug())){
 			$title = __(self::pageAddingTitle, 'wpshop');
 		}
 		return $title;
@@ -93,17 +94,17 @@ class wps_shortcodes_ctr
 		$shortcodes['simple_product']['attrs_def']['type'] = 'list|grid';
 		$shortcodes['simple_product']['attrs_exemple']['pid'] = '12';
 		$shortcodes['simple_product']['attrs_exemple']['type'] = 'list';
-		
+
 		$shortcodes['wpshop_product_title']['main_title'] = __( 'Product title', 'wpshop' );
 		$shortcodes['wpshop_product_title']['main_code'] = 'wpshop_product_title';
 		$shortcodes['wpshop_product_title']['attrs_def']['pid'] = 'ID_DU_PRODUIT';
 		$shortcodes['wpshop_product_title']['attrs_exemple']['pid'] = '12';
-		
+
 		$shortcodes['wpshop_product_content']['main_title'] = __( 'Product content', 'wpshop' );
 		$shortcodes['wpshop_product_content']['main_code'] = 'wpshop_product_content';
 		$shortcodes['wpshop_product_content']['attrs_def']['pid'] = 'ID_DU_PRODUIT';
 		$shortcodes['wpshop_product_content']['attrs_exemple']['pid'] = '12';
-		
+
 		$shortcodes['wpshop_product_thumbnail']['main_title'] = __( 'Product thumbnail', 'wpshop' );
 		$shortcodes['wpshop_product_thumbnail']['main_code'] = 'wpshop_product_thumbnail';
 		$shortcodes['wpshop_product_thumbnail']['attrs_def']['pid'] = 'ID_DU_PRODUIT';
@@ -178,7 +179,7 @@ class wps_shortcodes_ctr
 
 		$shortcodes['widget_cart_mini']['main_title'] = __('Display the cart widget', 'wpshop');
 		$shortcodes['widget_cart_mini']['main_code'] = 'wpshop_mini_cart';
-		
+
 		$shortcodes['wpshop_button_add_to_cart']['main_title'] = __('Display the button add to cart', 'wpshop');
 		$shortcodes['wpshop_button_add_to_cart']['main_code'] = 'wpshop_button_add_to_cart';
 		$shortcodes['wpshop_button_add_to_cart']['attrs_def']['pid'] = 'ID_DU_PRODUIT';
@@ -251,9 +252,9 @@ class wps_shortcodes_ctr
 	}
 
 
-	/** 
-	 * Récupères le contenu de tous les shortcodes 
-	 * 
+	/**
+	 * Récupères le contenu de tous les shortcodes
+	 *
 	 * @return string
 	 */
 	function elementList(){

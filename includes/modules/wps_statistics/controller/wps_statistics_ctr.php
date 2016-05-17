@@ -225,6 +225,7 @@ class wps_statistics_ctr {
 		$day = ( !empty($_POST['day']) ) ? sanitize_text_field( $_POST['day'] ) : null;
 		$width = !empty( $_POST['width'] ) ? (int) $_POST['width'] : 0;
 		$height = !empty( $_POST['height'] ) ? (int) $_POST['height'] : 0;
+		
 		$response = $this->wps_statistics_orders_moment( array( 'choosen_day' => $day, 'return' => true, 'width' => $width, 'height' => $height ) );
 		$status = true;
 		echo json_encode( array( 'status' => $status, 'response' => $response ) );
