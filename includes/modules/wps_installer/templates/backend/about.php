@@ -9,7 +9,7 @@ $sub_page = !empty( $_GET['sub-page'] ) ? sanitize_text_field( $_GET['sub-page']
 	<div class="wp-badge" ><?php printf( __( 'Version %s', 'wpshop'), WPSHOP_VERSION ); ?></div>
 
 	<h2 class="nav-tab-wrapper">
-		<a class="nav-tab<?php echo !empty( $sub_page ) ? ' nav-tab-active' : '' ); ?>" href="<?php echo admin_url( "admin.php?page=wpshop_about" ); ?>"><?php _e( 'Introduction to WPShop', 'wpshop'); ?></a>
+		<a class="nav-tab<?php echo !empty( $sub_page ) ? ' nav-tab-active' : ''; ?>" href="<?php echo admin_url( "admin.php?page=wpshop_about" ); ?>"><?php _e( 'Introduction to WPShop', 'wpshop'); ?></a>
 		<!--
 			<a class="nav-tab<?php echo ( !empty( $sub_page ) && ( "credits" == $sub_page ) ? ' nav-tab-active' : '' ); ?>" href="<?php echo admin_url( "admin.php?page=wpshop_about&sub-page=credits" ); ?>"><?php _e( 'Credits', 'wpshop'); ?></a>
 		 -->
