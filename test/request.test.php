@@ -27,15 +27,15 @@ foreach ( $unitList as $file_url )
 			  if ( !preg_match( '#sanitize_.+#', $lines[$key] ) &&
 				!preg_match( '#\*#', $lines[$key] ) &&
 				!preg_match( '#\\/\/#', $lines[$key] ) &&
-				!preg_match( '#( ?int ?)#', $lines[$key] ) && 
+				!preg_match( '#( ?int ?)#', $lines[$key] ) &&
 				!preg_match( '#varSanitizer#', $lines[$key] ) ) {
 				  $string_post_unsecured[$file_url][$key + 1] = htmlentities( $lines[$key] );
 				  $total_unsecured_line++;
 			  }
 
 			  if ( preg_match( '#(\$_POST|\$_GET|\$_REQUEST|\$_SESSION)\[\'.+\'\].+?\=#isU', $lines[$key] ) ) {
-				$string_post_unsecured[$file_url][$key + 1] = htmlentities( $lines[$key] );
-				$total_unsecured_line++;
+  				$string_post_unsecured[$file_url][$key + 1] = htmlentities( $lines[$key] );
+  				$total_unsecured_line++;
 			  }
 			}
 		}
@@ -50,7 +50,18 @@ if ( !empty( $string_post_unsecured ) ) {
     if ( !empty( $file ) ) {
       echo "[+] File : " . $file_url . ' => Unsecured $_POST|$_GET|$_REQUEST|$_SESSION ' . count( $file ) . PHP_EOL . '<br />';
       foreach ( $file as $line => $content ) {
-        echo "[+] Line : " . $line . " => " . trim($content) . PHP_EOL . '<br />';
+        $color = "black";
+        if ( preg_match( '#\$_POST#', trim($content) ) ) {
+          $color = "#ea6153";
+        }
+        else if( preg_match( '#\$_GET#', trim($content) ) ) {
+          $color = "#3498db";
+        }
+        else if( preg_match( '#\$_REQUEST#', trim($content) ) ) {
+          $color = "#2ecc71";
+        }
+
+        echo "[+] <span style='color: " . $color . "'>Line : " . $line . " => " . trim($content) . PHP_EOL . '</span><br />';
       }
     }
   }
