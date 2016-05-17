@@ -90,10 +90,15 @@ class wps_statistics_ctr {
 	 * Save action to exclude customer of statistics
 	 */
 	function wps_statistics_save_customer_infos() {
-		if ( !empty($_POST['action']) && $_POST['action'] != 'autosave' && !empty($_POST['post_type']) && $_POST['post_type'] == WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ) {
-			$customer_def = get_post( (int)$_POST['post_ID'] );
-			if( isset( $_POST['wps_statistics_exclude_customer'] ) ) {
-				update_user_meta( $customer_def->post_author, 'wps_statistics_exclude_customer', $_POST['wps_statistics_exclude_customer'] );
+		$action = !empty( $_POST['action'] ) ? sanitize_text_field( $_POST['action'] ) : '';
+		$post_type = !empty( $_POST['post_type'] ) ? sanitize_text_field( $_POST['post_type'] ) : '';
+		$post_id = !empty( $_POST['post_ID'] ) ? (int) $_POST['post_ID'] : 0;
+		$wps_statistics_exclude_customer = isset( $_POST['wps_statistics_exclude_customer'] ) ? (int) $_POST['wps_statistics_exclude_customer'] : 0;
+
+		if ( !empty($action) && $action != 'autosave' && !empty($post_type) && $post_type == WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ) {
+			$customer_def = get_post( $post_id );
+			if( isset( $wps_statistics_exclude_customer ) ) {
+				update_user_meta( $customer_def->post_author, 'wps_statistics_exclude_customer', $wps_statistics_exclude_customer );
 			}
 		}
 	}
@@ -216,8 +221,11 @@ class wps_statistics_ctr {
 	 */
 	function wps_hourly_order_day() {
 		$status = false; $response = '';
+
 		$day = ( !empty($_POST['day']) ) ? sanitize_text_field( $_POST['day'] ) : null;
-		$response = $this->wps_statistics_orders_moment( array( 'choosen_day' => $day, 'return' => true, 'width' => (int)$_POST['width'], 'height' => (int)$_POST['height'] ) );
+		$width = !empty( $_POST['width'] ) ? (int) $_POST['width'] : 0;
+		$height = !empty( $_POST['height'] ) ? (int) $_POST['height'] : 0;
+		$response = $this->wps_statistics_orders_moment( array( 'choosen_day' => $day, 'return' => true, 'width' => $width, 'height' => $height ) );
 		$status = true;
 		echo json_encode( array( 'status' => $status, 'response' => $response ) );
 		wp_die();
