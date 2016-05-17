@@ -214,7 +214,8 @@ class wps_customer_ctr {
 		}
 
 		/* Redirect to new user */
-		if( $pagenow == 'post-new.php' && isset( $_GET['post_type'] ) && $_GET['post_type'] == WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ) {
+		$post_type = !empty(  $_GET['post_type'] ) ? sanitize_text_field(  $_GET['post_type'] ) : '';
+		if( $pagenow == 'post-new.php' && isset( $post_type ) && $post_type == WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ) {
 			$_SESSION['redirect_to_customer'] = 'edit.php?post_type=' . WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS;
 			wp_redirect( admin_url('user-new.php', 'http' ), 301 );
 			exit;
@@ -285,8 +286,9 @@ class wps_customer_ctr {
 		}
 		$user_id = $post->post_author;
 		$user_info = array();
-		if( !empty( $_POST['attribute'] ) ) {
-			foreach( $_POST['attribute'] as $type => $attributes ) {
+		$attribute = !empty( $_POST['attribute'] ) ? (array)$_POST['attribute'] : array();
+		if( !empty( $attribute ) ) {
+			foreach( $attribute as $type => $attributes ) {
 				foreach( $attributes as $meta => $attribute ) {
 					$user_info[$meta] = sanitize_text_field( $attribute );
 				}
@@ -295,10 +297,12 @@ class wps_customer_ctr {
 		self::save_customer_synchronize( $customer_post_ID, $user_id, $user_info );
 		/** Update newsletter user preferences **/
 		$newsletter_preferences = array();
-		if( !empty($_POST['newsletters_site']) ) {
+		$newsletter_site = !empty( $_POST['newsletters_site'] ) ? sanitize_text_field( $_POST['newsletters_site'] ) : '';
+		if( !empty($newsletter_site) ) {
 			$newsletter_preferences['newsletters_site'] = 1;
 		}
-		if( !empty($_POST['newsletters_site_partners']) ) {
+		$newsletters_site_partners = !empty( $_POST['newsletters_site_partners'] ) ? sanitize_text_field( $_POST['newsletters_site_partners'] ) : '';
+		if( !empty($newsletters_site_partners) ) {
 			$newsletter_preferences['newsletters_site_partners'] = 1;
 		}
 		update_user_meta( $user_id, 'user_preferences', $newsletter_preferences);
@@ -386,25 +390,6 @@ class wps_customer_ctr {
 	 * Notice for errors on admin
 	 */
 	function notice_save_post_customer_informations() {
-		/*global $wpdb;
-		$wps_entities = new wpshop_entities();
-		$query = $wpdb->prepare('SELECT id FROM ' . WPSHOP_DBT_ATTRIBUTE_SET . ' WHERE entity_id = %d', $wps_entities->get_entity_identifier_from_code( WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ) );
-		$attribute_set_id = $wpdb->get_var( $query );
-		if ( !empty($attribute_set_id) ) {
-			$group  = wps_address::get_addresss_form_fields_by_type( $attribute_set_id );
-			foreach ( $group as $attribute_sets ) {
-				foreach ( $attribute_sets as $attribute_set_field ) {
-					global $wpshop;
-					$validate = $wpshop->validateForm($attribute_set_field['content'], $_POST['attribute'] );
-					if( !empty( $wpshop->errors ) ) {
-						if( empty( $_SESSION['save_post_customer_informations_errors'] ) ) {
-							$_SESSION['save_post_customer_informations_errors'] = array();
-						}
-						$_SESSION['save_post_customer_informations_errors'] = array_merge( $_SESSION['save_post_customer_informations_errors'], $wpshop->errors );
-					}
-				}
-			}
-		}*/
 		$errors = isset( $_SESSION['save_post_customer_informations_errors'] ) ? $_SESSION['save_post_customer_informations_errors'] : '';
 		if( !empty( $errors ) ) {
 			foreach( $errors as $error ) {
@@ -501,8 +486,8 @@ class wps_customer_ctr {
 	}
 
 	function list_table_filters() {
-		if (isset($_GET['post_type'])) {
-			$post_type = sanitize_text_field( $_GET['post_type'] );
+		$post_type = !empty( $_GET['post_type'] ) ? sanitize_text_field( $_GET['post_type'] ) : '';
+		if (isset($post_type)) {
 			if (post_type_exists($post_type) && ($post_type == WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS)) {
 				$filter_possibilities = array();
 				$filter_possibilities[''] = __('-- Select Filter --', 'wpshop');
@@ -515,10 +500,11 @@ class wps_customer_ctr {
 
 	function list_table_filter_parse_query($query) {
 		global $pagenow, $wpdb;
-
-		if ( is_admin() && ($pagenow == 'edit.php') && !empty( $_GET['post_type'] ) && ( $_GET['post_type'] == WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ) && !empty( $_GET['entity_filter'] ) ) {
+		$post_type = !empty( $_GET['post_type'] ) ? sanitize_text_field( $_GET['post_type'] ) : '';
+		$entity_filter = !empty( $_GET['entity_filter'] ) ? sanitize_text_field( $_GET['entity_filter'] ) : '';
+		if ( is_admin() && ($pagenow == 'edit.php') && !empty( $post_type ) && ( $post_type == WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ) && !empty( $entity_filter ) ) {
 			$check = null;
-			switch ( sanitize_text_field( $_GET['entity_filter'] ) ) {
+			switch ( $entity_filter ) {
 				case 'orders':
 					$sql_query = $wpdb->prepare(
 						"SELECT ID
