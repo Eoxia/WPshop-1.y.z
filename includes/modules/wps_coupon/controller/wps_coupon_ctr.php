@@ -131,9 +131,20 @@ class wps_coupon_ctr {
 	 * @TODO REQUEST
 	 */
 	function save_coupon_custom_informations() {
-		if( !empty($_REQUEST['post_ID']) && (get_post_type($_REQUEST['post_ID']) == WPSHOP_NEWTYPE_IDENTIFIER_COUPON) ) {
+		$post_ID = !empty( $_REQUEST['post_ID'] ) ? (int) $_REQUEST['post_ID'] : 0;
+		if( !empty($post_ID) && (get_post_type($post_ID) == WPSHOP_NEWTYPE_IDENTIFIER_COUPON) ) {
 			$wps_coupon_mdl = new wps_coupon_model();
-			$wps_coupon_mdl->save_coupons_informations( $_REQUEST );
+			
+			$data = array(
+				'wpshop_coupon_mini_amount' => !empty( $_REQUEST['wpshop_coupon_mini_amount'] ) ? sanitize_text_field( $_REQUEST['wpshop_coupon_mini_amount'] ) : '',
+				'wpshop_coupon_min_mount_shipping_rule' => !empty( $_REQUEST['wpshop_coupon_min_mount_shipping_rule'] ) ? sanitize_text_field( $_REQUEST['wpshop_coupon_min_mount_shipping_rule'] ) : '',
+				'coupon_code' => !empty( $_REQUEST['coupon_code'] ) ? sanitize_text_field( $_REQUEST['coupon_code'] ) : '',
+				'coupon_discount_amount' => !empty( $_REQUEST['coupon_discount_amount'] ) ? sanitize_text_field( $_REQUEST['coupon_discount_amount'] ) : '',
+				'wpshop_coupon_discount_type' => !empty( $_REQUEST['wpshop_coupon_discount_type'] ) ? sanitize_text_field( $_REQUEST['wpshop_coupon_discount_type'] ) : '',
+				'coupon_receiver' => !empty( $_REQUEST['coupon_receiver'] ) ? sanitize_text_field( $_REQUEST['coupon_receiver'] ) : '',
+				'coupon_usage_limit' => !empty( $_REQUEST['coupon_usage_limit'] ) ? sanitize_text_field( $_REQUEST['coupon_usage_limit'] ) : '',
+			);
+			$wps_coupon_mdl->save_coupons_informations( $data );
 		}
 	}
 
