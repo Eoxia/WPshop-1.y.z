@@ -47,7 +47,8 @@ class wps_product_quick_add {
 	 * AJAX - Recharge la liste des attributs du groupe sélectionné par l'administratuer pour la création du nouveau produit / Reload attribute list for the selected attribute set, choosen by administrator for new product creation
 	 */
 	function attribute_list_reload() {
-		$this->display_attribute( $_POST[ 'attribute_set' ] );
+		$attribute_set = !empty( $_POST['attribute_set'] ) ? (int) $_POST['attribute_set'] : 0;
+		$this->display_attribute( $attribute_set );
 		wp_die( );
 	}
 
@@ -62,10 +63,10 @@ class wps_product_quick_add {
 			'pid' => -1,
 		);
 
-		$post_title = ( !empty($_POST['post_title']) ) ? $_POST['post_title'] : -1;
-		$post_content = ( !empty($_POST['post_content']) ) ? $_POST['post_content'] : '';
+		$post_title = ( !empty($_POST['post_title']) ) ? sanitize_text_field( $_POST['post_title'] ) : -1;
+		$post_content = ( !empty($_POST['post_content']) ) ? sanitize_text_field( $_POST['post_content'] ) : '';
 		$attributes = ( !empty($_POST['attribute']) ) ? $_POST['attribute'] : -1;
-		$id_attribute_set = ( !empty($_POST['wps-product-attribute-set']) ) ? $_POST['wps-product-attribute-set'] : -1;
+		$id_attribute_set = ( !empty($_POST['wps-product-attribute-set']) ) ? (int) $_POST['wps-product-attribute-set'] : -1;
 
 		$post_type = WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT;
 		$attribute_set_list = wpshop_attributes_set::get_attribute_set_list_for_entity( wpshop_entities::get_entity_identifier_from_code( 'wpshop_product' ) );

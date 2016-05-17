@@ -35,19 +35,19 @@ class wps_product_ajax_ctr_01 {
 	 */
 	public function ajax_save_product_price() {
 		header( 'Content-Type: application/json' );
-
 		$response = array();
 
 		$price_piloting_option = get_option( 'wpshop_shop_price_piloting' );
 
-		$inconsistent_product_number 	= !empty( $_POST['product_price'] ) ? count( $_POST['product_price'] ) : 0;
+		$inconsistent_product_number 	= !empty( $_POST['product_price'] ) ? (int) count( $_POST['product_price'] ) : 0;
 		$consistent_product_number 		= 0;
 
 		$entity_type_id	= wpshop_entities::get_entity_identifier_from_code(WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT);
 		$language 		= WPSHOP_CURRENT_LOCALE;
+		$icl_language = !empty( $_REQUEST['icl_post_language'] ) ? sanitize_text_field( $_REQUEST['icl_post_language'] ) : '';
 
-		if ( !empty($_REQUEST['icl_post_language']) ) {
-			$query = $wpdb->prepare("SELECT locale FROM " . $wpdb->prefix . "icl_locale_map WHERE code = %s", sanitize_text_field( $_REQUEST['icl_post_language'] ) );
+		if ( !empty($icl_language) ) {
+			$query = $wpdb->prepare("SELECT locale FROM " . $wpdb->prefix . "icl_locale_map WHERE code = %s", $icl_language );
 			$language = $wpdb->get_var($query);
 		}
 
