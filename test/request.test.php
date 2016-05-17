@@ -36,7 +36,9 @@ foreach ( $unitList as $file_url )
 			  }
 
 			  if ( preg_match( '#(\$_POST|\$_GET|\$_REQUEST)\[\'.+\'\].+?\=#isU', $lines[$key] ) &&
-        !preg_match( '#\* @#', $lines[$key] ) ) {
+        !preg_match( '#\* @#', $lines[$key] ) &&
+        !preg_match( '#\\/\/#', $lines[$key] ) &&
+        !preg_match( '#\*#', $lines[$key] ) ) {
   				$string_post_unsecured[$file_url][$key + 1] = htmlentities( $lines[$key] );
   				$total_unsecured_line++;
 			  }
