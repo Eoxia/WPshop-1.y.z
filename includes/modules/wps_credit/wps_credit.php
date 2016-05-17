@@ -287,16 +287,19 @@ if ( !class_exists('wps_credit') ) {
 			$price_piloting_option = get_option( 'wpshop_shop_price_piloting' );
 			$product_list_to_return = array();
 			$order_id = ( !empty($_POST['order_id']) ) ? wpshop_tools::varSanitizer( $_POST['order_id'] ) : null;
+			$wps_credit_return = !empty( $_POST['wps_credit_return'] ) ? (array) $_POST['wps_credit_return'] : array();
+			$wps_credit_item_quantity = !empty( $_POST['wps_credit_item_quantity'] ) ? (array) $_POST['wps_credit_item_quantity'] : array();
+			$wps_credit_item_price = !empty( $_POST['wps_credit_item_price'] ) ? (array) $_POST['wps_credit_item_price'] : array();
 			if ( !empty($order_id) ) {
-				if( !empty($_POST['wps_credit_return']) ) {
+				if( !empty($wps_credit_return) ) {
 					$order_postmeta = get_post_meta( $order_id, '_order_postmeta', true );
 					if ( !empty($order_postmeta) && $order_postmeta['order_items'] ) {
-						if ( !empty( $_POST['wps_credit_return'] ) && is_array($_POST['wps_credit_return']) ) {
-							foreach( $_POST['wps_credit_return'] as $item_key => $returned_item ) {
-	 							if ( !empty( $_POST['wps_credit_item_quantity'][$item_key] ) && $_POST['wps_credit_item_quantity'][$item_key] <= $order_postmeta['order_items'][$item_key]['item_qty'] ) {
-	 								if ( !empty( $_POST['wps_credit_item_price'][$item_key] ) && $_POST['wps_credit_item_price'][$item_key] <= ( ( !empty($price_piloting_option) && $price_piloting_option == 'HT' ) ? $order_postmeta['order_items'][$item_key]['item_pu_ht'] : $order_postmeta['order_items'][$item_key]['item_pu_ttc'] ) ){
-	 									$product_list_to_return[ $item_key ]['qty'] = sanitize_key( $_POST['wps_credit_item_quantity'][$item_key] );
-	 									$product_list_to_return[ $item_key ]['price'] = sanitize_key( $_POST['wps_credit_item_price'][$item_key] );
+						if ( !empty( $wps_credit_return ) && is_array($wps_credit_return) ) {
+							foreach( $wps_credit_return as $item_key => $returned_item ) {
+	 							if ( !empty( $wps_credit_item_quantity[$item_key] ) && $wps_credit_item_quantity[$item_key] <= $order_postmeta['order_items'][$item_key]['item_qty'] ) {
+	 								if ( !empty( $wps_credit_item_price[$item_key] ) && $wps_credit_item_price[$item_key] <= ( ( !empty($price_piloting_option) && $price_piloting_option == 'HT' ) ? $order_postmeta['order_items'][$item_key]['item_pu_ht'] : $order_postmeta['order_items'][$item_key]['item_pu_ttc'] ) ){
+	 									$product_list_to_return[ $item_key ]['qty'] = sanitize_key( $wps_credit_item_quantity[$item_key] );
+	 									$product_list_to_return[ $item_key ]['price'] = sanitize_key( $wps_credit_item_price[$item_key] );
 	 								}
 	 								else {
 	 									$result = __( 'You try to return a product more expensive than what was purchased', 'wpshop' );
@@ -307,7 +310,8 @@ if ( !class_exists('wps_credit') ) {
 	 							}
 							}
 
-							if( !empty( $_POST['wps_credit_shipping_cost'] ) ) {
+							$wps_credit_shipping_cost = !empty( $_POST['wps_credit_shipping_cost'] ) ? sanitize_text_field( $_POST['wps_credit_shipping_cost'] ) : '';
+							if( !empty( $wps_credit_shipping_cost ) ) {
 								$product_list_to_return['shipping_cost']['price'] = $order_postmeta['order_shipping_cost'];
 							}
 
@@ -315,11 +319,14 @@ if ( !class_exists('wps_credit') ) {
 							if ( !empty($product_list_to_return) ) {
 								/** Check restock Item **/
 								$products_list_to_restock = array();
-								if ( !empty($_POST['wps_credit_restock']) ) {
-									$products_list_to_restock = sanitize_text_field( $_POST['wps_credit_restock'] );
+								$wps_credit_restock = !empty( $_POST['wps_credit_restock'] ) ? sanitize_text_field( $_POST['wps_credit_restock'] ) : '';
+								if ( !empty($wps_credit_restock) ) {
+									$products_list_to_restock = $wps_credit_restock;
 								}
-								$credit_status = ( !empty($_POST['wps_credit_status']) ) ? sanitize_text_field( $_POST['wps_credit_status'] ) : '';
-								$add_credit_value = ( !empty($_POST['wps_add_credit_value']) ) ? sanitize_text_field( $_POST['wps_add_credit_value'] ) : '';
+								$wps_credit_status = !empty( $_POST['wps_credit_status'] ) ? sanitize_text_field( $_POST['wps_credit_status'] ) : '';
+								$wps_add_credit_value = !empty( $_POST['wps_add_credit_value'] ) ? sanitize_text_field( $_POST['wps_add_credit_value'] ) : '';
+								$credit_status = $wps_credit_status;
+								$add_credit_value = $wps_add_credit_value;
 								$status = self::create_an_credit( $order_id, $product_list_to_return, $credit_status, $add_credit_value, $products_list_to_restock );
 							}
 
