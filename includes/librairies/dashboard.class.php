@@ -257,10 +257,9 @@ class wpshop_dashboard {
 				<?php
 					global $current_month_offset;
 
-					$current_month_offset = (int) date('m');
+					$current_month_offset = (isset($_GET['month'])) ? (int) $_GET['month'] : (int) date('m');
 
-					if (isset($_GET['month'])) $current_month_offset = (int) $_GET['month'];
-				?>
+									?>
 				<div class="postbox stats" id="wpshop-stats">
 					<h3 class="hndle">
 						<?php if ($current_month_offset!=date('m')) : ?>

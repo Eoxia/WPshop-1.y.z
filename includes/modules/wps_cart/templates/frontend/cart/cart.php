@@ -96,7 +96,7 @@
 				}
 
 				if ( !empty($download_codes) && !empty($download_codes[$item_id_for_download]) && !empty($download_codes[$item_id_for_download]['download_code']) ) {
-					$download_link = '<a href="' .WPSHOP_URL. '/download_file.php?oid=' .$oid. '&amp;download=' .$download_codes[$item_id_for_download]['download_code']. '" target="_blank" class="wps-bton-fourth-mini-rounded">' .__('Download the product','wpshop'). '</a>';
+					$download_link = '<a href="' .admin_url( 'admin-post.php?action=download_file&amp;oid=' . $oid . '&amp;download=' . $download_codes[$item_id_for_download]['download_code'] ) . '" target="_blank" class="wps-bton-fourth-mini-rounded">' .__('Download the product','wpshop'). '</a>';
 				}
 			}
 

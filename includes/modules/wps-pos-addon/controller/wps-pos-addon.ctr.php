@@ -23,12 +23,14 @@ class wps_pos_addon {
 		add_action( 'init', array( $this, 'wps_pos_addon_session' ) );
 		add_action( 'init', array( $this, 'wps_pos_option_db' ) );
 
-		if( !isset( $_GET['tab'] ) || ( isset( $_GET['tab'] ) && $_GET['tab'] == 'dashboard' ) ) {
+		$tab = ( !empty( $_GET['tab'] ) ) ? sanitize_text_field( $_GET['tab'] ) : '';
+
+		if( !empty( $tab ) || $tab == 'dashboard' ) ) {
 			/**	Instanciation des différents composants du logiciel de caisse / Instanciate the different component for POS addon	*/
 			$this->wps_pos_customer = new wps_pos_addon_customer();
 			$this->wps_pos_product = new wps_pos_addon_product();
 			$this->wps_pos_order = new wps_pos_addon_order();
-		} elseif( $_GET['tab'] == 'bank_deposit' ) {
+		} elseif( $tab == 'bank_deposit' ) {
 			$this->wps_pos_addon_bank_deposit = new wps_pos_addon_bank_deposit();
 			$this->wps_pos_addon_bank_deposit_histo = new wps_pos_addon_bank_deposit_histo();
 
@@ -67,7 +69,10 @@ class wps_pos_addon {
 		if ( $screen->id == $wps_pos_addon_menu ) {
 			wp_register_style( 'wpspos-common-styles', WPSPOS_URL . 'assets/css/backend.css', '', WPSPOS_VERSION );
 			wp_enqueue_style( 'wpspos-common-styles' );
-			if( isset( $_GET['tab'] ) && $_GET['tab'] == 'bank_deposit' ) {
+
+			$tab = ( !empty( $_GET['tab'] ) ) ? sanitize_text_field( $_GET['tab'] ) : '';
+
+			if( empty( $tab ) || $tab == 'bank_deposit' ) {
 				wp_enqueue_script('wpspos-backend-bank-deposit-js',  WPSPOS_URL . 'assets/js/backend_bank_deposit.js', '', WPSPOS_VERSION);
 			} else {
 				wp_enqueue_script('wpspos-backend-js',  WPSPOS_URL . 'assets/js/backend.js', '', WPSPOS_VERSION);
@@ -139,7 +144,10 @@ class wps_pos_addon {
 	function wps_pos_addon_session() {
 		@session_start();
 
-		if ( !empty( $_GET ) && !empty( $_GET[ 'new_order' ] ) && ( 'yes' == $_GET[ 'new_order' ] ) ) {
+		$new_order = ( !empty( $_GET['new_order'] ) ) ? sanitize_text_field( $_GET['new_order'] ) : '';
+		$page = ( !empty( $_GET['page'] ) ) ? sanitize_text_field( $_GET['page'] ) : '';
+
+		if ( 'yes' == $new_order ) {
 			unset( $_SESSION[ 'cart' ] );
 			unset( $_SESSION[ 'wps-pos-addon' ] );
 			delete_user_meta( get_current_user_id(), '_wpshop_persistent_cart' );
@@ -148,7 +156,7 @@ class wps_pos_addon {
 			wp_safe_redirect( admin_url( 'admin.php?page=wps-pos' ) );
 		}
 
-		if( empty( $_GET[ 'page' ] ) || ( 'wps-pos' != $_GET[ 'page' ] ) ) {
+		if( empty( $page ) || ( 'wps-pos' != $page ) ) {
 			unset( $_SESSION[ 'wps-pos-addon' ] );
 		}
 
@@ -395,7 +403,7 @@ class wps_pos_addon {
 
 		$alphabet = unserialize( WPSPOS_ALPHABET_LETTERS );
 		$letter = !empty( $_POST['term'] ) && in_array( $_POST['term'], $alphabet )	? sanitize_text_field( $_POST['term'] ) : null;
-		$element_type = !empty( $_POST['element_type'] ) ? wpshop_tools::varSanitizer( $_POST['element_type'] ) : 'customer';
+		$element_type = !empty( $_POST['element_type'] ) ? sanitize_text_field( $_POST['element_type'] ) : 'customer';
 		$response[ 'element_type' ] = $element_type;
 
 		if ( !empty( $letter ) ) {
@@ -420,7 +428,7 @@ class wps_pos_addon {
 
 		}
 		else {
-			$response[ 'output' ] = sprintf( __( 'THe requested term (%s) to search is invalid. Please check your request and try again', 'wps-pos-i18n' ), sanitize_text_field( $_POST['term'] ) );
+			$response[ 'output' ] = sprintf( __( 'THe requested term (%s) to search is invalid. Please check your request and try again', 'wps-pos-i18n' ), $letter );
 		}
 
 		wp_die( json_encode( $response ) );
@@ -432,10 +440,10 @@ class wps_pos_addon {
 	function ajax_save_config_barcode_only() {
 		$option = 'wps_pos_options';
 		$values = get_option( $option );
-		if( !empty( $_POST['value_checkbox'] ) && $_POST['value_checkbox'] == 'checked' ) {
+		if( !empty( $_POST['value_checkbox'] ) && ( $value_checkbox = sanitize_text_field( $_POST['value_checkbox'] ) ) == 'checked' ) {
 			$values['only_barcode'] = 'checked';
   			update_option( $option, $values );
-		} elseif( !empty( $_POST['value_checkbox'] ) && $_POST['value_checkbox'] == 'unchecked' ) {
+		} elseif( $value_checkbox == 'unchecked' ) {
 			$values['only_barcode'] = 'unchecked';
   			update_option( $option, $values );
 		}
@@ -444,9 +452,9 @@ class wps_pos_addon {
 
 	function ajax_wpspos_state_is_quotation() {
 		@session_start();
-		if( !empty( $_POST['value_checkbox'] ) && $_POST['value_checkbox'] == 'checked' ) {
+		if( !empty( $_POST['value_checkbox'] ) && ( $value_checkbox = sanitize_text_field( $_POST['value_checkbox'] ) ) == 'checked' ) {
 			$_SESSION['wpspos_is_quotation'] = true;
-		} elseif( !empty( $_POST['value_checkbox'] ) && $_POST['value_checkbox'] == 'unchecked' ) {
+		} elseif( $value_checkbox == 'unchecked' ) {
 			unset( $_SESSION['wpspos_is_quotation'] );
 		}
 		wp_die();
@@ -454,9 +462,9 @@ class wps_pos_addon {
 
 	function ajax_wpspos_state_is_receipt() {
 		@session_start();
-		if( !empty( $_POST['value_checkbox'] ) && $_POST['value_checkbox'] == 'checked' ) {
+		if( !empty( $_POST['value_checkbox'] ) && ( $value_checkbox = sanitize_text_field( $_POST['value_checkbox'] ) ) == 'checked' ) {
 			$_SESSION['wpspos_is_receipt'] = true;
-		} elseif( !empty( $_POST['value_checkbox'] ) && $_POST['value_checkbox'] == 'unchecked' ) {
+		} elseif( $value_checkbox == 'unchecked' ) {
 			unset( $_SESSION['wpspos_is_receipt'] );
 		}
 		wp_die();

@@ -32,9 +32,14 @@ class wps_pos_addon_bank_deposit_histo {
 		wp_localize_script( 'wpspos-backend-bank-deposit-js', 'historics', $this->get_historic() );
 		wp_localize_script( 'wpspos-backend-bank-deposit-js', 'templates_url', WPSHOP_TEMPLATES_URL );
 	}
-
 	public function save_historic_ajax() {
-		$this->add_historic( $this->row_model( 0, sanitize_text_field( $_POST['date'] ), sanitize_text_field( $_POST['amount'] ), $_POST['payments'] ) );
+		$payments = array();
+		foreach( $_POST['payments'] as $payment ) {
+			if( is_float( $payment ) ) {
+				$payments[] = (float) $payment;
+			}
+		}
+		$this->add_historic( $this->row_model( 0, sanitize_text_field( $_POST['date'] ), sanitize_text_field( $_POST['amount'] ), $payments ) );
 		echo json_encode( $this->get_historic() );
 		wp_die();
 	}

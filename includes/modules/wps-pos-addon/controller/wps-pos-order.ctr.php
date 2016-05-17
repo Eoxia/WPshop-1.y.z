@@ -60,13 +60,16 @@ class wps_pos_addon_order {
 
 		$result = $selected_variation_list = '';
 		$price_piloting_option = get_option('wpshop_shop_price_piloting');
-		if ( !empty( $_SESSION['cart'] ) || ( !empty( $_POST ) && !empty( $_POST['order_id'] ) ) ) {
+
+		$order_id = ( !empty( $_POST['order_id'] ) ) ? (int) $_POST['order_id'] : null;
+
+		if ( !empty( $_SESSION['cart'] ) || isset( $order_id ) ) ) {
 			/* if ( empty( $_SESSION[ 'cart' ][ 'customer_id' ]) ) {
 				$result = __( 'No customer selected for the order, please choose a customer from left hand side list for continue this order', 'wps-pos-i18n' );
 			}
 			else  */
-			if( !empty( $_POST['order_id'] ) ) {
-				$order = get_post_meta( (int)$_POST['order_id'], '_order_postmeta', true );
+			if( isset( $order_id ) ) {
+				$order = get_post_meta( $order_id, '_order_postmeta', true );
 
 				/**	Get current order content	*/
 				$cart_content = $order;
@@ -138,10 +141,10 @@ class wps_pos_addon_order {
 		$status = false;
 		$output = $message = '';
 
-		$order_id = ( !empty( $_POST['order_id'] ) ) ? wpshop_tools::varSanitizer( $_POST['order_id'] ) : null;
+		$order_id = ( !empty( $_POST['order_id'] ) ) ? (int) $_POST['order_id'] : null;
 		$new_order = empty( $_POST['order_id'] );
-		$payment_method = ( !empty( $_POST['wpspos-payment-method']) ) ? wpshop_tools::varSanitizer( $_POST['wpspos-payment-method'] ) : null;
-		$customer_id = ( !empty( $_POST['customer_id'] ) ) ? wpshop_tools::varSanitizer( $_POST['customer_id'] ) : ( !empty( $_SESSION[ 'cart' ][ 'customer_id' ] ) ) ? wpshop_tools::varSanitizer( $_SESSION[ 'cart' ][ 'customer_id' ] ) : null;
+		$payment_method = ( !empty( $_POST['wpspos-payment-method']) ) ? sanitize_text_field( $_POST['wpspos-payment-method'] ) : null;
+		$customer_id = ( !empty( $_POST['customer_id'] ) ) ? (int) $_POST['customer_id'] : ( !empty( $_SESSION[ 'cart' ][ 'customer_id' ] ) ) ? (int) $_SESSION[ 'cart' ][ 'customer_id' ] : null;
 		$payment_amount = ( !empty( $_POST['wps-pos-total-order-amount'] ) ) ? wpshop_tools::varSanitizer( $_POST['wps-pos-total-order-amount'] ) : null;
 		$received_payment_amount = ( !empty( $_POST['wpspos-order-received-amount'] ) ) ? wpshop_tools::varSanitizer( $_POST['wpspos-order-received-amount'] ) : $payment_amount;
 

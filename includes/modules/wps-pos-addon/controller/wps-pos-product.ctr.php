@@ -149,7 +149,7 @@ class wps_pos_addon_product {
 	function ajax_pos_check_product_type() {
 		$product_type = 'simple';
 
-		$product_id = ( !empty($_POST['product_id']) ) ? wpshop_tools::varSanitizer($_POST['product_id']) : null;
+		$product_id = ( !empty($_POST['product_id']) ) ? (int) $_POST['product_id'] : null;
 		if ( !empty($product_id) ) {
 			$product_post_meta = get_post_meta( $product_id, '_wpshop_variation_defining', true );
 			if ( !empty( $product_post_meta ) ) {

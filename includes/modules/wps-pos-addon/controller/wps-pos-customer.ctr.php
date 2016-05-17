@@ -285,13 +285,13 @@ class wps_pos_addon_customer {
 	 */
 	function display_selected_customer( $customer_id ) {
 		/**	Récupération des données de l'utilisateur / Get selected user account informations	*/
-		$customer_infos = get_userdata( $customer_id );
+		$customer_infos = get_userdata( (int) $customer_id );
 
 		$_SESSION[ 'wps-pos-addon' ] = 1;
 
 		$_SESSION[ 'billing_address' ] = $this->check_customer_billing_address( $customer_id );
 		$shipping_address_id = get_option( 'wpshop_pos_addon_shop_address' );
-		$_SESSION[ 'shipping_address' ] = ( !empty($shipping_address_id) ) ? $shipping_address_id : '';
+		$_SESSION[ 'shipping_address' ] = ( !empty($shipping_address_id) && sanitize_key( $shipping_address_id ) ) ? $shipping_address_id : '';
 
 		/**	Inclusion du fichier d'affichage / Include the display file	*/
 		require( wpshop_tools::get_template_part( WPSPOS_DIR, WPSPOS_TEMPLATES_MAIN_DIR, 'backend/customers', 'metabox-selected', 'customer' ) );
@@ -306,7 +306,7 @@ class wps_pos_addon_customer {
 			'element_type'	=> 'customer',
 			'output'		=> '',
 		);
-		$selected_customer = !empty( $_POST ) && !empty( $_POST[ 'customer' ] ) && is_int( (int)$_POST[ 'customer' ] ) ? wpshop_tools::varSanitizer( $_POST[ 'customer' ] ) : null;
+		$selected_customer = ( !empty( $_POST ) && !empty( $_POST[ 'customer' ] ) && is_int( (int) $_POST[ 'customer' ] ) ) ? (int) $_POST[ 'customer' ] : null;
 
 		if ( !empty( $selected_customer ) ) {
 			$_SESSION[ 'cart' ][ 'customer_id' ] = $selected_customer;
@@ -330,6 +330,7 @@ class wps_pos_addon_customer {
 	 */
 	function ajax_pos_customer_search() {
 		global $wpdb;
+		$term = ( !empty( $_POST['term'] ) ) ? sanitize_text_field( $_POST['term'] ) : '';
 
 		/** Get the default customer **/
 		$default_customer_option = get_option( 'wpshop_pos_addon_default_customer_id' );
@@ -349,19 +350,19 @@ class wps_pos_addon_customer {
 		if ( false ) {
 			/**	Build the customer search	*/
 			$args = array(
-				'search'			=> "*" . sanitize_text_field( $_POST[ 'term' ] ) . "*",
+				'search'			=> "*" . $term . "*",
 				'search_columns'	=> array( 'user_login', 'user_email', 'user_nicename', ),
 
 				'meta_query'		=> array(
 					'relation'	=> 'OR',
 					array(
 						'key'		=> 'first_name',
-						'value'		=> sanitize_text_field( $_POST[ 'term' ] ),
+						'value'		=> $term,
 						'compare'	=> 'LIKE',
 					),
 					array(
 						'key'		=> 'last_name',
-						'value'		=> sanitize_text_field( $_POST[ 'term' ] ),
+						'value'		=> $term,
 						'compare'	=> 'LIKE',
 					),
 				),
@@ -413,7 +414,7 @@ class wps_pos_addon_customer {
 						AND UM.meta_value LIKE '%%%s%%'
 					)
 				GROUP BY U.ID
-			", array( sanitize_text_field( $_POST[ 'term' ] ), sanitize_text_field( $_POST[ 'term' ] ), sanitize_text_field( $_POST[ 'term' ] ), sanitize_text_field( $_POST[ 'term' ] ), sanitize_text_field( $_POST[ 'term' ] ), ) );
+			", array( $term, $term, $term, $term, $term, ) );
 			$customer_search = $wpdb->get_results( $query );
 			if ( !empty( $customer_search ) ) {
 				foreach ( $customer_search as $customer ) {
