@@ -582,6 +582,7 @@ class wps_address {
 		$response  = '<div id="wps_address_error_container"></div>';
 		$response .= '<form id="wps_address_form_save" action="' .admin_url('admin-ajax.php'). '" method="post">';
 		$response .= '<input type="hidden" name="action" value="wps_save_address" />';
+		$response .= wp_nonce_field( 'wps_save_address' );
 		$first_address_checking = false;
 
 		$user_id = ( !empty($user_id) ) ? $user_id : get_current_user_id();
