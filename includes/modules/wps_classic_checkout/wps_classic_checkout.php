@@ -459,8 +459,10 @@ if ( !class_exists("wps_classic_checkout") ) {
 			$payment_method = ( !empty($_POST['wps-payment-method']) ) ? wpshop_tools::varSanitizer( $_POST['wps-payment-method'] ): null;
 			$order_id = ( !empty($_SESSION['cart']['order_id']) ) ? wpshop_tools::varSanitizer($_SESSION['cart']['order_id']) : 0;
 			$customer_comment = ( !empty($_POST['wps-customer-comment']) ) ? wpshop_tools::varSanitizer( $_POST['wps-customer-comment'] ) : null;
+			$terms_of_sale_indicator = !empty( $_POST['terms_of_sale_indicator'] ) ? sanitize_text_field( $_POST['terms_of_sale_indicator'] ) : '';
+			$terms_of_sale = !empty( $_POST['terms_of_sale'] ) ? sanitize_text_field( $_POST['terms_of_sale'] ) : '';
 
-			$terms_of_sale_checking = ( ( isset($_POST['terms_of_sale_indicator']) && !empty($_POST['terms_of_sale']) ) || ( !empty($_POST['terms_of_sale']) ) || ( !isset($_POST['terms_of_sale_indicator']) && empty($_POST['terms_of_sale']) ) ) ? true : false;
+			$terms_of_sale_checking = ( ( isset($terms_of_sale_indicator) && !empty($terms_of_sale) ) || ( !empty($terms_of_sale) ) || ( !isset($terms_of_sale_indicator) && empty($terms_of_sale) ) ) ? true : false;
 
 			if ($terms_of_sale_checking) {
 				if ( !empty($payment_method) ) {

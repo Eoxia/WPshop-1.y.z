@@ -248,8 +248,9 @@ class wps_barcode {
 
 			$barcode = $this->wps_generate_barcode($array);
 			/** For add a product */
-			if (  isset($_REQUEST['wpshop_product_attribute']['varchar']['barcode']) ) {
-				if ($_REQUEST['wpshop_product_attribute']['varchar']['barcode'] !== '') {
+			$barcode = !empty( $_REQUEST['wpshop_product_attribute']['varchar']['barcode'] ) ? sanitize_text_field( $_REQUEST['wpshop_product_attribute']['varchar']['barcode'] ) : '';
+			if (  isset($barcode) ) {
+				if ($barcode !== '') {
 					wpeologs_ctr::log_datas_in_files( 'wps_barcode',
 					array(
 					'object_id' => $post_ID,
@@ -264,7 +265,7 @@ class wps_barcode {
 						'message' => sprintf( __('Adding barcode: %s for %s object ID', 'wps_barcode'), '<b>'.$barcode.'</b>', '<b>'.$post_ID.'</b>') ),
 					0);
 
-					$_REQUEST['wpshop_product_attribute']['varchar']['barcode'] = $barcode;
+					// $_REQUEST['wpshop_product_attribute']['varchar']['barcode'] = $barcode;
 				}
 			}
 			else {
