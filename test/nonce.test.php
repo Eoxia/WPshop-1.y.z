@@ -20,7 +20,7 @@ $total_unsecured_line = 0;
 
     $file = file_get_contents( $test );
 	//"\).+\{.+\}#isU
-    preg_match_all( '#add_action\( ?(\"|\')wp_ajax(\"|\') ?, ?(\"|\')(.+)?(\"|\') \)#isU', $file, $matches );
+    preg_match_all( '#add_action\( *(\"|\')wp_ajax(\"|\') *, *(\"|\')(.+)?(\"|\') *\)#isU', $file, $matches );
 	echo "<pre>";
 	print_r($matches);
 	echo "</pre>";
