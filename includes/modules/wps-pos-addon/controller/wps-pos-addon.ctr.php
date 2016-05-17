@@ -25,7 +25,7 @@ class wps_pos_addon {
 
 		$tab = ( !empty( $_GET['tab'] ) ) ? sanitize_text_field( $_GET['tab'] ) : '';
 
-		if( !empty( $tab ) || $tab == 'dashboard' ) ) {
+		if( !empty( $tab ) || $tab == 'dashboard' ) {
 			/**	Instanciation des différents composants du logiciel de caisse / Instanciate the different component for POS addon	*/
 			$this->wps_pos_customer = new wps_pos_addon_customer();
 			$this->wps_pos_product = new wps_pos_addon_product();

@@ -63,7 +63,7 @@ class wps_pos_addon_order {
 
 		$order_id = ( !empty( $_POST['order_id'] ) ) ? (int) $_POST['order_id'] : null;
 
-		if ( !empty( $_SESSION['cart'] ) || isset( $order_id ) ) ) {
+		if ( !empty( $_SESSION['cart'] ) || isset( $order_id ) ) {
 			/* if ( empty( $_SESSION[ 'cart' ][ 'customer_id' ]) ) {
 				$result = __( 'No customer selected for the order, please choose a customer from left hand side list for continue this order', 'wps-pos-i18n' );
 			}
