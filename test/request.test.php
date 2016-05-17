@@ -9,7 +9,7 @@ echo "[+] Starting Request Tests" . PHP_EOL . PHP_EOL;
 $unitList = search_files('../', "/^.*\.php$/");
 $string_post_unsecured = array();
 $total_unsecured_line = 0;
-$pattern = '#\$_POST|\$_GET|\$_REQUEST|\$_SESSION#';
+$pattern = '#\$_POST|\$_GET|\$_REQUEST#';
 
 // Loop on unitList
 foreach ( $unitList as $file_url )
