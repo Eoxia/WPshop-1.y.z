@@ -66,7 +66,7 @@ class wps_export_ctr {
 				case 'date':
 					$bdte = !empty( $_GET['bdte'] ) ? sanitize_text_field( $_GET['bdte'] ) : '';
 					$edte = !empty( $_GET['edte'] ) ? sanitize_text_field( $_GET['edte'] ) : '';
-					if( !empty($bdte)) && !empty($edte) ) {
+					if( !empty($bdte) && !empty($edte) ) {
 						$filetitle = "users_registered_" . $bdte . "_to_" . $edte;
 						$array = $wps_export_mdl->get_customers($option, $bdte, $edte);
 					}
