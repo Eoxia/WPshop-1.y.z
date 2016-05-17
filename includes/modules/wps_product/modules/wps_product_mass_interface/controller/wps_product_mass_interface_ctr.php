@@ -269,33 +269,36 @@ class wps_product_mass_interface_ctr {
 		$response = ''; $status = false;
 		$count_products_to_update = 0; $total_updated_products = 0;
 
+		$wps_product_quick_save = !empty( $_REQUEST['wps_product_quick_save'] ) ? (array) $_REQUEST['wps_product_quick_save'] : array();
+		$wps_mass_interface = !empty( $_REQUEST['wps_mass_interface'] ) ? (array) $_REQUEST['wps_mass_interface'] : array();
+		$wpshop_product_attribute = !empty( $_REQUEST['wpshop_product_attribute'] ) ? (array) $_REQUEST['wpshop_product_attribute'] : array();
 
-		if( !empty($_REQUEST['wps_product_quick_save']) ) {
-			$count_products_to_update = count( $_REQUEST['wps_product_quick_save'] );
-			foreach( $_REQUEST['wps_product_quick_save'] as $product_to_save ) {
+		if( !empty($wps_product_quick_save) ) {
+			$count_products_to_update = count( $wps_product_quick_save );
+			foreach( $wps_product_quick_save as $product_to_save ) {
 				$data_to_save = array();
 				// Update post
 				$updated_post = wp_update_post( array( 'ID' => $product_to_save,
-						'post_title' => sanitize_text_field( $_REQUEST['wps_mass_interface'][$product_to_save]['post_title'] ),
-						'post_content' => sanitize_text_field( $_REQUEST['wps_mass_interface'][$product_to_save]['post_content'] ),
+						'post_title' => sanitize_text_field( $wps_mass_interface[$product_to_save]['post_title'] ),
+						'post_content' => sanitize_text_field( $wps_mass_interface[$product_to_save]['post_content'] ),
 						)
 				);
 				// Update attributes
 				if( !empty($updated_post) ) {
 					// Update Featured picture
-					if( !empty($_REQUEST['wps_mass_interface'][$product_to_save]['picture']) ) {
+					if( !empty($wps_mass_interface[$product_to_save]['picture']) ) {
 						$thumbnail_exist = get_post_meta( $updated_post, '_thumbnail_id', true );
-						if($_REQUEST['wps_mass_interface'][$product_to_save]['picture'] != 'deleted') {
-							wp_update_post( array('ID' => (int)$_REQUEST['wps_mass_interface'][$product_to_save]['picture'], 'post_parent' => $updated_post) );
-							update_post_meta( $updated_post, '_thumbnail_id', (int)$_REQUEST['wps_mass_interface'][$product_to_save]['picture'] );
+						if($wps_mass_interface[$product_to_save]['picture'] != 'deleted') {
+							wp_update_post( array('ID' => (int)$wps_mass_interface[$product_to_save]['picture'], 'post_parent' => $updated_post) );
+							update_post_meta( $updated_post, '_thumbnail_id', (int)$wps_mass_interface[$product_to_save]['picture'] );
 						}
-						elseif($_REQUEST['wps_mass_interface'][$product_to_save]['picture'] == 'deleted' && !empty($thumbnail_exist)) {
+						elseif($wps_mass_interface[$product_to_save]['picture'] == 'deleted' && !empty($thumbnail_exist)) {
 							delete_post_meta( $updated_post, '_thumbnail_id' );
 						}
 					}
 
 					// Update files datas
-					if( !empty($_REQUEST['wps_mass_interface'][$product_to_save]['files']) ) {
+					if( !empty($wps_mass_interface[$product_to_save]['files']) ) {
 						$files_data = explode( ',', sanitize_text_field( $_REQUEST['wps_mass_interface'][$product_to_save]['files'] ) );
 						if( !empty($files_data) && is_array($files_data) ) {
 							foreach( $files_data as $file_id ) {
@@ -307,7 +310,7 @@ class wps_product_mass_interface_ctr {
 					}
 
 					$data_to_save['post_ID'] = $data_to_save['product_id'] = intval( $product_to_save );
-					$data_to_save['wpshop_product_attribute'] = ( !empty($_REQUEST['wpshop_product_attribute'][ $product_to_save ]) ) ? $_REQUEST['wpshop_product_attribute'][ $product_to_save ] : array();
+					$data_to_save['wpshop_product_attribute'] = ( !empty($wpshop_product_attribute[ $product_to_save ]) ) ? $wpshop_product_attribute[ $product_to_save ] : array();
 
 					if(empty($data_to_save['wpshop_product_attribute']['varchar']['barcode'])) {
 						// Get current barcode
@@ -320,7 +323,7 @@ class wps_product_mass_interface_ctr {
 					$data_to_save['user_ID'] = get_current_user_id();
 					$data_to_save['action'] = 'editpost';
 
-					if( !empty($_REQUEST['wps_mass_interface'][$product_to_save]['post_delete']) && $_REQUEST['wps_mass_interface'][$product_to_save]['post_delete'] == "true" ) {
+					if( !empty($wps_mass_interface[$product_to_save]['post_delete']) && $wps_mass_interface[$product_to_save]['post_delete'] == "true" ) {
 						wp_trash_post( $product_to_save );
 					}
 
