@@ -51,8 +51,10 @@ class wps_product_ajax_ctr_01 {
 			$language = $wpdb->get_var($query);
 		}
 
-		if( !empty( $_POST['product_price'] ) ) {
-			foreach( $_POST['product_price'] as $product_id => $price ) {
+		$product_price = !empty( $_POST['product_price'] ) ? (array) $_POST['product_price'] : array();
+
+		if( !empty( $product_price ) ) {
+			foreach( $product_price as $product_id => $price ) {
 				try {
 					if( $price_piloting_option == 'TTC' )
 						wpshop_attributes::saveAttributeForEntity( array( 'decimal' => array( 'product_price' => sanitize_text_field( $price ) )), $entity_type_id, (int)$product_id, $language, 'wpshop_products' );
