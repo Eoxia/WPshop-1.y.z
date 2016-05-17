@@ -11,36 +11,37 @@ $string_post_unsecured = array();
 $total_unsecured_line = 0;
 
 // Loop on unitList
-//foreach($unitList as $test)
-//{
+foreach($unitList as $test)
+{
 	// echo "[+] Testing -> " . $test . PHP_EOL;
-  //if ( $test != '../test/request.test.php' ) {
-	$test = "abc.php";
-    $string_post_unsecured[$test] = array();
+if ( $test != '../test/request.test.php' ) {
+	$string_post_unsecured[$test] = array();
 
     $file = file_get_contents( $test );
-	//"\).+\{.+\}#isU
-    preg_match_all( '#add_action\( *(\"|\')wp_ajax(\"|\') *, *(\"|\')(.+)?(\"|\') *\)#isU', $file, $matches );
-	echo "<pre>";
-	print_r($matches);
-	echo "</pre>";
+    preg_match_all( '#add_action\(.+(\'|")wp_ajax_.+(\'|"),.+(\'|")(.+)(\'|").+\)#isU', $file, $matches );
+	$matched_function = array();
+	if ( !empty( $matches[4] ) ) {
+		foreach ( $matches[4] as $matched_string ) {
+			preg_match_all( '#(.+)?\', *(.+)?\'#isU', $matched_string, $exploded );
+			if ( empty( $exploded[0] ) ) {
+				$matched_string = str_replace( '(', '', $matched_string );
+				$matched_string = str_replace( ')', '', $matched_string );
+				$matched_string = trim($matched_string);
+				preg_match( '#function *' . $matched_string . '(.+)?\}#isU', $file, $function );
+				
+				if ( !empty( $function[0] ) ) {
+					$function = $function[0];
+					if ( !preg_match( '#wp_verify_nonce#', $function ) ) {
+						$string_post_unsecured[$test][$matched_string] = "wp_security_nonce() not found";
+						$total_unsecured_line++;
+					}
+				}
+			}
+		}
+	}
 	
-    if ( !empty( $matches ) ) {
-      foreach( $matches[0] as $matched_string ) {
-        if ( !empty( $matched_string ) && !empty( $matched_string ) ) {
-          /*if ( !preg_match( '#wp_verify_nonce#', $matched_string ) ) {
-            preg_match( '#function(.+)\(#', $matched_string, $fonction_name );
-            if ( !empty( $fonction_name ) && !empty( $fonction_name[1] ) ) {
-              $string_post_unsecured[$test][$fonction_name[1]] = "wp_security_nonce() not found";
-              $total_unsecured_line++;
-            }
-          }*/
-        }
-      }
-    }
-
-//  }
-//}
+}
+}
 
 echo "[+] Total unsecured nonce : " . $total_unsecured_line . PHP_EOL . '<br />';
 
