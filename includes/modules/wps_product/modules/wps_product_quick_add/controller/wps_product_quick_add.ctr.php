@@ -65,7 +65,7 @@ class wps_product_quick_add {
 
 		$post_title = ( !empty($_POST['post_title']) ) ? sanitize_text_field( $_POST['post_title'] ) : -1;
 		$post_content = ( !empty($_POST['post_content']) ) ? sanitize_text_field( $_POST['post_content'] ) : '';
-		$attributes = ( !empty($_POST['attribute']) ) ? $_POST['attribute'] : -1;
+		$attributes = ( !empty($_POST['attribute']) ) ? (array)$_POST['attribute'] : array();
 		$id_attribute_set = ( !empty($_POST['wps-product-attribute-set']) ) ? (int) $_POST['wps-product-attribute-set'] : -1;
 
 		$post_type = WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT;
