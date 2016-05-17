@@ -8,14 +8,17 @@ class wpshop_customer_search {
 	}
 
 	public function wpshop_search_where_in_customer( $where ) {
+		$post_type = !empty( $_GET['post_type'] ) ? sanitize_text_field( $_GET['post_type'] ) : '';
+		$s = !empty( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '';
+		$entity_filter = !empty( $_GET['filter'] ) ? sanitize_text_field( $_GET['filter'] ) : '';
 
-		if( is_admin() && ( !empty($_GET['post_type']) && ( $_GET['post_type'] == WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ) ) && ( !empty( $_GET['s'] ) || !empty( $_GET['entity_filter'] ) ) ) {
+		if( is_admin() && ( !empty($post_type) && ( $post_type == WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ) ) && ( !empty( $s ) || !empty( $entity_filter ) ) ) {
 			global $wpdb;
 
 			$where = "	AND {$wpdb->posts}.post_type = '" . WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS . "'";
 
-			if( !empty( $_GET['entity_filter'] ) ) {
-				switch ( $_GET['entity_filter'] ) {
+			if( !empty( $entity_filter ) ) {
+				switch ( $entity_filter ) {
 					case 'orders':
 						$operator = 'IN';
 						break;
@@ -32,9 +35,9 @@ class wpshop_customer_search {
 								)";
 			}
 
-			if( !empty( $_GET['s'] ) ) {
-				$s_soundex = soundex( sanitize_text_field( $_GET['s'] ) );
-				$s = strtoupper( sanitize_text_field( $_GET['s'] ) );
+			if( !empty( $s ) ) {
+				$s_soundex = soundex( $s );
+				$s = strtoupper( $s );
 				$where .= "	AND ( 	{$wpdb->posts}.ID = '{$s}'
 									OR UPPER( {$wpdb->posts}.post_title ) LIKE '%{$s}%'
 									OR SOUNDEX( {$wpdb->posts}.post_title ) = '{$s_soundex}'
