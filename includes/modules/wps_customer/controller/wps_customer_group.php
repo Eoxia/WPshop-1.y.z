@@ -14,58 +14,61 @@ class wps_customer_group {
 	 * Gérer les actions $_POST
 	 */
 	function manage_post() {
-		if (!empty($_POST)) {
+		$addrole = !empty( $_POST['addrole'] ) ? sanitize_text_field( $_POST['addrole'] );
+		$editrole = !empty( $_POST['editrole'] ) ? sanitize_text_field( $_POST['editrole'] );
+		$group_name = !empty( $_POST['group-name'] ) ? sanitize_text_field( $_POST['group-name'] );
+		$group_parent = !empty( $_POST['group-parent'] ) ? sanitize_text_field( $_POST['group-parent'] );
+		$group_description = !empty( $_POST['group-description'] ) ? sanitize_text_field( $_POST['group-description'] );
+		$group_users = !empty( $_POST['group-users'] ) ? (array) $_POST['group-users'];
+		$code = !empty( $_GET['code'] ) ? sanitize_text_field( $_GET['code'] ) : '';
 
-			if ((!empty($_POST['addrole']) || !empty($_POST['editrole'])) && !empty($_POST['group-name'])) {
+		if ((!empty($addrole) || !empty($editrole)) && !empty($group_name)) {
 
-				// ROLES
-				$roles = get_option('wp_user_roles', array());
+			// ROLES
+			$roles = get_option('wp_user_roles', array());
 
-				// AJOUT
-				if (!empty($_POST['addrole'])) {
+			// AJOUT
+			if (!empty($addrole)) {
 
-					$code = 'wpshop_'.str_replace('-', '_', sanitize_title($_POST['group-name']));
+				$code = 'wpshop_'.str_replace('-', '_', sanitize_title($group_name));
 
-					// Si le role n'existe pas
-					if (!isset($roles[$code])) {
+				// Si le role n'existe pas
+				if (!isset($roles[$code])) {
 
-						// On ajoute le role
-						$rights = $this->getRoleRights($_POST['group-parent']);
-						add_role($code, sanitize_text_field($_POST['group-name']), $rights);
+					// On ajoute le role
+					$rights = $this->getRoleRights($group_parent);
+					add_role($code, sanitize_text_field($group_name), $rights);
 
-						// On enregistre les metas du groupe
-						$this->setGroupMetas($code, sanitize_text_field( $_POST['group-description'] ), sanitize_text_field( $_POST['group-parent'] ) );
+					// On enregistre les metas du groupe
+					$this->setGroupMetas($code, sanitize_text_field( $group_description ), sanitize_text_field( $group_parent ) );
 
-						// On affecte des utilisateurs au role
-						$this->affectUsersToGroup($code, $_POST['group-users']);
+					// On affecte des utilisateurs au role
+					$this->affectUsersToGroup($code, $group_users);
 
-						// Redirect
-						wpshop_tools::wpshop_safe_redirect(admin_url('admin.php?page='.WPSHOP_NEWTYPE_IDENTIFIER_GROUP.'&action=edit&code='.$code));
-					}
-					else echo __('This group already exist','wpshop');
+					// Redirect
+					wpshop_tools::wpshop_safe_redirect(admin_url('admin.php?page='.WPSHOP_NEWTYPE_IDENTIFIER_GROUP.'&action=edit&code='.$code));
 				}
-				// EDITION
-				elseif (!empty($_POST['editrole']) && !empty($_GET['code'])) {
-
-					$code = sanitize_text_field( $_GET['code'] );
-
-					// Si le role existe
-					if (isset($roles[$code])) {
-
-						$current_role = $this->getRole($code);
-
-						$this->setNewRoleRights($code, $current_role['parent'], sanitize_text_field( $_POST['group-parent'] ) );
-
-						// On enregistre les metas du groupe
-						$this->setGroupMetas($code, sanitize_text_field( $_POST['group-description'] ) , sanitize_text_field( $_POST['group-parent'] ) );
-
-						// On affecte des utilisateurs au role
-						$this->unaffectUsersToGroup($code); // !important
-						$this->affectUsersToGroup($code, $_POST['group-users']);
-					}
-				}
-				else wpshop_tools::wpshop_safe_redirect(admin_url('admin.php?page='.WPSHOP_NEWTYPE_IDENTIFIER_GROUP));
+				else echo __('This group already exist','wpshop');
 			}
+			// EDITION
+			elseif (!empty($editrole) && !empty($code)) {
+
+				// Si le role existe
+				if (isset($roles[$code])) {
+
+					$current_role = $this->getRole($code);
+
+					$this->setNewRoleRights($code, $current_role['parent'], sanitize_text_field( $group_parent ) );
+
+					// On enregistre les metas du groupe
+					$this->setGroupMetas($code, sanitize_text_field( $group_description ) , sanitize_text_field( $group_parent ) );
+
+					// On affecte des utilisateurs au role
+					$this->unaffectUsersToGroup($code); // !important
+					$this->affectUsersToGroup($code, $group_users);
+				}
+			}
+			else wpshop_tools::wpshop_safe_redirect(admin_url('admin.php?page='.WPSHOP_NEWTYPE_IDENTIFIER_GROUP));
 		}
 	}
 
@@ -227,22 +230,24 @@ class wps_customer_group {
 		$content = ob_get_contents();
 		ob_end_clean();
 		$wps_customer_mdl = new wps_customer_mdl();
+		$action = !empty( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
+		$code = !empty( $_GET['code'] ) ? sanitize_text_field( $_GET['code'] ) : '';
 		// Si on re�oit une action
-		if (!empty(sanitize_text_field( $_GET['action']))) {
+		if ( !empty( $action ) ) {
 
 			$readonly_name_field = '';
 
-			switch (sanitize_text_field($_GET['action'])) {
+			switch ( $action ) {
 
 				case 'delete':
 
-					if (!empty(sanitize_text_field($_GET['code']))) {
+					if ( !empty( $code ) ) {
 
 						$roles = get_option('wp_user_roles', array());
 
-						if (isset($roles[$_GET['code']]) && $_GET['code'] != 'customer' && $_GET['code'] != 'wpshop_customer') {
-							unset($roles[sanitize_text_field($_GET['code'])]);
-							$this->unaffectUsersToGroup(sanitize_text_field($_GET['code']));
+						if (isset($roles[$code]) && $code != 'customer' && $code != 'wpshop_customer') {
+							unset($roles[$code]);
+							$this->unaffectUsersToGroup($code);
 							update_option('wp_user_roles', $roles);
 						}
 					}
@@ -255,9 +260,9 @@ class wps_customer_group {
 
 					$readonly_name_field = 'readonly';
 
-					if (!empty(sanitize_text_field($_GET['code']))) {
+					if (!empty($code)) {
 
-						$role = $this->getRole(sanitize_text_field($_GET['code']));
+						$role = $this->getRole($code);
 
 						if (!empty($role)) {
 
@@ -272,7 +277,7 @@ class wps_customer_group {
 							$select_parent = '<option value="">--</option>';
 
 							foreach($roles as $code => $role) {
-								if ($code != sanitize_text_field($_GET['code'])) {
+								if ($code != $code) {
 									$selected = $group_parent==$code ? 'selected' : '';
 									$select_parent .= '<option value="'.$code.'" '.$selected.'>'.$role['name'].'</option>';
 								}
@@ -285,7 +290,7 @@ class wps_customer_group {
 								foreach($users as $user) {
 									if ($user->ID != 1) {
 										$u = new WP_User($user->ID);
-										$selected = isset($u->roles[0]) && $u->roles[0]==sanitize_text_field($_GET['code']) ? 'selected' : '';
+										$selected = isset($u->roles[0]) && $u->roles[0]==$code ? 'selected' : '';
 										$select_users .= '<option value="'.$user->ID.'" '.$selected.'>'.$user->user_login.'</option>';
 									}
 								}
@@ -352,17 +357,20 @@ class wps_customer_group {
 			$wpshop_list_table = new wpshop_groups_custom_List_table();
 			//Fetch, prepare, sort, and filter our data...
 			$status="'valid'";
-			if(!empty($_REQUEST['attribute_status'])){
-				switch($_REQUEST['attribute_status']){
+			$attribute_status = !empty( $_REQUEST['attribute_status'] ) ? sanitize_text_field( $_REQUEST['attribute_status'] ) : '';
+			$orderby = !empty( $_REQUEST['orderby'] ) ? sanitize_text_field( $_REQUEST['orderby'] ) : '';
+			$order = !empty( $_REQUEST['order'] ) ? sanitize_text_field( $_REQUEST['order'] ) : '';
+			if(!empty($attribute_status)){
+				switch($attribute_status){
 					case 'unactive':
 						$status="'moderated', 'notused'";
-						if(empty($_REQUEST['orderby']) && empty($_REQUEST['order'])){
-							$_REQUEST['orderby']='status';
-							$_REQUEST['order']='asc';
+						if(empty($orderby) && empty($order)){
+							$orderby ='status';
+							$order ='asc';
 						}
 						break;
 					default:
-						$status="'".$_REQUEST['attribute_status']."'";
+						$status="'".$attribute_status."'";
 						break;
 				}
 			}
