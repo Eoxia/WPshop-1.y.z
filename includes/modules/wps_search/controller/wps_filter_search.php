@@ -470,7 +470,7 @@ class wps_filter_search {
 	function stock_values_for_attribute( $categories_id = array() ) {
 		@set_time_limit( 900 );
 
-		$tax_input = ( !empty( $_POST['tax_input'] ) && !empty( $_POST['tax_input']['wpshop_product_category'] ) ? (int) $_POST['tax_input']['wpshop_product_category' : '';
+		$tax_input = ( !empty( $_POST['tax_input'] ) && !empty( $_POST['tax_input']['wpshop_product_category'] ) ) ? (int) $_POST['tax_input']['wpshop_product_category'] : '';
 		$post_type = !empty( $_POST['post_type'] ) ? sanitize_text_field( $_POST['post_type'] ) : '';
 		if (  !empty( $tax_input ) && !empty($post_type) && $post_type == WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT ) {
 			$categories_id = $tax_input;
@@ -559,8 +559,8 @@ class wps_filter_search {
 		$data = array();
 		foreach ( $filter_search_elements as $k=>$filter_search_element) {
 			$search = isset( $_REQUEST['filter_search'.$k] ) ? sanitize_text_field( $_REQUEST['filter_search'.$k] ) : '';
-			$amount_min = !isset( $_REQUEST['amount_min'.$k] ) : 0 : sanitize_text_field( $_REQUEST['amount_min'.$k] );
-			$amount_max = !isset( $_REQUEST['amount_max'.$k] ) : 0 : sanitize_text_field( $_REQUEST['amount_max'.$k] );
+			$amount_min = !isset( $_REQUEST['amount_min'.$k] ) ? 0 : sanitize_text_field( $_REQUEST['amount_min'.$k] );
+			$amount_max = !isset( $_REQUEST['amount_max'.$k] ) ? 0 : sanitize_text_field( $_REQUEST['amount_max'.$k] );
 			$datatype_element = array( 'select_value', 'multiple_select_value', 'fork_values');
 			if ( (in_array($filter_search_element['type'], $datatype_element) && ( isset($search) && $search == 'all_attribute_values' ) ) ||
 				( ($filter_search_element['type'] == 'select_value' || $filter_search_element['type'] == 'multiple_select_value' ) &&  $search == '' ) ||
@@ -594,11 +594,11 @@ class wps_filter_search {
 		$array_for_query = implode(',', $categories_id);
 
 		/** SQL request Construct for pick up all product with one of filter search element value **/
-		if ( !empty( $filter_search_elements ) {
+		if ( !empty( $filter_search_elements ) ) {
 			foreach ( $filter_search_elements as $k=>$filter_search_element ) {
 				$search = isset( $_REQUEST['filter_search'.$k] ) ? sanitize_text_field( $_REQUEST['filter_search'.$k] ) : '';
-				$amount_min = !isset( $_REQUEST['amount_min'.$k] ) : 0 : sanitize_text_field( $_REQUEST['amount_min'.$k] );
-				$amount_max = !isset( $_REQUEST['amount_max'.$k] ) : 0 : sanitize_text_field( $_REQUEST['amount_max'.$k] );
+				$amount_min = !isset( $_REQUEST['amount_min'.$k] ) ? 0 : sanitize_text_field( $_REQUEST['amount_min'.$k] );
+				$amount_max = !isset( $_REQUEST['amount_max'.$k] ) ? 0 : sanitize_text_field( $_REQUEST['amount_max'.$k] );
 
 				if ( !empty($filter_search_element['type']) && !empty($search) && $filter_search_element['type'] == 'select_value' && $search != 'all_attribute_values') {
 					$request_cmd .= 'SELECT meta_key, post_id FROM ' .$wpdb->postmeta. ' INNER JOIN ' .$wpdb->posts. ' ON  post_id = ID WHERE (meta_key = "'.$k.'" AND meta_value = "'.$search.'") AND post_type = "'.WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT.'" AND post_status = "publish" ';
