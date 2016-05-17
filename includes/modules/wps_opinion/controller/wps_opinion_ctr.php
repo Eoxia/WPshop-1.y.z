@@ -240,8 +240,10 @@ class wps_opinion_ctr {
 	function wps_update_opinion_star_rate() {
 		$status = false;
 		$output = '';
-		if( isset($_POST['rate']) ) {
-			$output = $this->display_stars( intval($_POST['rate']) );
+		$rate = !empty( $_POST['rate'] ) ? (int) $_POST['rate'] : 0;
+
+		if( isset( $rate ) ) {
+			$output = $this->display_stars( $rate );
 			$status = true;
 		}
 		echo json_encode( array( 'status' => $status, 'response' => $output) );
