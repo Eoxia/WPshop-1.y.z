@@ -94,22 +94,24 @@ class wpsBubble_ctr {
 		/** Eviter l'auto save pour ne pas vider les champs personnalisés */
 		if(defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
 			return;
-		if(empty($_POST['meta']))
+
+		$meta = !empty( $_POST['meta'] ) ? (array) $_POST['meta'] : false;
+		if(!$meta)
 			return;
 
 		// Rework the URL meta
 		$tmp_array_urls = array();
-		if(!empty($_POST['meta']['urls'])) {
-			for($i = 0; $i < count($_POST['meta']['urls']['paramater']); $i++) {
-				$tmp_array_urls[$i]['paramater'] = 	sanitize_text_field( $_POST['meta']['urls']['paramater'][$i] );
-				$tmp_array_urls[$i]['value'] = 			(!empty($_POST['meta']['urls']['value']) && !empty($_POST['meta']['urls']['value'][$i])) ? sanitize_text_field( $_POST['meta']['urls']['value'][$i] ) : "";
+		if(!empty($meta['urls'])) {
+			for($i = 0; $i < count($meta['urls']['paramater']); $i++) {
+				$tmp_array_urls[$i]['paramater'] = 	sanitize_text_field( $meta['urls']['paramater'][$i] );
+				$tmp_array_urls[$i]['value'] = 			(!empty($meta['urls']['value']) && !empty($meta['urls']['value'][$i])) ? sanitize_text_field( $meta['urls']['value'][$i] ) : "";
 			}
-			$_POST['meta']['urls'] = array();
-			$_POST['meta']['urls'] = $tmp_array_urls;
+			$meta['urls'] = array();
+			$meta['urls'] = $tmp_array_urls;
 		}
 
 		// Update post meta
-		update_post_meta($post_id, $this->post_metakey, $_POST['meta']);
+		update_post_meta($post_id, $this->post_metakey, $meta);
 	}
 
 	/**
@@ -294,9 +296,10 @@ class wpsBubble_ctr {
 	*/
 	public function check_url_bubble($urls) {
 		// Il faut que ça respecte au moins 1 $_GET
-		if(!empty($urls)) {
-			foreach($urls as $url) {
-				if(!empty($_GET[$url['paramater']]) && $_GET[$url['paramater']] == $url['value']) {
+		if ( !empty( $urls ) ) {
+			foreach ($urls as $url ) {
+				$url = !empty( $_GET[$url['paramater']] ) ? sanitize_text_field( $_GET[$url['paramater']] ) : '';
+				if ( !empty( $url ) && $url == $url['value']) {
 					return true;
 				}
 				else if(empty($url['paramater']) && empty($url['value'])) {
