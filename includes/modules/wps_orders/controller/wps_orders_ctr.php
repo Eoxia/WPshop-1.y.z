@@ -341,8 +341,8 @@ class wps_orders_ctr {
 		public function wps_delete_order() {
 			$status = false;
 			$output = '';
-			if( $_POST['order_id'] ) {
-				$order_id = (int)$_POST['order_id'];
+			$order_id = !empty( $_POST['order_id'] ) ? (int) $_POST['order_id'] : 0;
+			if( $order_id ) {
 				$order_meta = get_post_meta( $order_id, '_order_postmeta', true );
 				$wps_credit = new wps_credit();
 				$wps_credit->create_an_credit( $order_id );
@@ -365,11 +365,16 @@ class wps_orders_ctr {
 		 */
 		public function wps_checkout_quotation() {
 			$status = true;
-			if( !empty( $_REQUEST['order_id'] ) ) {
-				$pay_quotation = self::pay_quotation( (int)$_REQUEST['order_id'] );
+			$order_id = !empty( $_REQUEST['order_id'] ) ? (int) $_REQUEST['order_id'] : 0;
+
+			if( !empty( $order_id ) ) {
+				$pay_quotation = self::pay_quotation( $order_id );
 				$status = $pay_quotation['status'];
 			}
-			if( !empty( $_REQUEST['is_link'] ) ) {
+
+			$is_link = !empty( $_REQUEST['is_link'] ) ? sanitize_text_field( $_REQUEST['is_link'] ) : '';
+
+			if( !empty( $is_link ) ) {
 				wp_redirect( $pay_quotation['permalink'] );
 				exit();
 			} else {
@@ -378,7 +383,8 @@ class wps_orders_ctr {
 			}
 		}
 		public function wps_checkout_quotation_no_login() {
-			wp_redirect( home_url('/wp-login.php') . '?redirect_to=' . urlencode( admin_url() . 'admin-ajax.php?action=wps_checkout_quotation&order_id=' . (int)$_REQUEST['order_id'] . '&is_link=link' ) );
+			$order_id = !empty( $_REQUEST['order_id'] ) ? (int) $_REQUEST['order_id'] : 0;
+			wp_redirect( home_url('/wp-login.php') . '?redirect_to=' . urlencode( admin_url() . 'admin-ajax.php?action=wps_checkout_quotation&order_id=' . $order_id . '&is_link=link' ) );
 			exit();
 		}
 }
