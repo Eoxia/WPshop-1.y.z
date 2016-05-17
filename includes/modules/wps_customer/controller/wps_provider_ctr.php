@@ -35,8 +35,12 @@ class wps_provider_ctr {
 		if( 'post.php' != $hook ) {
 			return;
 		}
-		if( isset( $_GET['post'] ) && $_GET['action'] == 'edit' ) {
-			$is_provider = $this->read( sanitize_text_field($_GET['post']) );
+
+		$post = !empty( $_GET['post'] ) ? (array)$_GET['post'] : array();
+		$action = !empty( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
+
+		if( isset( $post ) && $action == 'edit' ) {
+			$is_provider = $this->read( $post );
 			if( isset( $is_provider ) ) {
 				wp_enqueue_script( 'wps_provider_products', WPS_ACCOUNT_URL . WPS_ACCOUNT_DIR . '/assets/backend/js/wps_provider_products.js' );
 			}
@@ -45,9 +49,11 @@ class wps_provider_ctr {
 	public function save_post( $post_id, $post, $update ) {
 		if( wp_is_post_revision( $post_id ) || $post->post_type != WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS )
 			return;
+
+		$wps_provider_product = !empty( $_REQUEST['wps_provider_product'] ) ? (array)$_REQUEST['wps_provider_product'] : array();
 		$is_provider = $this->read( $post_id );
-		if( isset( $is_provider ) && !empty( $_REQUEST['wps_provider_product'] ) ) {
-			foreach( $_REQUEST['wps_provider_product'] as $product_id => $product ) {
+		if( isset( $is_provider ) && !empty( $wps_provider_product ) ) {
+			foreach( $wps_provider_product as $product_id => $product ) {
 				switch( $product['special_provider'] ) {
 					case 'update':
 						$product['ID'] = $product_id;
