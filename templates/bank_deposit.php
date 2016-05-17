@@ -7,22 +7,19 @@
 	/*	Wordpress - Admin page that define some needed vars and include file	*/
 	require_once(ABSPATH . 'wp-admin/includes/admin.php');
 
-	if( empty( $_GET['fromdate'] ) ) {
-		$_GET['fromdate'] = date('Y-m-d');
-	}
-	if( empty( $_GET['method'] ) ) {
-		$_GET['method'] = 'all';
-	}
-	
+	$fromdate = empty( $fromdate ) ? date( 'Y-m-d' ) : sanitize_text_field( $_GET['fromdate'] );
+	$method = empty( $_GET['method'] ) ? 'all' : sanitize_text_field( $_GET['method'] );
+	$mode = !empty( $_GET['mode'] ) ? sanitize_text_field( $_GET['mode'] ) : '';
+
 	$valid_dates = array();
 	$valid_dates['relation'] = 'OR';
-	
-	$from_to = !empty( $_GET['todate'] );
-	
-	$fromdate = DateTime::createFromFormat( 'Y-m-d', $_GET['fromdate'] );
-	$todate = DateTime::createFromFormat( 'Y-m-d', ($from_to) ? $_GET['todate'] : $_GET['fromdate'] );
+
+	$from_to = !empty( $_GET['todate'] ) : sanitize_text_field( $_GET['todate'] ) : date( 'Y-m-d' );
+
+	$fromdate = DateTime::createFromFormat( 'Y-m-d', $fromdate );
+	$todate = DateTime::createFromFormat( 'Y-m-d', ($from_to) ? $from_to : $fromdate );
 	$datePeriod = new DatePeriod( $fromdate, new DateInterval('P1D'), $todate->modify('+1 day') );
-	
+
 	foreach($datePeriod as $date) {
 		$valid_dates[] = array(
 			'key'			=> '_order_postmeta',
@@ -30,7 +27,7 @@
 			'compare' 		=> 'LIKE',
 		);
 	}
-	
+
 	$args = array(
 		'posts_per_page' 	=> -1,
 		'post_type'			=> WPSHOP_NEWTYPE_IDENTIFIER_ORDER,
@@ -45,18 +42,18 @@
 			$valid_dates,
 		),
 	);
-	if( $_GET['method'] != 'all' ) {
+	if( $method != 'all' ) {
 		$args['meta_query'][] = array(
 				'key'			=> '_order_postmeta',
-				'value' 		=> serialize( 'method' ) . serialize( $_GET['method'] ),
+				'value' 		=> serialize( 'method' ) . serialize( $method ),
 				'compare' 		=> 'LIKE',
 		);
 	}
 	$query = new WP_Query( $args );
-	
+
 	$orders = $query->posts;
 	$orders_date = array();
-	
+
 	foreach( $orders as $order ) {
 		$order->_order_postmeta = get_post_meta( $order->ID, '_order_postmeta', true );
 		foreach( $order->_order_postmeta['order_payment']['received'] as $payment_received ) {
@@ -147,17 +144,17 @@
 				<td class="valign-top width-075"><?php _e('Date', 'wpshop'); ?>:</td>
 				<td class="align-right width-075">
 				<?php if( $from_to ) { ?>
-					<span class="force-one-line"><?php echo __( 'From', 'wpshop' ) . ' ' . mysql2date( get_option( 'date_format' ), $_GET['fromdate'], true ); ?></span>
-					<span class="force-one-line"><?php echo __( 'to', 'wpshop' ) . ' ' . mysql2date( get_option( 'date_format' ), $_GET['todate'], true ); ?></span>
+					<span class="force-one-line"><?php echo __( 'From', 'wpshop' ) . ' ' . mysql2date( get_option( 'date_format' ), $fromdate, true ); ?></span>
+					<span class="force-one-line"><?php echo __( 'to', 'wpshop' ) . ' ' . mysql2date( get_option( 'date_format' ), $from_to, true ); ?></span>
 				<?php } else { ?>
-					<span class="force-one-line"><?php echo mysql2date( get_option( 'date_format' ), $_GET['fromdate'], true ); ?></span>
+					<span class="force-one-line"><?php echo mysql2date( get_option( 'date_format' ), $fromdate, true ); ?></span>
 				<?php } ?>
 				</td>
 			</tr>
 			<tr>
 				<td class="width-15"><?php echo $company['company_postcode'] . ' ' . $company['company_country']; ?></td>
 				<td class="width-075"><?php _e('Method', 'wpshop' ); ?>:</td>
-				<td class="align-right width-075"><?php _e( $_GET['method'], 'wpshop' ); ?></td>
+				<td class="align-right width-075"><?php _e( $method, 'wpshop' ); ?></td>
 			</tr>
 		</table>
 		<br>
@@ -172,8 +169,8 @@
 			 	</tr>
 			</thead>
 			<tbody class="border">
-				<?php if( empty( $orders_date[$_GET['method']] ) ) { $orders_date[$_GET['method']] = array(); $orders_date[$_GET['method']]['list'] = array(); $orders_date[$_GET['method']]['amount_total'] = 0; } ?>
-			 	<?php foreach( $orders_date[$_GET['method']]['list'] as $payment_received ) : ?>
+				<?php if( empty( $orders_date[$method] ) ) { $orders_date[$method] = array(); $orders_date[$method]['list'] = array(); $orders_date[$method]['amount_total'] = 0; } ?>
+			 	<?php foreach( $orders_date[$method]['list'] as $payment_received ) : ?>
 			    <tr>
 					<td class="margin-sides"><?php echo ( !empty($payment_received['invoice_ref']) ) ? $payment_received['invoice_ref'] : ''; ?></td>
 					<td class="force-one-line margin-sides"><?php echo ( !empty($payment_received['date']) ) ? ( $from_to ) ? mysql2date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $payment_received['date'], true ) : mysql2date( get_option( 'time_format' ), $payment_received['date'], true ) : ''; ?></td>
@@ -198,24 +195,24 @@
 		   	 <tfoot class="border">
 		   	 	<tr>
 		   	 		<td colspan="4" class="margin-sides bold"><?php _e('Bank deposit sum', 'wpshop'); ?></td>
-		   	 		<td class="align-right border margin-sides bold"><?php echo number_format( $orders_date[$_GET['method']]['amount_total'], 2, '.', '' ) . wpshop_tools::wpshop_get_currency(); ?></td>
+		   	 		<td class="align-right border margin-sides bold"><?php echo number_format( $orders_date[$method]['amount_total'], 2, '.', '' ) . wpshop_tools::wpshop_get_currency(); ?></td>
 		   	 	</tr>
 		   	 </tfoot>
 		</table>
 	<?php
 	$content = ob_get_contents();
 	ob_end_clean();
-	
-	if ( !empty( $_GET['mode'] ) && $_GET['mode'] == 'pdf') {
+
+	if ( !empty( $mode ) && $mode == 'pdf') {
 		require_once(WPSHOP_LIBRAIRIES_DIR.'HTML2PDF/html2pdf.class.php');
 		try {
 			$html_content = $content_css . '<page>' . $content . '</page>';
 			$html2pdf = new HTML2PDF('P', 'A4', 'fr');
-	
+
 			$html2pdf->setDefaultFont('Arial');
 			$html2pdf->writeHTML($html_content);
-	
-			$html2pdf->Output( __('Bank deposit', 'wpshop') . ' - ' . mysql2date( get_option( 'date_format' ), $_GET['fromdate'] ) . '.pdf', 'D');
+
+			$html2pdf->Output( __('Bank deposit', 'wpshop') . ' - ' . mysql2date( get_option( 'date_format' ), $fromdate ) . '.pdf', 'D');
 		}
 		catch (HTML2PDF_exception $e) {
 			echo $e;
@@ -231,7 +228,7 @@
 <!--<![endif]-->
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<title><?php _e('Bank deposit', 'wpshop'); ?> - <?php echo mysql2date( get_option( 'date_format' ), $_GET['fromdate'] ); ?></title>
+		<title><?php _e('Bank deposit', 'wpshop'); ?> - <?php echo mysql2date( get_option( 'date_format' ), $fromdate ); ?></title>
 		<?php echo $content_css; ?>
 	</head>
 	<body>
