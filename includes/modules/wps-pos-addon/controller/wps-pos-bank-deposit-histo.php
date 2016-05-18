@@ -33,8 +33,9 @@ class wps_pos_addon_bank_deposit_histo {
 		wp_localize_script( 'wpspos-backend-bank-deposit-js', 'templates_url', WPSHOP_TEMPLATES_URL );
 	}
 	public function save_historic_ajax() {
+		$list_payments = !empty( $_POST['payments'] ) ? (array) $_POST['payments'] : array();
 		$payments = array();
-		foreach( $_POST['payments'] as $payment ) {
+		foreach( $list_payments as $payment ) {
 			if( is_float( $payment ) ) {
 				$payments[] = (float) $payment;
 			}

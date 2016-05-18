@@ -142,7 +142,7 @@ class wps_pos_addon_order {
 		$output = $message = '';
 
 		$order_id = ( !empty( $_POST['order_id'] ) ) ? (int) $_POST['order_id'] : null;
-		$new_order = empty( $_POST['order_id'] );
+		$new_order = empty( $order_id );
 		$payment_method = ( !empty( $_POST['wpspos-payment-method']) ) ? sanitize_text_field( $_POST['wpspos-payment-method'] ) : null;
 		$customer_id = ( !empty( $_POST['customer_id'] ) ) ? (int) $_POST['customer_id'] : ( !empty( $_SESSION[ 'cart' ][ 'customer_id' ] ) ) ? (int) $_SESSION[ 'cart' ][ 'customer_id' ] : null;
 		$payment_amount = ( !empty( $_POST['wps-pos-total-order-amount'] ) ) ? wpshop_tools::varSanitizer( $_POST['wps-pos-total-order-amount'] ) : null;

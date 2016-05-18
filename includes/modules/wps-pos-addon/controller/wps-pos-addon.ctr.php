@@ -440,10 +440,11 @@ class wps_pos_addon {
 	function ajax_save_config_barcode_only() {
 		$option = 'wps_pos_options';
 		$values = get_option( $option );
-		if( !empty( $_POST['value_checkbox'] ) && ( $value_checkbox = sanitize_text_field( $_POST['value_checkbox'] ) ) == 'checked' ) {
+		$value_checkbox = !empty( $_POST['value_checkbox'] ) ? sanitize_text_field( $_POST['value_checkbox'] ) : '';
+		if( !empty( $value_checkbox ) && $value_checkbox == 'checked' ) {
 			$values['only_barcode'] = 'checked';
   			update_option( $option, $values );
-		} elseif( $value_checkbox == 'unchecked' ) {
+		} elseif( $value_checkbox == '' ) {
 			$values['only_barcode'] = 'unchecked';
   			update_option( $option, $values );
 		}
@@ -452,9 +453,11 @@ class wps_pos_addon {
 
 	function ajax_wpspos_state_is_quotation() {
 		@session_start();
-		if( !empty( $_POST['value_checkbox'] ) && ( $value_checkbox = sanitize_text_field( $_POST['value_checkbox'] ) ) == 'checked' ) {
+		$value_checkbox = !empty( $_POST['value_checkbox'] ) ? sanitize_text_field( $_POST['value_checkbox'] ) : '';
+
+		if( !empty( $value_checkbox ) && $value_checkbox == 'checked' ) {
 			$_SESSION['wpspos_is_quotation'] = true;
-		} elseif( $value_checkbox == 'unchecked' ) {
+		} elseif( $value_checkbox == '' ) {
 			unset( $_SESSION['wpspos_is_quotation'] );
 		}
 		wp_die();
@@ -462,9 +465,11 @@ class wps_pos_addon {
 
 	function ajax_wpspos_state_is_receipt() {
 		@session_start();
-		if( !empty( $_POST['value_checkbox'] ) && ( $value_checkbox = sanitize_text_field( $_POST['value_checkbox'] ) ) == 'checked' ) {
+		$value_checkbox = !empty( $_POST['value_checkbox'] ) ? sanitize_text_field( $_POST['value_checkbox'] ) : '';
+
+		if( !empty( $value_checkbox ) && $value_checkbox == 'checked' ) {
 			$_SESSION['wpspos_is_receipt'] = true;
-		} elseif( $value_checkbox == 'unchecked' ) {
+		} elseif( $value_checkbox == '' ) {
 			unset( $_SESSION['wpspos_is_receipt'] );
 		}
 		wp_die();

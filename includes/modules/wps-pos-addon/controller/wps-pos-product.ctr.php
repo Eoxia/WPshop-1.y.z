@@ -191,7 +191,9 @@ class wps_pos_addon_product {
 			$query_args[] = WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT;
 			$query_args[] = $term;
 
-			if ( empty( $_POST[ 'search_in' ] ) || ( 'only_barcode' != $_POST[ 'search_in' ] ) ) {
+			$search_in = !empty( $_POST[ 'search_in' ] ) ? sanitize_text_field( $_POST[ 'search_in' ] ) : '';
+
+			if ( empty( $search_in ) || ( 'only_barcode' != $search_in ) ) {
 				$more_query = " OR P.post_title LIKE %s";
 				$query_args[] = '%' . $term . '%';
 			}

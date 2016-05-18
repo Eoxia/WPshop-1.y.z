@@ -62,7 +62,13 @@ class wpspos_customer_quick_add {
 		$email_founded = false;
 		$user = array();
 		$email_field = $last_name_field = $first_name_field = '';
-		$quick_add_customer = wps_customer_ctr::quick_add_customer( $_POST );
+
+
+		$data = array(
+			'attribute' => !empty( $_POST['attribute'] ) ? (array)$_POST['attribute'] : array(),
+		);
+
+		$quick_add_customer = wps_customer_ctr::quick_add_customer( $data );
 		switch( $quick_add_customer ) {
 			case 1:
 				$response[ 'output' ] = __('An email address is required', 'wpshop');
@@ -89,11 +95,12 @@ class wpspos_customer_quick_add {
 				$response[ 'customer_id' ] = $quick_add_customer['integer']['ID'];
 
 				/** Create customer address from sended data **/
-				$_REQUEST['user']['customer_id'] = (int)$quick_add_customer['integer']['ID'];
-				$attribute_to_save = $_POST['attribute'];
-				unset( $_POST['attribute'] );
-				$_POST['attribute'][ (int)$_POST[ 'wps-customer-account-set-id' ] ] = $attribute_to_save;
-				wps_address::save_address_infos( (int)$_POST[ 'wps-customer-account-set-id' ] );
+				// $_REQUEST['user']['customer_id'] = (int)$quick_add_customer['integer']['ID'];
+				$attribute_to_save = $data['attribute'];
+				$customer_id = !empty( $_POST[ 'wps-customer-account-set-id' ] ) ? (int) $_POST[ 'wps-customer-account-set-id' ] : 0;
+				// unset( $_POST['attribute'] );
+				// $_POST['attribute'][ (int)$_POST[ 'wps-customer-account-set-id' ] ] = $attribute_to_save;
+				wps_address::save_address_infos( $customer_id );
 				break;
 		}
 
