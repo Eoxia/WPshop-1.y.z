@@ -5,49 +5,49 @@ class wps_account_dashboard_ctr {
 // 		add_shortcode( 'wps_messages', array( 'wpshop_messages', 'get_histo_messages_per_customer' ) );
 		add_shortcode( 'wps_account_last_actions_resume', array($this, 'display_account_last_actions' ) );
 	}
-	
+
 	function import_data( $part ) {
 		$output = '';
-		
+
 		switch( $part ) {
-			case 'account' : 
-				$output  = '<div id="wps_account_informations_container">';
+			case 'account' :
+				$output  = '<div id="wps_account_informations_container" data-nonce="' . wp_create_nonce( 'wps_account_reload_informations' ) . '">';
 				$output .= do_shortcode('[wps_account_informations]');
 				$output .= '</div>';
 				$output .= do_shortcode( '[wps_orders_in_customer_account]');
 			break;
-			case 'address' : 
+			case 'address' :
 				$output .= do_shortcode( '[wps_addresses]' );
 			break;
-			case 'order' : 
+			case 'order' :
 				$output = do_shortcode( '[wps_orders_in_customer_account]' );
 			break;
-			case  'opinion' : 
+			case  'opinion' :
 				$output = do_shortcode( '[wps_opinion]' );
 			break;
-			case 'wishlist' : 
+			case 'wishlist' :
 				$output = '<div class="wps-alert-info">' .__( 'This functionnality will be available soon', 'wpshop'). '</div>';
 			break;
-			case 'coupon' : 
+			case 'coupon' :
 				$output = do_shortcode( '[wps_coupon]' );
 			break;
-			case 'messages' : 
+			case 'messages' :
 				$output = do_shortcode( '[wps_message_histo]' );
 			break;
-			default : 
+			default :
 				$output = do_shortcode('[wps_account_informations]');
 			break;
-			
+
 		}
-		
+
 		$output = apply_filters( 'wps_my_account_extra_panel_content', $output, $part );
-		
+
 		if( get_current_user_id() == 0 ) {
 			$output = do_shortcode( '[wpshop_login]' );
 		}
 		return $output;
 	}
-	
+
 	/**
 	 * Display Account Dashboard
 	 */
@@ -57,11 +57,11 @@ class wps_account_dashboard_ctr {
 		ob_start();
 		require_once( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, WPS_ACCOUNT_PATH . WPS_ACCOUNT_DIR . "/templates/", "frontend", "account/account-dashboard") );
 		$output = ob_get_contents();
-		ob_end_clean();	
+		ob_end_clean();
 		echo $output;
 	}
-	
-	
+
+
 	function display_account_last_actions() {
 		global $wpdb;
 		$output = '';
@@ -83,7 +83,7 @@ class wps_account_dashboard_ctr {
 					$orders_list .= ob_get_contents();
 					ob_end_clean();
 				}
-					
+
 				ob_start();
 				require_once( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, WPS_ACCOUNT_PATH . WPS_ACCOUNT_DIR . "/templates/","frontend", "account/account-dashboard-resume") );
 				$output = ob_get_contents();

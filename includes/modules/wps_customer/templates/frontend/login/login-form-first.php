@@ -13,7 +13,7 @@
 		</div>
 	</div>
 	<div class="wps-form-group">
-		<button class="wps-bton-first-alignRight-rounded" id="wps_first_login_button">
+		<button class="wps-bton-first-alignRight-rounded" data-nonce="<?php echo wp_create_nonce( 'wps_login_first_request' ); ?>" id="wps_first_login_button">
 			<?php _e('Continue', 'wpshop'); ?>
 		</button>
 	</div>

@@ -34,8 +34,8 @@ class wps_account_ctr {
 		add_shortcode( 'wps_account_informations_form', array($this, 'account_informations_form') );
 
 		/** Ajax Actions **/
-		add_action('wp_ajax_wps_display_connexion_form', array(&$this, 'wps_ajax_get_login_form_interface') );
-		add_action('wp_ajax_nopriv_wps_display_connexion_form', array(&$this, 'wps_ajax_get_login_form_interface') );
+		// add_action('wap_ajax_wps_display_connexion_form', array(&$this, 'wps_ajax_get_login_form_interface') );
+		// add_action('wap_ajax_nopriv_wps_display_connexion_form', array(&$this, 'wps_ajax_get_login_form_interface') );
 
 		add_action('wp_ajax_wps_login_request', array(&$this, 'control_login_form_request') );
 		add_action('wp_ajax_nopriv_wps_login_request', array(&$this, 'control_login_form_request') );
@@ -103,8 +103,13 @@ class wps_account_ctr {
 	}
 
 	/** LOG IN - AJAX - Action to connect **/
-	// @TODO : NONCE
 	function control_login_form_request() {
+
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'control_login_form_request' ) )
+			wp_die();
+
 		$result = '';
 		$status = false;
 		$origin = sanitize_text_field( $_POST['wps-checking-origin'] );
@@ -154,6 +159,11 @@ class wps_account_ctr {
 	 * LOG IN - AJAX - Display log in Form in Ajax
 	 */
 	function wps_ajax_get_login_form_interface() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_ajax_get_login_form_interface' ) )
+			wp_die();
+
 		$response = array( 'status' => true, 'response' => self::get_login_form() );
 		echo json_encode( $response );
 		die();
@@ -173,6 +183,11 @@ class wps_account_ctr {
 	 * LOG IN - First Step log in request
 	 */
 	function wps_login_first_request() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_login_first_request' ) )
+			wp_die();
+
 		$status = false; $login_action = false; $response = '';
 		$user_email = ( !empty($_POST['email_address']) ) ? wpshop_tools::varSanitizer( $_POST['email_address'] ) : null;
 		if ( !empty($user_email) ) {
@@ -222,6 +237,11 @@ class wps_account_ctr {
 	 * FORGOT PASSWORD - AJAX - Fill the forgot password modal
 	 */
 	function wps_fill_forgot_password_modal() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_fill_forgot_password_modal' ) )
+			wp_die();
+
 		$status = false; $title = $content = '';
 		$title = __( 'Forgot password', 'wpshop' );
 		$content = do_shortcode('[wps_forgot_password]');
@@ -234,6 +254,11 @@ class wps_account_ctr {
 	 * FORGOT PASSWORD- AJAX - Forgot Password Request
 	 */
 	function wps_forgot_password_request() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_forgot_password_request' ) )
+			wp_die();
+
 		global $wpdb;
 		$status = false; $result = '';
 		$user_login = ( !empty( $_POST['wps_user_login']) ) ? wpshop_tools::varSanitizer($_POST['wps_user_login']) : null;
@@ -295,6 +320,11 @@ class wps_account_ctr {
 
 	/** FORGOT PASSWORD - AJAX - Make renew password action **/
 	function wps_forgot_password_renew() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_forgot_password_renew' ) )
+			wp_die();
+
 		global $wpdb;
 		$status = false; $result = $form = '';
 		$password = ( !empty( $_POST['pass1']) ) ? wpshop_tools::varSanitizer( $_POST['pass1'] ) : null;
@@ -396,6 +426,11 @@ class wps_account_ctr {
 	 * SIGN UP - Save sign up form
 	 */
 	function wps_save_signup_form() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_save_signup_form' ) )
+			wp_die();
+
 		global $wpdb, $wpshop;
 		$user_id = ( !empty( $_POST['wps_sign_up_request_from_admin'] ) ) ? (int) $_POST['wps_sign_up_request_from_admin'] : get_current_user_id();
 		$wps_message = new wps_message_ctr();
@@ -712,6 +747,11 @@ class wps_account_ctr {
 	 * ACCOUNT - Save account informations
 	 */
 	function wps_save_account_informations () {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_save_account_informations' ) )
+			wp_die();
+
 		global $wpdb;
 		$status = false; $response = '';
 
@@ -742,6 +782,11 @@ class wps_account_ctr {
 	 * ACCOUNT - AJAX - Reload account informations data
 	 */
 	function wps_account_reload_informations() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_account_reload_informations' ) )
+			wp_die();
+
 		$status = false;
 		$response = do_shortcode('[wps_account_informations]');
 		if( !empty($response) ) {
@@ -755,6 +800,11 @@ class wps_account_ctr {
 	 * ACCOUNT - AJAX - Fill account informations modal
 	 */
 	function wps_fill_account_informations_modal() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_fill_account_informations_modal' ) )
+			wp_die();
+
 		$title = $content = '';
 		$title = __('Edit your account informations', 'wpshop');
 		$content = do_shortcode( '[wps_account_informations_form]' );

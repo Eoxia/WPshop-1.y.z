@@ -7,7 +7,9 @@
 		<?php if( !empty($args) ) : ?>
 			<input type="hidden" name="wps_sign_up_request_from_admin" value="admin" />
 		<?php endif; ?>
-			<input type="hidden" name="action" value="wps_signup_request" />
+
+		<input type="hidden" name="action" value="wps_signup_request" />
+		<?php wp_nonce_field( 'wps_save_signup_form' ); ?>
 
 		<?php
 		if( !empty($signup_fields) ) :

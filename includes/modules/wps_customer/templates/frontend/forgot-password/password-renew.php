@@ -8,6 +8,7 @@
 		<input type="hidden" name="activation_key" value="<?php echo sanitize_text_field($_GET['key']); ?>" />
 		<input type="hidden" name="user_login" value="<?php echo sanitize_text_field($_GET['login']); ?>" />
 		<input type="hidden" name="action" value="wps_forgot_password_renew" />
+		<?php echo wp_nonce_field( 'wps_forgot_password_renew' ); ?>
 
 		<div class="wps-form-group">
 			<label for="wps_login_email_address"><?php _e('New password', 'wpshop');?></label>

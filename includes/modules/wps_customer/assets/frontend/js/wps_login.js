@@ -31,18 +31,19 @@ jQuery(document).ready(function() {
 		        },
 			});
 		});
-	
+
 	/** Quand on presse return on click sur wps_first_login_button */
 	jQuery('#wps_login_first_email_address').keyup(function(event) {
 		if(event.which == 13) {
 			jQuery("#wps_first_login_button").click();
 		}
 	});
-	
+
 	jQuery( document ).on( 'click', '#wps_first_login_button', function() {
 		jQuery( this ).addClass( 'wps-bton-loading' );
 		var data = {
 				action: "wps_login_first_request",
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 				email_address : jQuery('#wps_login_first_email_address').val()
 			};
 			jQuery.post(ajaxurl, data, function(response) {
