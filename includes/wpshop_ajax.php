@@ -2969,6 +2969,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action( 'wp_ajax_wps_send_direct_payment_link', 'wps_send_direct_payment_link' );
 
 	function wps_mass_action_product() {
+		check_ajax_referer( 'wps_mass_action_product' );
 		$mass_actions_tools_page = '';
 		$default_attributes = array( 'product_stock', 'barcode', 'product_price', 'special_price', );
 
@@ -3004,6 +3005,8 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action( 'wp_ajax_wps_mass_action_product', 'wps_mass_action_product' );
 
 	function wps_put_history_back() {
+		check_ajax_referer( 'wps_put_history_back' );
+
 		global $wpdb;
 		$upload_dir = wp_upload_dir();
 		$log_dir = $upload_dir[ 'basedir' ] . '/wps_repair/';
@@ -3269,6 +3272,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 			$response = '
 				<form action="' . admin_url( 'admin-ajax.php' ) . '" method="POST" id="wps_put_histo_back" >
 					<input type="text" name="action" value="wps_put_history_back" />
+					' . wp_nonce_field( 'wps_put_history_back' ) . '
 					<table style="border-collapse: collapse;border:1px solid black;" cellpadding="0" cellspacing="0" >
 						<tr style="border:1px solid black;"><td style="border:1px solid black;" >' . __( 'Product', 'wpshop' ) . '</td>'.$more_header.'</tr>
 						' . $lines . '
