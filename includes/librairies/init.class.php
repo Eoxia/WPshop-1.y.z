@@ -295,7 +295,7 @@ class wpshop_init{
 		wp_enqueue_script('jquery-effects-core');
 		wp_enqueue_script('jquery-effects-highlight');
 
-		$page = !empty( $_GET['page'] ) ? sanitize_text_field( $page ) : '';
+		$page = !empty( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : '';
 
 		/*	Include specific js file for the current page if existing	*/
 		if(isset($page) && is_file(WPSHOP_JS_DIR . 'pages/' . $page . '.js')){
