@@ -183,13 +183,13 @@ ob_end_clean();
 
 /*	Empty Quotation button									Vidage du panier */
 ob_start();
-?><div class="wpshop_cart_buttons_container" ><div class="alignright" ><input type="submit" value="<?php _e('Validate my quotation','wpshop'); ?>" name="cartCheckout" class="alignright" /><br/><a href="#" class="emptyCart alignright" ><?php _e('Empty the quotation','wpshop'); ?></a></div></div><?php
+?><div class="wpshop_cart_buttons_container" ><div class="alignright" ><input type="submit" value="<?php _e('Validate my quotation','wpshop'); ?>" name="cartCheckout" class="alignright" /><br/><a href="#" data-nonce="<?php echo wp_create_nonce( 'wps_empty_cart' ); ?>" class="emptyCart alignright" ><?php _e('Empty the quotation','wpshop'); ?></a></div></div><?php
 $tpl_element['cart_quotation_buttons'] = ob_get_contents();
 ob_end_clean();
 
 /*	Empty cart button									Vidage du panier */
 ob_start();
-?><div class="wpshop_cart_buttons_container" ><div class="alignright" ><input type="submit" value="<?php _e('Validate my cart','wpshop'); ?>" name="cartCheckout" class="alignright" /><br/><a href="#" class="emptyCart alignright" ><?php _e('Empty the cart','wpshop'); ?></a></div></div><?php
+?><div class="wpshop_cart_buttons_container" ><div class="alignright" ><input type="submit" value="<?php _e('Validate my cart','wpshop'); ?>" name="cartCheckout" class="alignright" /><br/><a href="#" data-nonce="<?php echo wp_create_nonce( 'wps_empty_cart' ); ?>" class="emptyCart alignright" ><?php _e('Empty the cart','wpshop'); ?></a></div></div><?php
 $tpl_element['cart_buttons'] = ob_get_contents();
 ob_end_clean();
 
@@ -460,7 +460,7 @@ ob_start();
 				<div class="wps-product-section">
 					<h1 itemprop="name" class="entry-title">{WPSHOP_PRODUCT_TITLE}</h1>
 					<div class="wps-productRating">[wps_star_rate_product pid="{WPSHOP_PRODUCT_ID}"]</div>
-					
+
 					<div class="wps-prices" itemscope itemtype="http://schema.org/Offer">{WPSHOP_PRODUCT_PRICE}</div>
 				</div>
 				<div class="wps-product-section">[wps_low_stock_alert id="{WPSHOP_PRODUCT_ID}"]</div>
@@ -532,9 +532,9 @@ ob_end_clean();
 ob_start();
 ?>
 <li class="{WPSHOP_PRODUCT_CLASS}" itemscope itemtype="http://data-vocabulary.org/Product" >
-	
+
 	<a href="{WPSHOP_PRODUCT_PERMALINK}" class="" title="{WPSHOP_PRODUCT_TITLE}">
-		{WPSHOP_PRODUCT_THUMBNAIL}		
+		{WPSHOP_PRODUCT_THUMBNAIL}
 	</a>
 	<span class="product_information-mini-list" itemprop="offers" itemscope itemtype="http://data-vocabulary.org/Offers">
 		<a href="{WPSHOP_PRODUCT_PERMALINK}" title="{WPSHOP_PRODUCT_TITLE}" class="wpshop_clearfix">
@@ -543,7 +543,7 @@ ob_start();
 			{WPSHOP_LOW_STOCK_ALERT_MESSAGE}
 			<p itemprop="description" class="wpshop_liste_description">{WPSHOP_PRODUCT_EXCERPT}</p>
 		</a>
-		{WPSHOP_PRODUCT_BUTTONS}		
+		{WPSHOP_PRODUCT_BUTTONS}
 		<div class="wps-extras">
 			{WPSHOP_PRODUCT_EXTRA_STATE}
 		</div>
@@ -557,7 +557,7 @@ ob_start();
 ?>
 <li itemscope="" itemtype="http://data-vocabulary.org/Product">
 	<div>
-		<a href="{WPSHOP_PRODUCT_PERMALINK}" title="{WPSHOP_PRODUCT_TITLE}" itemprop="offers" itemscope itemtype="http://data-vocabulary.org/Offers">			
+		<a href="{WPSHOP_PRODUCT_PERMALINK}" title="{WPSHOP_PRODUCT_TITLE}" itemprop="offers" itemscope itemtype="http://data-vocabulary.org/Offers">
 			<span class="wps-thumbnail">
 				{WPSHOP_PRODUCT_THUMBNAIL_WPSHOP-PRODUCT-GALERY}
 				<span class="wps-extras">
@@ -565,16 +565,16 @@ ob_start();
 				</span>
 				<span class="wps-hover">voir</span>
 			</span>
-			<span class="wps-caption">		
+			<span class="wps-caption">
 				<span class="wps-title" itemprop="name" >{WPSHOP_PRODUCT_TITLE}</span>
 				<span itemprop="price" class="wps-price-container">
-			    	<span class="wps-price">{WPSHOP_PRODUCT_PRICE}</span>  
+			    	<span class="wps-price">{WPSHOP_PRODUCT_PRICE}</span>
 			    </span>
 			</span>
 		</a>
 		<div class="wps-action-container">
 			{WPSHOP_PRODUCT_BUTTONS}
-		</div>		
+		</div>
 	</div>
 </li><?php
 $tpl_element['product_mini_grid'] = ob_get_contents();
@@ -664,7 +664,7 @@ ob_start();
 			</li>
 		</ul>
 	</div>
-	
+
 </div><?php
 $tpl_element['product_listing_sorting'] = ob_get_contents();
 ob_end_clean();
@@ -1420,9 +1420,3 @@ ob_start();
 <?php
 $tpl_element['wps_new_add_to_cart_confirmation_modal'] = ob_get_contents();
 ob_end_clean();
-
-
-
-
-
-

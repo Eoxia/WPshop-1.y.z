@@ -90,6 +90,7 @@ jQuery( document ).ready( function() {
 		jQuery( '#wps_coupon_alert_container' ).hide();
 		var data = {
 				action: "wps_apply_coupon",
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 				coupon_code : jQuery( '#wps_coupon_code' ).val()
 			};
 			jQuery.post(ajaxurl, data, function(response){
@@ -114,7 +115,8 @@ jQuery( document ).ready( function() {
 	jQuery( document ).on( 'click', '#wps-cart-order-action', function() {
 		jQuery( this ).addClass( 'wps-bton-loading' );
 		var data = {
-				action: "wps_cart_pass_to_step_two"
+				action: "wps_cart_pass_to_step_two",
+				_wpnonce: jQuery( this ).data( 'nonce' )
 			};
 			jQuery.post(ajaxurl, data, function(response){
 				if( response['status'] ) {
@@ -163,7 +165,8 @@ jQuery( document ).ready( function() {
 	jQuery( document ).on( 'click', '.emptyCart', function() {
 		jQuery( this ).addClass( 'wps-bton-loading' );
 		var data = {
-				action: "wps_empty_cart"
+				action: "wps_empty_cart",
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 			};
 			jQuery.post(ajaxurl, data, function(response){
 				if(response['status']) {
@@ -186,6 +189,7 @@ function reload_wps_cart() {
 	jQuery( '#wps_cart_container' ).addClass( 'wps-bloc-loading');
 	var data = {
 			action: "wps_reload_cart"
+			_wpnonce: jQuery( '#wps_cart_container' ).data( 'nonce' ),
 		};
 		jQuery.post(ajaxurl, data, function(response){
 				//jQuery( '#wps_cart_container').animate({'opacity' : 0.1}, 450, function() {
@@ -206,6 +210,7 @@ function reload_mini_cart() {
 	}
 	var data = {
 			action: "wps_reload_mini_cart",
+			_wpnonce: jQuery( '.wps-fixed-cart-container' ).data( 'nonce' ),
 			type : type
 		};
 		jQuery.post(ajaxurl, data, function(response){
@@ -224,6 +229,7 @@ function reload_mini_cart() {
 function reload_summary_cart() {
 	var data = {
 			action: "wps_reload_summary_cart"
+			_wpnonce: jQuery( "#wps_resume_cart_container" ).data( 'nonce' ),
 		};
 		jQuery.post(ajaxurl, data, function(response){
 			jQuery( '#wps_resume_cart_container').animate({'opacity' : 0.1}, 450, function() {
