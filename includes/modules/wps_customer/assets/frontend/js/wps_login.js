@@ -12,7 +12,6 @@ jQuery(document).ready(function() {
 						jQuery('#login_loader').show();
 				},
 		        success: function( response ) {
-		        	console.log('ta mere');
 		        	if ( response[0] ) {
 							// Special wishlist
 							/*if(open_modal_wishlist)
