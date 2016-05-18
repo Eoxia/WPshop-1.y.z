@@ -165,7 +165,7 @@ class wpshop_categories
 
 		$tpl_component['CATEGORY_DELETE_PICTURE_BUTTON'] = '';
 		if( !empty($category_meta_information) && !empty($category_meta_information['wpshop_category_picture']) ) {
-			$tpl_component['CATEGORY_DELETE_PICTURE_BUTTON'] = '<a href="#" role="button" id="wps-delete-category-picture" class="wps-bton-second-mini-rounded">' .__( 'Delete the category picture', 'wpshop' ). '</a> ';
+			$tpl_component['CATEGORY_DELETE_PICTURE_BUTTON'] = '<a href="#" role="button" id="wps-delete-category-picture" data-nonce="' . wp_create_nonce( 'wps_delete_picture_category' ) . '" class="wps-bton-second-mini-rounded">' .__( 'Delete the category picture', 'wpshop' ). '</a> ';
 		}
 		$tpl_component['CATEGORY_PICTURE_ID'] = ( ( !empty($category_meta_information['wpshop_category_picture']) ) ? $category_meta_information['wpshop_category_picture'] : '' );
 
@@ -309,7 +309,7 @@ class wpshop_categories
 		// $item_width = null;
 		// /*	Make some treatment in case we are in grid mode	*/
 		// if($output_type == 'grid'){
-		// 		Determine the width of a component in a line grid	
+		// 		Determine the width of a component in a line grid
 		// 	$element_width = (100 / WPSHOP_DISPLAY_GRID_ELEMENT_NUMBER_PER_LINE);
 		// 	$item_width = (round($element_width) - 1) . '%';
 		// }
@@ -412,13 +412,13 @@ class wpshop_categories
 	}
 
 	/**
-	 * Get the category thumbnail by the category id. Get the option 
-	 * wpshop_product_category_$id, check if the option is an array and if the key 
-	 * wpshop_category_picture(id post value) it's not empty, if it is the case set the  
-	 * previously value in $id_picture. Use wp_get_attachment_image_src with the 
+	 * Get the category thumbnail by the category id. Get the option
+	 * wpshop_product_category_$id, check if the option is an array and if the key
+	 * wpshop_category_picture(id post value) it's not empty, if it is the case set the
+	 * previously value in $id_picture. Use wp_get_attachment_image_src with the
 	 * $id_picture for get the informations of attachment like: url, with, height and
-	 * resized image (true for resized image, false if it is the original). 
-	 *  
+	 * resized image (true for resized image, false if it is the original).
+	 *
 	 * @see get_option
 	 * @see wp_get_attachment_image_src
 	 * @param unknown_type $id
@@ -429,23 +429,23 @@ class wpshop_categories
 	public static function get_the_category_thumbnail($id, $size = 'thumbnail', $icon = false) {
 		/** Get the attachment/post ID */
 		$array_option_category 	= get_option('wpshop_product_category_' . $id);
-		
+
 		/** If not attachment/post ID in the category, return "No thumbnail in the category" */
 		if(is_array($array_option_category) && empty($array_option_category['wpshop_category_picture']))
 			return __('No thumbnail in the category', 'wpshop');
-		
+
 		/** Set attachment/post ID in $id_picture */
 		$id_picture = $array_option_category['wpshop_category_picture'];
-		
-		/** 
-		 * Set the post thumbnail in $post_thumbnail 
+
+		/**
+		 * Set the post thumbnail in $post_thumbnail
 		 * @get_the_post_thumbnail - WordPress function
 		 */
 		$post_thumbnail = wp_get_attachment_image_src($id_picture, $size, $icon);
-		
+
 		if(!$post_thumbnail)
 			return __('No thumbnail in this post', 'wpshop');
-			
+
 		return $post_thumbnail;
 	}
 }

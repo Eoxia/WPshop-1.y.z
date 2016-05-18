@@ -716,6 +716,7 @@ class wpshop_attributes_set{
 					"'.__('Add', 'wpshop').'": function(){
 						jQuery("#managementContainer").load(ajaxurl,{
 							"action": "wps_attribute_set_section_new",
+							"_wpnonce": "<?php echo wp_create_nonce("saveNewAttributeSetSection"); ?>",
 							"attributeSetSectionName": jQuery("#'.$dialog_input_identifier.'").val()
 						});
 						jQuery(this).children("img").show();
