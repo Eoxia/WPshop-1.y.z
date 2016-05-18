@@ -677,7 +677,7 @@ class wpshop_attributes_unit
 		}
 		if(current_user_can('wpshop_add_attributes_unit_group')){
 			$listItemOutput .= '
-<input type="button" value="' . __('Add an unit group', 'wpshop') . '" class="button-secondary alignleft" name="add_attribute_unit_group" id="add_attribute_unit_group" />';
+<input type="button" value="' . __('Add an unit group', 'wpshop') . '" class="button-secondary alignleft" name="add_attribute_unit_group" id="add_attribute_unit_group" data-nonce="' . wp_create_nonce( 'add_edit_attribute_unit_group' ) . '" />';
 		}
 		$listItemOutput .= wpshop_display::getTable($tableId, $tableTitles, $tableRows, $tableClasses, $tableRowsId, $tableSummary, true) . '
 <script type="text/javascript" >
@@ -709,7 +709,8 @@ class wpshop_attributes_unit
 			$listItemOutput .= '
 		wpshop("#add_attribute_unit_group").click(function(){
 			wpshop("#wpshop_unit_group_list").load(ajaxurl, {
-				"action": "wps_attribute_group_unit_add"
+				"action": "wps_attribute_group_unit_add",
+				"_wpnonce": jQuery(this).data("nonce")
 			});
 		});';
 		}
