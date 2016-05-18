@@ -2,7 +2,7 @@
 
 if(!empty($my_wishlist) && is_array($my_wishlist)):
 	?>
-	<div class="wpshop_product_container">
+	<div class="wpshop_product_container" data-nonce="<?php echo wp_create_nonce( 'products_by_criteria' ); ?>">
 		<div class="container_product_listing wps-bloc-loader">
 			<ul class="products_listing wpshop_clearfix grid_3 grid_mode">
 				<?php

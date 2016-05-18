@@ -3,7 +3,7 @@ wpshop
 
 Wpshop est un plugin ecommerce Made in France, simple et flexible.
 
-[![Build Status](https://img.shields.io/travis/Eoxia/wpshop/master.svg?label=Linux)](https://travis-ci.org/Eoxia/wpshop)
+[![Build Status](https://img.shields.io/travis/Eoxia/wpshop/beta.svg?label=Linux)](https://travis-ci.org/Eoxia/wpshop)
 
 L'utilisation de shortcodes permet une intégration en toute simplicité des produits ou catégories sur vos pages et articles. Modes de paiement CB inclus : paypal et Cybermut pour le Crédit Mutuel et le CIC. Le thème intégré est conçu en responsive web design pour une adaptation sans zoom pour les smartphones et tablettes.
 
