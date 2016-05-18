@@ -760,10 +760,10 @@ class wpshop_products {
 			unset($tpl_component);
 
 			if ( !empty( $atts) && !empty($atts['container']) && $atts['container'] == 'no') {
-				$string = $sorting.'<div class="wps-catalog-container wps-bloc-loader">'.$string.'</div>';
+				$string = $sorting.'<div data-nonce="' . wp_create_nonce( 'products_by_criteria' ) . '" class="wps-catalog-container wps-bloc-loader">'.$string.'</div>';
 			}
 			else {
-				$string = '<div class="wpshop_products_block">'.$sorting.'<div class="wps-catalog-container wps-bloc-loader">'.$string.'</div></div>';
+				$string = '<div class="wpshop_products_block">'.$sorting.'<div data-nonce="' . wp_create_nonce( 'products_by_criteria' ) . '" class="wps-catalog-container wps-bloc-loader">'.$string.'</div></div>';
 			}
 		}
 		else if ( empty($atts['no_result_message']) || ($atts['no_result_message'] != 'no') ) {

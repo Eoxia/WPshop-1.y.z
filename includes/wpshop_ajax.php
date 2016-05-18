@@ -3417,11 +3417,13 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action( 'wp_ajax_wps_attribute_unit_interface', 'load_unit_interface' );
 
 	function load_attribute_units() {
+		check_ajax_referer( 'load_attribute_units' );
 		echo wpshop_attributes_unit::elementList();
 	}
 	add_action( 'wp_ajax_wps_attribute_unit_load', 'load_attribute_units' );
 
 	function add_edit_attribute_unit() {
+		check_ajax_referer( 'add_edit_attribute_unit' );
 		$atribute_unit = '';
 		if ( $action == 'edit_attribute_unit' ) {
 			$atribute_unit = wpshop_tools::varSanitizer($_REQUEST['elementIdentifier']);
@@ -3432,6 +3434,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action( 'wp_ajax_wps_attribute_unit_edit', 'add_edit_attribute_unit' );
 
 	function save_new_attribute_unit() {
+		check_ajax_referer( 'save_new_attribute_unit' );
 		$save_output = '';
 
 		$attribute_unit_informations['id'] = '';
@@ -3456,6 +3459,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action( 'wp_ajax_wps_attribute_unit_new', 'save_new_attribute_unit' );
 
 	function update_attribute_unit() {
+		check_ajax_referer( 'update_attribute_unit' );
 		$save_output = '';
 
 		$attributeUnitId = wpshop_tools::varSanitizer($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['id']);
@@ -3594,6 +3598,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action( 'wp_ajax_wps_attribute_group_unit_delete', 'delete_attribute_unit_group' );
 
 	function products_by_criteria() {
+		check_ajax_referer( 'products_by_criteria' );
 		// If a filter by attribute is found, recalcul the products that matching it
 		if(!empty($_REQUEST['attr'])) {
 			$att = explode(':',$_REQUEST['attr']);

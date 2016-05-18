@@ -364,6 +364,7 @@ class wpshop_attributes_unit
 		jQuery(".edit_attribute_unit").click(function(){
 			jQuery("#wpshop_unit_list").load(ajaxurl,{
 				"action": "wps_attribute_unit_edit",
+				"_wpnonce": "<?php echo wp_create_nonce("add_edit_attribute_unit"); ?>",
 				"elementIdentifier": wpshop(this).attr("id").replace("edit_attribute_unit_", "")
 			});
 		});';
@@ -372,7 +373,8 @@ class wpshop_attributes_unit
 			$listItemOutput .= '
 		jQuery("#add_attribute_unit").click(function(){
 			jQuery("#wpshop_unit_list").load(ajaxurl,{
-				"action": "wps_attribute_unit_add"
+				"action": "wps_attribute_unit_add",
+				"_wpnonce": "<?php echo wp_create_nonce("add_edit_attribute_unit"); ?>",
 			});
 		});';
 		}
@@ -463,7 +465,8 @@ class wpshop_attributes_unit
 
 		jQuery("#cancel_unit_edition").click(function(){
 			jQuery("#wpshop_unit_list").load(ajaxurl, {
-				"action": "wps_attribute_unit_load"
+				"action": "wps_attribute_unit_load",
+				"_wpnonce": "<?php echo wp_create_nonce( "load_attribute_units" ); ?>",
 			});
 		});
 
