@@ -68,7 +68,7 @@ class wpshop_checkout {
 					'post_type' => WPSHOP_NEWTYPE_IDENTIFIER_ORDER,
 					'post_title' => sprintf(__('Order - %s','wpshop'), mysql2date('d M Y\, H:i:s', current_time('mysql', 0), true)),
 					'post_status' => 'publish',
-					'post_excerpt' => !empty($_POST['wps-customer-comment']) ? $_POST['wps-customer-comment'] : '',
+					'post_excerpt' => !empty($_POST['wps-customer-comment']) ? sanitize_text_field( $_POST['wps-customer-comment'] ) : '',
 					'post_author' => $user_id,
 					'comment_status' => 'closed'
 				);
@@ -148,6 +148,7 @@ class wpshop_checkout {
 				do_action( 'wps_order_extra_save', $order_id );
 
 				//Add an action to extra actions on order save
+				// @TODO : REQUEST
 				$args = array( 'order_id' => $order_id, 'posted_data' => $_REQUEST);
 				wpshop_tools::create_custom_hook( 'wps_order_extra_save_action', $args );
 

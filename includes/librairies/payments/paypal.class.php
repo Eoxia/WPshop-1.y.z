@@ -29,12 +29,13 @@ class wpshop_paypal {
 			update_option( 'wps_payment_mode', $payment_option );
 		}
 
+		$payment_listener = !empty( $_GET['paymentListener'] ) ? sanitize_text_field( $_GET['paymentListener'] ) : '';
 
-
-		if(!empty($_GET['paymentListener']) && $_GET['paymentListener']=='paypal') {
+		if(!empty($payment_listener) && $payment_listener=='paypal') {
 			$payment_status = 'denied';
 			// read the post from PayPal system and add 'cmd'
 			$req = 'cmd=_notify-validate';
+			// @TODO : REQUEST
 			foreach ($_POST as $key => $value) {
 				$value = urlencode(stripslashes($value));
 				$req .= "&$key=$value";
@@ -62,13 +63,14 @@ class wpshop_paypal {
 			$shipping = $_POST['mc_shipping']; // frais de livraison
 			$business = $_POST['business']; // compte pro
 			$order_id = (int)$_POST['invoice']; // num de facture
-			$receiver_email = $_POST['receiver_email'];
+			$receiver_email = sanitize_text_field( $_POST['receiver_email'] );
 			$amount_paid = $_POST['mc_gross']; // total (hors frais livraison)
 			$txn_id = $_POST['txn_id']; // num�ro de transaction
 			$payment_status = $_POST['payment_status']; // status du paiement
 			$payer_email = $_POST['payer_email']; // email du client
-			$txn_type = $_POST['txn_type'];
+			$txn_type = sanitize_text_field( $_POST['txn_type'] );
 
+			// @TODO : Request
 			if ( !empty($_POST) ) {
 				foreach ( $_POST as $key => $value) {
 					if ( substr($key, 0, 9) == 'item_name' ) {
@@ -134,13 +136,15 @@ class wpshop_paypal {
 				fclose($fp);
 			}
 
+			$mc_gross = !empty( $_POST['mc_gross'] ) ? (float)$_POST['mc_gross'] : 0;
+
 			$params_array = array('method' => 'paypal',
 					'waited_amount' => number_format((float)$order['order_amount_to_pay_now'], 2, '.', ''),
-					'status' => ( ( number_format((float)$order['order_amount_to_pay_now'], 2, '.', '') == number_format((float)$_POST['mc_gross'], 2, '.', '') ) ? 'payment_received' : 'incorrect_amount' ),
+					'status' => ( ( number_format((float)$order['order_amount_to_pay_now'], 2, '.', '') == number_format($mc_gross, 2, '.', '') ) ? 'payment_received' : 'incorrect_amount' ),
 					'author' => $order['customer_id'],
 					'payment_reference' => $txn_id,
 					'date' => current_time('mysql', 0),
-					'received_amount' => number_format((float)$_POST['mc_gross'], 2, '.', '') );
+					'received_amount' => number_format($mc_gross, 2, '.', '') );
 			wpshop_payment::check_order_payment_total_amount($order_id, $params_array, $payment_status);
 
 		}
