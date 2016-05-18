@@ -188,7 +188,7 @@
 <?php endif; ?>
 
 <?php if( !empty($cart_type) && $cart_type == 'admin-panel' && ( empty( $cart_content['order_status'] ) || $cart_content['order_status'] == 'awaiting_payment' || ( ( !empty( $cart_content['cart_type'] ) && $cart_content['cart_type'] == 'quotation' ) && $cart_content['order_status'] != 'completed' ) ) ) : ?>
-	<button class="wps-bton-second-rounded alignRight" id="wps-orders-update-cart-informations">
+	<button class="wps-bton-second-rounded alignRight" data-nonce="<?php echo wp_create_nonce( 'wps_orders_update_cart_informations' ); ?>" id="wps-orders-update-cart-informations">
 		<i class="dashicons dashicons-update"></i>
 		<?php _e( 'Update order informations', 'wpshop'); ?>
 	</button>

@@ -8,6 +8,7 @@ jQuery( document ).ready( function() {
 			jQuery( this ).addClass( 'wps-bton-loading' );
 			var data = {
 					action : "wps_add_product_to_order_admin",
+					_wpnonce: jQuery( this ).data( 'nonce' ),
 					pid : pid,
 					oid : jQuery( '#post_ID' ).val(),
 					qty : qty
@@ -15,7 +16,7 @@ jQuery( document ).ready( function() {
 				jQuery.post(ajaxurl, data, function(response){
 					if(response['status']) {
 						if( response['variations_exist'] ) {
-							var link = ajaxurl + '?action=wps_order_load_product_variations&width=750&height=600&oid=' + jQuery( '#post_ID').val() + '&pid=' + pid + '&qty=' + qty;
+							var link = ajaxurl + '?action=wps_order_load_product_variations&_wpnonce=' + response['_wpnonce'] + '&width=750&height=600&oid=' + jQuery( '#post_ID').val() + '&pid=' + pid + '&qty=' + qty;
 							tb_show('Select variations', link ,'');
 						}
 						else {
@@ -39,6 +40,7 @@ jQuery( document ).ready( function() {
 		var letter = jQuery( this ).attr( 'id' );
 		var data = {
 				action: "wps_order_refresh_product_listing",
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 				letter : letter,
 				oid : jQuery( '#post_ID' ).val()
 			};
@@ -155,14 +157,15 @@ jQuery( document ).ready( function() {
 				}
 		}, 'json');
 	});
-	
+
 	jQuery( document ).on( 'click', '#wps-regerate-invoice-payment-btn', function( e ) {
 		e.preventDefault();
 		jQuery( this ).addClass( 'wps-bton-loading' );
 		var uniqid = this.dataset.class;
 		var btn = this;
 		var data = {
-			action: "wps_reverify_payment_invoice_ref", 
+			action: "wps_reverify_payment_invoice_ref",
+			_wpnonce: jQuery( this ).data( 'nonce' ),
 			inputs: jQuery.map( jQuery( '.wps-regerate-invoice-payment-input' + uniqid ), function( element ) { return {key: element.getAttribute( "name" ), value: jQuery( element ).val()}; } )
 		};
 		jQuery.post( ajaxurl, data, function( response ){;
@@ -202,6 +205,7 @@ jQuery( document ).ready( function() {
 		jQuery( '#wps_cart_container').addClass( 'wps-bloc-loading' );
 		var data = {
 				action: "wps_update_product_qty_in_admin",
+				_wpnonce: jQuery( '#wps_cart_container' ).data( 'nonce' ),
 				order_id : jQuery( '#post_ID').val(),
 				product_id : product_id,
 				qty : qty,
@@ -230,6 +234,7 @@ jQuery( document ).ready( function() {
 
 		var data = {
 				action: "wpshop_add_private_comment_to_order",
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 				comment : comment,
 				oid : oid,
 				send_email : send_email,
@@ -261,6 +266,7 @@ function refresh_cart() {
 	jQuery( '#wps_cart_container').addClass( 'wps-bloc-loading' );
 	var data = {
 			action: "wps_refresh_cart_order",
+			_wpnonce: jQuery( '#wps_cart_container' ).data( 'nonce' ),
 			order_id : jQuery( '#post_ID').val(),
 		};
 		jQuery.post(ajaxurl, data, function(response){
@@ -276,6 +282,7 @@ function refresh_cart() {
 function  refresh_payments() {
 	var data = {
 			action: "wps_refresh_payments_order",
+			_wpnonce: jQuery( '#wps_cart_container' ).data( 'nonce' ),
 			order_id : jQuery( '#post_ID').val(),
 		};
 		jQuery.post(ajaxurl, data, function(response){

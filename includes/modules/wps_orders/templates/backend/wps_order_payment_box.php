@@ -57,7 +57,7 @@ $waited_amount_sum = $received_amount_sum = $i = 0;
 					<div>
 					<input type="hidden" name="order_id" class="wps-regerate-invoice-payment-input<?php $idregen = uniqid(); echo $idregen; ?>" value="<?php echo $order->ID; ?>">
 					<input type="hidden" name="index_payment" class="wps-regerate-invoice-payment-input<?php echo $idregen; ?>" value="<?php echo $index_payment; ?>">
-					<div class="wps-product-section"><button id="wps-regerate-invoice-payment-btn" class="wps-bton-fourth-mini-third" data-class="<?php echo $idregen; ?>"><i class="dashicons dashicons-controls-repeat"></i><?php _e( 'Regerate invoice payment', 'wpshop' ); ?></button></div>
+					<div class="wps-product-section"><button data-nonce="<?php echo wp_create_nonce( 'wps_reverify_payment_invoice_ref' ); ?>" id="wps-regerate-invoice-payment-btn" class="wps-bton-fourth-mini-third" data-class="<?php echo $idregen; ?>"><i class="dashicons dashicons-controls-repeat"></i><?php _e( 'Regerate invoice payment', 'wpshop' ); ?></button></div>
 					</div>
 				<?php } ?>
 				<br/>

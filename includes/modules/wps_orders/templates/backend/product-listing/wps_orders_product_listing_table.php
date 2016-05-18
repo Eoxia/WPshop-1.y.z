@@ -34,7 +34,7 @@
 				<a class="wps-bton-icon-plus-small wps-cart-add-product-qty" href=""></a>
 			</div>
 			<div class="wps-table-cell">
-				<a href="#" class="wps-bton-first-mini-rounded wps-order-add-product" id="wps-order-add-product-<?php echo $pid; ?>"><i class="wps-icon-basket"></i> <?php _e( 'Add to order', 'wpshop'); ?></a>
+				<a href="#" data-nonce="<?php echo wp_create_nonce( 'wps_add_product_to_order_admin' ); ?>" class="wps-bton-first-mini-rounded wps-order-add-product" id="wps-order-add-product-<?php echo $pid; ?>"><i class="wps-icon-basket"></i> <?php _e( 'Add to order', 'wpshop'); ?></a>
 			</div>
 		<?php endif; ?>
 	</div>
