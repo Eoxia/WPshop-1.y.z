@@ -2336,8 +2336,8 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		global $wpshop_account;
 		global $wpdb;
 		check_ajax_referer( 'wpshop_order_customer_adress_load', 'wpshop_ajax_nonce' );
-		$current_customer_id = !empty( $_REQUEST['customer_id'] ) ? $_REQUEST['customer_id'] : 0;
-		$order_id = !empty( $_REQUEST['order_id'] ) ? $_REQUEST['order_id'] : 0;
+		$current_customer_id = !empty( $_REQUEST['customer_id'] ) ? (int) $_REQUEST['customer_id'] : 0;
+		$order_id = !empty( $_REQUEST['order_id'] ) ? (int) $_REQUEST['order_id'] : 0;
 
 		$order_postmeta = get_post_meta ($order_id, '_order_postmeta', true);
 		$order_infos_postmeta = get_post_meta ($order_id, '_order_info', true);
@@ -2668,7 +2668,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 				$shipping_set_infos = get_option('wpshop_shipping_address_choice');
 				/** If it's same addresses for Shipping and Billing */
 				if (isset($shiptobilling) && $shiptobilling == "on") {
-					wpshop_account::same_billing_and_shipping_address($_REQUEST['billing_address'], $_REQUEST['shipping_address']);
+					wpshop_account::same_billing_and_shipping_address($billing_address, $shipping_address);
 				}
 
 				if ( !empty($billing_address) ) {
