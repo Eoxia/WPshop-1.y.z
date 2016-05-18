@@ -21,7 +21,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 
 		check_ajax_referer( 'wpshop_product_duplication', 'wpshop_ajax_nonce' );
 
-		$current_post_id = isset($_POST['current_post_id']) ? wpshop_tools::varSanitizer($_POST['current_post_id']) : null;
+		$current_post_id = isset($_POST['current_post_id']) ? sanitize_key($_POST['current_post_id']) : null;
 
 		$result = wpshop_entities::duplicate_entity_element($current_post_id);
 
@@ -37,7 +37,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		check_ajax_referer( 'wpshop_delete_product_thumbnail', 'wpshop_ajax_nonce' );
 
 		$bool = false;
-		$attachement_id = isset($_POST['attachement_id']) ? intval(wpshop_tools::varSanitizer($_POST['attachement_id'])) : null;
+		$attachement_id = isset($_POST['attachement_id']) ? (int) $_POST['attachement_id'] : null;
 
 		if ( !empty($attachement_id) ) {
 			$deletion_result = wp_delete_attachment($attachement_id, false);
@@ -55,9 +55,9 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		check_ajax_referer( 'wpshop_reload_product_attachment_part', 'wpshop_ajax_nonce' );
 
 		$bool = false;
-		$current_post_id = isset($_POST['current_post_id']) ? intval(wpshop_tools::varSanitizer($_POST['current_post_id'])) : null;
+		$current_post_id = isset($_POST['current_post_id']) ? (int) $_POST['current_post_id'] : null;
 		$attachement_type_list = array('reload_box_document' => 'application/pdf', 'reload_box_picture' => 'image/');
-		$part_to_reload = isset($_POST['part_to_reload']) ? wpshop_tools::varSanitizer($_POST['part_to_reload']) : null;
+		$part_to_reload = isset($_POST['part_to_reload']) ? sanitize_text_field( $_POST['part_to_reload']) : null;
 		$attachement_type = $attachement_type_list[$part_to_reload];
 
 		echo json_encode(array(wpshop_products::product_attachement_by_type($current_post_id, $attachement_type, 'media-upload.php?post_id=' . $current_post_id . '&amp;tab=library&amp;type=image&amp;TB_iframe=1&amp;width=640&amp;height=566'), $part_to_reload));
@@ -72,8 +72,8 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		global $wpdb;
 		check_ajax_referer( 'product_bulk_edit_save', 'wpshop_ajax_nonce' );
 
-		$post_ids = ( isset( $_POST[ 'post_ids' ] ) && !empty( $_POST[ 'post_ids' ] ) ) ? $_POST[ 'post_ids' ] : array();
-		$post_attributes = ( isset( $_POST[ 'attribute' ] ) && !empty( $_POST[ 'attribute' ] ) ) ? $_POST[ 'attribute' ] : array();
+		$post_ids = ( isset( $_POST[ 'post_ids' ] ) && !empty( $_POST[ 'post_ids' ] ) ) ? (array) $_POST[ 'post_ids' ] : array();
+		$post_attributes = ( isset( $_POST[ 'attribute' ] ) && !empty( $_POST[ 'attribute' ] ) ) ? (array) $_POST[ 'attribute' ] : array();
 
 		if ( !empty( $post_ids ) && is_array( $post_ids ) && !empty( $post_attributes ) && is_array( $post_attributes ) ) {
 			$attribute_to_save = array();
@@ -161,8 +161,8 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		check_ajax_referer( 'wpshop_variation_management', 'wpshop_ajax_nonce' );
 		global $wpdb;
 
-		$attributes_for_variation = isset($_POST['wpshop_attribute_to_use_for_variation']) ? ($_POST['wpshop_attribute_to_use_for_variation']) : null;
-		$current_post_id = isset($_POST['current_post_id']) ? wpshop_tools::varSanitizer($_POST['current_post_id']) : null;
+		$attributes_for_variation = isset($_POST['wpshop_attribute_to_use_for_variation']) ? (array) $_POST['wpshop_attribute_to_use_for_variation'] : null;
+		$current_post_id = isset($_POST['current_post_id']) ? sanitize_key($_POST['current_post_id']) : null;
 
 		/** Get the list of values of the attribute to affect to a variation	*/
 		$var = array();
@@ -190,7 +190,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		check_ajax_referer( 'wpshop_variation_management', 'wpshop_ajax_nonce' );
 		$output = '';
 
-		$current_post_id = isset($_POST['current_post_id']) ? wpshop_tools::varSanitizer($_POST['current_post_id']) : null;
+		$current_post_id = isset($_POST['current_post_id']) ? sanitize_key($_POST['current_post_id']) : null;
 
 		/*	Get the list of values of the attribute to affect to a variation	*/
 		$attribute_for_variation = wpshop_attributes::get_variation_available_attribute_display( $current_post_id, 'single' );
@@ -218,7 +218,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	 */
 	function ajax_new_combined_variation_list_definition() {
 		check_ajax_referer( 'wpshop_variation_management', 'wpshop_ajax_nonce' );
-		$current_post_id = isset($_POST['current_post_id']) ? wpshop_tools::varSanitizer($_POST['current_post_id']) : null;
+		$current_post_id = isset($_POST['current_post_id']) ? sanitize_key($_POST['current_post_id']) : null;
 		$output = '';
 
 		$attribute_for_variation = wpshop_attributes::get_variation_available_attribute_display( $current_post_id );
@@ -235,7 +235,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	function wpshop_ajax_admin_variation_parameters() {
 		check_ajax_referer( 'wpshop_variation_management', 'wpshop_ajax_nonce' );
 
-		$current_post_id = isset($_POST['current_post_id']) ? wpshop_tools::varSanitizer($_POST['current_post_id']) : null;
+		$current_post_id = isset($_POST['current_post_id']) ? sanitize_key($_POST['current_post_id']) : null;
 		$output = '';
 
 		/*	Display variation options	*/
@@ -346,7 +346,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	function wpshop_ajax_admin_variation_parameters_save() {
 		check_ajax_referer( 'wpshop_variation_parameters', 'wpshop_ajax_nonce' );
 
-		$current_post_id = isset($_POST['current_post_id']) ? wpshop_tools::varSanitizer($_POST['current_post_id']) : null;
+		$current_post_id = isset($_POST['current_post_id']) ? sanitize_key($_POST['current_post_id']) : null;
 
 		if ( !empty($_POST[WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION]['options']) ) {
 			$variation_post_meta = get_post_meta($current_post_id, '_wpshop_variation_defining', true);
@@ -366,10 +366,10 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		check_ajax_referer( 'wpshop_variation_management', 'wpshop_ajax_nonce' );
 		$output = '';
 
-		$attributes_for_variation = isset($_POST['variation_attr']) ? ($_POST['variation_attr']) : null;
-		$wpshop_admin_use_attribute_for_single_variation_checkbox = isset($_POST['wpshop_admin_use_attribute_for_single_variation_checkbox']) ? ($_POST['wpshop_admin_use_attribute_for_single_variation_checkbox']) : null;
-		$variation_specific_definition = isset($_POST['wps_pdt_variations']['new']['attribute']) ? ($_POST['wps_pdt_variations']['new']['attribute']) : null;
-		$current_post_id = isset($_POST['wpshop_head_product_id']) ? wpshop_tools::varSanitizer($_POST['wpshop_head_product_id']) : null;
+		$attributes_for_variation = isset($_POST['variation_attr']) ? (array) $_POST['variation_attr'] : null;
+		$wpshop_admin_use_attribute_for_single_variation_checkbox = isset($_POST['wpshop_admin_use_attribute_for_single_variation_checkbox']) ? sanitize_text_field($_POST['wpshop_admin_use_attribute_for_single_variation_checkbox']) : null;
+		$variation_specific_definition = isset($_POST['wps_pdt_variations']['new']['attribute']) ? (array) $_POST['wps_pdt_variations']['new']['attribute'] : null;
+		$current_post_id = isset($_POST['wpshop_head_product_id']) ? sanitize_key($_POST['wpshop_head_product_id']) : null;
 
 		$attribute_to_use_for_creation = array();
 		foreach ( $attributes_for_variation as $attribute_code => $attribute_value) {
@@ -408,7 +408,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		$result = false;
 		$list_to_remove = '';
 
-		$current_post_id = isset($_POST['current_post_id']) && is_array($_POST['current_post_id']) ? $_POST['current_post_id'] : null;
+		$current_post_id = isset($_POST['current_post_id']) && is_array($_POST['current_post_id']) ? (array) $_POST['current_post_id'] : null;
 		foreach ( $current_post_id as $variation_id) {
 			$result = wp_delete_post($variation_id, false);
 			if ( $result ) {
@@ -427,7 +427,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	function ajax_wpshop_delete_head_product_variation_def() {
 		check_ajax_referer( 'wpshop_variation_management', 'wpshop_ajax_nonce' );
 
-		$current_post_id = isset($_POST['current_post_id']) ? wpshop_tools::varSanitizer($_POST['current_post_id']) : null;
+		$current_post_id = isset($_POST['current_post_id']) ? sanitize_key($_POST['current_post_id']) : null;
 		$current_variation_def = get_post_meta($current_post_id, '_wpshop_variation_defining', true);
 		unset($current_variation_def['attributes']);
 		update_post_meta($current_post_id, '_wpshop_variation_defining', $current_variation_def);
@@ -440,9 +440,9 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	/* Validate the payment transaction number */
 	function wpshop_ajax_validate_payment_method() {
 		check_ajax_referer( 'wpshop_validate_payment_method', 'wpshop_ajax_nonce' );
-		$order_id = ( isset( $_POST[ 'order_id' ] ) && !empty( $_POST[ 'order_id' ] ) ) ? $_POST[ 'order_id' ] : null;
+		$order_id = ( isset( $_POST[ 'order_id' ] ) && !empty( $_POST[ 'order_id' ] ) ) ? (int) $_POST[ 'order_id' ] : null;
 		$payment_method = ( isset( $_POST[ 'payment_method' ] ) && !empty( $_POST[ 'payment_method' ] ) ) ? $_POST[ 'payment_method' ] : null;
-		$transaction_id = ( isset( $_POST[ 'transaction_id' ] ) && !empty( $_POST[ 'transaction_id' ] ) ) ? $_POST[ 'transaction_id' ] : null;
+		$transaction_id = ( isset( $_POST[ 'transaction_id' ] ) && !empty( $_POST[ 'transaction_id' ] ) ) ? (int) $_POST[ 'transaction_id' ] : null;
 
 		if ( !empty($order_id) ) {
 			if( !empty($payment_method) && !empty($transaction_id) ) {
@@ -595,7 +595,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		global $wpdb;
 
 		$option_id=$option_default_value=$option_value_id=$options_value='';
-		$attribute_identifier = isset($_GET['attribute_identifier']) ? wpshop_tools::varSanitizer($_GET['attribute_identifier']) : '0';
+		$attribute_identifier = isset($_GET['attribute_identifier']) ? (int) $_GET['attribute_identifier'] : '0';
 		$option_name = (!empty($_REQUEST['attribute_new_label']) ? $_REQUEST['attribute_new_label'] : '');
 		$options_value = sanitize_title($option_name);
 
@@ -3293,7 +3293,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	function wps_delete_picture_category() {
 		check_ajax_referer( 'wps_delete_picture_category' );
 		$status = false; $response = '';
-		$cat_id = ( !empty($_POST['cat_id']) ) ? intval( $_POST['cat_id'] ) : null;
+		$cat_id = ( !empty($_POST['cat_id']) ) ? (int) $_POST['cat_id'] : null;
 		if( !empty($cat_id) ) {
 			// Get Category option
 			$category_option = get_option(WPSHOP_NEWTYPE_IDENTIFIER_CATEGORIES . '_' . $cat_id );
@@ -3341,6 +3341,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		else
 			$attributeSetSectionCreation_Result = '<img src=\'' . WPSHOP_ERROR_ICON . '\' alt=\'action_error\' class=\'wpshopPageMessage_Icon\' />' . __('An error occured while saving new section', 'wpshop');
 		echo wpshop_attributes_set::attributeSetDetailsManagement($elementIdentifier) . '<script type="text/javascript" >wpshop(document).ready(function(){	jQuery("#wpshop_new_set_section_add").dialog("close");jQuery("#wpshop_new_set_section_add").children("img").hide(); });wpshopShowMessage("' . $attributeSetSectionCreation_Result . '");hideShowMessage(5000);'.$more_script.'</script>';
+		wp_die();
 	}
 	add_action( 'wp_ajax_wps_attribute_set_section_new', 'saveNewAttributeSetSection' );
 
@@ -3368,6 +3369,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		else
 			$attributeSetSectionCreation_Result = '<img src=\'' . WPSHOP_ERROR_ICON . '\' alt=\'action_error\' class=\'wpshopPageMessage_Icon\' />' . __('An error occured while updating the section', 'wpshop');
 		echo wpshop_attributes_set::attributeSetDetailsManagement($elementIdentifier) . '<script type="text/javascript" >wpshopShowMessage("' . $attributeSetSectionCreation_Result . '");hideShowMessage(5000);</script>';
+		wp_die();
 	}
 	add_action( 'wp_ajax_wps_attribute_set_section_edit', 'editAttributeSetSection' );
 
@@ -3389,6 +3391,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		else
 			$attributeSetSectionCreation_Result = '<img src=\'' . WPSHOP_ERROR_ICON . '\' alt=\'action_error\' class=\'wpshopPageMessage_Icon\' />' . __('An error occured while deleting the section', 'wpshop');
 		echo '<script type="text/javascript" >wpshopShowMessage("' . $attributeSetSectionCreation_Result . '");hideShowMessage(5000);'.$more_script.'</script>';
+		wp_die();
 	}
 	add_action( 'wp_ajax_wps_attribute_set_section_delete', 'deleteAttributeSetSection' );
 
@@ -3429,6 +3432,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 			$atribute_unit = (int) $_REQUEST['elementIdentifier'];
 		}
 		echo wpshop_attributes_unit::elementEdition($atribute_unit);
+		wp_die();
 	}
 	add_action( 'wp_ajax_wps_attribute_unit_add', 'add_edit_attribute_unit' );
 	add_action( 'wp_ajax_wps_attribute_unit_edit', 'add_edit_attribute_unit' );
@@ -3455,6 +3459,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		}
 
 		echo '<script type="text/javascript" >wpshop(document).ready(function(){setTimeout(function(){ wpshop("#wpshopMessage_unit").removeClass("wpshopPageMessage_Updated"); wpshop("#wpshopMessage_unit").html(""); }, 5000);});</script><div class="fade below-h2 wpshopPageMessage wpshopPageMessage_Updated" id="wpshopMessage_unit">' . $save_message . '</div>' . $save_output;
+		wp_die();
 	}
 	add_action( 'wp_ajax_wps_attribute_unit_new', 'save_new_attribute_unit' );
 
@@ -3491,6 +3496,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		}
 
 		echo '<script type="text/javascript" >wpshop(document).ready(function(){setTimeout(function(){ wpshop("#wpshopMessage_unit").removeClass("wpshopPageMessage_Updated"); wpshop("#wpshopMessage_unit").html(""); }, 5000);});</script><div class="fade below-h2 wpshopPageMessage wpshopPageMessage_Updated" id="wpshopMessage_unit">' . $save_message . '</div>' . $save_output;
+		wp_die();
 	}
 	add_action( 'wp_ajax_wps_attribute_unit_update', 'update_attribute_unit' );
 
@@ -3510,6 +3516,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		}
 
 		echo '<script type="text/javascript" >wpshop(document).ready(function(){setTimeout(function(){ wpshop("#wpshopMessage_unit").removeClass("wpshopPageMessage_Updated"); wpshop("#wpshopMessage_unit").html(""); }, 5000);});</script><div class="fade below-h2 wpshopPageMessage wpshopPageMessage_Updated" id="wpshopMessage_unit">' . $save_message . '</div>' . wpshop_attributes_unit::elementList();
+		wp_die();
 	}
 	add_action( 'wp_ajax_wps_attribute_unit_delete', 'delete_attribute_unit' );
 
@@ -3552,6 +3559,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		}
 
 		echo '<script type="text/javascript" >wpshop(document).ready(function(){setTimeout(function(){ wpshop("#wpshopMessage_unit").removeClass("wpshopPageMessage_Updated"); wpshop("#wpshopMessage_unit").html(""); }, 5000);});</script><div class="fade below-h2 wpshopPageMessage wpshopPageMessage_Updated" id="wpshopMessage_unit">' . $save_message . '</div>' . $save_output;
+		wp_die();
 	}
 	add_action( 'wp_ajax_wps_attribute_group_unit_new', 'save_new_attribute_unit_group' );
 
@@ -3575,6 +3583,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		}
 
 		echo '<script type="text/javascript" >wpshop(document).ready(function(){setTimeout(function(){ wpshop("#wpshopMessage_unit").removeClass("wpshopPageMessage_Updated"); wpshop("#wpshopMessage_unit").html(""); }, 5000);});</script><div class="fade below-h2 wpshopPageMessage wpshopPageMessage_Updated" id="wpshopMessage_unit">' . $save_message . '</div>' . $save_output;
+		wp_die();
 	}
 	add_action( 'wp_ajax_wps_attribute_group_unit_update', 'update_attribute_unit_group' );
 
@@ -3594,6 +3603,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		}
 
 		echo '<script type="text/javascript" >wpshop(document).ready(function(){setTimeout(function(){ wpshop("#wpshopMessage_unit").removeClass("wpshopPageMessage_Updated"); wpshop("#wpshopMessage_unit").html(""); }, 5000);});</script><div class="fade below-h2 wpshopPageMessage wpshopPageMessage_Updated" id="wpshopMessage_unit">' . $save_message . '</div>' . wpshop_attributes_unit::unit_group_list();
+		wp_die();
 	}
 	add_action( 'wp_ajax_wps_attribute_group_unit_delete', 'delete_attribute_unit_group' );
 
@@ -3618,6 +3628,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		if($data[0]) {
 			echo json_encode(array(true, do_shortcode($data[1])));
 		} else echo json_encode(array(false,__('No product found','wpshop')));
+		wp_die();
 	}
 	add_action( 'wp_ajax_wps_products_by_criteria', 'products_by_criteria' );
 
@@ -3650,6 +3661,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		}
 
 		echo json_encode($array);
+		wp_die();
 	}
 	add_action( 'wp_ajax_wps_ajax_send_message', 'ajax_sendMessage' );
 
@@ -3683,6 +3695,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		}
 
 		echo json_encode($array);
+		wp_die();
 	}
 	add_action( 'wp_ajax_wps_ajax_resend_message', 'ajax_resendMessage' );
 
@@ -3695,6 +3708,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 			$array[] = array('id' => $d->ID, 'name' => $d->post_title);
 		}
 		echo json_encode($array);
+		wp_die();
 	}
 	add_action( 'wp_ajax_wps_related_products', 'related_products' );
 
@@ -3709,6 +3723,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 			$wps_cart_ctr->store_cart_in_session($order);
 			echo json_encode(array(true, ''));
 		} else echo json_encode(array(false, $result['message']));
+		wp_die();
 	}
 	add_action( 'wp_ajax_wps_cart_action_apply_coupon', 'applyCoupon' );
 
