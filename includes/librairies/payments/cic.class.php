@@ -231,7 +231,10 @@ class wpshop_CIC {
 				update_option( 'wps_payment_mode', $payment_option );
 			}
 		}
-		if(!empty($_GET['paymentListener']) && $_GET['paymentListener']=='cic') {
+
+		$paymentListener = !empty( $_GET['paymentListener'] ) ? sanitize_text_field( $_GET['paymentListener'] ) : '';
+
+		if(!empty($paymentListener) && $paymentListener=='cic') {
 			header("Pragma: no-cache");
 			header("Content-type: text/plain");
 			self::display_response();
