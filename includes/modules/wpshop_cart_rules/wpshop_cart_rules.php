@@ -382,5 +382,5 @@ if ( !class_exists("wpshop_cart_rules") ) {
 }
 /**	Instanciate the module utilities if not	*/
 if ( class_exists("wpshop_cart_rules") ) {
-	$wpshop_prices = new wpshop_cart_rules();
+	$wpshop_cart_rules = new wpshop_cart_rules();
 }

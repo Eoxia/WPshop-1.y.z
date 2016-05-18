@@ -720,6 +720,13 @@ class wps_cart {
 		}
 		$cart_infos['order_amount_to_pay_now'] = $cart_infos['order_grand_total'] - $total_received;
 
+		// Apply cart rules
+		$cart_rule = wpshop_cart_rules::get_cart_rule( $cart_infos['order_grand_total'] );
+		if( $cart_rule['cart_rule_exist'] ) {
+			$cart_infos['order_discount_type'] = $cart_rule['cart_rule_info']['discount_type'];
+			$cart_infos['order_discount_value'] = $cart_rule['cart_rule_info']['discount_value'];
+		}
+
 		// Apply coupons
 		if( !empty( $_SESSION['cart']) && !$from_admin ) {
 			if( !empty($_SESSION['cart']['coupon_id']) ) {
@@ -742,9 +749,11 @@ class wps_cart {
 			// Calcul discount on Order
 			switch ($cart_infos['order_discount_type']) {
 				case 'amount':
+				case 'absolute_discount':
 					$cart_infos['order_discount_amount_total_cart'] = number_format( str_replace( ',', '.', $cart_infos['order_discount_value'] ), 2, '.', '');
 				break;
 				case 'percent':
+				case 'percent_discount':
 					$cart_infos['order_discount_amount_total_cart'] = number_format( $cart_infos['order_grand_total'], 2, '.', '') * ( number_format( str_replace( ',', '.', $cart_infos['order_discount_value']), 2, '.', '') / 100);
 				break;
 			}
