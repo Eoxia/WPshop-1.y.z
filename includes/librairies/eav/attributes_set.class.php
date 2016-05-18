@@ -80,8 +80,8 @@ class wpshop_attributes_set{
 	*	@return string $title The title of the page looking at the environnement
 	*/
 	function pageTitle(){
-		$action = isset($_REQUEST['action']) ? wpshop_tools::varSanitizer($_REQUEST['action']) : '';
-		$objectInEdition = isset($_REQUEST['id']) ? wpshop_tools::varSanitizer($_REQUEST['id']) : '';
+		$action = isset($_REQUEST['action']) ? sanitize_text_field($_REQUEST['action']) : '';
+		$objectInEdition = isset($_REQUEST['id']) ? sanitize_key($_REQUEST['id']) : '';
 
 		$title = __(self::pageTitle, 'wpshop' );
 		if($action != ''){
@@ -105,11 +105,11 @@ class wpshop_attributes_set{
 		/*	Start definition of output message when action is doing on another page	*/
 		/************		CHANGE THE FIELD NAME TO TAKE TO DISPLAY				*************/
 		/****************************************************************************/
-		$saveditem = isset($_REQUEST['saveditem']) ? wpshop_tools::varSanitizer($_REQUEST['saveditem']) : '';
-		$action = isset($_REQUEST['action']) ? wpshop_tools::varSanitizer($_REQUEST['action']) : 'add';
+		$saveditem = isset($_REQUEST['saveditem']) ? sanitize_text_field($_REQUEST['saveditem']) : '';
+		$action = isset($_REQUEST['action']) ? sanitize_text_field($_REQUEST['action']) : 'add';
 		if(!empty($action) && ($action=='activate') && (!empty($_REQUEST['id']))){
-			$query = $wpdb->update(self::getDbTable(), array('status'=>'moderated'), array('id'=>$_REQUEST['id']));
-			wpshop_tools::wpshop_safe_redirect(admin_url('admin.php?page=' . self::getListingSlug() . "&action=edit&id=" . $_REQUEST['id']));
+			$query = $wpdb->update(self::getDbTable(), array('status'=>'moderated'), array('id'=>sanitize_key($_REQUEST['id'])));
+			wpshop_tools::wpshop_safe_redirect(admin_url('admin.php?page=' . self::getListingSlug() . "&action=edit&id=" . sanitize_key($_REQUEST['id'])));
 		}
 		if(($action != '') && ($action == 'saveok') && ($saveditem > 0)){
 			$editedElement = self::getElement($saveditem);
@@ -123,29 +123,30 @@ class wpshop_attributes_set{
 		/*	Define the database operation type from action launched by the user	 */
 		/*************************			GENERIC				****************************/
 		/*************************************************************************/
-		$pageAction = isset($_REQUEST[self::getDbTable() . '_action']) ? wpshop_tools::varSanitizer($_REQUEST[self::getDbTable() . '_action']) : ((!empty($_GET['action']) && ($_GET['action']=='delete')) ? $_GET['action'] : '');
-		$id = isset($_REQUEST[self::getDbTable()]['id']) ? wpshop_tools::varSanitizer($_REQUEST[self::getDbTable()]['id']) : ((!empty($_GET['id'])) ? $_GET['id'] : '');
-		$set_section = !empty($_REQUEST[self::getDbTable()]['set_section']) ? wpshop_tools::varSanitizer($_REQUEST[self::getDbTable()]['set_section']) : '';
-		unset($_REQUEST[self::getDbTable()]['set_section']);
+		$attribute_set_parameter = !empty( $_REQUEST[self::getDbTable()] ) ? (array)$_REQUEST[self::getDbTable()] : array();
+		$pageAction = isset($_REQUEST[self::getDbTable() . '_action']) ? sanitize_text_field($_REQUEST[self::getDbTable() . '_action']) : ((!empty($_GET['action']) && ($_GET['action']=='delete')) ? sanitize_text_field($_GET['action']) : '');
+		$id = isset($attribute_set_parameter['id']) ? sanitize_key($attribute_set_parameter['id']) : ((!empty($_GET['id'])) ? sanitize_key($_GET['id']) : '');
+		$set_section = !empty($attribute_set_parameter['set_section']) ? sanitize_text_field($attribute_set_parameter['set_section']) : '';
+		unset($attribute_set_parameter['set_section']);
 
 		/*	Specific case for the attribute groups	*/
-		if(!isset($_REQUEST[self::getDbTable()]['status'])){
-			$_REQUEST[self::getDbTable()]['status'] = 'moderated';
+		if(!isset($attribute_set_parameter['status'])){
+			$attribute_set_parameter['status'] = 'moderated';
 		}
-		if(!isset($_REQUEST[self::getDbTable()]['default_set'])){
-			$_REQUEST[self::getDbTable()]['default_set'] = 'no';
+		if(!isset($attribute_set_parameter['default_set'])){
+			$attribute_set_parameter['default_set'] = 'no';
 		}
 
 		if(($pageAction != '') && (($pageAction == 'edit') || ($pageAction == 'editandcontinue') || ($pageAction == 'delete'))){
 			if(current_user_can('wpshop_edit_attribute_set')){
-				$_REQUEST[self::getDbTable()]['last_update_date'] = date('Y-m-d H:i:s');
+				$attribute_set_parameter['last_update_date'] = date('Y-m-d H:i:s');
 				if($pageAction == 'delete'){
 					if(current_user_can('wpshop_delete_attribute_set'))
-						$_REQUEST[self::getDbTable()]['status'] = 'deleted';
+						$attribute_set_parameter['status'] = 'deleted';
 					else
 						$actionResult = 'userNotAllowedForActionDelete';
 				}
-				$actionResult = wpshop_database::update($_REQUEST[self::getDbTable()], $id, self::getDbTable());
+				$actionResult = wpshop_database::update($attribute_set_parameter, $id, self::getDbTable());
 			}
 			else{
 				$actionResult = 'userNotAllowedForActionEdit';
@@ -167,9 +168,9 @@ class wpshop_attributes_set{
 					}
 
 					$attribute_display = array();
-					if ( !empty($_REQUEST['attribute_group_order']) ) {
+					if ( !empty($_REQUEST['attribute_group_order']) && $attribute_group_order = (array) $_REQUEST['attribute_group_order'] ) {
 
-						foreach( $_REQUEST['attribute_group_order'] as $group_id => $group_def ) {
+						foreach( $attribute_group_order as $group_id => $group_def ) {
 							$end_line_element_id = 0;
 							if( $group_id != 'newOrderNotAffectedAttribute' ) {
 								$attribute_display[ str_replace('newOrder', '', $group_id) ] = explode( ',', $group_def );
@@ -201,22 +202,22 @@ class wpshop_attributes_set{
 		}
 		elseif(($pageAction != '') && (($pageAction == 'delete'))){
 			if(current_user_can('wpshop_delete_attribute_set')){
-				$_REQUEST[self::getDbTable()]['last_update_date'] = date('Y-m-d H:i:s');
-				$_REQUEST[self::getDbTable()]['status'] = 'deleted';
-				$actionResult = wpshop_database::update($_REQUEST[self::getDbTable()], $id, self::getDbTable());
+				$attribute_set_parameter['last_update_date'] = date('Y-m-d H:i:s');
+				$attribute_set_parameter['status'] = 'deleted';
+				$actionResult = wpshop_database::update($attribute_set_parameter, $id, self::getDbTable());
 			}
 			else
 				$actionResult = 'userNotAllowedForActionDelete';
 		}
 		elseif(($pageAction != '') && (($pageAction == 'save') || ($pageAction == 'saveandcontinue') || ($pageAction == 'add'))){
 			if(current_user_can('wpshop_add_attribute_set')){
-				$_REQUEST[self::getDbTable()]['creation_date'] = date('Y-m-d H:i:s');
-				$actionResult = wpshop_database::save($_REQUEST[self::getDbTable()], self::getDbTable());
+				$attribute_set_parameter['creation_date'] = date('Y-m-d H:i:s');
+				$actionResult = wpshop_database::save($attribute_set_parameter, self::getDbTable());
 				$id = $wpdb->insert_id;
 				if ( empty( $set_section ) ) {
 					$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_GROUP, array('status' => 'valid', 'attribute_set_id' => $id, 'position' => 1, 'creation_date' => current_time('mysql',0), 'code' => 'general',  'default_group' => 'yes', 'name' => __('Main information', 'wpshop')));
 
-					$selected_entity_query = $wpdb->prepare("SELECT post_name FROM " . $wpdb->posts . " WHERE ID = %d", $_REQUEST[self::getDbTable()]['entity_id']);
+					$selected_entity_query = $wpdb->prepare("SELECT post_name FROM " . $wpdb->posts . " WHERE ID = %d", $attribute_set_parameter['entity_id']);
 					if (WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT == $wpdb->get_var($selected_entity_query)) {
 						$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_GROUP, array('status' => 'valid', 'attribute_set_id' => $id, 'position' => 1, 'creation_date' => current_time('mysql',0), 'code' => 'prices',  'default_group' => 'no', 'name' => __('Prices', 'wpshop')));
 						$price_attribute_set_id = $wpdb->insert_id;
@@ -239,7 +240,7 @@ class wpshop_attributes_set{
 										$position = 4;
 									break;
 							}
-							$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status'=>'valid', 'creation_date'=>current_time('mysql', 0), 'entity_type_id'=>$_REQUEST[self::getDbTable()]['entity_id'], 'attribute_set_id'=>$id, 'attribute_group_id'=>$price_attribute_set_id, 'attribute_id'=>$attribute_id, 'position'=>$position));
+							$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status'=>'valid', 'creation_date'=>current_time('mysql', 0), 'entity_type_id'=>$attribute_set_parameter['entity_id'], 'attribute_set_id'=>$id, 'attribute_group_id'=>$price_attribute_set_id, 'attribute_id'=>$attribute_id, 'position'=>$position));
 						}
 					}
 				}
@@ -254,7 +255,7 @@ class wpshop_attributes_set{
 		/****************************************************************************/
 		if($actionResult != ''){
 			$elementIdentifierForMessage = __('the attribute group', 'wpshop');
-			if(!empty($_REQUEST[self::getDbTable()]['name']))$elementIdentifierForMessage = '<span class="bold" >' . $_REQUEST[self::getDbTable()]['name'] . '</span>';
+			if(!empty($attribute_set_parameter['name']))$elementIdentifierForMessage = '<span class="bold" >' . $attribute_set_parameter['name'] . '</span>';
 			if($actionResult == 'error'){/*	CHANGE HERE FOR SPECIFIC CASE	*/
 				$pageMessage .= '<img src="' . WPSHOP_ERROR_ICON . '" alt="action error" class="wpshopPageMessage_Icon" />' . sprintf(__('An error occured while saving %s', 'wpshop'), $elementIdentifierForMessage);
 			}
@@ -263,15 +264,15 @@ class wpshop_attributes_set{
 				/*************************			CHANGE FOR SPECIFIC ACTION FOR CURRENT ELEMENT				******************/
 				/*****************************************************************************************************************/
 				if ( !empty($_REQUEST['wpshop_attribute_set_section_order']) ) {
-					$newOrder = str_replace('attribute_group_', '', $_REQUEST['wpshop_attribute_set_section_order']);
+					$newOrder = str_replace('attribute_group_', '', sanitize_key($_REQUEST['wpshop_attribute_set_section_order']));
 					$order = explode(',', $newOrder);
 					foreach($order as $position => $set_section_id){
 						$_REQUEST['wpshop_attribute_set_section'][$set_section_id]['position']=$position;
 					}
 				}
 
-				if(isset($_REQUEST['attribute_group_order']) && ($_REQUEST['attribute_group_order'] != '')){
-					foreach($_REQUEST['attribute_group_order'] as $groupIdentifier => $newOrder){
+				if(isset($_REQUEST['attribute_group_order']) && ($attribute_group_order = (array) $_REQUEST['attribute_group_order']) && ($attribute_group_order != '')){
+					foreach($attribute_group_order as $groupIdentifier => $newOrder){
 						$newOrder = str_replace('attribute_', '', $newOrder);
 						$order = explode(',', $newOrder);
 						$groupId = str_replace('newOrder', '', $groupIdentifier);
@@ -285,7 +286,7 @@ class wpshop_attributes_set{
 										$query = $wpdb->prepare("UPDATE " . WPSHOP_DBT_ATTRIBUTE_DETAILS . " SET position = %d, attribute_group_id = %d, last_update_date = NOW() WHERE attribute_id = %d AND status = %s AND attribute_set_id = %d", $i, $groupId, $element, 'valid', $id);
 									}
 									else{
-										$query = $wpdb->prepare("INSERT INTO " . WPSHOP_DBT_ATTRIBUTE_DETAILS . " (id, status, creation_date, entity_type_id, attribute_set_id, attribute_group_id, attribute_id, position) VALUES ('', 'valid', NOW(), %d, %d, %d, %d, %d)", $_REQUEST[self::getDbTable()]['entity_id'], $id, $groupId, $element, $i);
+										$query = $wpdb->prepare("INSERT INTO " . WPSHOP_DBT_ATTRIBUTE_DETAILS . " (id, status, creation_date, entity_type_id, attribute_set_id, attribute_group_id, attribute_id, position) VALUES ('', 'valid', NOW(), %d, %d, %d, %d, %d)", $attribute_set_parameter['entity_id'], $id, $groupId, $element, $i);
 									}
 									$wpdb->query($query);
 								}
@@ -297,10 +298,10 @@ class wpshop_attributes_set{
 						}
 					}
 				}
-				if(!empty($_REQUEST['wpshop_attribute_set_section'])){
-					foreach($_REQUEST['wpshop_attribute_set_section'] as $set_section_id => $set_section_options){
+				if(!empty($_REQUEST['wpshop_attribute_set_section']) && $wpshop_attribute_set_section = (array) $_REQUEST['wpshop_attribute_set_section']){
+					foreach($wpshop_attribute_set_section as $set_section_id => $set_section_options){
 						if(!empty($set_section_options) && is_array($set_section_options)){
-							$set_section_options['default_group'] = (!empty($_REQUEST['wpshop_attribute_set_section_is_default_of_set']) && ($_REQUEST['wpshop_attribute_set_section_is_default_of_set'] == $set_section_id)) ? 'yes' : 'no';
+							$set_section_options['default_group'] = (!empty($_REQUEST['wpshop_attribute_set_section_is_default_of_set']) && (sanitize_key($_REQUEST['wpshop_attribute_set_section_is_default_of_set']) == $set_section_id)) ? 'yes' : 'no';
 							$set_section_options['last_update_date'] = current_time('mysql', 0);
 							$set_section_options['display_on_frontend'] = (!empty($set_section_options['display_on_frontend']) && ($set_section_options['display_on_frontend'] == 'yes')) ? 'yes' : 'no';
 							$wpdb->update(WPSHOP_DBT_ATTRIBUTE_GROUP, $set_section_options, array('id'=>$set_section_id), array('%s'), array('%d'));
@@ -324,13 +325,13 @@ class wpshop_attributes_set{
 				}
 
 				/*	If the current group is selected as default group set all others for current entity at no	*/
-				if($_REQUEST[self::getDbTable()]['default_set'] == 'yes'){
+				if($attribute_set_parameter['default_set'] == 'yes'){
 					$entity_to_take = 0;
 					if(isset($_REQUEST['attribute_set_group_id']) && ($_REQUEST['attribute_set_group_id'] != '')){
-						$entity_to_take = $_REQUEST['attribute_set_group_id'];
+						$entity_to_take = sanitize_key($_REQUEST['attribute_set_group_id']);
 					}
-					if(isset($_REQUEST[self::getDbTable()]['entity_id']) && ($_REQUEST[self::getDbTable()]['entity_id'] != '')){
-						$entity_to_take = $_REQUEST[self::getDbTable()]['entity_id'];
+					if(isset($attribute_set_parameter['entity_id']) && ($attribute_set_parameter['entity_id'] != '')){
+						$entity_to_take = $attribute_set_parameter['entity_id'];
 					}
 					if($entity_to_take > 0){
 						$query = $wpdb->prepare("UPDATE " . self::getDbTable() . " SET default_set = 'no' WHERE id != %d AND entity_id = %d", $id, $entity_to_take);
@@ -366,11 +367,7 @@ class wpshop_attributes_set{
 		$status="'valid', 'moderated'";
 		$attribute_set_list = array();
 		if(!empty($_REQUEST['attribute_groups_status'])){
-			switch($_REQUEST['attribute_groups_status']){
-				default:
-					$status="'".$_REQUEST['attribute_groups_status']."'";
-				break;
-			}
+			$status="'".sanitize_text_field($_REQUEST['attribute_groups_status'])."'";
 		}
 		$attr_set_list = wpshop_attributes_set::getElement('', $status);
 		$i=0;
@@ -411,7 +408,7 @@ class wpshop_attributes_set{
     <div class="wrap">
 			<?php $wpshop_list_table->views() ?>
 			<form id="attributes_set_filter" method="get">
-				<input type="hidden" name="page" value="<?php echo $_REQUEST['page']; ?>" />
+				<input type="hidden" name="page" value="<?php echo esc_attr($_REQUEST['page']); ?>" />
 				<?php $wpshop_list_table->display() ?>
 			</form>
     </div>
@@ -432,7 +429,7 @@ class wpshop_attributes_set{
 
 		$dbFieldList = wpshop_database::fields_to_input(self::getDbTable());
 		$form_more_content = $the_form_content_hidden = $the_form_general_content = '';
-		$action = isset($_REQUEST['action']) ? wpshop_tools::varSanitizer($_REQUEST['action']) : 'add';
+		$action = isset($_REQUEST['action']) ? sanitize_text_field($_REQUEST['action']) : 'add';
 		$bloc_list=array();
 
 		$editedItem = '';
@@ -444,8 +441,8 @@ class wpshop_attributes_set{
 			$input_value = $input_def['value'];
 			$input_def_id=$input_def['id']='wpshop_' . self::currentPageCode . '_edition_table_field_id_'.$input_name;
 
-			$attributeAction = isset($_REQUEST[self::getDbTable() . '_action']) ? wpshop_tools::varSanitizer($_REQUEST[self::getDbTable() . '_action']) : '';
-			$attributeFormValue = isset($_REQUEST[self::getDbTable()][$input_name]) ? wpshop_tools::varSanitizer($_REQUEST[self::getDbTable()][$input_name]) : '';
+			$attributeAction = isset($_REQUEST[self::getDbTable() . '_action']) ? sanitize_text_field($_REQUEST[self::getDbTable() . '_action']) : '';
+			$attributeFormValue = isset($_REQUEST[self::getDbTable()][$input_name]) ? sanitize_text_field($_REQUEST[self::getDbTable()][$input_name]) : '';
 
 			/*	Get value by checking current object type	*/
 			$currentFieldValue = $input_value;
@@ -537,7 +534,7 @@ class wpshop_attributes_set{
 
 		$the_form = '
 <form name="' . self::getDbTable() . '_form" id="' . self::getDbTable() . '_form" method="post" action="#" >
-' . wpshop_form::form_input(self::getDbTable() . '_action', self::getDbTable() . '_action', (!empty($_REQUEST['action'])?wpshop_tools::varSanitizer($_REQUEST['action']):'save'), 'hidden') . '
+' . wpshop_form::form_input(self::getDbTable() . '_action', self::getDbTable() . '_action', (!empty($_REQUEST['action'])?sanitize_text_field($_REQUEST['action']):'save'), 'hidden') . '
 ' . wpshop_form::form_input(self::getDbTable() . '_form_has_modification', self::getDbTable() . '_form_has_modification', 'no' , 'hidden') . $the_form_content_hidden . wpshop_display::custom_page_output_builder($bloc_list, WPSHOP_ATTRIBUTE_SET_EDITION_PAGE_LAYOUT) . '
 	<div class="wpshop_edition_button wpshop_edition_button_'.self::currentPageCode.'" >';
 
@@ -579,7 +576,7 @@ class wpshop_attributes_set{
 	*	@return string $currentPageButton The html output code with the different button to add to the interface
 	*/
 	function getPageFormButton($element_id = 0){
-		$action = isset($_REQUEST['action']) ? wpshop_tools::varSanitizer($_REQUEST['action']) : 'add';
+		$action = isset($_REQUEST['action']) ? sanitize_text_field($_REQUEST['action']) : 'add';
 		$currentPageButton = '';
 
 		return $currentPageButton;

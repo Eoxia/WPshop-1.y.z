@@ -81,8 +81,8 @@ class wpshop_attributes{
 	 *	@return string $title The title of the page looking at the environnement
 	 */
 	function pageTitle(){
-		$action = isset($_REQUEST['action']) ? wpshop_tools::varSanitizer($_REQUEST['action']) : '';
-		$objectInEdition = isset($_REQUEST['id']) ? wpshop_tools::varSanitizer($_REQUEST['id']) : '';
+		$action = isset($_REQUEST['action']) ? sanitize_text_field($_REQUEST['action']) : '';
+		$objectInEdition = isset($_REQUEST['id']) ? sanitize_key($_REQUEST['id']) : '';
 		$page = !empty( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : '';
 
 		$title = __(self::pageTitle, 'wpshop' );
@@ -112,9 +112,9 @@ class wpshop_attributes{
 		/*	Start definition of output message when action is doing on another page	*/
 		/************		CHANGE THE FIELD NAME TO TAKE TO DISPLAY				*************/
 		/****************************************************************************/
-		$action = isset($_REQUEST['action']) ? wpshop_tools::varSanitizer($_REQUEST['action']) : 'add';
-		$saveditem = isset($_REQUEST['saveditem']) ? wpshop_tools::varSanitizer($_REQUEST['saveditem']) : '';
-		$set_section = !empty($_REQUEST[self::getDbTable()]['set_section']) ? wpshop_tools::varSanitizer($_REQUEST[self::getDbTable()]['set_section']) : '';
+		$action = isset($_REQUEST['action']) ? sanitize_text_field($_REQUEST['action']) : 'add';
+		$saveditem = isset($_REQUEST['saveditem']) ? sanitize_text_field($_REQUEST['saveditem']) : '';
+		$set_section = !empty($_REQUEST[self::getDbTable()]['set_section']) ? sanitize_text_field($_REQUEST[self::getDbTable()]['set_section']) : '';
 		if ( !empty($_REQUEST[self::getDbTable()]['set_section']) ) unset($_REQUEST[self::getDbTable()]['set_section']);
 		$id = !empty($_REQUEST['id']) ? (int) $_REQUEST['id'] : null;
 		if(!empty($action) && ($action=='activate') ){
@@ -269,7 +269,7 @@ class wpshop_attributes{
 		/*****************************		GENERIC				**************************/
 		/*************************************************************************/
 		$pageAction = (!empty($attribute_parameter['frontend_label']) && isset($_REQUEST[self::getDbTable() . '_action'])) ? sanitize_text_field($_REQUEST[self::getDbTable() . '_action']) : ((!empty($_GET['action']) && ($_GET['action']=='delete')) ? sanitize_text_field($_GET['action']) : '');
-		$id = isset($attribute_parameter['id']) ? wpshop_tools::varSanitizer($attribute_parameter['id']) : ((!empty($_GET['id'])) ? $_GET['id'] : '');
+		$id = isset($attribute_parameter['id']) ? sanitize_key($attribute_parameter['id']) : ((!empty($_GET['id'])) ? $_GET['id'] : '');
 		if(($pageAction != '') && (($pageAction == 'edit') || ($pageAction == 'editandcontinue'))){
 			if(current_user_can('wpshop_edit_attributes')){
 				$attribute_parameter['last_update_date'] = date('Y-m-d H:i:s');
@@ -604,12 +604,12 @@ class wpshop_attributes{
 	<!-- Forms are NOT created automatically, so you need to wrap the table in one to use features like bulk actions -->
 	<?php $wpshop_list_table->views() ?>
 	<form id="attributes_filter" method="get">
-	    <input type="hidden" name="page" value="<?php echo $_REQUEST['page']; ?>" />
+	    <input type="hidden" name="page" value="<?php echo esc_attr($_REQUEST['page']); ?>" />
 		<?php $wpshop_list_table->search_box('search', sanitize_text_field($_REQUEST['page']) . '_search_input'); ?>
 	</form>
 	<form id="attributes_filter" method="get">
 		<!-- For plugins, we also need to ensure that the form posts back to our current page -->
-		<input type="hidden" name="page" value="<?php echo $_REQUEST['page']; ?>" />
+		<input type="hidden" name="page" value="<?php echo esc_attr($_REQUEST['page']); ?>" />
 		<!-- Now we can render the completed list table -->
 		<?php $wpshop_list_table->display() ?>
 	</form>
@@ -1233,7 +1233,7 @@ ob_end_clean();
 	 *	@return string $currentPageButton The html output code with the different button to add to the interface
 	 */
 	function getPageFormButton($element_id = 0){
-		$action = isset($_REQUEST['action']) ? wpshop_tools::varSanitizer($_REQUEST['action']) : 'add';
+		$action = isset($_REQUEST['action']) ? sanitize_text_field($_REQUEST['action']) : 'add';
 		$currentPageButton = '';
 
 		 //$currentPageButton .= '<h2 class="cancelButton alignleft" ><a href="' . admin_url('edit.php?post_type='.WPSHOP_NEWTYPE_IDENTIFIER_ENTITIES.'&amp;page=' . self::getListingSlug()) . '" class="button add-new-h2" >' . __('Back', 'wpshop') . '</a></h2>';
