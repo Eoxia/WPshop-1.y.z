@@ -175,7 +175,7 @@ if ( !class_exists("wpshop_cart_rules") ) {
 
 			$status = false;
 			$response = array();
-			$cart_rules = ( !empty($_POST['cart_rules']) ) ? $_POST['cart_rules'] : null;
+			$cart_rules = ( !empty($_POST['cart_rules']) ) ? sanitize_text_field( $_POST['cart_rules'] ) : null;
 
 			if ( !empty($cart_limen) && !empty($discount_type) && !empty($discount_value) ) {
 				if ( !empty($cart_rules) ) {
@@ -203,7 +203,7 @@ if ( !class_exists("wpshop_cart_rules") ) {
 
 			$status = false;
 			$response = array();
-			$cart_rules = ( !empty($_POST['cart_rules']) ) ? $_POST['cart_rules'] : null;
+			$cart_rules = ( !empty($_POST['cart_rules']) ) ? sanitize_text_field( $_POST['cart_rules'] ) : null;
 
 			$cart_rule_id = str_replace('_', '.', $cart_rule_id);
 

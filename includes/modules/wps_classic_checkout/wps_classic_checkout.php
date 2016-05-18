@@ -496,7 +496,7 @@ if ( !class_exists("wps_classic_checkout") ) {
 						$status = true;
 						//Add an action to extra actions on order save
 						// @TODO : REQUEST
-						$args = array( 'order_id' => $order_id, 'posted_data' => $_REQUEST);
+						// $args = array( 'order_id' => $order_id, 'posted_data' => $_REQUEST);
 						wpshop_tools::create_custom_hook( 'wps_order_extra_save_action', $args );
 					}
 					else {
