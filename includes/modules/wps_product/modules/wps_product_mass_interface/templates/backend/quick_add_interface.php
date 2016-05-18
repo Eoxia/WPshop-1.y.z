@@ -1,7 +1,7 @@
 <?php if ( !defined( 'ABSPATH' ) ) exit;
 ?>
 <div class="wrap">
-	<h2><span class="dashicons dashicons-update" style="font-size : 30px; width : 30px; height : 30px"></span> <?php _e( 'Mass edit products interface', 'wpshop')?><button class="add-new-h2" id="wps-mass-interface-button-new-product"><i class="wps-icon-pencil"></i> <?php _e( 'Create a new product', 'wpshop'); ?></button></h2>
+	<h2><span class="dashicons dashicons-update" style="font-size : 30px; width : 30px; height : 30px"></span> <?php _e( 'Mass edit products interface', 'wpshop')?><button class="add-new-h2" data-nonce="<?php wp_create_nonce( 'wps_mass_interface_new_product_creation' ); ?>" id="wps-mass-interface-button-new-product"><i class="wps-icon-pencil"></i> <?php _e( 'Create a new product', 'wpshop'); ?></button></h2>
 
 
 <div class="wps-boxed">
@@ -38,7 +38,7 @@
 <div style="display : none" class="wps-alert-error"></div>
 <div style="display : none" class="wps-alert-success"></div>
 
-<div id="wps_mass_products_edit_tab_container">
+<div id="wps_mass_products_edit_tab_container" data-nonce="<?php echo wp_create_nonce( 'wps_mass_edit_change_page' ); ?>">
 
 <?php  echo $product_list_interface; ?>
 

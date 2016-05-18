@@ -28,11 +28,11 @@ class wps_product_mass_interface_ctr {
 
 		// Trigger ajax action
 		add_action( 'wp_ajax_wps_mass_edit_change_page', array( $this, 'wps_mass_edit_change_page') );
-		add_action ( 'wp_ajax_wps_mass_edit_product_save_action', array( $this, 'wps_save_product_quick_interface') );
+		add_action( 'wp_ajax_wps_mass_edit_product_save_action', array( $this, 'wps_save_product_quick_interface') );
 		add_action( 'wp_ajax_wps_mass_interface_new_product_creation', array( $this, 'wps_mass_interface_new_product_creation' ) );
 		add_action( 'wp_ajax_wps_mass_delete_file', array( $this, 'wps_mass_delete_file' ) );
 		add_action( 'wp_ajax_wps_mass_edit_update_files_list', array( $this, 'wps_mass_edit_update_files_list' ) );
-		add_action( 'wp_ajax_wps_mass_delete_post',  array( $this, 'wps_mass_delete_post' ) );
+		// add_action( 'wap_ajax_wps_mass_delete_post', array( $this, 'wps_mass_delete_post' ) );
 	}
 
 	function register_mass_products_edit_submenu() {
@@ -220,6 +220,11 @@ class wps_product_mass_interface_ctr {
 	 * AJAX - Change page action on mass edit product interface
 	 */
 	function wps_mass_edit_change_page() {
+		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_mass_edit_change_page' ) )
+			wp_die();
+
 		$status = false; $response = '';
 		$page = ( !empty($_POST['page_id']) ) ? intval( $_POST['page_id'] ) - 1 : 0;
 		$attribute_set_id = ( !empty($_POST['att_set_id']) ) ? intval( $_POST['att_set_id'] ) : 1;
@@ -239,6 +244,11 @@ class wps_product_mass_interface_ctr {
 	 * AJAX - Create a draft product and display the line allowing to edit informations for this product
 	 */
 	function wps_mass_interface_new_product_creation() {
+		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_mass_interface_new_product_creation' ) )
+			wp_die();
+
 		global $wpdb;
 		$output = $pagination = '';
 		$status = false;
@@ -265,6 +275,11 @@ class wps_product_mass_interface_ctr {
 	 * AJAX - Save datas
 	 */
 	function wps_save_product_quick_interface() {
+		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_save_product_quick_interface' ) )
+			wp_die();
+
 		global $wpdb;
 		$response = ''; $status = false;
 		$count_products_to_update = 0; $total_updated_products = 0;
@@ -358,6 +373,11 @@ class wps_product_mass_interface_ctr {
 	* Delete product list
 	**/
 	function wps_mass_delete_file() {
+		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_mass_delete_file' ) )
+			wp_die();
+
 		$status = false;
 		$file_id = (!empty($_POST['file_id']) ) ? intval($_POST['file_id']) : null;
 		if( !empty($file_id) ) {
@@ -372,6 +392,11 @@ class wps_product_mass_interface_ctr {
 	* Update product files list
 	*/
 	function wps_mass_edit_update_files_list() {
+		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_mass_edit_update_files_list' ) )
+			wp_die();
+
 		$status = false; $response = '';
 		$product_id = ( !empty($_POST['product_id']) ) ? intval($_POST['product_id']) : null;
 		$files = ( !empty($_POST['files']) ) ? intval($_POST['files']) : null;
