@@ -28,7 +28,9 @@ class wps_customer_quick_add {
 	 * AJAX - Charge le fomulaire d'ajout rapide d'un client / Load the form for new customer quick add
 	 */
 	function customer_creation() {
-		check_ajax_referer( 'wps-customer-quick-nonce', 'wps-nonce' );
+		$_wpnonce = sanitize_key( $_REQUEST['wps-nonce'] );
+		if ( !wp_verify_nonce( $_wpnonce, 'wps-customer-quick-nonce' ) )
+			wp_die();
 		global $wpdb;
 
 		$customer_entity_type_id = wpshop_entities::get_entity_identifier_from_code( WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS );
@@ -48,6 +50,12 @@ class wps_customer_quick_add {
 	 * AJAX - Création d'un nouveau client / Create a new customer
 	 */
 	function create_customer() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'create_customer' ) )
+			wp_die();
+
+
 		global $wpdb;
 		$response = array(
 			'status' => false,
