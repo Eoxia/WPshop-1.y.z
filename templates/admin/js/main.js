@@ -294,7 +294,8 @@ wpshop(document).ready(function(){
 	wpshop("#wpshop_attribute_unit_manager_opener").click(function(){
 		wpshop("#wpshop_attribute_unit_manager").html("<div class='wpshopCenterContainer' >" + wpshop("#wpshopLoadingPicture").html() + "</div>");
 		wpshop("#wpshop_attribute_unit_manager").load(ajaxurl,{
-			"action": "wps_attribute_unit_interface"
+			"action": "wps_attribute_unit_interface",
+			"_wpnonce" : jQuery("#wpshop_attribute_unit_manager_opener").data('nonce')
 		});
 		wpshop("#wpshop_attribute_unit_manager").dialog("open");
 	});
@@ -302,7 +303,8 @@ wpshop(document).ready(function(){
 	wpshop("#wpshop_attribute_group_unit_manager_opener").click(function(){
 		wpshop("#wpshop_attribute_unit_manager").html("<div class='wpshopCenterContainer' >" + wpshop("#wpshopLoadingPicture").html() + "</div>");
 		wpshop("#wpshop_attribute_unit_manager").load(ajaxurl,{
-			"action": "wps_attribute_unit_interface"
+			"action": "wps_attribute_unit_interface",
+			"_wpnonce" : jQuery("#wpshop_attribute_unit_manager_opener").data('nonce')
 		});
 		wpshop("#wpshop_attribute_unit_manager").dialog("open");
 	});
@@ -731,7 +733,7 @@ wpshop(document).ready(function(){
 		var _wpnonce = jQuery( this ).data( 'nonce' );
 		jQuery("#create_new_customer_dialog").dialog("open");
 		var data = {
-				action: "load_create_new_customer_interface"
+				action: "load_create_new_customer_interface",
 				_wpnonce: _wpnonce,
 			};
 			jQuery.post(ajaxurl, data, function(response) {

@@ -315,7 +315,7 @@ class wpshop_attributes_unit
 						$subRowActions .= '&nbsp;|&nbsp;';
 					}
 					$subRowActions .= '
-		<a href="#" id="delete_attribute_unit_' . $element->id . '" class="delete_attribute_unit" >' . __('Delete', 'wpshop') . '</a>';
+		<a href="#" id="delete_attribute_unit_' . $element->id . '" class="delete_attribute_unit" data-nonce="' . wp_create_nonce( 'delete_attribute_unit' ) . '" >' . __('Delete', 'wpshop') . '</a>';
 				}
 
 				$rowActions = '
@@ -353,7 +353,8 @@ class wpshop_attributes_unit
 			if(confirm(wpshopConvertAccentTojs("' . __('Are you sure you want to delete this unit', 'wpshop')  .' ?"))){
 				wpshop("#wpshop_unit_list").load(ajaxurl,{
 					"action": "wps_attribute_unit_delete",
-					"elementIdentifier": wpshop(this).attr("id").replace("delete_attribute_unit_", "")
+					"elementIdentifier": wpshop(this).attr("id").replace("delete_attribute_unit_", ""),
+					"_wpnonce": jQuery(".delete_attribute_unit").data( "nonce" )
 				});
 			}
 		});';
@@ -785,7 +786,7 @@ class wpshop_attributes_unit
 ' . wpshop_form::form_input('action', 'action', 'wps_attribute_group_unit_edit', 'hidden') . '
 ' . wpshop_form::form_input(self::currentPageCode . '_form_has_modification', self::currentPageCode . '_form_has_modification', 'no' , 'hidden') . '
 	' . $the_form_content_hidden .'' . $the_form_general_content . '
-	<input type="button" value="' . __('Retour', 'wpshop') . '" class="button-primary alignright" name="cancel_unit_group_edition" id="cancel_unit_group_edition" />
+	<input type="button" value="' . __('Retour', 'wpshop') . '" class="button-primary alignright" name="cancel_unit_group_edition" id="cancel_unit_group_edition" data-nonce="' . wp_create_nonce( 'load_attribute_unit_groups' ) . '"/>
 	<input type="submit" value="' . __('Save', 'wpshop') . '" class="button-primary alignright" name="save_new_unit_group" id="save_new_unit_group" />
 </form>
 <script type="text/javascript" >
@@ -796,7 +797,8 @@ class wpshop_attributes_unit
 
 		jQuery("#cancel_unit_group_edition").click(function(){
 			jQuery("#wpshop_unit_group_list").load(ajaxurl, {
-				"action": "wps_attribute_group_unit_load"
+				"action": "wps_attribute_group_unit_load",
+				"_wpnonce": jQuery("#cancel_unit_group_edition").data( "nonce" )
 			});
 		});
 

@@ -917,12 +917,12 @@ ob_end_clean();
 				}
 				if( $input_def['label'] == '_unit_group_id') {
 					$the_input .= '<div id="wpshop_loader_input_group_unit"></div>';
-					$the_input .= '<a class="button-primary" href="#wpshop_unit_group_list" id="wpshop_attribute_group_unit_manager_opener">'.__('Manage group unit', 'wpshop').'</a>';
+					$the_input .= '<a class="button-primary" href="#wpshop_unit_group_list" id="wpshop_attribute_group_unit_manager_opener" data-nonce="' . wp_create_nonce( 'load_unit_interface' ) . '">'.__('Manage group unit', 'wpshop').'</a>';
 				}
 
 				if( $input_def['label'] == '_default_unit') {
 					$the_input .= '<div id="wpshop_loader_input_unit"></div>';
-					$the_input .= '<a class="button-primary" href="#wpshop_unit_list" id="wpshop_attribute_unit_manager_opener">'.__('Manage units', 'wpshop').'</a>';
+					$the_input .= '<a class="button-primary" href="#wpshop_unit_list" id="wpshop_attribute_unit_manager_opener" data-nonce="' . wp_create_nonce( 'load_unit_interface' ) . '">'.__('Manage units', 'wpshop').'</a>';
 					$the_input .= '<input type="hidden" name="input_wpshop_load_attribute_unit_list" id="input_wpshop_load_attribute_unit_list" value="' . wp_create_nonce("wpshop_load_attribute_unit_list") . '" />';
 					$the_input .= '<div id="wpshop_attribute_unit_manager" title="' . __('Unit management', 'wpshop') . '" class="wpshopHide" ><div class="loading_picture_container" id="product_chooser_picture" ><img src="' . WPSHOP_LOADING_ICON . '" alt="loading..." /></div></div>';
 				}
@@ -930,7 +930,7 @@ ob_end_clean();
 
 				if($input_def['type'] != 'hidden'){
 					if ( ($input_def['label'] == 'entity_id') && is_object($editedItem) ) {
-						$the_input .= '<br/><span class="wpshop_duplicate_attribute" >' . __('Duplicate this attribute to another entity', 'wpshop') . '</span>';
+						$the_input .= '<br/><span class="wpshop_duplicate_attribute" >' . __('Duplicate this attribute to . another entity', 'wpshop') . '</span>';
 					}
 					$input = '
 		<tr class="wpshop_' . self::currentPageCode . '_edition_table_line wpshop_' . self::currentPageCode . '_edition_table_line_'.$input_def['name'].'" >
