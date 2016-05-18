@@ -4,7 +4,7 @@
 	<div class="wps-gridwrapper">
 		<div class="wps-grid4x6"><span class="wps-h3"><?php echo $address_title; ?></span></div>
 	</div>
-	<ul class="wps-itemList wps-address-container" id="wps-address-container-<?php echo $address_type_id; ?>">
+	<ul class="wps-itemList wps-address-container" data-nonce="<?php echo wp_create_nonce( 'wps_reload_address_interface' ); ?>" id="wps-address-container-<?php echo $address_type_id; ?>">
 <?php if( !empty($box_content) ): ?>
 		<?php echo $box_content; ?>
 <?php endif; ?>

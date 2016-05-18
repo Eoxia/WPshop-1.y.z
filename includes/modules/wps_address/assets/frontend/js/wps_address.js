@@ -140,6 +140,7 @@ jQuery( document ).ready( function() {
 
 		var data = {
 				action: "wps_reload_address_interface",
+				_wpnonce: jQuery( '#wps-address-container-' + address_type ).data( 'nonce' ),
 				address_id :  address_id,
 				address_type : address_type
 			};

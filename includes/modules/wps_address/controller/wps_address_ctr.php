@@ -50,13 +50,13 @@ class wps_address {
 		add_action( 'wp_ajax_wps_save_address', array( &$this, 'wps_save_address') ); // DONE
 		add_action( 'wp_ajax_wps-address-edition-form-load', array( &$this, 'load_address_edition_form' ) ); // DONE
 		add_action( 'wp_ajax_wps-address-display-an-address', array( &$this, 'display_address' ) ); // DONE
-// 		add_action( 'wp_ajax_wps-address-save-address', array( &$this, 'wps_save_address' ) );
+// 		add_action( 'wap_ajax_wps-address-save-address', array( &$this, 'wps_save_address' ) );
 		add_action( 'wp_ajax_wps-address-display-list', array( &$this, 'display_addresses_list' ) ); // DONE
 		add_action( 'wp_ajax_wps-address-add-new', array( &$this, 'display_address_adding_form' ) ); // DONE
 		add_action( 'wp_ajax_wps_delete_an_address', array( &$this, 'wps_delete_an_address' ) ); // DONE
 		add_action( 'wp_ajax_wps_reload_address_interface', array( &$this, 'wps_reload_address_interface' ) );
-// 		add_action( 'wp_ajax_display_address_form', array( &$this, '') );
-// 		add_action( 'wp_ajax_wps-add-an-address-in-admin', array( $this, 'wps_add_an_address_in_admin' ) );
+// 		add_action( 'wap_ajax_display_address_form', array( &$this, '') );
+// 		add_action( 'wap_ajax_wps-add-an-address-in-admin', array( $this, 'wps_add_an_address_in_admin' ) );
 
 		/*	Include the different javascript	*/
 		add_action( 'wp_enqueue_scripts', array( &$this, 'frontend_js' ) );
@@ -1334,6 +1334,11 @@ class wps_address {
 	 * AJAX - Relad Address Interface in new checkout tunnel
 	 */
 	function wps_reload_address_interface() {
+		$_wpnonce = ( !empty( $_REQUEST['_wpnonce'] ) ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_reload_address_interface' ) )
+			die();
+
 		global $wpdb;
 		$status = false; $response = '';
 		$address_type = !empty($_POST['address_type']) ? (int) $_POST['address_type'] : null;

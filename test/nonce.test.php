@@ -27,7 +27,7 @@ if ( $test != '../test/request.test.php' ) {
 				$matched_string = str_replace( '(', '', $matched_string );
 				$matched_string = str_replace( ')', '', $matched_string );
 				$matched_string = trim($matched_string);
-				preg_match( '#function *' . $matched_string . '(.+)?\}#isU', $file, $function );
+				preg_match( '#function *' . $matched_string . ' *\((.+)?\}#isU', $file, $function );
 
 				if ( !empty( $function[0] ) ) {
 					$function = $function[0];
