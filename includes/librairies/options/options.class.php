@@ -79,8 +79,10 @@ class wpshop_options {
 					),
 			);
 
+		$wpshop_shop_type = !empty( $_POST['wpshop_shop_type'] ) ? sanitize_text_field( $_POST['wpshop_shop_type'] ) : '';
+
 		/**	Some options are available only when sale mode is active	*/
-		if((WPSHOP_DEFINED_SHOP_TYPE == 'sale') && !isset($_POST['wpshop_shop_type']) || (isset($_POST['wpshop_shop_type']) && ($_POST['wpshop_shop_type'] != 'presentation'))) :
+		if((WPSHOP_DEFINED_SHOP_TYPE == 'sale') && !isset($wpshop_shop_type) || (isset($wpshop_shop_type) && ($wpshop_shop_type != 'presentation'))) :
 			$groups['wpshop_cart_option'] =
 				array(	'label' => __('Cart', 'wpshop'),
 						'subgroups' => array(
@@ -189,12 +191,14 @@ class wpshop_options {
 		wpshop_company_options::declare_options();
 
 		/* Payments */
-		if((WPSHOP_DEFINED_SHOP_TYPE == 'sale') && !isset($_POST['wpshop_shop_type']) || (isset($_POST['wpshop_shop_type']) && ($_POST['wpshop_shop_type'] != 'presentation')) && !isset($_POST['old_wpshop_shop_type']) || (isset($_POST['old_wpshop_shop_type']) && ($_POST['old_wpshop_shop_type'] != 'presentation'))){
+		$wpshop_shop_type = !empty( $_POST['wpshop_shop_type'] ) ? sanitize_text_field( $_POST['wpshop_shop_type'] ) : '';
+		$old_wpshop_shop_type = !empty( $_POST['old_wpshop_shop_type'] ) ? sanitize_text_field( $_POST['old_wpshop_shop_type'] ) : '';
+		if((WPSHOP_DEFINED_SHOP_TYPE == 'sale') && !isset($wpshop_shop_type) || (isset($wpshop_shop_type) && ($wpshop_shop_type != 'presentation')) && !isset($old_wpshop_shop_type) || (isset($old_wpshop_shop_type) && ($old_wpshop_shop_type != 'presentation'))){
 			wpshop_payment_options::declare_options();
 		}
 
 		/* Cart */
-		if((WPSHOP_DEFINED_SHOP_TYPE == 'sale') && !isset($_POST['wpshop_shop_type']) || (isset($_POST['wpshop_shop_type']) && ($_POST['wpshop_shop_type'] != 'presentation')) && !isset($_POST['old_wpshop_shop_type']) || (isset($_POST['old_wpshop_shop_type']) && ($_POST['old_wpshop_shop_type'] != 'presentation'))){
+		if((WPSHOP_DEFINED_SHOP_TYPE == 'sale') && !isset($wpshop_shop_type) || (isset($wpshop_shop_type) && ($wpshop_shop_type != 'presentation')) && !isset($old_wpshop_shop_type) || (isset($old_wpshop_shop_type) && ($old_wpshop_shop_type != 'presentation'))){
 			register_setting('wpshop_options', 'wpshop_cart_option', array('wpshop_options', 'wpshop_options_validate_cart'));
 			add_settings_section('wpshop_cart_info', '<span class="dashicons dashicons-cart"></span>'.__('Cart', 'wpshop'), array('wpshop_options', 'plugin_section_text'), 'wpshop_cart_info');
 			add_settings_field('wpshop_cart_product_added_behaviour', __('Action when produt is added succesfully into cart', 'wpshop'), array('wpshop_options', 'wpshop_cart_product_added_behaviour_field'), 'wpshop_cart_info', 'wpshop_cart_info');
@@ -223,7 +227,7 @@ class wpshop_options {
 		$wpshop_advanced_settings->declare_options();
 
 		/* Shipping section */
-		if((WPSHOP_DEFINED_SHOP_TYPE == 'sale') && !isset($_POST['wpshop_shop_type']) || (isset($_POST['wpshop_shop_type']) && ($_POST['wpshop_shop_type'] != 'presentation')) && !isset($_POST['old_wpshop_shop_type']) || (isset($_POST['old_wpshop_shop_type']) && ($_POST['old_wpshop_shop_type'] != 'presentation'))){
+		if((WPSHOP_DEFINED_SHOP_TYPE == 'sale') && !isset($wpshop_shop_type) || (isset($wpshop_shop_type) && ($wpshop_shop_type != 'presentation')) && !isset($old_wpshop_shop_type) || (isset($old_wpshop_shop_type) && ($old_wpshop_shop_type != 'presentation'))){
 		$wpshop_shipping_options = new wpshop_shipping_options();
 			$wpshop_shipping_options->declare_options();
 		}
