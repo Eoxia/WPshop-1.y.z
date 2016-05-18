@@ -58,9 +58,9 @@ class wpshop_notices{
 			$messages_to_hide .= 'SLICKSHOP,';
 		}
 
-		$install = !empty( $_GET[ 'install' ] ) ? sanitize_text_field( $_GET[ 'install' ] ) ? '';
+		$install = !empty( $_GET[ 'install' ] ) ? sanitize_text_field( $_GET[ 'install' ] ) : '';
 
-		if(!empty($notice) && ( empty( $install ) ) ) ) ) {
+		if(!empty($notice) && ( empty( $install ) ) ) {
 			$notice='<p>'.__('You configure your shop to be a sale shop. But some configuration are missing for this type of shop using', 'wpshop').'</p><ul>'.$notice.'</ul>';
 			if ( !empty($messages_to_hide) ) {
 				$notice .= '<button class="wps_hide_notice_message button-secondary" id="wps_hide_notice_message">' .__('Hide this message', 'wpshop'). '</button>';

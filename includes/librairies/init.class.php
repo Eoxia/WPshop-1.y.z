@@ -40,7 +40,12 @@ class wpshop_init{
 		/*	Include head js	*/
 		add_action('admin_print_scripts', array('wpshop_init', 'admin_print_js'));
 
-		if((isset($_GET['page']) && substr($_GET['page'], 0, 7) == 'wpshop_') || (isset($_GET['page']) && $_GET['page'] == 'wps-installer' ) || (isset($_GET['post_type']) && substr($_GET['post_type'], 0, 7) == 'wpshop_') || !empty($_GET['post']) || (isset($_GET['page']) && $_GET['page']==WPSHOP_NEWTYPE_IDENTIFIER_GROUP) || (isset($_GET['taxonomy']) && ($_GET['taxonomy'] == WPSHOP_NEWTYPE_IDENTIFIER_CATEGORIES))){
+		$page = !empty( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : '';
+		$post_type = !empty( $_GET['post_type'] ) ? sanitize_text_field( $_GET['post_type'] ) : '';
+		$action = !empty( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
+		$post = !empty( $_GET['post'] ) ? sanitize_text_field( $_GET['post'] ) : '';
+		$taxonomy = !empty( $_GET['taxonomy'] ) ? sanitize_text_field( $_GET['taxonomy'] ) : '';
+		if((isset($page) && substr($page, 0, 7) == 'wpshop_') || (isset($page) && $page == 'wps-installer' ) || (isset($post_type) && substr($post_type, 0, 7) == 'wpshop_') || !empty($post) || (isset($page) && $page==WPSHOP_NEWTYPE_IDENTIFIER_GROUP) || (isset($taxonomy) && ($taxonomy == WPSHOP_NEWTYPE_IDENTIFIER_CATEGORIES))){
 			/*	Include the different javascript	*/
 // 			add_action('admin_init', array('wpshop_init', 'admin_js'));
 			add_action( 'admin_enqueue_scripts', array('wpshop_init', 'admin_js') );
@@ -59,7 +64,7 @@ class wpshop_init{
 			add_action('wp_print_scripts', array('wpshop_init', 'frontend_js_instruction'));
 		}
 
-		if (isset($_GET['page'],$_GET['action']) && $_GET['page']=='wpshop_doc' && $_GET['action']=='edit') {
+		if (isset($page,$action) && $page=='wpshop_doc' && $action=='edit') {
 			add_action('admin_init', array('wpshop_doc', 'init_wysiwyg'));
 		}
 
@@ -162,6 +167,8 @@ class wpshop_init{
 			wp_dequeue_script('autosave');
 		}
 
+		$entity_to_search = !empty( $_GET['entity_to_search'] ) ? sanitize_text_field( $_GET['entity_to_search'] ) : '';
+
 		echo '
 <script type="text/javascript">
 	var WPSHOP_AJAX_FILE_URL = "'.WPSHOP_AJAX_FILE_URL.'";
@@ -242,7 +249,7 @@ class wpshop_init{
 	var WPSHOP_SEARCH_IN_ORDER_EXPLAIN_MESSAGE = "'.__('You want to search in orders', 'wpshop').'";
 	var WPSHOP_SEARCH_IN_ORDER_CHOICE_CUSTOMER = "'.__('a customer', 'wpshop').'";
 	var WPSHOP_SEARCH_IN_ORDER_CHOICE_PRODUCT = "'.__('a product', 'wpshop').'";
-	var WPSHOP_SEARCH_IN_ORDER_USER_CHOICE = "'.( (!empty($_GET['entity_to_search']) ) ? $_GET['entity_to_search'] : 'customer' ).'";
+	var WPSHOP_SEARCH_IN_ORDER_USER_CHOICE = "'.( (!empty($entity_to_search) ) ? $entity_to_search : 'customer' ).'";
 	var WPSHOP_DELETE_ADDRESS_CONFIRMATION = "'.__( 'Do you really want to delete this address', 'wpshop' ).'";
 
 	var wps_options_shipping_weight_for_custom_fees = "'.__( 'You must enter a weight', 'wpshop' ).'";
@@ -288,15 +295,16 @@ class wpshop_init{
 		wp_enqueue_script('jquery-effects-core');
 		wp_enqueue_script('jquery-effects-highlight');
 
+		$page = !empty( $_GET['page'] ) ? sanitize_text_field( $page ) : '';
 
 		/*	Include specific js file for the current page if existing	*/
-		if(isset($_GET['page']) && is_file(WPSHOP_JS_DIR . 'pages/' . $_GET['page'] . '.js')){
-			wp_enqueue_script($_GET['page'] . '_js', WPSHOP_JS_URL . 'pages/' . $_GET['page'] . '.js', '', WPSHOP_VERSION);
+		if(isset($page) && is_file(WPSHOP_JS_DIR . 'pages/' . $page . '.js')){
+			wp_enqueue_script($page . '_js', WPSHOP_JS_URL . 'pages/' . $page . '.js', '', WPSHOP_VERSION);
 		}
-		if((isset($_GET['page']) && ($_GET['page'] == 'wpshop_dashboard'))) {
-			wp_enqueue_script($_GET['page'] . '_js', WPSHOP_JS_URL . 'pages/' . WPSHOP_URL_SLUG_OPTION . '.js', '', WPSHOP_VERSION);
-			wp_register_style($_GET['page'] . '_css', WPSHOP_CSS_URL . 'pages/' . WPSHOP_URL_SLUG_OPTION . '.css', '', WPSHOP_VERSION);
-			wp_enqueue_style($_GET['page'] . '_css');
+		if((isset($page) && ($page == 'wpshop_dashboard'))) {
+			wp_enqueue_script($page . '_js', WPSHOP_JS_URL . 'pages/' . WPSHOP_URL_SLUG_OPTION . '.js', '', WPSHOP_VERSION);
+			wp_register_style($page . '_css', WPSHOP_CSS_URL . 'pages/' . WPSHOP_URL_SLUG_OPTION . '.css', '', WPSHOP_VERSION);
+			wp_enqueue_style($page . '_css');
 		}
 	}
 
@@ -353,9 +361,10 @@ class wpshop_init{
 		wp_enqueue_style('wpshop_chosen_css');
 
 		/*	Include specific css file for the current page if existing	*/
-		if(isset($_GET['page']) && is_file(WPSHOP_CSS_DIR . 'pages/' . $_GET['page'] . '.css')){
-			wp_register_style($_GET['page'] . '_css', WPSHOP_CSS_URL . 'pages/' . $_GET['page'] . '.css', '', WPSHOP_VERSION);
-			wp_enqueue_style($_GET['page'] . '_css');
+		$page = !empty( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : '';
+		if(isset($page) && is_file(WPSHOP_CSS_DIR . 'pages/' . $page . '.css')){
+			wp_register_style($page . '_css', WPSHOP_CSS_URL . 'pages/' . $page . '.css', '', WPSHOP_VERSION);
+			wp_enqueue_style($page . '_css');
 		}
 
 		wp_register_style('wpshop_default_admin_wps_style_css', WPSHOP_TEMPLATES_URL . 'wpshop/css/wps_style_old.css', '', WPSHOP_VERSION);
