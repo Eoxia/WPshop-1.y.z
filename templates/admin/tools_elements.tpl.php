@@ -9,7 +9,7 @@ echo wpshop_display::displayPageHeader(__('Outils pour WP-Shop', 'wpshop'), '', 
 			<li class="loading_pic_on_select" ><a href="<?php echo admin_url('admin-ajax.php'); ?>?action=wpshop_tool_db_check" title="wpshop_tools_tab_container" ><?php _e('Database structure check', 'wpshop'); ?></a></li>
 			<li class="loading_pic_on_select" ><a href="<?php echo admin_url('admin-ajax.php'); ?>?action=wpshop_tool_default_datas_check" title="wpshop_tools_tab_container" ><?php _e('Default data check', 'wpshop'); ?></a></li>
 			<li class="loading_pic_on_select" ><a href="<?php echo admin_url('admin-ajax.php'); ?>?action=wps_mass_action" title="wpshop_tools_tab_container" class="wps_mass_action" ><?php _e('Mass action', 'wpshop'); ?></a></li>
-			<li class="loading_pic_on_select" ><a href="<?php echo admin_url('admin-ajax.php'); ?>?action=checking_products_values" title="wpshop_tools_tab_container" class="checking_products_values" ><?php _e('Checking product values', 'wpshop'); ?></a></li>
+			<li class="loading_pic_on_select" ><a href="<?php print wp_nonce_url( admin_url( 'admin-ajax.php?action=checking_products_values' ), 'ajax_render_inconsistent_product_price', '_wpnonce' ); ?>" title="wpshop_tools_tab_container" class="checking_products_values" ><?php _e('Checking product values', 'wpshop'); ?></a></li>
 		</ul>
 		<div id="wpshop_tools_tab_container" ></div>
 	</div>
