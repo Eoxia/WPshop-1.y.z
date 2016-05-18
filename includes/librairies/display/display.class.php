@@ -642,7 +642,7 @@ class wpshop_display {
 				}
 			}
 
-			if ($pagenow == 'edit-tags.php' && isset($_REQUEST['action']) && $_REQUEST['action'] == 'edit' && empty($_REQUEST['taxonomy'])) {
+			if ($pagenow == 'edit-tags.php' && isset($_REQUEST['action']) && sanitize_key($_REQUEST['action']) == 'edit' && empty($_REQUEST['taxonomy'])) {
 				add_action('edit_term',array('wpshop_display','wpshop_rt_taxonomy_save'));
 			}
 
@@ -669,7 +669,8 @@ class wpshop_display {
 
 		$a = array('description');
 		foreach ($a as $v) {
-			wp_update_term($tag_ID,$v,$_POST[$v]);
+			$term = (array) $_POST[$v];
+			wp_update_term($tag_ID,$v,$term);
 		}
 	}
 

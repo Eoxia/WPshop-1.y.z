@@ -228,7 +228,7 @@ DEFINE('WPSHOP_DEFINED_SHOP_TYPE', $wpshop_shop_type);
 	DEFINE('WPSHOP_DEBUG_MODE_ALLOWED_IP', (!empty($extra_options['WPSHOP_DEBUG_MODE_ALLOWED_IP'])?serialize(array_merge($default_ip, array($extra_options['WPSHOP_DEBUG_MODE_ALLOWED_IP']))):serialize($default_ip)));
 	/*	DEBUG MODE	*/
 	$debug_mode = false;
-	if ( !empty($extra_options['WPSHOP_DEBUG_MODE']) && ($extra_options['WPSHOP_DEBUG_MODE'] == 'true') || (!empty($_GET['distant_debug_mode']) && $_GET['distant_debug_mode'] == 'eoxia') )
+	if ( !empty($extra_options['WPSHOP_DEBUG_MODE']) && ($extra_options['WPSHOP_DEBUG_MODE'] == 'true') || (!empty($_GET['distant_debug_mode']) && sanitize_key($_GET['distant_debug_mode']) == 'eoxia') )
 		$debug_mode = true;
 	DEFINE('WPSHOP_DEBUG_MODE', $debug_mode);
 	/*	DATA DELETE	*/
