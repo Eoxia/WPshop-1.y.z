@@ -403,7 +403,7 @@ wpshop(document).ready(function(){
 		//alert(title+message+recipient);
 
 		if (messageid!='undefined') {
-			jQuery.getJSON(ajaxurl, { action: "wps_ajax_resend_message", messageid: messageid },
+			jQuery.getJSON(ajaxurl, { action: "wps_ajax_resend_message", messageid: messageid, _wpnonce: jQuery( this ).data( 'nonce' ) },
 				function(data){
 					if (!data.result) {
 						alert(data.message);

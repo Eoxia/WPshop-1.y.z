@@ -3384,17 +3384,19 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		<div id="wpshop_unit_main_listing_interface">
 			<div class="wpshop_full_page_tabs">
 				<ul class="ui-tabs-nav">
-					<li id="wpshop_unit_list_tab" class="ui-state-default"><a href="#wpshop_unit_list" >' . __('Unit', 'wpshop') . '</a></li>
-					<li id="wpshop_unit_group_list_tab" ><a href="#wpshop_unit_group_list" >' . __('Unit group', 'wpshop') . '</a></li>
+					<li id="wpshop_unit_list_tab" class="ui-state-default"><a href="#wpshop_unit_list" ><?php _e('Unit', 'wpshop'); ?></a></li>
+					<li id="wpshop_unit_group_list_tab" ><a href="#wpshop_unit_group_list" ><?php _e('Unit group', 'wpshop'); ?></a></li>
 				</ul>
 			</div>
-			<div id="wpshop_unit_list" >' . wpshop_attributes_unit::elementList() . '</div>
-			<div id="wpshop_unit_group_list" >' . wpshop_attributes_unit::unit_group_list() . '</div>
+			<div id="wpshop_unit_list" ><?php echo wpshop_attributes_unit::elementList(); ?></div>
+			<div id="wpshop_unit_group_list" ><?php echo wpshop_attributes_unit::unit_group_list(); ?></div>
 		</div>
 		<script type="text/javascript" >
 			wpshop(document).ready(function(){ jQuery("#wpshop_unit_main_listing_interface").tabs(); });
 		</script>
 		<?php
+
+		wp_die();
 	}
 	add_action( 'wp_ajax_wps_attribute_unit_interface', 'load_unit_interface' );
 
@@ -3552,6 +3554,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action( 'wp_ajax_wps_attribute_group_unit_update', 'update_attribute_unit_group' );
 
 	function delete_attribute_unit_group() {
+		check_ajax_referer( 'delete_attribute_unit_group' );
 		$unit_id = wpshop_tools::varSanitizer($_REQUEST['elementIdentifier']);
 		$save_output = '';
 
@@ -3592,6 +3595,8 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action( 'wp_ajax_wps_products_by_criteria', 'products_by_criteria' );
 
 	function ajax_sendMessage() {
+		check_ajax_referer( 'sendMessage' );
+
 		if (!empty($_REQUEST['postid']) && !empty($_REQUEST['title']) && !empty($_REQUEST['message']) && !empty($_REQUEST['recipient'])) {
 
 			$user_info = get_userdata($_REQUEST['recipient']);
@@ -3620,6 +3625,8 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action( 'wp_ajax_wps_ajax_send_message', 'ajax_sendMessage' );
 
 	function ajax_resendMessage() {
+		check_ajax_referer( 'resendMessage' );
+
 		if (!empty($_REQUEST['messageid'])) {
 
 			$ids = explode('-',$_REQUEST['messageid']);
@@ -3652,6 +3659,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action( 'wp_ajax_wps_ajax_resend_message', 'ajax_resendMessage' );
 
 	function related_products() {
+		check_ajax_referer( 'related_products' );
 		$data = wpshop_products::product_list(false, $_REQUEST['search']);
 		$array=array();
 		foreach ($data as $d) {
@@ -3662,6 +3670,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action( 'wp_ajax_wps_related_products', 'related_products' );
 
 	function applyCoupon() {
+		check_ajax_referer( 'applyCoupon' );
 		$wps_coupon_ctr = new wps_coupon_ctr();
 		$result = $wps_coupon_ctr->applyCoupon($_REQUEST['coupon_code']);
 		if ($result['status']===true) {
