@@ -8,6 +8,7 @@
 	$attribute_set_id = $wpdb->get_var( $query );
 ?>
 	<input type="hidden" name="action" value="wpspos-customer-quick-add" />
+	<?php wp_nonce_field( 'create_customer' ); ?>
 	<input type="hidden" name="wps-customer-account-set-id" value="<?php echo $attribute_set_id; ?>" />
 
 	<?php if ( !empty( $customer_attributes ) ) : ?>
