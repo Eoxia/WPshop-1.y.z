@@ -18,7 +18,7 @@ if ( $test != '../test/request.test.php' ) {
 	$string_post_unsecured[$test] = array();
 
     $file = file_get_contents( $test );
-    preg_match_all( '#add_action\(.+(\'|")wp_ajax_.+(\'|"),.+(\'|")(.+)(\'|").+\)#isU', $file, $matches );
+    preg_match_all( '#add_action\( *(\'|")wp_ajax_.+(\'|"),.+(\'|")(.+)(\'|").+\)#isU', $file, $matches );
 	$matched_function = array();
 	if ( !empty( $matches[4] ) ) {
 		foreach ( $matches[4] as $matched_string ) {

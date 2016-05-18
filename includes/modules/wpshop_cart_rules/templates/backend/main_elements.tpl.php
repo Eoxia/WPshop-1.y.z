@@ -38,7 +38,7 @@ ob_start();
 	</div>
 </div>
 <div class="wpshop_cls"></div>
-<div class="cart_rules_discount_interface_container"><a id="save_cart_rule" class="button-primary"><?php _e('Add the cart rule', 'wpshop')?></a></div>
+<div class="cart_rules_discount_interface_container"><a id="save_cart_rule" data-nonce="<?php echo wp_create_nonce( 'wpshop_ajax_save_cart_rule' ); ?> " class="button-primary"><?php _e('Add the cart rule', 'wpshop')?></a></div>
 <div class="wpshop_cls"></div>
 
 <h3><?php _e('Cart rules already created', 'wpshop'); ?></h3>
@@ -62,7 +62,7 @@ ob_start();
 	<td>{WPSHOP_CART_RULE_LINE_DISCOUNT_TYPE}</td>
 	<td>{WPSHOP_CART_RULE_LINE_CUSTOMER_GROUP}</td>
 	<td>{WPSHOP_CART_RULE_LINE_DISCOUNT_VALUE}</td>
-	<td id="{WPSHOP_CART_RULE_ID}" class="cart_line_delete_rule" ><img src="{WPSHOP_MEDIAS_ICON_URL}delete.png" alt="<?php _e('Delete', 'wpshop_shipping_configuration'); ?>" /></td>
+	<td id="{WPSHOP_CART_RULE_ID}" data-nonce="<?php echo wp_create_nonce( 'wpshop_ajax_delete_cart_rule' ); ?>" class="cart_line_delete_rule" ><img src="{WPSHOP_MEDIAS_ICON_URL}delete.png" alt="<?php _e('Delete', 'wpshop_shipping_configuration'); ?>" /></td>
 <?php
 $tpl_element['admin']['default']['cart_rules_line'] = ob_get_contents();
 ob_end_clean();

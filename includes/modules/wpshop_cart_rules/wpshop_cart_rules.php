@@ -30,8 +30,8 @@ if ( !class_exists("wpshop_cart_rules") ) {
 			add_action( 'admin_init', array(&$this, 'admin_js') );
 
 			/** AJAX actions **/
-			add_action('wp_ajax_save_cart_rule',array(&$this, 'wpshop_ajax_save_cart_rule'));
-			add_action('wp_ajax_delete_cart_rule',array(&$this, 'wpshop_ajax_delete_cart_rule'));
+			add_action('wp_ajax_save_cart_rule',array( $this, 'wpshop_ajax_save_cart_rule'));
+			add_action('wp_ajax_delete_cart_rule',array( $this, 'wpshop_ajax_delete_cart_rule'));
 		}
 
 		/**
@@ -168,6 +168,11 @@ if ( !class_exists("wpshop_cart_rules") ) {
 
 		/** Save the cart rule **/
 		function wpshop_ajax_save_cart_rule () {
+			$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+			if ( !wp_verify_nonce( $_wpnonce, 'wpshop_ajax_save_cart_rule' ) )
+				wp_die();
+
 			$cart_limen = ( !empty($_POST['cart_limen']) ) ? wpshop_tools::varSanitizer($_POST['cart_limen']) : null;
 			$discount_type = ( !empty($_POST['discount_type']) ) ? wpshop_tools::varSanitizer($_POST['discount_type']) : null;
 			$discount_value = ( !empty($_POST['discount_value']) ) ? wpshop_tools::varSanitizer($_POST['discount_value']) : null;
@@ -199,6 +204,11 @@ if ( !class_exists("wpshop_cart_rules") ) {
 
 		/** Save the cart rule **/
 		function wpshop_ajax_delete_cart_rule () {
+			$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+			if ( !wp_verify_nonce( $_wpnonce, 'wpshop_ajax_delete_cart_rule' ) )
+				wp_die();
+
 			$cart_rule_id = ( !empty($_POST['cart_rule_id']) ) ? wpshop_tools::varSanitizer($_POST['cart_rule_id']) : null;
 
 			$status = false;
