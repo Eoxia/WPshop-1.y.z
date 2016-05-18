@@ -55,7 +55,7 @@
 
 
 	<li class="<?php echo $class; ?> wps-bloc-loader">
-			<span><input type="radio" name="wps-shipping-method" value="<?php echo $shipping_mode_id; ?>" id="<?php echo $shipping_mode_id ; ?>" <?php echo $checked; ?> /> <?php apply_filters( 'wps-extra-fields-'.$shipping_mode_id, '' ); ?></span>
+			<span><input type="radio" name="wps-shipping-method" data-nonce="<?php echo wp_create_nonce( 'wps_calculate_shipping_cost' ); ?>" value="<?php echo $shipping_mode_id; ?>" id="<?php echo $shipping_mode_id ; ?>" <?php echo $checked; ?> /> <?php apply_filters( 'wps-extra-fields-'.$shipping_mode_id, '' ); ?></span>
 
 			<?php echo ( !empty($shipping_mode['logo']) ? '<span class="wps-shipping-method-logo">'.wp_get_attachment_image( $shipping_mode['logo'], 'thumbnail' ).'</span>': '' ); ?>
 
@@ -83,7 +83,3 @@
 	$i++;
 	endif;
 ?>
-
-
-
-

@@ -57,21 +57,21 @@ ob_end_clean();
 ob_start();
 ?>
 <div class="wps-boxed">
-	<span class="wps-h2"><?php _e('General configurations', 'wpshop')?></span>	
+	<span class="wps-h2"><?php _e('General configurations', 'wpshop')?></span>
 	<div>{WPSHOP_EXTRA_CONTENT}</div>
 	<div class="wps-form-group">
 		<label for="wps_shipping_mode_{WPSHOP_SHIPPING_MODE_ID}_explanation"><?php _e('Explanation', 'wpshop'); ?> :</label>
 		<div class="wps-form"><textarea id="wps_shipping_mode_{WPSHOP_SHIPPING_MODE_ID}_explanation" name="wps_shipping_mode[modes][{WPSHOP_SHIPPING_MODE_ID}][explanation]">{WPSHOP_EXPLANATION}</textarea></div>
 	</div>
-	
+
 	<span class="wps-h5"><?php _e('Free shipping cost configuration', 'wpshop')?></span>
 	<div class="wps-row wps-gridwrapper2-padded">
 		<!-- Free shipping for all orders -->
 		<div class="wps-form-group">
 			<div class="wps-form"><input type="checkbox" name="wps_shipping_mode[modes][{WPSHOP_SHIPPING_MODE_ID}][free_shipping]" id="{WPSHOP_SHIPPING_MODE_ID}_free_shipping" {WPSHOP_FREE_SHIPPING} /> <label for="{WPSHOP_SHIPPING_MODE_ID}_free_shipping"><?php _e('Activate free shipping for all orders', 'wpshop'); ?></label></div>
-			
+
 		</div>
-		
+
 		<!-- Free shipping for orders which amount is over an amount -->
 		<div>
 			<div class="wps-form-group">
@@ -83,7 +83,7 @@ ob_start();
 			</div>
 		</div>
 	</div>
-	
+
 	<!--  Min & Max Shipping cost Configuration -->
 	<span class="wps-h5"><?php _e('Minimum and maximum limit shipping cost configuration', 'wpshop')?></span>
 	<div class="wps-row">
@@ -91,28 +91,28 @@ ob_start();
 			<div class="wps-form"><input type="checkbox" class="wps_shipping_mode_configuation_min_max" name="wps_shipping_mode[modes][{WPSHOP_SHIPPING_MODE_ID}][min_max][activate]" id="{WPSHOP_SHIPPING_MODE_ID}_min_max_activate" {WPSHOP_MIN_MAX_ACTIVATE} /> <label for="{WPSHOP_SHIPPING_MODE_ID}_min_max_activate"><?php _e('Activate the min. and max. shipping cost', 'wpshop'); ?></label></div>
 		</div>
 	</div>
-	
+
 	<div class="wps-row">
 		<div class="wps-row wps-gridwrapper2-padded" id="{WPSHOP_SHIPPING_MODE_ID}_min_max_shipping_rules_configuration">
 			<div class="wps-form-group">
 				<label><?php _e('Minimum', 'wpshop'); ?> ( {WPSHOP_CURRENCY} ) :</label>
 				<div class="wps-form"><input type="text" name="wps_shipping_mode[modes][{WPSHOP_SHIPPING_MODE_ID}][min_max][min]" value="{WPSHOP_MIN_VALUE}" /></div>
 			</div>
-			
+
 			<div class="wps-form-group">
 				<label><?php _e('Maximum', 'wpshop'); ?> ( {WPSHOP_CURRENCY} ) :</label>
 				<div class="wps-form"><input type="text" name="wps_shipping_mode[modes][{WPSHOP_SHIPPING_MODE_ID}][min_max][max]"  value="{WPSHOP_MAX_VALUE}" /></div>
 			</div>
 		</div>
 	</div>
-	
+
 </div>
 
 <!--  Shipping zone limitation configuration -->
 <div class="wps-boxed">
 	<span class="wps-h2"><?php _e('Area Shipping Limitation', 'wpshop')?></span>
-	
-	<span class="wps-h5">1. <?php _e('Countries Shipping Limitation', 'wpshop')?></span>	
+
+	<span class="wps-h5">1. <?php _e('Countries Shipping Limitation', 'wpshop')?></span>
 	<div class="wps-row">
 		<label><?php _e('Choose all countries where you want to ship orders. Let empty you don\'t want limitations', 'wpshop'); ?></label>
 		<div class="wps-form">
@@ -121,7 +121,7 @@ ob_start();
 			</select>
 		</div>
 	</div>
-	
+
 	<span class="wps-h5">2. <?php _e('Postcode Shipping Limitation', 'wpshop')?></span>
 	<div class="wps-row">
 		<label><?php _e('Write all allowed postcode, separate it by a comma. Let empty if you don\'t want limitations.', 'wpshop'); ?></label>
@@ -129,7 +129,7 @@ ob_start();
 			<textarea name="wps_shipping_mode[modes][{WPSHOP_SHIPPING_MODE_ID}][limit_destination][postcode]">{WPSHOP_SHIPPING_MODE_POSTCODE_LIMIT_DESTINATION}</textarea>
 		</div>
 	</div>
-	
+
 	<span class="wps-h5">3. <?php _e('Department Shipping Limitation', 'wpshop')?></span>
 	<div class="wps-row">
 		<label><?php _e('Write all allowed department, separate it by a comma. Let empty if you don\'t want limitations.', 'wpshop'); ?></label>
@@ -137,30 +137,30 @@ ob_start();
 			<textarea name="wps_shipping_mode[modes][{WPSHOP_SHIPPING_MODE_ID}][limit_destination][department]">{WPSHOP_SHIPPING_MODE_DEPARTMENT_LIMIT_DESTINATION}</textarea>
 		</div>
 	</div>
-	
+
 </div>
 
 <div class="wps-boxed">
 	<span class="wps-h2"><?php _e('Custom shipping rules', 'wpshop'); ?></span>
 	<textarea id="{WPSHOP_SHIPPING_MODE_ID}_wpshop_custom_shipping" name="wps_shipping_mode[modes][{WPSHOP_SHIPPING_MODE_ID}][custom_shipping_rules][fees]" class="wpshopHide" >{WPSHOP_CUSTOM_SHIPPING_FEES_DATA}</textarea>
-	
+
 	<div class="wps-row wps-gridwrapper3-padded">
 		<div class="wps-form-group">
 			<div class="wps-form"><input type="checkbox" name="wps_shipping_mode[modes][{WPSHOP_SHIPPING_MODE_ID}][custom_shipping_rules][active]" id="{WPSHOP_SHIPPING_MODE_ID}_custom_shipping_active" {WPSHOP_CUSTOM_SHIPPING_RULES_ACTIVE} /> <label for="{WPSHOP_SHIPPING_MODE_ID}_custom_shipping_active"><?php _e('Activate custom shipping fees','wpshop'); ?></label></div>
 		</div>
-		
+
 		<div class="wps-form-group">
 			<div class="wps-form"><input type="checkbox" class="active_postcode_custom_shipping" id="{WPSHOP_SHIPPING_MODE_ID}_custom_shipping_active_cp" name="wps_shipping_mode[modes][{WPSHOP_SHIPPING_MODE_ID}][custom_shipping_rules][active_cp]" {WPSHOP_CUSTOM_SHIPPING_ACTIVE_CP}/> <label for="{WPSHOP_SHIPPING_MODE_ID}_custom_shipping_active_cp"> <?php _e('Activate custom shipping fees by postcode', 'wpshop'); ?></label></div>
 		</div>
-		
+
 		<div class="wps-form-group">
 			<div class="wps-form"><input type="checkbox" class="active_department_custom_shipping" id="{WPSHOP_SHIPPING_MODE_ID}_custom_shipping_active_department" name="wps_shipping_mode[modes][{WPSHOP_SHIPPING_MODE_ID}][custom_shipping_rules][active_department]" {WPSHOP_CUSTOM_SHIPPING_ACTIVE_DEPARTMENT}/> <label for="{WPSHOP_SHIPPING_MODE_ID}_custom_shipping_active_department"> <?php _e('Activate custom shipping fees by department', 'wpshop'); ?></label></div>
 		</div>
 	</div>
-	
+
 	<span class="wps-h5"><?php _e('Configuration', 'wpshop'); ?></span>
 	<div class="wps-row wps-gridwrapper3-padded">
-	
+
 		<div class="wps-form-group">
 			<label for="{WPSHOP_SHIPPING_MODE_ID}_country_list"><?php _e('Choose a country', 'wpshop'); ?> : </label>
 			<div class="wps-form">
@@ -169,44 +169,44 @@ ob_start();
 				</select>
 			</div>
 		</div>
-		
+
 		<div class="wps-form-group postcode_rule">
 			<label for="{WPSHOP_SHIPPING_MODE_ID}_postcode_rule" class="postcode_rule"><?php _e('Postcode', 'wpshop'); ?> : </label>
 			<div class="wps-form">
 				<input type="text" name="postcode_rule" id="{WPSHOP_SHIPPING_MODE_ID}_postcode_rule" class="shipping_rules_configuration_input postcode_rule"/>
 			</div>
 		</div>
-		
+
 		<div class="wps-form-group department_rule">
 			<label for="{WPSHOP_SHIPPING_MODE_ID}_department_rule" class="department_rule"><?php _e('Department', 'wpshop'); ?> : </label>
 			<div class="wps-form">
 				<input type="text" name="department_rule" id="{WPSHOP_SHIPPING_MODE_ID}_department_rule" class="shipping_rules_configuration_input department_rule"/>
 			</div>
 		</div>
-		
+
 	</div>
-	
+
 	<div class="wps-row wps-gridwrapper2-padded">
 		<div class="wps-form-group">
 			<label for="{WPSHOP_SHIPPING_MODE_ID}_weight_rule"><?php _e('Weight', 'wpshop'); ?> <strong>({WPSHOP_SHIPPING_WEIGHT_UNITY})</strong> : </label>
 			<div class="wps-form"><input type="text" name="weight_rule" id="{WPSHOP_SHIPPING_MODE_ID}_weight_rule" class="shipping_rules_configuration_input"/></div>
-		</div>	
-		
+		</div>
+
 		<div class="wps-form-group">
 			<label for="{WPSHOP_SHIPPING_MODE_ID}_shipping_price"><?php _e('Price', 'wpshop'); ?> <strong>({WPSHOP_CURRENCY} <?php echo WPSHOP_PRODUCT_PRICE_PILOT; ?>)</strong> : </label>
 			<div class="wps-form"><input type="text" name="shipping_price" id="{WPSHOP_SHIPPING_MODE_ID}_shipping_price" class="shipping_rules_configuration_input"/></div>
 		</div>
 	</div>
-	
+
 	<div class="wps-row">
 		<input type="checkbox" id="{WPSHOP_SHIPPING_MODE_ID}_main_rule" name="main_rule" value="OTHERS"/> <label for="{WPSHOP_SHIPPING_MODE_ID}_main_rule" class="global_rule_checkbox_indic"><?php _e('Apply a common rule to all others countries','wpshop'); ?></label>
 	</div>
-	
+
 	<div class="wps-form-group">
-		<center><a id="{WPSHOP_SHIPPING_MODE_ID}_save_rule" role="button" class="save_rules_button wps-bton-first-rounded"><?php _e('Add the rule', 'wpshop'); ?></a></center>
+		<center><a id="{WPSHOP_SHIPPING_MODE_ID}_save_rule" role="button" data-nonce="<?php echo wp_create_nonce( 'wpshop_ajax_save_shipping_rule' ); ?>" class="save_rules_button wps-bton-first-rounded"><?php _e('Add the rule', 'wpshop'); ?></a></center>
 	</div>
-	
-	<div class="wps-row wps-table wps-bloc-loader" id="{WPSHOP_SHIPPING_MODE_ID}_shipping_rules_container">
+
+	<div class="wps-row wps-table wps-bloc-loader" id="{WPSHOP_SHIPPING_MODE_ID}_shipping_rules_container" data-nonce="<?php echo wp_create_nonce( 'wpshop_ajax_display_shipping_rules' ); ?>">
 		{WPSHOP_CUSTOM_SHIPPING_RULES_DISPLAY}
 	</div>
 </div>
@@ -247,12 +247,9 @@ ob_start();
 	<div class="wps-table-cell">{WPSHOP_SHIPPING_RULE_WEIGHT} {WPSHOP_SHIPPING_RULE_WEIGHT_UNITY}</div>
 	<div class="wps-table-cell">{WPSHOP_SHIPPING_RULE_FEE} {WPSHOP_SHIPPING_RULE_WEIGHT_CURRENCY}</div>
 	<div class="wps-table-cell">
-		<a href="#" id="{WPSHOP_SHIPPING_RULE_DESTINATION}|{WPSHOP_SHIPPING_RULE_WEIGHT}|{WPSHOP_SHIPPING_MODE_ID}" class="delete_rule" title="{WPSHOP_SHIPPING_MODE_ID}"><i class="wps-icon-trash"></i></a>
+		<a href="#" id="{WPSHOP_SHIPPING_RULE_DESTINATION}|{WPSHOP_SHIPPING_RULE_WEIGHT}|{WPSHOP_SHIPPING_MODE_ID}" class="delete_rule" data-nonce="<?php echo wp_create_nonce( 'wpshop_ajax_delete_shipping_rule' ); ?>" title="{WPSHOP_SHIPPING_MODE_ID}"><i class="wps-icon-trash"></i></a>
 	</div>
 </div>
 <?php
 $tpl_element['admin']['default']['shipping_rules_table_line'] = ob_get_contents();
 ob_end_clean();
-
-
-

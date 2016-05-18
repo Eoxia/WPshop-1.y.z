@@ -16,6 +16,11 @@ class wps_shipping_mode_ajax_actions {
 	 * AJAX - Save custom Rules
 	 **/
 	function wpshop_ajax_save_shipping_rule(){
+		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wpshop_ajax_save_shipping_rule' ) )
+			wp_die();
+
 		global $wpdb;
 		$wps_shipping = new wps_shipping();
 		$status = false;
@@ -62,6 +67,11 @@ class wps_shipping_mode_ajax_actions {
 	 * AJAX - Delete Custom shipping Rule
 	 */
 	function wpshop_ajax_delete_shipping_rule() {
+		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wpshop_ajax_delete_shipping_rule' ) )
+			wp_die();
+
 		global $wpdb;
 		$wps_shipping = new wps_shipping();
 		$fees_data = ( !empty($_POST['fees_data']) ) ? sanitize_text_field( $_POST['fees_data'] ) : null;
@@ -116,6 +126,11 @@ class wps_shipping_mode_ajax_actions {
 	 * AJAX - Display Created custom shipping rules
 	 */
 	function wpshop_ajax_display_shipping_rules () {
+		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wpshop_ajax_display_shipping_rules' ) )
+			wp_die();
+
 		$status = false;
 		$fees_data = ( !empty($_POST['fees_data']) ) ? sanitize_text_field( $_POST['fees_data'] ) : null;
 		$shipping_mode_id = ( !empty($_POST['shipping_mode_id']) ) ? (int) $_POST['shipping_mode_id'] : null;
@@ -140,6 +155,11 @@ class wps_shipping_mode_ajax_actions {
 	 * AJAX - Reload shippig mode interface
 	 */
 	function wps_reload_shipping_mode() {
+		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_reload_shipping_mode' ) )
+			wp_die();
+
 		$status = false; $allow_order = true;
 		$result = '';
 		$address_id = !empty( $_POST['address_id'] ) ? (int) $_POST['address_id'] : 0;
@@ -174,6 +194,11 @@ class wps_shipping_mode_ajax_actions {
 	 * AJAX - Calculate Shipping cost
 	 */
 	function wps_calculate_shipping_cost() {
+		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_calculate_shipping_cost' ) )
+			wp_die();
+
 		$status = false;
 		$result = '';
 		$chosen_method = !empty($_POST['chosen_method']) ? wpshop_tools::varSanitizer($_POST['chosen_method']) : null;
@@ -196,6 +221,11 @@ class wps_shipping_mode_ajax_actions {
 	 * AJAX - (New checkout Tunnel ) Load available shipping modes
 	 */
 	function wps_load_shipping_methods() {
+		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_load_shipping_methods' ) )
+			wp_die();
+
 		$status = true; $response = '';
 		$shipping_address_id = ( !empty($_POST['shipping_address']) ) ? intval( $_POST['shipping_address'] ) : null;
 		if ( !empty($shipping_address_id) ) {
@@ -245,6 +275,11 @@ class wps_shipping_mode_ajax_actions {
 
 
 	function wps_add_new_shipping_mode() {
+		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_add_new_shipping_mode' ) )
+			wp_die();
+
 		$status = false; $reponse = '';
 
 		$k = 'wps_custom_shipping_mode_'.time();

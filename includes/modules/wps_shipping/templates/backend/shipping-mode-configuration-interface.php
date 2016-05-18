@@ -160,11 +160,11 @@
 
 	<div class="wps-form-group">
 		<br/>
-		<center><a id="<?php echo $k; ?>_save_rule" role="button" class="save_rules_button wps-bton-third-mini-rounded"><?php _e('Add the rule', 'wpshop'); ?></a></center>
+		<center><a id="<?php echo $k; ?>_save_rule" role="button" data-nonce="<?php echo wp_create_nonce( 'wpshop_ajax_save_shipping_rule' ); ?>" class="save_rules_button wps-bton-third-mini-rounded"><?php _e('Add the rule', 'wpshop'); ?></a></center>
 		<br/>
 	</div>
 
-	<div class="wps-row wps-table wps-bloc-loader" id="<?php echo $k; ?>_shipping_rules_container">
+	<div class="wps-row wps-table wps-bloc-loader" id="<?php echo $k; ?>_shipping_rules_container" data-nonce="<?php echo wp_create_nonce( 'wpshop_ajax_display_shipping_rules' ); ?>">
 		<?php echo $this->generate_shipping_rules_table( $fees_data, $k ); ?>
 	</div>
 </div>

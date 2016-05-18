@@ -1037,7 +1037,7 @@ ob_start();
 ?><form method="post" name="checkoutForm" action="<?php echo get_permalink(wpshop_tools::get_page_id( get_option('wpshop_checkout_page_id'))); ?>" >
 	{WPSHOP_CHECKOUT_CUSTOMER_BILLING_ADDRESS}
 	<h2><?php _e('Shipping method choice', 'wpshop'); ?></h2>
-	<div id="wps_shipping_modes_choice">{WPSHOP_CHECKOUT_CUSTOMER_SHIPPING_CHOICE}</div>
+	<div id="wps_shipping_modes_choice" data-nonce="<?php echo wp_create_nonce( 'wps_shipping_modes_choice' ); ?>">{WPSHOP_CHECKOUT_CUSTOMER_SHIPPING_CHOICE}</div>
 	<?php
 	//echo do_shortcode('[wps_book_shipping]'); ?>
 
@@ -1365,7 +1365,7 @@ ob_end_clean();
 /** Shipping Method **/
 ob_start();
 ?>
-<div class="wps_shipping_method_choice wps_shipping_method_{WPSHOP_SHIPPING_METHOD_CODE}" ><input type="radio" name="wps_shipping_method_choice" id="{WPSHOP_SHIPPING_METHOD_CODE}" value="{WPSHOP_SHIPPING_METHOD_NAME}" {WPSHOP_DEFAULT_SHIPPING_METHOD} /> <img src="{WPSHOP_SHIPPING_METHOD_IMG}" alt="" /> {WPSHOP_SHIPPING_METHOD_NAME} {WPSHOP_SHIPPING_METHOD_EXTRA_PARAMS}</div>
+<div class="wps_shipping_method_choice wps_shipping_method_{WPSHOP_SHIPPING_METHOD_CODE}" ><input type="radio" data-nonce="<?php echo wp_create_nonce( 'wps_calculate_shipping_cost' ); ?>" name="wps_shipping_method_choice" id="{WPSHOP_SHIPPING_METHOD_CODE}" value="{WPSHOP_SHIPPING_METHOD_NAME}" {WPSHOP_DEFAULT_SHIPPING_METHOD} /> <img src="{WPSHOP_SHIPPING_METHOD_IMG}" alt="" /> {WPSHOP_SHIPPING_METHOD_NAME} {WPSHOP_SHIPPING_METHOD_EXTRA_PARAMS}</div>
 <div class="wps_shipping_method_additional_element_container {WPSHOP_SHIPPING_METHOD_CONTAINER_CLASS}" id="container_{WPSHOP_SHIPPING_METHOD_CODE}">{WPSHOP_SHIPPING_METHOD_CONTENT}</div>
 <div class="clear"></div>
 <?php

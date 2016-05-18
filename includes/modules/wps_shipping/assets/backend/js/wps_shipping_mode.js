@@ -121,6 +121,7 @@ jQuery(document).ready(function() {
 		jQuery("#wps_shipping_mode_list_container").addClass( 'wps-bloc-loading' );
 		var data = {
 				action: "wps_add_new_shipping_mode",
+        _wpnonce: jQuery( this ).data( 'nonce' ),
 			};
 			jQuery.post(ajaxurl, data, function(response){
 				if ( response["status"] )  {
@@ -144,6 +145,7 @@ jQuery(document).ready(function() {
 		var id_shipping_method = jQuery(this).attr('id');
 		id_shipping_method = id_shipping_method.replace( '_save_rule', '');
 		jQuery( this ).addClass( 'wps-bton-loading' );
+    var _wpnonce = jQuery( this ).data( 'nonce' );
 
 		var selected_country = '';
 		if ( jQuery("#" + id_shipping_method + "_main_rule").is(':checked') && jQuery("#" + id_shipping_method + "_custom_shipping_active_cp").is(':checked')) {
@@ -175,6 +177,7 @@ jQuery(document).ready(function() {
 		if ((jQuery("#" + id_shipping_method + "_weight_rule").val() != '') && (jQuery("#" + id_shipping_method + "_shipping_price").val() != '')) {
 			var data = {
 					action: "save_shipping_rule",
+          _wpnonce: _wpnonce,
 					weight_rule : jQuery("#" + id_shipping_method + "_weight_rule").val(),
 					shipping_price : jQuery("#" + id_shipping_method + "_shipping_price").val(),
 					selected_country : selected_country,
@@ -212,6 +215,7 @@ jQuery(document).ready(function() {
 		jQuery("#" + id + "_shipping_rules_container").addClass( 'wps-bloc-loading' );
 		var data = {
 				action: "delete_shipping_rule",
+        _wpnonce: jQuery( this ).data( 'nonce' ),
 				country_and_weight: jQuery(this).attr('id'),
 				fees_data : jQuery("#" + id + "_wpshop_custom_shipping").val()
 			};
@@ -235,6 +239,7 @@ jQuery(document).ready(function() {
 		jQuery("#" + id + "_shipping_rules_container").addClass( 'wps-bloc-loading' );
 		var data = {
 			action: "display_shipping_rules",
+      _wpnonce: jQuery( '#' + id + '_shipping_rules_container' ).data( 'nonce' ),
 			fees_data : jQuery("#" + id + "_wpshop_custom_shipping").val(),
 			shipping_mode_id : id
 		};

@@ -18,7 +18,7 @@ wpshop(document).ready(function(){
 
 	}).bind('change', function(event) {
 		jQuery('.page-numbers').address(function() {
-			
+
 			return jQuery(this).attr('href').replace(location.pathname, '');
 		});
 
@@ -802,7 +802,8 @@ function updateQty(element, pid, qty) {
 			}
 			reload_cart();
 			var chosen_method = jQuery( 'input[name=wps_shipping_method_choice]:checked' ).attr( 'id' );
-			recalculate_shipping_cost( chosen_method );
+			var _wpnonce = jQuery( 'input[name=wps_shipping_method_choice]:checked' ).data( 'nonce' );
+			recalculate_shipping_cost( chosen_method, _wpnonce );
 		}
 		else {
 			jQuery('a.remove',element).removeClass('loading');
@@ -1080,6 +1081,7 @@ function reload_cart() {
 function reload_shipping_mode( address_id  ) {
 	var data = {
 		action: "wps_reload_shipping_mode",
+		_wpnonce: jQuery( '#wps_shipping_modes_choice' ).data( 'nonce' ),
 		address : address_id
 	};
 	jQuery.post(ajaxurl, data, function(response){
@@ -1089,7 +1091,8 @@ function reload_shipping_mode( address_id  ) {
 				jQuery('#wps_shipping_modes_choice').html( response['response']);
 				jQuery('#wps_shipping_modes_choice').fadeIn( 'slow', function () {
 					var chosen_method = jQuery( 'input[name=wps_shipping_method_choice]:checked' ).attr( 'id' );
-					recalculate_shipping_cost( chosen_method );
+					var _wpnonce = jQuery( 'input[name=wps_shipping_method_choice]:checked' ).data( 'nonce' );
+					recalculate_shipping_cost( chosen_method, _wpnonce );
 				} );
 				jQuery( '#wpshop_checkout_payment_buttons' ).show();
 			}
@@ -1099,7 +1102,8 @@ function reload_shipping_mode( address_id  ) {
 				jQuery('#wps_shipping_modes_choice').html( response['response']);
 				jQuery('#wps_shipping_modes_choice').fadeIn( 'slow', function () {
 					var chosen_method = jQuery( 'input[name=wps_shipping_method_choice]:checked' ).attr( 'id' );
-					recalculate_shipping_cost( chosen_method );
+					var _wpnonce = jQuery( 'input[name=wps_shipping_method_choice]:checked' ).data( 'nonce' );
+					recalculate_shipping_cost( chosen_method, _wpnonce );
 				} );
 			}
 		}
@@ -1117,13 +1121,15 @@ function reload_shipping_mode( address_id  ) {
 /** Shipping Mode Choice **/
 jQuery(document).on('click', 'input[name=wps_shipping_method_choice]', function() {
 	var chosen_method = jQuery( this ).attr( 'id' );
-	recalculate_shipping_cost( chosen_method );
+	var _wpnonce = jQuery( this ).data( 'nonce' );
+	recalculate_shipping_cost( chosen_method, _wpnonce );
 });
 
 
-function recalculate_shipping_cost( chosen_method ) {
+function recalculate_shipping_cost( chosen_method, _wpnonce ) {
 	var data = {
 			action: "wps_calculate_shipping_cost",
+			_wpnonce: _wpnonce,
 			chosen_method : chosen_method
 		};
 		jQuery.post(ajaxurl, data, function(response){
@@ -1202,5 +1208,3 @@ function wpshopConvertAccentTojs_front(text){
 	text = text.replace(/&OElig;/g, "\522");
 	return text;
 }
-
-

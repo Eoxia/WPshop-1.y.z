@@ -1,4 +1,4 @@
-<?php if ( !defined( 'ABSPATH' ) ) exit; 
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 $wps_shipping = new wps_shipping();
 $shipping_rules = $wps_shipping->shipping_fees_string_2_array( stripslashes($fees_data) );
 
@@ -26,9 +26,9 @@ if( !empty($shipping_rules) ) : ?>
 					<div class="wps-table-cell"><?php echo $country_name; ?> (<?php echo $shipping_rule['destination']; ?>)</div>
 					<div class="wps-table-cell"><?php echo ($unity == 'kg') ? $p / 1000 : $p; ?> <?php _e( $unity, 'wpshop')?></div>
 					<div class="wps-table-cell"><?php echo $fee; ?> <?php echo wpshop_tools::wpshop_get_currency(); ?></div>
-					<div class="wps-table-cell"><a href="#" id="<?php echo $shipping_rule['destination']; ?>|<?php echo $p; ?>|<?php echo $shipping_mode_id; ?>" class="delete_rule" title="<?php echo $shipping_mode_id; ?>"><i class="wps-icon-trash"></i></a></div>
+					<div class="wps-table-cell"><a href="#" id="<?php echo $shipping_rule['destination']; ?>|<?php echo $p; ?>|<?php echo $shipping_mode_id; ?>" data-nonce="<?php echo wp_create_nonce( 'wpshop_ajax_delete_shipping_rule' ); ?>" class="delete_rule" title="<?php echo $shipping_mode_id; ?>"><i class="wps-icon-trash"></i></a></div>
 				</div>
-	<?php 
+	<?php
 				endforeach;
 			endif;
 	endforeach; ?>
