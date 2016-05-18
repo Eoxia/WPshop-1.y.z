@@ -3291,6 +3291,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 
 
 	function wps_delete_picture_category() {
+		check_ajax_referer( 'wps_delete_picture_category' );
 		$status = false; $response = '';
 		$cat_id = ( !empty($_POST['cat_id']) ) ? intval( $_POST['cat_id'] ) : null;
 		if( !empty($cat_id) ) {
@@ -3319,6 +3320,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	/* ATTRIBUTES SET */
 
 	function saveNewAttributeSetSection() {
+		check_ajax_referer( 'saveNewAttributeSetSection' );
 		$attributeSetSectionName = wpshop_tools::varSanitizer($_REQUEST['attributeSetSectionName']);
 		$attributeSetInfos = array();
 		$attributeSetInfos['id'] = '';
@@ -3343,6 +3345,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action( 'wp_ajax_wps_attribute_set_section_new', 'saveNewAttributeSetSection' );
 
 	function editAttributeSetSection() {
+		check_ajax_referer( 'editAttributeSetSection' );
 		$attributeSetSectionName = wpshop_tools::varSanitizer($_REQUEST['attributeSetSectionName']);
 		$attributeSetSectionId = wpshop_tools::varSanitizer($_REQUEST['attributeSetSectionId']);
 		$attributeSetSectionDefault = wpshop_tools::varSanitizer($_REQUEST['attributeSetSectionDefault']);
@@ -3369,6 +3372,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action( 'wp_ajax_wps_attribute_set_section_edit', 'editAttributeSetSection' );
 
 	function deleteAttributeSetSection() {
+		check_ajax_referer( 'deleteAttributeSetSection' );
 		$attributeSetSectionId = wpshop_tools::varSanitizer($_REQUEST['attributeSetSectionId']);
 		$attributeSetInfos = array();
 		$attributeSetInfos['status'] = 'deleted';
