@@ -2700,7 +2700,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 				if ( !empty($billing_address) ) {
 					wps_address::save_address_infos( $billing_address );
 				}
-				if( !empty($shipping_address ) {
+				if( !empty($shipping_address ) ) {
 					wps_address::save_address_infos( $shipping_address);
 				}
 				$result = json_encode( array(true, __('Customer created', 'wpshop'), $user_id) );

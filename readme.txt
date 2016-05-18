@@ -99,13 +99,9 @@ Il faut vérifier que le réglage des permaliens pour votre site est bien régl�
 
 = Version 1.4.1.7 =
 
-Améliorations/ Improvments
-
-* 
-
 Corrections
 
-* 
+* 4224 - Mise à jour : correction des failles de sécurité / Update : fix security plugin
 
 = Version 1.4.1.6 =
 
