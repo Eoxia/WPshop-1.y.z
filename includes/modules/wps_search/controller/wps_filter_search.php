@@ -550,6 +550,11 @@ class wps_filter_search {
 	 * AJAX - Action to search with selected attributes values
 	 */
 	function wpshop_ajax_filter_search_action () {
+		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wpshop_ajax_filter_search_action' ) )
+			wp_die();
+
 		global $wpdb;
 		$category_id =  !empty($_POST['wpshop_filter_search_category_id']) ? wpshop_tools::varSanitizer( $_POST['wpshop_filter_search_category_id'] ) : 0;
 		$filter_search_elements = $this->pick_up_filter_search_elements_type($category_id);
