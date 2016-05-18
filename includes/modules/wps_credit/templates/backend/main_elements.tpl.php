@@ -56,7 +56,7 @@ ob_start();
 <h2><?php _e('Item list', 'wpshop'); ?></h2>
 <form action="<?php echo admin_url('admin-ajax.php'); ?>" id="wps_make_credit_form" method="post">
 <input type="hidden" name="action" value="wps_make_credit_action" />
-<?php wp_input_field( 'wps_make_credit_action' ); ?>
+<?php wp_nonce_field( 'wps_make_credit_action' ); ?>
 <input type="hidden" name="order_id" value="{WPSHOP_ORDER_ID}" />
 <table class="wps_credit_table">
 	<tr>
