@@ -66,6 +66,7 @@ class ewpshop_shortcodes
 	function pageTitle(){
 		$action = isset($_REQUEST['action']) ? wpshop_tools::varSanitizer($_REQUEST['action']) : '';
 		$objectInEdition = isset($_REQUEST['id']) ? wpshop_tools::varSanitizer($_REQUEST['id']) : '';
+		$page = !empty( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : '';
 
 		$title = __(self::pageTitle, 'wpshop' );
 		if($action != ''){
@@ -77,7 +78,7 @@ class ewpshop_shortcodes
 				$title = __(self::pageAddingTitle, 'wpshop');
 			}
 		}
-		elseif((self::getEditionSlug() != self::getListingSlug()) && ($_GET['page'] == self::getEditionSlug())){
+		elseif((self::getEditionSlug() != self::getListingSlug()) && ($page == self::getEditionSlug())){
 			$title = __(self::pageAddingTitle, 'wpshop');
 		}
 		return $title;
