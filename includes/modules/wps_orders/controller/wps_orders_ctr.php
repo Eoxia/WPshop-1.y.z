@@ -26,11 +26,11 @@ class wps_orders_ctr {
 
 
 			/** Ajax Actions **/
-			add_action( 'wp_ajax_wps_add_product_to_quotation', array( &$this, 'wps_add_product_to_quotation') );
-// 			add_action( 'wp_ajax_wps_change_product_list', array( &$this, 'wps_change_product_list') );
+			// add_action( 'wp_ajax_wps_add_product_to_quotation', array( &$this, 'wps_add_product_to_quotation') );
+// 			add_action( 'wap_ajax_wps_change_product_list', array( &$this, 'wps_change_product_list') );
 
-// 			add_action( 'wp_ajax_wps_orders_load_variations_container', array( &$this, 'wps_orders_load_variations_container') );
-// 			add_action( 'wp_ajax_wps_order_refresh_in_admin', array( &$this, 'wps_order_refresh_in_admin') );
+// 			add_action( 'wap_ajax_wps_orders_load_variations_container', array( &$this, 'wps_orders_load_variations_container') );
+// 			add_action( 'wap_ajax_wps_order_refresh_in_admin', array( &$this, 'wps_order_refresh_in_admin') );
 
 			add_action( 'wp_ajax_wps_orders_load_details', array( $this, 'wps_orders_load_details') );
 
@@ -270,6 +270,11 @@ class wps_orders_ctr {
 		 * AJAX - Load order details in customer account
 		 */
 		function wps_orders_load_details() {
+			$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+			if ( !wp_verify_nonce( $_wpnonce, 'wps_orders_load_details' ) )
+				wp_die();
+
 			$order_id = ( !empty($_POST['order_id']) ) ? wpshop_tools::varSanitizer( $_POST['order_id'] ) : '';
 			$user_id = get_current_user_id();
 			$status = false; $result = '';
@@ -290,6 +295,11 @@ class wps_orders_ctr {
 		 * AJAX - Choose customer to create order
 		 */
 		function wps_order_choose_customer() {
+			$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+			if ( !wp_verify_nonce( $_wpnonce, 'wps_order_choose_customer' ) )
+				wp_die();
+
 			$status = false; $billing_data = $shipping_data = '';
 			$customer_id = ( !empty($_POST['customer_id']) ) ? intval( $_POST['customer_id'] ): null;
 			if( !empty($customer_id) ) {
@@ -339,6 +349,11 @@ class wps_orders_ctr {
 		 * AJAX - Delete order by order_id
 		 */
 		public function wps_delete_order() {
+			$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+			if ( !wp_verify_nonce( $_wpnonce, 'wps_delete_order' ) )
+				wp_die();
+
 			$status = false;
 			$output = '';
 			$order_id = !empty( $_POST['order_id'] ) ? (int) $_POST['order_id'] : 0;
@@ -364,6 +379,11 @@ class wps_orders_ctr {
 		 * AJAX - Pay billing
 		 */
 		public function wps_checkout_quotation() {
+			$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+			if ( !wp_verify_nonce( $_wpnonce, 'wps_checkout_quotation' ) )
+				wp_die();
+
 			$status = true;
 			$order_id = !empty( $_REQUEST['order_id'] ) ? (int) $_REQUEST['order_id'] : 0;
 
@@ -383,6 +403,11 @@ class wps_orders_ctr {
 			}
 		}
 		public function wps_checkout_quotation_no_login() {
+			$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+			if ( !wp_verify_nonce( $_wpnonce, 'wps_checkout_quotation' ) )
+				wp_die();
+
 			$order_id = !empty( $_REQUEST['order_id'] ) ? (int) $_REQUEST['order_id'] : 0;
 			wp_redirect( home_url('/wp-login.php') . '?redirect_to=' . urlencode( admin_url() . 'admin-ajax.php?action=wps_checkout_quotation&order_id=' . $order_id . '&is_link=link' ) );
 			exit();

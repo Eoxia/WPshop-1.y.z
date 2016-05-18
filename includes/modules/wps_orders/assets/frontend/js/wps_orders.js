@@ -5,6 +5,7 @@ jQuery( document ).ready( function() {
 		jQuery( this ).addClass( 'wps-bton-loading' );
 		var data = {
 				action: "wps_orders_load_details",
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 				order_id : order_id
 			};
 			jQuery.post(ajaxurl, data, function(response) {
@@ -25,6 +26,7 @@ jQuery( document ).ready( function() {
 		jQuery( this ).addClass( 'wps-bton-loading' );
 		var data = {
 			action: "wps_delete_order",
+			_wpnonce: jQuery( this ).data( 'nonce' ),
 			order_id: order_id,
 		};
 		jQuery.post(ajaxurl, data, function( response ) {
@@ -43,6 +45,7 @@ jQuery( document ).ready( function() {
 		var element = this;
 		var data = {
 			action: "wps_checkout_quotation",
+			_wpnonce: jQuery( this ).data( 'nonce' ),
 			order_id: element.dataset.oid,
 		};
 		jQuery( element ).addClass( 'wps-bton-loading' );

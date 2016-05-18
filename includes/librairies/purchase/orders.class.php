@@ -662,7 +662,8 @@ class wpshop_orders {
 	static function display_customer_pay_quotation( $state, $oid ) {
 		$btn = '<a role="button" class="wps-bton-' . ( ( $state ) ? 'third' : 'second' ) . '-mini-rounded quotation_is_payable_by_customer" href="#" >'.__('Customer can pay', 'wpshop').'</a>';
 		if( $state ) {
-			$btn .= '<br><a href="' . admin_url() . 'admin-ajax.php?action=wps_checkout_quotation&order_id=' . $oid . '&is_link=link">' . __( 'Pay link', 'wpshop' ) . '</a>';
+			$url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wps_checkout_quotation&order_id=' . $oid . '&is_link=link' ), 'wps_checkout_quotation', '_wpnonce' );
+			$btn .= '<br><a href="' . $url . '">' . __( 'Pay link', 'wpshop' ) . '</a>';
 		}
 		return $btn;
 	}
