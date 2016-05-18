@@ -2863,7 +2863,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 
 	function wps_hide_notice_messages() {
 		check_ajax_referer( 'wps_hide_notice_messages' );
-		
+
 		$status = false;
 		$indicator = !empty($_POST['indicator'] ) ? wpshop_tools::varSanitizer($_POST['indicator']) : null;
 		if ( !empty($indicator) ) {
@@ -2890,6 +2890,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 
 
 	function wps_update_products_prices() {
+		check_ajax_referer( 'wps_update_products_prices' );
 		$action = wpshop_prices::mass_update_prices();
 		$response = array( 'status' => $action[0], 'response' => $action[1] );
 		echo json_encode( $response );
@@ -2899,6 +2900,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 
 	/** Quotation is payable by customer **/
 	function wps_quotation_is_payable_by_customer() {
+		check_ajax_referer( 'wps_quotation_is_payable_by_customer' );
 		global $wpdb;
 		$status = false; $response = '';
 		$order_id = ( !empty($_POST['order_id']) ) ? intval( $_POST['order_id'] ) : null;
