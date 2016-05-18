@@ -3538,4 +3538,108 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	}
 	add_action( 'wp_ajax_wps_attribute_group_unit_delete', 'delete_attribute_unit_group' );
 
+	function products_by_criteria() {
+		// If a filter by attribute is found, recalcul the products that matching it
+		if(!empty($_REQUEST['attr'])) {
+			$att = explode(':',$_REQUEST['attr']);
+			$products_id = wpshop_products::get_products_matching_attribute($att[0],$att[1]);
+		}
+		$products_id = !empty($products_id) ? $products_id : $_REQUEST['pid'];
+		$page_number = $_REQUEST['page_number'];
+
+
+		if ( !empty($_GET['page_product']) ) {
+			$page_number = wpshop_tools::varSanitizer($_GET['page_product']);
+		}
+		$data = wpshop_products::wpshop_get_product_by_criteria(
+			$_REQUEST['criteria'], $_REQUEST['cid'], $products_id, $_REQUEST['display_type'], $_REQUEST['order'], $page_number, $_REQUEST['products_per_page']
+		);
+		if($data[0]) {
+			echo json_encode(array(true, do_shortcode($data[1])));
+		} else echo json_encode(array(false,__('No product found','wpshop')));
+	}
+	add_action( 'wp_ajax_wps_products_by_criteria', 'products_by_criteria' );
+
+	function ajax_sendMessage() {
+		if (!empty($_REQUEST['postid']) && !empty($_REQUEST['title']) && !empty($_REQUEST['message']) && !empty($_REQUEST['recipient'])) {
+
+			$user_info = get_userdata($_REQUEST['recipient']);
+			$first_name = $user_info->user_firstname;
+			$last_name = $user_info->user_lastname;
+			$data = array('customer_first_name'=>$first_name,'customer_last_name'=>$last_name);
+
+			$wps_message_ctr = new wps_message_ctr();
+
+
+			$title = $wps_message_ctr->customMessage($_REQUEST['title'], $data);
+			$message = $wps_message_ctr->customMessage($_REQUEST['message'], $data);
+
+			if (!empty($user_info->user_email)) {
+				$wps_message_ctr->wpshop_email($user_info->user_email, $title, $message, $save=true, $model_id=$_REQUEST['postid'], $object=array());
+				$array = array('result' => true, 'message' => '');
+			}
+			else $array = array('result' => true, 'message' => __('An error occured','wpshop'));
+		}
+		else {
+			$array = array('result' => false, 'message' => __('An error occured','wpshop'));
+		}
+
+		echo json_encode($array);
+	}
+	add_action( 'wp_ajax_wps_ajax_send_message', 'ajax_sendMessage' );
+
+	function ajax_resendMessage() {
+		if (!empty($_REQUEST['messageid'])) {
+
+			$ids = explode('-',$_REQUEST['messageid']);
+			$postid = $ids[0];
+			$date = $ids[1].'-'.$ids[2];
+			$arraykey = $ids[3];
+
+			$historic = get_post_meta($postid, 'wpshop_messages_histo_'.$date, true);
+
+			if (isset($historic[$arraykey])) {
+				$historic[$arraykey]['mess_dispatch_date'][] = current_time('mysql', 0);
+				update_post_meta($postid, 'wpshop_messages_histo_'.$date, $historic);
+
+				$data = $historic[$arraykey];
+				$wps_message_ctr = new wps_message_ctr();
+				$wps_message_ctr->wpshop_email($data['mess_user_email'], $data['mess_title'], $data['mess_message'], $save=false, $object=array());
+
+				$array = array('result' => true, 'message' => '');
+			}
+			else {
+				$array = array('result' => false, 'message' => __('An error occured','wpshop'));
+			}
+		}
+		else {
+			$array = array('result' => false, 'message' => __('An error occured','wpshop'));
+		}
+
+		echo json_encode($array);
+	}
+	add_action( 'wp_ajax_wps_ajax_resend_message', 'ajax_resendMessage' );
+
+	function related_products() {
+		$data = wpshop_products::product_list(false, $_REQUEST['search']);
+		$array=array();
+		foreach ($data as $d) {
+			$array[] = array('id' => $d->ID, 'name' => $d->post_title);
+		}
+		echo json_encode($array);
+	}
+	add_action( 'wp_ajax_wps_related_products', 'related_products' );
+
+	function applyCoupon() {
+		$wps_coupon_ctr = new wps_coupon_ctr();
+		$result = $wps_coupon_ctr->applyCoupon($_REQUEST['coupon_code']);
+		if ($result['status']===true) {
+			$wps_cart_ctr = new wps_cart();
+			$order = $wps_cart_ctr->calcul_cart_information(array());
+			$wps_cart_ctr->store_cart_in_session($order);
+			echo json_encode(array(true, ''));
+		} else echo json_encode(array(false, $result['message']));
+	}
+	add_action( 'wp_ajax_wps_cart_action_apply_coupon', 'applyCoupon' );
+
 ?>

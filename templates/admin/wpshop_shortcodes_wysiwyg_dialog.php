@@ -67,7 +67,7 @@ if ( !empty($type) ) {
 	<script type="text/javascript" src="<?php echo WPSHOP_JS_URL; ?>pages/wpshop_wysiwyg.js?v=<?php echo WPSHOP_VERSION;?>" ></script>
 	<script type="text/javascript" src="<?php echo WPSHOP_JS_URL; ?>jquery-libs/chosen.jquery.min.js?v=<?php echo WPSHOP_VERSION;?>" ></script>
 	<script type="text/javascript">
-		var WPSHOP_AJAX_FILE_URL = "<?php echo admin_url('admin-ajax.php'); ?>";
+//		var WPSHOP_AJAX_FILE_URL = "<?php echo admin_url('admin-ajax.php'); ?>";
 		var wpshop_wysiwyg_shortcode_insertion_search = "<?php echo wp_create_nonce('wpshop_element_search'); ?>";
 		var WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT = "<?php echo WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT; ?>";
 	</script>

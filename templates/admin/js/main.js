@@ -402,7 +402,7 @@ wpshop(document).ready(function(){
 		//alert(title+message+recipient);
 
 		if (messageid!='undefined') {
-			jQuery.getJSON(WPSHOP_AJAX_FILE_URL, { post: "true", elementCode: "ajax_resendMessage", messageid: messageid },
+			jQuery.getJSON(ajaxurl, { action: "wps_ajax_resend_message", messageid: messageid },
 				function(data){
 					if (!data.result) {
 						alert(data.message);
@@ -419,9 +419,7 @@ wpshop(document).ready(function(){
 
 	/*	Add support for option excluded domain addition	*/
 	jQuery("#wpshop_attribute_add_new_option_value").live("click",function(){
-		jQuery("#ajax-response").load(WPSHOP_AJAX_FILE_URL,{
-			"post": "true",
-			"elementCode": "attribute",
+		jQuery("#ajax-response").load(ajaxurl,{
 			"action": "load_new_option_field"
 		});
 	});
