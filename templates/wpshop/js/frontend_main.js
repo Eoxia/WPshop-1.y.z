@@ -717,6 +717,7 @@ function load_variation_summary() {
 		//jQuery(".wpshop_save_money_message").html('');
 		var data = {
 			action:"wpshop_variation_selection",
+			_wpnonce: jQuery( this ).data( 'nonce' ),
 			wpshop_pdt: jQuery("#wpshop_pdt").val(),
 			wpshop_variation: frontend_attribute_variation_selection,
 			wpshop_free_variation: frontend_attribute_free_variation_selection,

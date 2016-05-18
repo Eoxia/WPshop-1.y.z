@@ -2191,6 +2191,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	 * Refresh Price in complete product sheet and Cart summary display
 	 */
 	function wpshop_ajax_wpshop_variation_selection() {
+		check_ajax_referer( 'wpshop_ajax_wpshop_variation_selection' );
 		$product_id = isset($_POST['wpshop_pdt']) ? intval(wpshop_tools::varSanitizer($_POST['wpshop_pdt'])) : null;
 		$wpshop_variation_selected = isset($_POST['wpshop_variation']) ? $_POST['wpshop_variation'] : null;
 		$wpshop_free_variation = isset($_POST['wpshop_free_variation']) ? $_POST['wpshop_free_variation'] : null;
