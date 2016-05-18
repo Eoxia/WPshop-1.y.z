@@ -3372,6 +3372,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action( 'wp_ajax_wps_attribute_set_section_edit', 'editAttributeSetSection' );
 
 	function deleteAttributeSetSection() {
+		check_ajax_referer( 'deleteAttributeSetSection' );
 		$attributeSetSectionId = wpshop_tools::varSanitizer($_REQUEST['attributeSetSectionId']);
 		$attributeSetInfos = array();
 		$attributeSetInfos['status'] = 'deleted';
