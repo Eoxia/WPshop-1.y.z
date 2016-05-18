@@ -18,10 +18,10 @@ ob_end_clean();
 ob_start();
 ?>
 <div class="wps_credit_list_element">
-<div class="wps_credit_list_sub_element"><span class="ui-icon {WPSHOP_CREDIT_STATUS_ICON}"></span> <span class="alignleft"><strong>{WPSHOP_CREDIT_REF}</strong></span> <span class="alignright wps_credit_list_element_date">{WPSHOP_CREDIT_DATE}</span></div> 
+<div class="wps_credit_list_sub_element"><span class="ui-icon {WPSHOP_CREDIT_STATUS_ICON}"></span> <span class="alignleft"><strong>{WPSHOP_CREDIT_REF}</strong></span> <span class="alignright wps_credit_list_element_date">{WPSHOP_CREDIT_DATE}</span></div>
 <div class="wps_credit_list_sub_element"><span class="alignleft">{WPSHOP_CREDIT_PDF_LINK}</span>
 <span class="alignright">
-<select id="credit_status_{WPSHOP_CREDIT_REF}" class="wps_credit_change_status">
+<select id="credit_status_{WPSHOP_CREDIT_REF}" data-nonce="<?php echo wp_create_nonce( 'wps_credit_change_status' ); ?>" class="wps_credit_change_status">
 {WPSHOP_CREDIT_STATUS_ELEMENTS}
 </select>
 </span>
@@ -56,7 +56,8 @@ ob_start();
 <h2><?php _e('Item list', 'wpshop'); ?></h2>
 <form action="<?php echo admin_url('admin-ajax.php'); ?>" id="wps_make_credit_form" method="post">
 <input type="hidden" name="action" value="wps_make_credit_action" />
-<input type="hidden" name="order_id" value="{WPSHOP_ORDER_ID}" /> 
+<?php wp_input_field( 'wps_make_credit_action' ); ?>
+<input type="hidden" name="order_id" value="{WPSHOP_ORDER_ID}" />
 <table class="wps_credit_table">
 	<tr>
 		<th><?php _e('Item name', 'wpshop'); ?></th>
@@ -67,7 +68,7 @@ ob_start();
 	</tr>
 	{WPSHOP_TABLE_LINES}
 </table>
-<p><input type="checkbox" name="wps_credit_shipping_cost" id="wps_credit_shipping_cost" /> <label for="wps_credit_shipping_cost"><?php _e('Add shipping cost to credit', 'wpshop'); ?></label>  
+<p><input type="checkbox" name="wps_credit_shipping_cost" id="wps_credit_shipping_cost" /> <label for="wps_credit_shipping_cost"><?php _e('Add shipping cost to credit', 'wpshop'); ?></label>
 <h2><?php _e('Credit statut', 'wpshop'); ?></h2>
 <p><label for="wps_credit_status"><?php _e('Credit status', 'wpshop')?> : </label> <select id="wps_credit_status" name="wps_credit_status"><option value="not_paid"><?php _e('Not paid', 'wpshop'); ?></option><option value="paid"><?php _e('Paid', 'wpshop'); ?></option></select></p>
 <p><input type="checkbox" id="add_credit_value" name="wps_add_credit_value" /> <label for="add_credit_value"><?php _e('Add credit value to E-Shop Customer account', 'wpshop' ); ?></label></p>

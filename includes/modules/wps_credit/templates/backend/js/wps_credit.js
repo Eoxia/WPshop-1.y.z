@@ -1,6 +1,6 @@
 jQuery( document ) .ready(function () {
-	
-	
+
+
 	/**Ajax Form **/
 	jQuery( document ).on( 'click', '#wps_save_credit_button', function() {
 		jQuery('#wps_make_credit_form').ajaxForm({
@@ -12,7 +12,7 @@ jQuery( document ) .ready(function () {
 	        	if ( response[0] ) {
 	        		jQuery( '#wps_credit_list_container' ).html( response[1] );
 	        		jQuery( '.tb-close-icon' ).click();
-	        		
+
 	        		/** POS Addon **/
 	        		jQuery( '#wps_selected_order_shop_return' ).slideUp('slow', function() {
 	        			jQuery( '#wps_selected_order_shop_return' ).html( response[1] );
@@ -26,8 +26,8 @@ jQuery( document ) .ready(function () {
 	        },
 		}).submit();
 	});
-	
-	
+
+
 	jQuery( document ).on( 'change', '.wps_credit_change_status', function() {
 		var id = jQuery( this ).attr('id');
 		id = id.replace( 'credit_status_', '' );
@@ -35,6 +35,7 @@ jQuery( document ) .ready(function () {
 		jQuery( '#wps_credit_list_container' ).fadeOut('slow');
 		var data = {
 				action: "wps_credit_change_status",
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 				order_id: jQuery("#post_ID").val(),
 				credit_ref : id,
 				selected_status : jQuery( this ).val()
@@ -52,6 +53,5 @@ jQuery( document ) .ready(function () {
 			}, "json");
 	});
 
-	
+
 });
-	

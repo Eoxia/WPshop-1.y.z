@@ -60,7 +60,8 @@ if ( !class_exists('wps_credit') ) {
 					$output .= self::display_credit_list($post->ID);
 					$output .= '</div>';
 				}
-				$output .= '<a href="' .admin_url( 'admin-ajax.php'). '?action=wps_credit_make_credit&oid='.$post->ID.'" id="make_credit_button" class="thickbox button">' . __('Make a credit', 'wpshop') . '</a>';
+				$url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wps_credit_make_credit&oid='.$post->ID ), 'wps_credit_make_credit_interface', '_wpnonce' );
+				$output .= '<a href="' . $url . '" id="make_credit_button" class="thickbox button">' . __('Make a credit', 'wpshop') . '</a>';
 				$output .= '<img src="' .WPSHOP_LOADING_ICON. '" alt="' .__('Loading', 'wpshop'). '" class="wpshopHide" id="change_credit_status_loader" />';
 			}
 			echo $output;
@@ -240,6 +241,11 @@ if ( !class_exists('wps_credit') ) {
 
 		/** Display Configuration interface to make credit **/
 		function wps_credit_make_credit_interface() {
+			$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+			if ( !wp_verify_nonce( $_wpnonce, 'wps_credit_make_credit_interface' ) )
+				wp_die();
+
 			$order_id = ( !empty($_REQUEST['oid']) ) ? wpshop_tools::varSanitizer($_REQUEST['oid']) : null;
 			$tab_lines = '';
 			$price_piloting_option = get_option( 'wpshop_shop_price_piloting' );
@@ -283,6 +289,11 @@ if ( !class_exists('wps_credit') ) {
 
 		/** Make a credit action Ajax Form **/
 		function wps_make_credit_action() {
+			$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+			if ( !wp_verify_nonce( $_wpnonce, 'wps_make_credit_action' ) )
+				wp_die();
+
 			$status = false; $result = '';
 			$price_piloting_option = get_option( 'wpshop_shop_price_piloting' );
 			$product_list_to_return = array();
@@ -484,6 +495,11 @@ if ( !class_exists('wps_credit') ) {
 		}
 
 		function wps_credit_change_status() {
+			$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+			if ( !wp_verify_nonce( $_wpnonce, 'wps_credit_change_status' ) )
+				wp_die();
+
 			$status = false; $result = '';
 			$order_id = ( !empty($_POST['order_id']) ) ? wpshop_tools::varSanitizer( $_POST['order_id'] ): null;
 			$credit_ref = ( !empty($_POST['credit_ref']) ) ? wpshop_tools::varSanitizer( $_POST['credit_ref'] ): null;
