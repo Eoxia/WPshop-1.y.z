@@ -17,7 +17,7 @@ class wps_statistics_ctr {
 		add_action( 'admin_enqueue_scripts', array( $this, 'add_css_files' ) );
 
 		// Ajax Actions
-		add_action('wp_ajax_wps_reload_statistics', array( &$this, 'wps_reload_statistics') );
+		// add_action('wap_ajax_wps_reload_statistics', array( &$this, 'wps_reload_statistics') );
 		add_action('wp_ajax_wps_hourly_order_day', array( &$this, 'wps_hourly_order_day') );
 
 		$this->wps_stats_mdl = new wps_statistics_mdl();
@@ -220,12 +220,17 @@ class wps_statistics_ctr {
 	 * AJAX - Display Orders moments according the choosen day
 	 */
 	function wps_hourly_order_day() {
+		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_hourly_order_day' ) )
+			wp_die();
+
 		$status = false; $response = '';
 
 		$day = ( !empty($_POST['day']) ) ? sanitize_text_field( $_POST['day'] ) : null;
 		$width = !empty( $_POST['width'] ) ? (int) $_POST['width'] : 0;
 		$height = !empty( $_POST['height'] ) ? (int) $_POST['height'] : 0;
-		
+
 		$response = $this->wps_statistics_orders_moment( array( 'choosen_day' => $day, 'return' => true, 'width' => $width, 'height' => $height ) );
 		$status = true;
 		echo json_encode( array( 'status' => $status, 'response' => $response ) );
