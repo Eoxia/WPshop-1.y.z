@@ -66,6 +66,7 @@ jQuery(document).ready(function() {
 	jQuery( document ).on("click", ".wps_hide_notice_message", function() {
 		var data = {
 				action: "wps_hide_notice_messages",
+        _wpnonce: jQuery( this ).data( 'nonce' ),
 				indicator : jQuery("#hide_messages_indicator").val()
 			};
 			jQuery.post(ajaxurl, data, function(response){

@@ -1376,7 +1376,7 @@ ob_end_clean();
 /** Restart the order Button **/
 ob_start();
 ?>
-<img src="{WPSHOP_RESTART_ORDER_LOADER}" alt="Loading..." id="restart_order_loader" class="alignright" style="border:0px solid #FFF" /><button id="restart_order" class="alignright wps-restart-order-btn" ><?php _e('Restart the order', 'wpshop'); ?></button>
+<img src="{WPSHOP_RESTART_ORDER_LOADER}" alt="Loading..." id="restart_order_loader" class="alignright" style="border:0px solid #FFF" /><button data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_restart_the_order' ); ?>" id="restart_order" class="alignright wps-restart-order-btn" ><?php _e('Restart the order', 'wpshop'); ?></button>
 <?php
 $tpl_element['button_restart_the_order'] = ob_get_contents();
 ob_end_clean();

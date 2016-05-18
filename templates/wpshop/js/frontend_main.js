@@ -622,6 +622,7 @@ wpshop(document).ready(function(){
 		jQuery('#restart_order_loader').fadeIn();
 		var data = {
 			action: "restart_the_order",
+			_wpnonce: jQuery( this ).data( 'nonce' ),
 			order_id : jQuery('#wps_order_id').val()
 		};
 		jQuery.post( ajaxurl, data, function(response) {
@@ -650,6 +651,7 @@ wpshop(document).ready(function(){
 		jQuery(this).addClass('wps-bton-loading');
 		var data = {
 			action: "restart_the_order",
+			_wpnonce: jQuery( this ).data( 'nonce' ),
 			order_id : id,
 			make_order_again : '1'
 		};
