@@ -321,6 +321,7 @@ ob_start();
 ?>
 <form method="post" action="<?php echo admin_url('admin-ajax.php'); ?>" name="billingAndShippingForm" id="create_new_customer_in_admin">
 	<input type="hidden" name="action" value="create_new_customer" />
+	<?php wp_nonce_field( 'ajax_wpshop_create_new_customer' );
 	<div class="col1 wpshopShow" id="register_form_classic">
 		{WPSHOP_CUSTOMER_ADDRESSES_FORM_CONTENT}
 		{WPSHOP_CUSTOMER_ADDRESSES_FORM_BUTTONS} <div class="loading_picture_container wpshopHide" id="create_new_customer_loader_creation"><img src="{WPSHOP_LOADING_ICON}" alt="loading..." /></div>
@@ -365,7 +366,7 @@ ob_start();
 		<div class="wpshop_cls" >
 		<div class="alignleft wps_category_thumbnail_preview_container" >{WPSHOP_CATEGORY_THUMBNAIL_PREVIEW}</div>
 		<div class="category_new_picture_upload" ><?php _e('If you want to change the current picture choose a new file', 'wpshop'); ?><br/>
-		{WPSHOP_CATEGORY_DELETE_PICTURE_BUTTON} 
+		{WPSHOP_CATEGORY_DELETE_PICTURE_BUTTON}
 		<a href="#" role="button" class="wps-bton-first-mini-rounded" id="add_picture_to_category"><?php _e( 'Add a picture to category', 'wpshop' ); ?></a>
 		<input type="hidden" name="wps_category_picture_id" id="wps_category_picture_id" value="{WPSHOP_CATEGORY_PICTURE_ID}" />
 		</div>

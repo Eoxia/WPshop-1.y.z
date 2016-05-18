@@ -153,7 +153,7 @@ wpshop(document).ready(function(){
 		jQuery('.form-field #description').replaceWith( editor_wysiwyg_to_put );
 		jQuery('#wpshop_transform_taxonomy_description_field_into_wysiwyg_for_js_duplicate').remove();
 	}
-	
+
 
 
 	var profileTable = jQuery('.user-edit-php .form-table, .profile-php .form-table').not('.rich-text-tags').has('textarea#description');
@@ -726,10 +726,11 @@ wpshop(document).ready(function(){
 	}
 
 	jQuery("#create_new_customer").click( function(){
-
+		var _wpnonce = jQuery( this ).data( 'nonce' );
 		jQuery("#create_new_customer_dialog").dialog("open");
 		var data = {
 				action: "load_create_new_customer_interface"
+				_wpnonce: _wpnonce,
 			};
 			jQuery.post(ajaxurl, data, function(response) {
 				if ( response[0] ) {

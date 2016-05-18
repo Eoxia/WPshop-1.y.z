@@ -251,6 +251,7 @@ wpshop(document).ready(function(){
 	/** Variation live display	 */
 	var wpshop_display_info_about_value_ajax_request = null;
 	jQuery(".wpshop_display_information_about_value").live('change', function(){
+		var _wpnonce = jQuery( this ).data( 'nonce' );
 		var attribute_for_detail = [];
 		jQuery(".wpshop_display_information_about_value").each(function(){
 			if ( (jQuery(this).attr("type") == "checkbox") || (jQuery(this).attr("type") == "radio") ) {
@@ -265,6 +266,7 @@ wpshop(document).ready(function(){
 
 		var data = {
 			action:"wpshop_ajax_variation_selection_show_detail_for_value",
+			_wpnonce: _wpnonce,
 			attribute_for_detail: attribute_for_detail,
 		};
 
@@ -582,6 +584,7 @@ wpshop(document).ready(function(){
 		jQuery("loader_"+id).show();
 		var data = {
 				action: "change_address",
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 				"address_type":jQuery(this).attr('id'),
 				"address_id":jQuery(this).val()
 			};
