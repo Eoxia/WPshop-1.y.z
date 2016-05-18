@@ -4,7 +4,7 @@ jQuery( document ).ready(function() {
 	jQuery( document ).on( 'click', '.wps-modal-forgot-password-opener', function(e) {
 		e.preventDefault();
 		var data = {
-				action: "wps_fill_forgot_password_modal"
+				action: "wps_fill_forgot_password_modal",
 				_wpnonce: jQuery( this ).data( 'nonce' ),
 			};
 			jQuery.post(ajaxurl, data, function(response) {

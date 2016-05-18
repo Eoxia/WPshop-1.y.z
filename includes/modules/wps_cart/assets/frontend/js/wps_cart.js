@@ -188,7 +188,7 @@ jQuery( document ).ready( function() {
 function reload_wps_cart() {
 	jQuery( '#wps_cart_container' ).addClass( 'wps-bloc-loading');
 	var data = {
-			action: "wps_reload_cart"
+			action: "wps_reload_cart",
 			_wpnonce: jQuery( '#wps_cart_container' ).data( 'nonce' ),
 		};
 		jQuery.post(ajaxurl, data, function(response){
@@ -228,7 +228,7 @@ function reload_mini_cart() {
 /** Reload Summary Cart **/
 function reload_summary_cart() {
 	var data = {
-			action: "wps_reload_summary_cart"
+			action: "wps_reload_summary_cart",
 			_wpnonce: jQuery( "#wps_resume_cart_container" ).data( 'nonce' ),
 		};
 		jQuery.post(ajaxurl, data, function(response){
