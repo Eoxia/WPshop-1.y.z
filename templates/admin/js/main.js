@@ -293,20 +293,16 @@ wpshop(document).ready(function(){
 	});
 	wpshop("#wpshop_attribute_unit_manager_opener").click(function(){
 		wpshop("#wpshop_attribute_unit_manager").html("<div class='wpshopCenterContainer' >" + wpshop("#wpshopLoadingPicture").html() + "</div>");
-		wpshop("#wpshop_attribute_unit_manager").load(WPSHOP_AJAX_FILE_URL,{
-			"post": "true",
-			"elementCode": "attribute_unit_management",
-			"action": "load_unit_interface"
+		wpshop("#wpshop_attribute_unit_manager").load(ajaxurl,{
+			"action": "wps_attribute_unit_interface"
 		});
 		wpshop("#wpshop_attribute_unit_manager").dialog("open");
 	});
 
 	wpshop("#wpshop_attribute_group_unit_manager_opener").click(function(){
 		wpshop("#wpshop_attribute_unit_manager").html("<div class='wpshopCenterContainer' >" + wpshop("#wpshopLoadingPicture").html() + "</div>");
-		wpshop("#wpshop_attribute_unit_manager").load(WPSHOP_AJAX_FILE_URL,{
-			"post": "true",
-			"elementCode": "attribute_unit_management",
-			"action": "load_unit_interface"
+		wpshop("#wpshop_attribute_unit_manager").load(ajaxurl,{
+			"action": "wps_attribute_unit_interface"
 		});
 		wpshop("#wpshop_attribute_unit_manager").dialog("open");
 	});

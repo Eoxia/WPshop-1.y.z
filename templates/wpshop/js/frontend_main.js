@@ -308,7 +308,7 @@ wpshop(document).ready(function(){
 		if(coupon_code == '')
 			return false;
 
-		jQuery.getJSON(WPSHOP_AJAX_URL, { post: "true", elementCode: "ajax_cartAction", action: "applyCoupon", coupon_code: coupon_code },
+		jQuery.getJSON(ajaxurl, { action: "wps_cart_action_apply_coupon", coupon_code: coupon_code },
 			function(data){
 				if(data[0]) {
 					reload_cart();
@@ -425,7 +425,7 @@ wpshop(document).ready(function(){
 
 		var criteria = jQuery('.hidden_sorting_criteria_field option:selected',wpshop_sorting_bloc).val();
 
-		var ajax_url = WPSHOP_AJAX_URL+'?post=true&elementCode=products_by_criteria&page_number='+page_number+'&criteria='+criteria;
+		var ajax_url = ajaxurl+'?action=wps_products_by_criteria&page_number='+page_number+'&criteria='+criteria;
 		jQuery('.hidden_sorting_fields',wpshop_sorting_bloc).each(function() {
 			ajax_url += '&'+jQuery(this).attr('name')+'='+jQuery(this).val();
 		});
@@ -453,7 +453,7 @@ wpshop(document).ready(function(){
 		var offset = jQuery('.sorting_bloc').offset();
 		jQuery('html, body').stop(true).animate({ scrollTop: offset.top }, 800);
 		var criteria = '';
-		var ajax_url = WPSHOP_AJAX_URL+'?post=true&elementCode=products_by_criteria&page_number='+page_number+'&criteria='+criteria;
+		var ajax_url = ajaxurl+'?action=wps_products_by_criteria&page_number='+page_number+'&criteria='+criteria;
 		jQuery('.hidden_sorting_fields').each(function() {
 			ajax_url += '&'+jQuery(this).attr('name')+'='+jQuery(this).val();
 		});

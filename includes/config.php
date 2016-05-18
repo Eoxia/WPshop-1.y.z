@@ -66,7 +66,7 @@ DEFINE('WPSHOP_DEFINED_SHOP_TYPE', $wpshop_shop_type);
 	DEFINE('WPSHOP_WP_UPLOAD_URL', $wp_upload_dir['baseurl'] . '/');
 
 /*	Define external ajax file url	*/
-	DEFINE('WPSHOP_AJAX_FILE_URL', WPSHOP_INCLUDES_URL . 'ajax.php');
+//	DEFINE('WPSHOP_AJAX_FILE_URL', WPSHOP_INCLUDES_URL . 'ajax.php');
 
 /*	Define element for new type creation	*/
 	DEFINE('WPSHOP_NEWTYPE_IDENTIFIER_ENTITIES', 'wpshop_entities');

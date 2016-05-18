@@ -714,12 +714,8 @@ class wpshop_attributes_set{
 				resizable: false,
 				buttons:{
 					"'.__('Add', 'wpshop').'": function(){
-						jQuery("#managementContainer").load(WPSHOP_AJAX_FILE_URL,{
-							"post": "true",
-							"elementCode": "' . self::currentPageCode . '",
-							"action": "saveNewAttributeSetSection",
-							"elementType": "attributeSetSection",
-							"elementIdentifier": "' . $attributeSetId . '",
+						jQuery("#managementContainer").load(ajaxurl,{
+							"action": "wps_attribute_set_section_new",
 							"attributeSetSectionName": jQuery("#'.$dialog_input_identifier.'").val()
 						});
 						jQuery(this).children("img").show();
@@ -867,12 +863,8 @@ class wpshop_attributes_set{
 			$user_more_script .= '
 			jQuery(".wpshop_attr_tool_box_delete").click(function(){
 				if(confirm(wpshopConvertAccentTojs("'.__('Are you sure you want to delete this atribute set section?', 'wpshop').'"))){
-					jQuery("#ajax-response").load(WPSHOP_AJAX_FILE_URL,{
-						"post": "true",
-						"elementCode": "' . self::currentPageCode . '",
-						"action": "deleteAttributeSetSection",
-						"elementType": "attributeSetSection",
-						"elementIdentifier": "' . $attributeSetId . '",
+					jQuery("#ajax-response").load(ajaxurl,{
+						"action": "wps_attribute_set_section_delete",
 						"attributeSetSectionId": jQuery(this).attr("id").replace("wpshop_set_section_delete_","")
 					});
 				}
