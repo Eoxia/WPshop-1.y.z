@@ -220,7 +220,10 @@ class wps_installer_ctr {
 	 * AJAX - Launch ajax action allowing to hide welcome panel for current user
 	 */
 	function wps_hide_welcome_panel() {
-		check_ajax_referer( 'wps-installer-welcome-panel-close', 'wpshop_ajax_nonce' );
+		$wpshop_ajax_nonce = !empty( $_REQUEST['wpshop_ajax_nonce'] ) ? sanitize_text_field( $_REQUEST['wpshop_ajax_nonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps-installer-welcome-panel-close' ) )
+			wp_die();
 
 		$user_pref = get_user_meta( get_current_user_id(), '_wps_hide_notice_messages_indicator', true );
 		$user_pref[ 'welcome-banner' ] = true;
