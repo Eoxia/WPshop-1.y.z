@@ -172,11 +172,12 @@ jQuery( document ).ready(function(){
 		var product_title = jQuery( this ).find('td:first').html().split( "<br>" )[0];
 		var product_id = jQuery( this ).data( "id" );
 		var product_type = jQuery( this ).data( "subtype" );
+		var _wpnonce = jQuery( this ).data( "nonce" );
 
 		/** Check if it's a product with variation */
 		if ( 'variations' == product_type ) {
 			/** Open the modal to select the variation **/
-			tb_show( product_title, ajaxurl + "?action=wps-pos-product-variation-selection&product_id=" + product_id + "&width=350px");
+			tb_show( product_title, ajaxurl + "?action=wps-pos-product-variation-selection&_wpnonce=" + _wpnonce + "&product_id=" + product_id + "&width=350px");
 			/**	First start by adding the loading class	*/
 			jQuery( ".wps-pos-product-listing" ).removeClass( "wps-bloc-loading" );
 		}
@@ -366,6 +367,7 @@ function search_product( event ) {
 	jQuery( "#wpspos-dashboard-product-metabox" ).children( ".wps-pos-alphabet-container" ).children( "button:first-child" ).removeClass( "wps-bton-first-rounded" ).addClass( "wps-bton-third-rounded" );
 	var data = {
 		action: "wpspos-product-search",
+		_wpnonce: jQuery( "input[name=wps-pos-product-to-choose]" ).data( 'nonce' ),
 		term: jQuery( "input[name=wps-pos-product-to-choose]" ).val(),
 		search_in: where_to_search,
 	};
@@ -378,7 +380,7 @@ function search_product( event ) {
 			}
 			else if ( "variation_selection" == response[ 'action' ] )  {
 				/** Open the modal to select the variation **/
-				tb_show( wps_pos_product_with_variation_box, ajaxurl + "?action=wps-pos-product-variation-selection&product_id=" + response[ 'output' ] + "&width=350px");
+				tb_show( wps_pos_product_with_variation_box, ajaxurl + "?action=wps-pos-product-variation-selection&_wpnonce=" + response[ '_wpnonce' ] + "&product_id=" + response[ 'output' ] + "&width=350px");
 			}
 			else {
 				jQuery( ".wps-pos-product-listing" ).html( response[ 'output' ] );

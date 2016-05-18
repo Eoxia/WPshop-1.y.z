@@ -1,7 +1,7 @@
 <?php if ( !defined( 'ABSPATH' ) ) exit;
 ?>
 <div class="wps-pos-element-metabox-selection wps-pos-element-metabox-selection-product" >
-	<input type="text" value="" placeholder="<?php _e( 'Start typing here for product search', 'wps-pos-i18n' ); ?>" name="wps-pos-product-to-choose" class="wps-pos-product-search" />
+	<input type="text" value="" data-nonce="<?php echo wp_create_nonce( 'ajax_pos_product_search' ); ?>" placeholder="<?php _e( 'Start typing here for product search', 'wps-pos-i18n' ); ?>" name="wps-pos-product-to-choose" class="wps-pos-product-search" />
 	<button class="wps-bton-first-rounded" id="wpspos-product-search" ><i class="dashicons dashicons-search" ></i></button>
 
 	<label style="margin-left: 50px;" >
