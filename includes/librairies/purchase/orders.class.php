@@ -139,7 +139,8 @@ class wpshop_orders {
 			}
 			if(!empty($order_postmeta['order_temporary_key'])){
 				$order_main_info .=  '<span class="dashicons dashicons-arrow-right"></span> <strong>'.__('Pre-order reference','wpshop').': </strong>'.$order_postmeta['order_temporary_key'].'<br/>';
-				$order_main_info .= '<a href="' .WPSHOP_TEMPLATES_URL . 'invoice.php?order_id=' . $_GET['post']. '&mode=pdf">' .__('Download the quotation', 'wpshop'). '</a><br />';
+				$post_ID = !empty( $_GET['post'] ) ? (int) $_GET['post'] : 0;
+				$order_main_info .= '<a href="' .WPSHOP_TEMPLATES_URL . 'invoice.php?order_id=' . $post_ID . '&mode=pdf">' .__('Download the quotation', 'wpshop'). '</a><br />';
 			}
 			if(!empty($order_postmeta['order_invoice_ref'])){
 				$sub_tpl_component = array();
@@ -174,11 +175,11 @@ class wpshop_orders {
 				<!-- <br/><input type="checkbox" name="notif_the_customer_sendsms" id="wpshop_order_notif_the_customer_sendsms_on_update" /> <label for="wpshop_order_nnotif_the_customer_sendsms_on_update" >'.__('Send a SMS to the customer', 'wpshop').'</label> -->
 			</div>';
 		}
-		
+
 		if( ( ( !empty($order_postmeta['cart_type']) && $order_postmeta['cart_type'] == 'quotation' ) || !empty( $order_postmeta['order_temporary_key'] ) ) && $order_postmeta['order_status'] != 'canceled' && (float) $order_postmeta['order_amount_to_pay_now'] != (float) 0 ) {
 			$tpl_component['ADMIN_ORDER_ACTIONS_LIST'] .= '<div class="wps-product-section">' . self::display_customer_pay_quotation( isset( $order_postmeta['pay_quotation'] ), $order->ID ) . '</div>';
 		}
-		
+
 		/*Add the button regarding the order status**/
 		if ( !empty($order_postmeta['order_status']) ) {
 			switch ( $order_postmeta['order_status'] ) {
@@ -477,17 +478,21 @@ class wpshop_orders {
 	}
 
 	public static function list_table_filters() {
-		if (isset($_GET['post_type'])) {
-			$post_type = $_GET['post_type'];
+		$post_type = !empty( $_GET['post_type'] ) ? sanitize_text_field( $_GET['post_type'] ) : '';
+		$entity_filter = !empty( $_GET['entity_filter'] ) ? sanitize_text_field( $_GET['entity_filter'] ) : '';
+		$entity_filter_btpf = !empty( $_GET['entity_filter_btpf'] ) ? sanitize_text_field( $_GET['entity_filter_btpf'] ) : '';
+		$entity_filter_btps = !empty( $_GET['entity_filter_btps'] ) ? sanitize_text_field( $_GET['entity_filter_btps'] ) : '';
+
+		if (isset($post_type)) {
 			if (post_type_exists($post_type) && ($post_type == WPSHOP_NEWTYPE_IDENTIFIER_ORDER)) {
 				$filter_possibilities = array();
 				$filter_possibilities['all'] = __('-- Select Filter --', 'wpshop');
 				$filter_possibilities['only_orders'] = __('List orders only', 'wpshop');
 				$filter_possibilities['quotations'] = __('List quotations only', 'wpshop');
 				$filter_possibilities['free_orders'] = __('List orders free', 'wpshop');
-				echo wpshop_form::form_input_select('entity_filter', 'entity_filter', $filter_possibilities, (!empty($_GET['entity_filter']) ? $_GET['entity_filter'] : ''), '', 'index');
-				$min = ( !empty($_GET['entity_filter_btpf']) && is_numeric($_GET['entity_filter_btpf']) ) ? $_GET['entity_filter_btpf'] : '';
-				$max = ( !empty($_GET['entity_filter_btps']) && is_numeric($_GET['entity_filter_btps']) ) ? $_GET['entity_filter_btps'] : '';
+				echo wpshop_form::form_input_select('entity_filter', 'entity_filter', $filter_possibilities, $entity_filter, '', 'index');
+				$min = $entity_filter_btpf;
+				$max = $entity_filter_btps;
 				echo ' <label for="entity_filter_btpf">'.__('Between two prices', 'wpshop').'</label> ';
 				echo wpshop_form::form_input('entity_filter_btpf', 'entity_filter_btpf', $min, 'text', 'placeholder="'.__('Minimum price', 'wpshop').'"', null);
 				echo wpshop_form::form_input('entity_filter_btps', 'entity_filter_btps', $max, 'text', 'placeholder="'.__('Maximum price', 'wpshop').'"', null);
@@ -497,10 +502,14 @@ class wpshop_orders {
 
 	public static function list_table_filter_parse_query($query) {
 		global $pagenow, $wpdb;
+		$post_type = !empty( $_GET['post_type'] ) ? sanitize_text_field( $_GET['post_type'] ) : '';
+		$entity_filter = !empty( $_GET['entity_filter'] ) ? sanitize_text_field( $_GET['entity_filter'] ) : '';
+		$entity_filter_btpf = !empty( $_GET['entity_filter_btpf'] ) ? sanitize_text_field( $_GET['entity_filter_btpf'] ) : '';
+		$entity_filter_btps = !empty( $_GET['entity_filter_btps'] ) ? sanitize_text_field( $_GET['entity_filter_btps'] ) : '';
 
-		if ( is_admin() && ($pagenow == 'edit.php') && !empty( $_GET['post_type'] ) && ( $_GET['post_type'] == WPSHOP_NEWTYPE_IDENTIFIER_ORDER ) && !empty( $_GET['entity_filter'] ) ) {
+		if ( is_admin() && ($pagenow == 'edit.php') && !empty( $post_type ) && ( $post_type == WPSHOP_NEWTYPE_IDENTIFIER_ORDER ) && !empty( $entity_filter ) ) {
 			$check = null;
-			switch ( $_GET['entity_filter'] ) {
+			switch ( $entity_filter ) {
 				case 'all':
 					$sql_query = $wpdb->prepare(
 						"SELECT ID
@@ -569,8 +578,8 @@ class wpshop_orders {
 					$min = 'minimum';
 					$max = 'maximum';
 				} else {
-					$min = ( !empty($_GET['entity_filter_btpf']) && is_numeric($_GET['entity_filter_btpf']) ) ? $_GET['entity_filter_btpf'] : 'minimum';
-					$max = ( !empty($_GET['entity_filter_btps']) && is_numeric($_GET['entity_filter_btps']) ) ? $_GET['entity_filter_btps'] : 'maximum';
+					$min = ( !empty($_GET['entity_filter_btpf']) && is_numeric($_GET['entity_filter_btpf']) ) ? sanitize_text_field( $_GET['entity_filter_btpf'] ) : 'minimum';
+					$max = ( !empty($_GET['entity_filter_btps']) && is_numeric($_GET['entity_filter_btps']) ) ? sanitize_text_field( $_GET['entity_filter_btps'] ) : 'maximum';
 				}
 				$results = $wpdb->get_results($sql_query);
 				$post_id_list = array();
