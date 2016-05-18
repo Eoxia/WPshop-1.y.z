@@ -38,7 +38,10 @@ class wps_product_quick_add {
 	 * AJAX - Charge le fomulaire d'ajout rapide d'un produit / Load the form for new product quick add
 	 */
 	function product_creation() {
-		check_ajax_referer( 'wps-product-quick-nonce', 'wps-nonce' );
+		$_wpnonce = !empty( $_POST['wps-nonce'] ) ? sanitize_text_field( $_POST['wps-nonce'] ) : '';
+		if ( !wp_verify_nonce( $_wpnonce, 'wps-product-quick-nonce' ) )
+			wp_die();
+
 		require_once( wpshop_tools::get_template_part( WPSPDTQUICK_DIR, WPSPDTQUICK_TEMPLATES_MAIN_DIR, "backend", "product_creation" ) );
 		wp_die( );
 	}
@@ -47,6 +50,11 @@ class wps_product_quick_add {
 	 * AJAX - Recharge la liste des attributs du groupe sélectionné par l'administratuer pour la création du nouveau produit / Reload attribute list for the selected attribute set, choosen by administrator for new product creation
 	 */
 	function attribute_list_reload() {
+		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'attribute_list_reload' ) )
+			wp_die();
+
 		$attribute_set = !empty( $_POST['attribute_set'] ) ? (int) $_POST['attribute_set'] : 0;
 		$this->display_attribute( $attribute_set );
 		wp_die( );
@@ -56,6 +64,11 @@ class wps_product_quick_add {
 	 * AJAX - Création d'un nouveau produit / Create a new product
 	 */
 	function create_product() {
+		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'create_product' ) )
+			wp_die();
+
 		global $wpdb;
 		$response = array(
 			'status' => false,

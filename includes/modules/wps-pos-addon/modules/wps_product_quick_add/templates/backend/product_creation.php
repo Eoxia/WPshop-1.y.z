@@ -37,7 +37,7 @@
 	<?php if ( !empty( $attribute_set_list ) && ( 1 <= count( $attribute_set_list ) ) ) : ?>
 	<div style=" width:80%; margin: 0 auto 10px auto; " >
 		<?php _e( 'Product type to create', 'wpshop' ); ?> :
-		<select name="wps-product-attribute-set" >
+		<select name="wps-product-attribute-set" data-nonce="<?php echo wp_create_nonce( 'attribute_list_reload' ); ?>" >
 	<?php foreach( $attribute_set_list as $attribute_set ) : ?>
 			<?php $is_default_set = false; ?>
 			<?php if ( !empty( $attribute_set->default_set ) && strtolower( __( 'Yes', 'wpshop' ) ) == strtolower( __( $attribute_set->default_set, 'wpshop' ) ) ) : ?>
@@ -65,6 +65,7 @@
 			jQuery( "#wps-product-quick-creation-form-attributes" ).addClass( "wps-bloc-loading" );
 			var data = {
 				"action": "wps-product-quick-add-reload-attribute-list",
+				"_wpnonce": jQuery( this ).data( 'nonce' ),
 				"attribute_set" : jQuery( this ).val(),
 			};
 			jQuery( "#wps-product-quick-creation-form-attributes" ).load( ajaxurl, data, function() {
