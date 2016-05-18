@@ -74,7 +74,7 @@ ob_end_clean();
 ob_start();
 ?>
 <div class="wpshop_cart_summary_detail" ></div><div class="wpshop_cart_alert" ></div>
-<div class="wpshop_cart_summary" >{WPSHOP_CART_MINI_CONTENT}</div>
+<div class="wpshop_cart_summary" data-nonce="<?php echo wp_create_nonce( '' ); ?>" >{WPSHOP_CART_MINI_CONTENT}</div>
 <?php
 $tpl_element['mini_cart_container'] = ob_get_contents();
 ob_end_clean();

@@ -1060,6 +1060,7 @@ function reload_cart() {
 
 	var data = {
 		action: "wpshop_display_cart",
+		_wpnonce: jQuery( '.wpshop_cart_summary' ).data( 'nonce' ),
 		display_button: jQuery("#wpshop_cart_hide_button_current_state").val(),
 	};
 	jQuery.post(ajaxurl, data, function(response){
@@ -1069,7 +1070,8 @@ function reload_cart() {
 
 	if(jQuery('.wpshop_cart_summary').attr("class") != undefined){
 		var data = {
-			action: "wpshop_reload_mini_cart"
+			action: "wpshop_reload_mini_cart",
+			_wpnonce: jQuery( '.wpshop_cart_summary' ).data( 'nonce' ),
 		};
 		jQuery('.wpshop_cart_summary').load(ajaxurl, data, function(response){
 

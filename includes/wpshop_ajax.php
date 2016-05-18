@@ -2165,6 +2165,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	 * Display cart after doing an action on it
 	 */
 	function ajax_wpshop_display_cart() {
+		check_ajax_referer( 'ajax_wpshop_display_cart' );
 		ini_set('display_errors', true);
 		error_reporting(E_ALL);
 		$wps_cart_ctr = new wps_cart();
@@ -2179,6 +2180,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	 * Display mini cart widgte after doing an action on it
 	 */
 	function ajax_wpshop_reload_mini_cart(){
+		check_ajax_referer( 'ajax_wpshop_display_cart' );
 		echo wpshop_cart::mini_cart_content();
 		die();
 	}
