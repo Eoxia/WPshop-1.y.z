@@ -238,6 +238,11 @@ class wps_opinion_ctr {
 	}
 
 	function wps_update_opinion_star_rate() {
+		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_update_opinion_star_rate' ) )
+			wp_die();
+
 		$status = false;
 		$output = '';
 		$rate = !empty( $_POST['rate'] ) ? (int) $_POST['rate'] : 0;
@@ -254,6 +259,11 @@ class wps_opinion_ctr {
 	 * AJAX - Save opinions
 	 */
 	function wps_opinion_save_form() {
+		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_opinion_save_form' ) )
+			wp_die();
+
 		$status = false; $response = '';
 		$wps_opinion_mdl = new wps_opinion_model();
 		$user_id = get_current_user_id();
@@ -295,6 +305,11 @@ class wps_opinion_ctr {
 	 * AJAX - Refresh Opinion list
 	 */
 	function wps_refresh_add_opinion_list() {
+		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_refresh_add_opinion_list' ) )
+			wp_die();
+
 		$status = true; $response = '';
 		$response = $this->display_opinion_customer_interface();
 		echo json_encode( array('status' => $status, 'response' => $response ) );
@@ -305,6 +320,11 @@ class wps_opinion_ctr {
 	 * AJAX - Fill the opinion modal
 	 */
 	function wps_fill_opinion_modal() {
+		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_fill_opinion_modal' ) )
+			wp_die();
+
 		$status = true; $title = ''; $content = '';
 		$title = __( 'Add your opinion', 'wps_opinion');
 		ob_start();

@@ -68,7 +68,7 @@ $account_dashboard_part = !empty( $_GET['account_dashboard_part'] ) ? sanitize_t
 		</ul>
 	</div>
 	<div class="wps-section-content">
-		<div class="wps-activ" id="wps_dashboard_content">
+		<div class="wps-activ" id="wps_dashboard_content" data-nonce="<?php echo wp_create_nonce( 'wps_refresh_add_opinion_list' ); ?>">
 			<?php echo $content; ?>
 		</div>
 	</div>
