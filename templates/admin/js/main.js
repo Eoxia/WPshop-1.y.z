@@ -926,6 +926,7 @@ wpshop(document).ready(function(){
 		var order_id = jQuery( '#post_ID' ).val();
 		var data = {
 				action: "wps_send_direct_payment_link",
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 				order_id : order_id
 			};
 			jQuery.post(ajaxurl, data, function(response) {

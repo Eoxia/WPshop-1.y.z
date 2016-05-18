@@ -2925,6 +2925,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 
 	/** Send a direct payment Link **/
 	function wps_send_direct_payment_link() {
+		check_ajax_referer( 'wps_send_direct_payment_link' );
 		global $wpdb;
 		$status = false; $response = '';
 		$order_id = ( !empty($_POST['order_id']) ) ? intval( $_POST['order_id'] ) : null;
