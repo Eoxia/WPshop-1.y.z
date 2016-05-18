@@ -301,6 +301,11 @@ class wps_pos_addon_customer {
 	 * AJAX - Selection et affectation du client à la commande en cours / Set selected user as new order owner
 	 */
 	function ajax_pos_customer_choice() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'ajax_pos_customer_choice' ) )
+			wp_die();
+
 		$response = array(
 			'status'		=> false,
 			'element_type'	=> 'customer',
@@ -329,6 +334,11 @@ class wps_pos_addon_customer {
 	 * AJAX - Recherche dans la liste des clients du site / Search into website customer list
 	 */
 	function ajax_pos_customer_search() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'ajax_pos_customer_search' ) )
+			wp_die();
+
 		global $wpdb;
 		$term = ( !empty( $_POST['term'] ) ) ? sanitize_text_field( $_POST['term'] ) : '';
 

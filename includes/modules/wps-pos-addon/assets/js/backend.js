@@ -116,7 +116,7 @@ jQuery( document ).ready(function(){
 		jQuery( ".wps-pos-customer-listing" ).addClass( "wps-bloc-loading" );
 
 		/**	Launch an ajax request for displaying	*/
-		wpspos_set_customer_for_order( jQuery( this ).attr( "data-id" ) );
+		wpspos_set_customer_for_order( jQuery( this ).attr( "data-id" ), jQuery( this ).data( 'nonce' ) );
 	});
 
 	/**	Trigger event on change customer button */
@@ -139,6 +139,7 @@ jQuery( document ).ready(function(){
 			jQuery( "#wpspos-dashboard-customer-metabox" ).children( ".wps-pos-alphabet-container" ).children( "button:first-child" ).removeClass( "wps-bton-first-rounded" ).addClass( "wps-bton-third-rounded" );
 			var data = {
 				action: "wpspos-customer-search",
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 				term: jQuery(this).val(),
 			};
 			customer_search = jQuery.post( ajaxurl, data, function( response ){
@@ -485,9 +486,10 @@ function display_money_cash_back() {
 }
 
 
-function wpspos_set_customer_for_order( customer_to_choose ) {
+function wpspos_set_customer_for_order( customer_to_choose, _wpnonce ) {
 	var data = {
 		action: "wpspos_set_customer_order",
+		_wpnonce: _wpnonce,
 		customer: customer_to_choose,
 	};
 	jQuery.post( ajaxurl, data, function( response ) {
