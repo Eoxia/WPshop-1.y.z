@@ -2,6 +2,7 @@
 ?>
 <form id="wps_product_quick_add_form" method="post" action="<?php echo admin_url( 'admin-ajax.php' ); ?>" >
 	<input type="hidden" name="action" value="wpspos-product-quick-add">
+	<?php wp_nonce_field( 'create_product' ); ?>
 	<div class="wps-boxed" style="margin-top:10px;" >
 		<span class="wps-h5"><?php _e( 'Product', 'wpshop'); ?></span>
 

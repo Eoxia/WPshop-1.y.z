@@ -20,7 +20,7 @@ class wpspos_product_quick_add {
 	public function __construct() {
 		/**	Affiche un formulaire permettant de créer un produit / Display a form allowing to add a new product	*/
 		add_action( 'wp_ajax_wpspos-product-quick-creation', array( $this, 'product_creation' ) );
-	//	add_action( 'wp_ajax_wpspos-product-quick-add-reload-attribute-list', array( $this, 'attribute_list_reload' ) );
+	//	add_action( 'wap_ajax_wpspos-product-quick-add-reload-attribute-list', array( $this, 'attribute_list_reload' ) );
 		add_action( 'wp_ajax_wpspos-product-quick-add', array( $this, 'create_product' ) );
 	}
 
@@ -37,7 +37,11 @@ class wpspos_product_quick_add {
 	 * AJAX - Charge le fomulaire d'ajout rapide d'un produit / Load the form for new product quick add
 	 */
 	function product_creation() {
-		check_ajax_referer( 'wps-product-quick-nonce', 'wps-nonce' );
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps-product-quick-nonce' ) )
+			wp_die();
+
 		require_once( wpshop_tools::get_template_part( WPSPOSPDTQUICK_DIR, WPSPOSPDTQUICK_TEMPLATES_MAIN_DIR, "backend", "product_creation" ) );
 		wp_die( );
 	}
@@ -55,6 +59,11 @@ class wpspos_product_quick_add {
 	 * AJAX - Création d'un nouveau produit / Create a new product
 	 */
 	function create_product() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'create_product' ) )
+			wp_die();
+
 		global $wpdb;
 		$response = array(
 			'status' => false,
