@@ -3315,7 +3315,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	/* ATTRIBUTES SET */
 
 	function saveNewAttributeSetSection() {
-		$attributeSetSectionName = wpshop_tools::varSanitizer($_REQUEST['attributeSetSectionName']);
+		$attributeSetSectionName = sanitize_text_field($_REQUEST['attributeSetSectionName']);
 		$attributeSetInfos = array();
 		$attributeSetInfos['id'] = '';
 		$attributeSetInfos['status'] = 'valid';
@@ -3339,11 +3339,11 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action( 'wp_ajax_wps_attribute_set_section_new', 'saveNewAttributeSetSection' );
 
 	function editAttributeSetSection() {
-		$attributeSetSectionName = wpshop_tools::varSanitizer($_REQUEST['attributeSetSectionName']);
-		$attributeSetSectionId = wpshop_tools::varSanitizer($_REQUEST['attributeSetSectionId']);
-		$attributeSetSectionDefault = wpshop_tools::varSanitizer($_REQUEST['attributeSetSectionDefault']);
-		$backend_display_type = wpshop_tools::varSanitizer($_REQUEST['attributeSetSectionDisplayType']);
-		$display_on_frontend = wpshop_tools::varSanitizer($_REQUEST['attributeSetSectionDisplayinFrontEnd']);
+		$attributeSetSectionName = sanitize_title($_REQUEST['attributeSetSectionName']);
+		$attributeSetSectionId = sanitize_key($_REQUEST['attributeSetSectionId']);
+		$attributeSetSectionDefault = sanitize_text_field($_REQUEST['attributeSetSectionDefault']);
+		$backend_display_type = sanitize_text_field($_REQUEST['attributeSetSectionDisplayType']);
+		$display_on_frontend = sanitize_text_field($_REQUEST['attributeSetSectionDisplayinFrontEnd']);
 		$backend_display_type = in_array($backend_display_type, array('movable-tab','fixed-tab')) ? $backend_display_type : 'fixed-tab';
 
 		if($attributeSetSectionDefault == 'yes'){
@@ -3365,7 +3365,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action( 'wp_ajax_wps_attribute_set_section_edit', 'editAttributeSetSection' );
 
 	function deleteAttributeSetSection() {
-		$attributeSetSectionId = wpshop_tools::varSanitizer($_REQUEST['attributeSetSectionId']);
+		$attributeSetSectionId = (int) $_REQUEST['attributeSetSectionId'];
 		$attributeSetInfos = array();
 		$attributeSetInfos['status'] = 'deleted';
 		$attributeSetInfos['last_update_date'] = current_time('mysql', 0);
@@ -3415,7 +3415,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	function add_edit_attribute_unit() {
 		$atribute_unit = '';
 		if ( $action == 'edit_attribute_unit' ) {
-			$atribute_unit = wpshop_tools::varSanitizer($_REQUEST['elementIdentifier']);
+			$atribute_unit = (int) $_REQUEST['elementIdentifier'];
 		}
 		echo wpshop_attributes_unit::elementEdition($atribute_unit);
 	}
@@ -3426,11 +3426,11 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		$save_output = '';
 
 		$attribute_unit_informations['id'] = '';
-		$attribute_unit_informations['status'] = wpshop_tools::varSanitizer($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['status']);
+		$attribute_unit_informations['status'] = sanitize_text_field($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['status']);
 		$attribute_unit_informations['creation_date'] = date('Y-m-d H:i:s');
-		$attribute_unit_informations['name'] = wpshop_tools::varSanitizer($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['name']);
-		$attribute_unit_informations['unit'] = wpshop_tools::varSanitizer($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['unit']);
-		$attribute_unit_informations['group_id'] = wpshop_tools::varSanitizer($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['group_id']);
+		$attribute_unit_informations['name'] = sanitize_text_field($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['name']);
+		$attribute_unit_informations['unit'] = sanitize_text_field($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['unit']);
+		$attribute_unit_informations['group_id'] = sanitize_key($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['group_id']);
 
 		$save_unit_result = wpshop_database::save($attribute_unit_informations, WPSHOP_DBT_ATTRIBUTE_UNIT);
 		if($save_unit_result == 'done'){
@@ -3449,15 +3449,15 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	function update_attribute_unit() {
 		$save_output = '';
 
-		$attributeUnitId = wpshop_tools::varSanitizer($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['id']);
-		$attribute_unit_informations['status'] = wpshop_tools::varSanitizer($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['status']);
+		$attributeUnitId = sanitize_key($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['id']);
+		$attribute_unit_informations['status'] = sanitize_text_field($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['status']);
 		$attribute_unit_informations['last_update_date'] = date('Y-m-d H:i:s');
-		$attribute_unit_informations['name'] = wpshop_tools::varSanitizer($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['name']);
-		$attribute_unit_informations['unit'] = wpshop_tools::varSanitizer($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['unit']);
-		$attribute_unit_informations['group_id'] = wpshop_tools::varSanitizer($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['group_id']);
-		$attribute_unit_informations['is_default_of_group'] = wpshop_tools::varSanitizer($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['is_default_of_group']);
-		$attribute_unit_informations['change_rate'] = wpshop_tools::varSanitizer($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['change_rate']);
-		$attribute_unit_informations['code_iso'] = wpshop_tools::varSanitizer($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['code_iso']);
+		$attribute_unit_informations['name'] = sanitize_text_field($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['name']);
+		$attribute_unit_informations['unit'] = sanitize_text_field($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['unit']);
+		$attribute_unit_informations['group_id'] = sanitize_key($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['group_id']);
+		$attribute_unit_informations['is_default_of_group'] = sanitize_key($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['is_default_of_group']);
+		$attribute_unit_informations['change_rate'] = sanitize_text_field($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['change_rate']);
+		$attribute_unit_informations['code_iso'] = sanitize_text_field($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT]['code_iso']);
 
 		if ( $attribute_unit_informations['is_default_of_group'] == 'yes' ) {
 			$wpdb->update(WPSHOP_DBT_ATTRIBUTE_UNIT, array(
@@ -3482,7 +3482,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action( 'wp_ajax_wps_attribute_unit_update', 'update_attribute_unit' );
 
 	function delete_attribute_unit() {
-		$unit_id = wpshop_tools::varSanitizer($_REQUEST['elementIdentifier']);
+		$unit_id = sanitize_key($_REQUEST['elementIdentifier']);
 		$save_output = '';
 
 		$attribute_unit_informations['status'] = 'deleted';
@@ -3510,7 +3510,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		check_ajax_referer( 'add_edit_attribute_unit_group' );
 		$atribute_unit_group = '';
 		if($action == 'edit_attribute_unit_group'){
-			$atribute_unit_group = wpshop_tools::varSanitizer($_REQUEST['elementIdentifier']);
+			$atribute_unit_group = (int) $_REQUEST['elementIdentifier'];
 		}
 		echo wpshop_attributes_unit::unit_group_edition($atribute_unit_group);
 	}
@@ -3522,9 +3522,9 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		$save_output = '';
 
 		$attribute_unit_informations['id'] = '';
-		$attribute_unit_informations['status'] = wpshop_tools::varSanitizer($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT_GROUP]['status']);
+		$attribute_unit_informations['status'] = sanitize_text_field($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT_GROUP]['status']);
 		$attribute_unit_informations['creation_date'] = date('Y-m-d H:i:s');
-		$attribute_unit_informations['name'] = wpshop_tools::varSanitizer($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT_GROUP]['name']);
+		$attribute_unit_informations['name'] = sanitize_text_field($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT_GROUP]['name']);
 
 		$save_unit_result = wpshop_database::save($attribute_unit_informations, WPSHOP_DBT_ATTRIBUTE_UNIT_GROUP);
 		if($save_unit_result == 'done'){
@@ -3544,10 +3544,10 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		check_ajax_referer( 'update_attribute_unit_group' );
 		$save_output = '';
 
-		$attributeUnitId = wpshop_tools::varSanitizer($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT_GROUP]['id']);
-		$attribute_unit_informations['status'] = wpshop_tools::varSanitizer($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT_GROUP]['status']);
+		$attributeUnitId = sanitize_key($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT_GROUP]['id']);
+		$attribute_unit_informations['status'] = sanitize_text_field($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT_GROUP]['status']);
 		$attribute_unit_informations['last_update_date'] = date('Y-m-d H:i:s');
-		$attribute_unit_informations['name'] = wpshop_tools::varSanitizer($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT_GROUP]['name']);
+		$attribute_unit_informations['name'] = sanitize_text_field($_POST[WPSHOP_DBT_ATTRIBUTE_UNIT_GROUP]['name']);
 
 		$save_unit_result =  wpshop_database::update($attribute_unit_informations, $attributeUnitId, WPSHOP_DBT_ATTRIBUTE_UNIT_GROUP);
 		if($save_unit_result == 'done'){
@@ -3565,7 +3565,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 
 	function delete_attribute_unit_group() {
 		check_ajax_referer( 'delete_attribute_unit_group' );
-		$unit_id = wpshop_tools::varSanitizer($_REQUEST['elementIdentifier']);
+		$unit_id = sanitize_key($_REQUEST['elementIdentifier']);
 		$save_output = '';
 
 		$attribute_unit_informations['status'] = 'deleted';
@@ -3583,17 +3583,18 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action( 'wp_ajax_wps_attribute_group_unit_delete', 'delete_attribute_unit_group' );
 
 	function products_by_criteria() {
+		$attr = !empty($_REQUEST['attr']) ? sanitize_text_field($_REQUEST['attr']) : '';
 		// If a filter by attribute is found, recalcul the products that matching it
-		if(!empty($_REQUEST['attr'])) {
-			$att = explode(':',$_REQUEST['attr']);
+		if(!empty($attr)) {
+			$att = explode(':',$attr);
 			$products_id = wpshop_products::get_products_matching_attribute($att[0],$att[1]);
 		}
-		$products_id = !empty($products_id) ? $products_id : $_REQUEST['pid'];
-		$page_number = $_REQUEST['page_number'];
+		$products_id = !empty($products_id) ? $products_id : (int) $_REQUEST['pid'];
+		$page_number = (int) $_REQUEST['page_number'];
 
 
 		if ( !empty($_GET['page_product']) ) {
-			$page_number = wpshop_tools::varSanitizer($_GET['page_product']);
+			$page_number = (int) $_GET['page_product'];
 		}
 		$data = wpshop_products::wpshop_get_product_by_criteria(
 			$_REQUEST['criteria'], $_REQUEST['cid'], $products_id, $_REQUEST['display_type'], $_REQUEST['order'], $page_number, $_REQUEST['products_per_page']
@@ -3606,10 +3607,12 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 
 	function ajax_sendMessage() {
 		check_ajax_referer( 'sendMessage' );
-
-		if (!empty($_REQUEST['postid']) && !empty($_REQUEST['title']) && !empty($_REQUEST['message']) && !empty($_REQUEST['recipient'])) {
-
-			$user_info = get_userdata($_REQUEST['recipient']);
+		$post_id = !empty($_REQUEST['postid']) ? (int) $_REQUEST['postid'] : null;
+		$title = !empty($_REQUEST['title']) ? sanitize_title($_REQUEST['title']) : '';
+		$message = !empty($_REQUEST['message']) ? sanitize_text_field($_REQUEST['message']) : '';
+		$recipient = !empty($_REQUEST['recipient']) ? (array) $_REQUEST['recipient'] : array();
+		if ( isset($post_id) && isset($title) && isset($message) && !empty($recipient) ) {
+			$user_info = get_userdata($recipient);
 			$first_name = $user_info->user_firstname;
 			$last_name = $user_info->user_lastname;
 			$data = array('customer_first_name'=>$first_name,'customer_last_name'=>$last_name);
@@ -3617,11 +3620,11 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 			$wps_message_ctr = new wps_message_ctr();
 
 
-			$title = $wps_message_ctr->customMessage($_REQUEST['title'], $data);
-			$message = $wps_message_ctr->customMessage($_REQUEST['message'], $data);
+			$title = $wps_message_ctr->customMessage($title, $data);
+			$message = $wps_message_ctr->customMessage($message, $data);
 
 			if (!empty($user_info->user_email)) {
-				$wps_message_ctr->wpshop_email($user_info->user_email, $title, $message, $save=true, $model_id=$_REQUEST['postid'], $object=array());
+				$wps_message_ctr->wpshop_email($user_info->user_email, $title, $message, $save=true, $model_id=$post_id, $object=array());
 				$array = array('result' => true, 'message' => '');
 			}
 			else $array = array('result' => true, 'message' => __('An error occured','wpshop'));
@@ -3636,10 +3639,9 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 
 	function ajax_resendMessage() {
 		check_ajax_referer( 'resendMessage' );
-
-		if (!empty($_REQUEST['messageid'])) {
-
-			$ids = explode('-',$_REQUEST['messageid']);
+		$message_id = !empty($_REQUEST['messageid']) ? (array) $_REQUEST['messageid'] : array();
+		if (isset($message_id)) {
+			$ids = explode('-',$message_id);
 			$postid = $ids[0];
 			$date = $ids[1].'-'.$ids[2];
 			$arraykey = $ids[3];
@@ -3670,7 +3672,8 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 
 	function related_products() {
 		check_ajax_referer( 'related_products' );
-		$data = wpshop_products::product_list(false, $_REQUEST['search']);
+		$search = sanitize_text_field($_REQUEST['search']);
+		$data = wpshop_products::product_list(false, $search);
 		$array=array();
 		foreach ($data as $d) {
 			$array[] = array('id' => $d->ID, 'name' => $d->post_title);
@@ -3682,7 +3685,8 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	function applyCoupon() {
 		check_ajax_referer( 'applyCoupon' );
 		$wps_coupon_ctr = new wps_coupon_ctr();
-		$result = $wps_coupon_ctr->applyCoupon($_REQUEST['coupon_code']);
+		$coupon_code = sanitize_text_field($_REQUEST['coupon_code']);
+		$result = $wps_coupon_ctr->applyCoupon($coupon_code);
 		if ($result['status']===true) {
 			$wps_cart_ctr = new wps_cart();
 			$order = $wps_cart_ctr->calcul_cart_information(array());
