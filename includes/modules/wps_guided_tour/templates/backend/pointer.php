@@ -10,7 +10,7 @@
           $meta = get_post_meta($bubble->ID, $this->post_metakey, true);
           if( !empty( $meta ) ) :
           $data_next = (!empty($meta) && !empty($meta['actions']['next'])) ? $meta['actions']['next'] : '';
-          $button_next = (!empty($meta) && !empty($meta['actions']['use_next_button'])) ? '<input data-name="wpeo_bubble_' . $bubble->post_name . '" data-action="' .  $meta['actions']['type_next'] . '" data-next="' . $data_next . '" type="button" class="button-primary wpeo-bubble-next" value="' . __('Next', self::$name_i18n) . '" />' : '';
+          $button_next = (!empty($meta) && !empty($meta['actions']['use_next_button'])) ? '<input data-name="wpeo_bubble_' . $bubble->post_name . '" data-action="' .  $meta['actions']['type_next'] . '" data-nonce="<?php echo wp_create_nonce( 'dismiss_my_pointer' ); ?>" data-next="' . $data_next . '" type="button" class="button-primary wpeo-bubble-next" value="' . __('Next', self::$name_i18n) . '" />' : '';
           $content = $this->format_string_php_to_js("<h3>" . $bubble->post_title . "</h3><p>" . $bubble->post_content . "<br />" . $button_next . "</p>");
           ?>
           <?php $meta = get_post_meta($bubble->ID, $this->post_metakey, true); ?>

@@ -319,6 +319,11 @@ class wpsBubble_ctr {
 	* @param int post_ID - The bubble ID
 	*/
 	public function reset_bubble_all_user() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'reset_bubble_all_user' ) )
+			wp_die();
+
 		$post = get_post((int)$_POST['post_ID']);
 		$post_name = $post->post_name;
 
@@ -344,6 +349,11 @@ class wpsBubble_ctr {
 	* @param string $_POST['pointer'] The sanitize name of the pointer
 	*/
 	public function dismiss_my_pointer() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'dismiss_my_pointer' ) )
+			wp_die();
+
 		$pointer = sanitize_key( $_POST['pointer'] );
 		if ( $pointer != sanitize_key( $pointer ) )
 			wp_die(0);
