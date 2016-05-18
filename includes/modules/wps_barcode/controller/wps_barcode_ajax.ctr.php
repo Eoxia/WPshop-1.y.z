@@ -8,6 +8,11 @@ class wps_barcode_ajax {
 
 	// @TODO : NONCE
 	public function imgProduct() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'imgProduct' ) )
+			wp_die();
+
 		global $meta, $barcode, $post_ID, $wpdb, $table_prefix, $gg;
 		require_once('wps_barcodegen.ctr.php');
 
@@ -43,6 +48,11 @@ class wps_barcode_ajax {
 	}
 
 	public function imgCoupons() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'imgProduct' ) )
+			wp_die();
+
 		global $meta, $barcode, $post_ID, $wpdb, $table_prefix;
 
 		$post_ID = (int)$_REQUEST['postID'];

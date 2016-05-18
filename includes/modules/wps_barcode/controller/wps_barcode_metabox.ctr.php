@@ -47,16 +47,16 @@ class wps_barcode_metabox {
 	 */
 	public function meta_box_product() {
 		global $meta, $barcode, $post_ID, $wpdb, $table_prefix, $ajax;
-		
+
 		require_once('wps_barcodegen.ctr.php');
 
 		$barcode = new wps_barcodegen;
-		
+
 		$ajaxurl = admin_url('admin-ajax.php');
 		$ajaxid = $post_ID;
 
 		$country = '000';
-		
+
 		/*Select value of barcode*/
 		$result = $wpdb->get_results(
 				'SELECT value FROM '.WPSHOP_DBT_ATTRIBUTE_VALUES_VARCHAR.
@@ -79,9 +79,9 @@ class wps_barcode_metabox {
 			chdir('..');
 			chdir( plugin_dir_path(__FILE__) );
 			chdir('..');
-			
+
 			$conf = get_option('wps_barcode');
-			
+
 			if ( isset($conf['generate_barcode']) && $conf['generate_barcode'] === 'on' ) {
 				echo $ajax->generate_image($barcode, $meta, __('product', 'wps_barcode'),
 						$price, $ref);
@@ -89,13 +89,13 @@ class wps_barcode_metabox {
 			else {
 				echo '<p style="text-align: center"><button class="button '.
 					'button-primary button-large" type="button"'.
-					'id="display_barcode">'.
+					'id="display_barcode" data-nonce=' . wp_create_nonce( 'imgProduct' ) . '>'.
 					__('Display', 'wps_barcode').'</button></p>';
 			}
 		}
 		else {
 			$conf = get_option('wps_barcode');
-				
+
 			if ( $conf['generate_barcode'] === 'true' ) {
 				echo '<p>'.sprintf( __('None bardcode generated as you did create %s.',
 					'wps_barcode'), __('product', 'wps_barcode')).'</p>';
@@ -157,8 +157,8 @@ class wps_barcode_metabox {
 					$order_meta = unserialize($result['_order_postmeta'][0]);
 					$title = ( !empty($order_meta['order_invoice_ref']) ) ? $order_meta['order_invoice_ref'] : $order_meta['order_key'];
 					$price = $order_meta['order_grand_total'];
-					
-					
+
+
 					if ( isset($conf['generate_barcode']) && $conf['generate_barcode'] === 'on' ) {
 						$this->generate_image($barcode, $meta[0], __('order client', 'wps_barcode'),
 							$price, $title );
@@ -204,7 +204,7 @@ class wps_barcode_metabox {
 
 					$query = $wpdb->get_results('SELECT post_date FROM '.
 							$table_prefix.'posts WHERE ID='.$post_ID, ARRAY_A);
-					
+
 					$pDate = new DateTime($query[0]['post_date']);
 					$date = $pDate->format('my');
 				}
@@ -224,7 +224,7 @@ class wps_barcode_metabox {
 			else {
 				$meta = $result['wpshop_coupon_barcode'][0];
 			}
-			
+
 			$query = $wpdb->get_results('SELECT post_title FROM '.
 					$table_prefix.'posts WHERE ID='.$post_ID, ARRAY_A);
 
@@ -391,10 +391,10 @@ class wps_barcode_metabox {
 			ob_start();
 			imagepng($im);
 			$img = ob_get_clean();
-			
+
 			echo '<p><img src="data:image/png;base64,'.base64_encode($img).
 				'" id="barcode" width="160" height="90" /></p>';
-			
+
 			echo '<p style="text-align: right"><button class="button '.
 					'button-primary button-large" type="button"'.
 					'id="print_barcode">'.
@@ -421,9 +421,9 @@ class wps_barcode_metabox {
 					'wps_barcode'), $type).'</p>';
 		}
 	}
-	
+
 	private function generateODT($img) {
-		
+
 	}
 
 	/**
