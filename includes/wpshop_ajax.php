@@ -2692,6 +2692,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	 * Send a message to customer
 	 */
 	function ajax_wpshop_send_message_by_type () {
+		check_ajax_referer( 'ajax_wpshop_send_message_by_type' );
 		global $wpdb;
 		$result = array();
 		$message_type_id = ( !empty( $_POST['message_type_id'])) ? wpshop_tools::varSanitizer($_POST['message_type_id']) : null;
@@ -2718,6 +2719,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 
 
 	function ajax_wpshop_upload_downloadable_file_action() {
+		check_ajax_referer( 'ajax_wpshop_upload_downloadable_file_action' );
 		$result = '';
 		if ( !empty( $_FILES['wpshop_file'] ) && !empty($_POST['element_identifer']) ) {
 			if(!is_dir(WPSHOP_UPLOAD_DIR)){
@@ -2744,6 +2746,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		$output  = '<form method="post" action="' .admin_url('admin-ajax.php') .'" name="" id="upload_downloadable_file" enctype="multipart/form-data" >';
 		$output .= '<p class="formField"><label for="wpshop_file">' .__('Choose your file to send', 'wpshop'). '</label><input type="file" name="wpshop_file" /></p>';
 		$output .= '<input type="hidden" name="action" value="upload_downloadable_file_action" />';
+		$output .= wp_nonce_field( 'ajax_wpshop_upload_downloadable_file_action' );
 		$output .= '<input type="hidden" name="element_identifer" id="element_identifer" value="' .$_POST['product_identifer']. '" />';
 		$output .= '<p class="formField"><a id="send_downloadable_file_button" class="wps-bton-first-mini-rounded">' .__('Send your file', 'wpshop'). '</a></p>';
 		$output .= '</form>';

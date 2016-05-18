@@ -376,6 +376,7 @@ wpshop(document).ready(function(){
 
 		var data = {
 				action: "send_message_by_type",
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 				customer_user_id : jQuery('#selected_recipient option:selected').val(),
 				message_type_id : jQuery('#wpshop_postid').val(),
 				message_model_name : jQuery('#wpshop_message_model').val()
