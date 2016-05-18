@@ -10,7 +10,7 @@
 				<?php if( !$account_origin ) :
 							echo do_shortcode('[wps_apply_coupon]');
 						else : ?>
-					<button id="<?php echo $oid; ?>" class="wps-bton-first-mini-rounded make_order_again"><?php _e( 'Make this order again', 'wpshop'); ?></button>
+					<button id="<?php echo $oid; ?>" class="wps-bton-first-mini-rounded make_order_again" data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_restart_the_order' ); ?>"><?php _e( 'Make this order again', 'wpshop'); ?></button>
 				<?php endif; ?>
 				<?php if( !empty($tracking) ) : ?>
 					<p><br />

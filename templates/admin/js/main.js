@@ -339,6 +339,7 @@ wpshop(document).ready(function(){
 		jQuery( '#update_products_loader' ).show();
 		var data = {
 				action: "update_products_prices",
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 			};
 			jQuery.post(ajaxurl, data, function(response) {
 				if ( response['status'] ) {
@@ -903,6 +904,7 @@ wpshop(document).ready(function(){
 		jQuery( btn ).addClass( 'wps-bton-loading' );
 		var data = {
 				action: "wps_quotation_is_payable_by_customer",
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 				order_id : order_id
 			};
 			jQuery.post(ajaxurl, data, function(response) {
@@ -924,6 +926,7 @@ wpshop(document).ready(function(){
 		var order_id = jQuery( '#post_ID' ).val();
 		var data = {
 				action: "wps_send_direct_payment_link",
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 				order_id : order_id
 			};
 			jQuery.post(ajaxurl, data, function(response) {

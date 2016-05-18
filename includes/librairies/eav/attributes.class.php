@@ -115,7 +115,7 @@ class wpshop_attributes{
 		$action = isset($_REQUEST['action']) ? sanitize_text_field($_REQUEST['action']) : 'add';
 		$saveditem = isset($_REQUEST['saveditem']) ? sanitize_text_field($_REQUEST['saveditem']) : '';
 		$set_section = !empty($_REQUEST[self::getDbTable()]['set_section']) ? sanitize_text_field($_REQUEST[self::getDbTable()]['set_section']) : '';
-		if ( !empty($_REQUEST[self::getDbTable()]['set_section']) ) unset($_REQUEST[self::getDbTable()]['set_section']);
+		if ( !empty($set_section) ) unset($_REQUEST[self::getDbTable()]['set_section']);
 		$id = !empty($_REQUEST['id']) ? (int) $_REQUEST['id'] : null;
 		if(!empty($action) && ($action=='activate') ){
 			if( isset($id) ) {
@@ -976,7 +976,7 @@ ob_end_clean();
 
 		/** It is attribute TVA, add a button to calcilate price in mass **/
 		if ( !empty($editedItem) && !empty($editedItem->code) && $editedItem->code == 'tx_tva' ) {
-			$the_form_general_content .= '<input type="button" id="wps_update_price_infos" value="' .__('Update all products price', 'wpshop').'" /> <img src="' .WPSHOP_LOADING_ICON. '" alt="" id="update_products_loader" /> <br/>';
+			$the_form_general_content .= '<input type="button" data-nonce="' . wp_create_nonce( 'wps_update_products_prices' ) . '" id="wps_update_price_infos" value="' .__('Update all products price', 'wpshop').'" /> <img src="' .WPSHOP_LOADING_ICON. '" alt="" id="update_products_loader" /> <br/>';
 			$the_form_general_content .= __('If you have updated your VAT rates, save it and update your products price after', 'wpshop' );
 		}
 		if (!empty($the_form_option_content_list)) {

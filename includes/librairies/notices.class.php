@@ -63,7 +63,7 @@ class wpshop_notices{
 		if(!empty($notice) && ( empty( $install ) ) ) {
 			$notice='<p>'.__('You configure your shop to be a sale shop. But some configuration are missing for this type of shop using', 'wpshop').'</p><ul>'.$notice.'</ul>';
 			if ( !empty($messages_to_hide) ) {
-				$notice .= '<button class="wps_hide_notice_message button-secondary" id="wps_hide_notice_message">' .__('Hide this message', 'wpshop'). '</button>';
+				$notice .= '<button data-nonce="' . wp_create_nonce( 'wps_hide_notice_messages' ) . '" class="wps_hide_notice_message button-secondary" id="wps_hide_notice_message">' .__('Hide this message', 'wpshop'). '</button>';
 				$notice .= '<input type="hidden" id="hide_messages_indicator" value="' .$messages_to_hide. '"/>';
 			}
 			self::admin_notice_container($notice, 'wpshop_shop_sale_type_notice');

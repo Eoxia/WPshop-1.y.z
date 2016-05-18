@@ -184,7 +184,7 @@ class wpshop_orders {
 		if ( !empty($order_postmeta['order_status']) ) {
 			switch ( $order_postmeta['order_status'] ) {
 				case 'awaiting_payment':
-					$tpl_component['ADMIN_ORDER_ACTIONS_LIST'] .= '<div class="wps-product-section"><a role="button" class="wps-bton-second-mini-rounded send_direct_payment_link" href="#" >'.__('Send a payment link to customer', 'wpshop').'</a></div>';
+					$tpl_component['ADMIN_ORDER_ACTIONS_LIST'] .= '<div class="wps-product-section"><a data-nonce="' . wp_create_nonce( 'wps_send_direct_payment_link' ) . '" role="button" class="wps-bton-second-mini-rounded send_direct_payment_link" href="#" >'.__('Send a payment link to customer', 'wpshop').'</a></div>';
 					$tpl_component['ADMIN_ORDER_ACTIONS_LIST'] .= '<div class="wps-product-section"><button class="wps-bton-second-mini-rounded markAsCanceled order_'.$order->ID.'" >'.__('Cancel this order', 'wpshop').'</button><input type="hidden" id="markascanceled_order_hidden_indicator" name="markascanceled_order_hidden_indicator" /></div>';
 				break;
 				/*case 'completed' || 'shipped':
@@ -660,7 +660,7 @@ class wpshop_orders {
 		return $output;
 	}
 	static function display_customer_pay_quotation( $state, $oid ) {
-		$btn = '<a role="button" class="wps-bton-' . ( ( $state ) ? 'third' : 'second' ) . '-mini-rounded quotation_is_payable_by_customer" href="#" >'.__('Customer can pay', 'wpshop').'</a>';
+		$btn = '<a role="button" data-nonce="' . wp_create_nonce( 'wps_quotation_is_payable_by_customer' ) . '" class="wps-bton-' . ( ( $state ) ? 'third' : 'second' ) . '-mini-rounded quotation_is_payable_by_customer" href="#" >'.__('Customer can pay', 'wpshop').'</a>';
 		if( $state ) {
 			$url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wps_checkout_quotation&order_id=' . $oid . '&is_link=link' ), 'wps_checkout_quotation', '_wpnonce' );
 			$btn .= '<br><a href="' . $url . '">' . __( 'Pay link', 'wpshop' ) . '</a>';
