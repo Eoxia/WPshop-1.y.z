@@ -18,10 +18,10 @@ if ( $test != '../test/request.test.php' ) {
 	$string_post_unsecured[$test] = array();
 
     $file = file_get_contents( $test );
-    preg_match_all( '#add_action\( *(\'|")wp_ajax_.+(\'|"),.+(\'|")(.+)(\'|").+\)#isU', $file, $matches );
+    preg_match_all( '#add_action\( *(\'|")wp_ajax_(nopriv_)?.+(\'|"),.+(\'|")(.+)(\'|").+\)#isU', $file, $matches );
 	$matched_function = array();
-	if ( !empty( $matches[4] ) ) {
-		foreach ( $matches[4] as $matched_string ) {
+	if ( !empty( $matches[5] ) ) {
+		foreach ( $matches[5] as $matched_string ) {
 			preg_match_all( '#(.+)?\', *(.+)?\'#isU', $matched_string, $exploded );
 			if ( empty( $exploded[0] ) ) {
 				$matched_string = str_replace( '(', '', $matched_string );

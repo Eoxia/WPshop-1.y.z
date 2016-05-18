@@ -24,8 +24,8 @@ class wps_cart {
 		add_action( 'init', array( $this, 'load_cart_from_db' ) );
 
 		/** Ajax Actions **/
-		add_action( 'wp_ajax_wps_reload_cart', array( 'wps_cart', 'wps_reload_cart' ) );
-		add_action( 'wp_ajax_nopriv_wps_reload_cart', array( 'wps_cart', 'wps_reload_cart' ) );
+		add_action( 'wp_ajax_wps_reload_cart', array( $this, 'wps_reload_cart' ) );
+		add_action( 'wp_ajax_nopriv_wps_reload_cart', array( $this, 'wps_reload_cart' ) );
 
 		add_action( 'wp_ajax_wps_reload_mini_cart', array( &$this, 'wps_reload_mini_cart' ) );
 		add_action( 'wp_ajax_nopriv_wps_reload_mini_cart', array( &$this, 'wps_reload_mini_cart' ) );
