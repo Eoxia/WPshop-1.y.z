@@ -115,7 +115,7 @@ class wpshop_attributes{
 		$action = isset($_REQUEST['action']) ? sanitize_text_field($_REQUEST['action']) : 'add';
 		$saveditem = isset($_REQUEST['saveditem']) ? sanitize_text_field($_REQUEST['saveditem']) : '';
 		$set_section = !empty($_REQUEST[self::getDbTable()]['set_section']) ? sanitize_text_field($_REQUEST[self::getDbTable()]['set_section']) : '';
-		if ( !empty($_REQUEST[self::getDbTable()]['set_section']) ) unset($_REQUEST[self::getDbTable()]['set_section']);
+		if ( !empty($set_section) ) unset($_REQUEST[self::getDbTable()]['set_section']);
 		$id = !empty($_REQUEST['id']) ? (int) $_REQUEST['id'] : null;
 		if(!empty($action) && ($action=='activate') ){
 			if( isset($id) ) {

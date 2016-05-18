@@ -479,7 +479,8 @@ if ( !class_exists( "wpeologs_ctr" ) ) {
 			$array_current_setting = get_option( '_wpeo_log_settings' );
 			$array_current_setting = json_decode( $array_current_setting, true );
 
-			$array_current_setting = array_replace( $array_current_setting, $_POST['service'] );
+			$service = !empty($_POST['service']) ? (array) $_POST['service'] : array();
+			$array_current_setting = array_replace( $array_current_setting, $service );
 
 			$success = update_option( '_wpeo_log_settings', json_encode( $array_current_setting ) );
 

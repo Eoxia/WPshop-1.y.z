@@ -54,8 +54,9 @@ class wpshop_documents
 	*/
 	public static function attachment_fields($form_fields, $post){
 		/*	Get the current post informations	*/
-		if(isset($_GET["post_id"])){
-			$parent_post = get_post( absint($_GET["post_id"]) );
+		$id = isset($_GET["post_id"]) ? absint( (int) $_GET["post_id"] ) : null;
+		if(isset($id)){
+			$parent_post = get_post( $id );
 		}
 		else{
 			$parent_post = get_post( $post->post_parent );
