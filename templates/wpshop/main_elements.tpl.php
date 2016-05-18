@@ -176,7 +176,7 @@ ob_end_clean();
 
 /*	Vouncher field into cart							Coupons de reduction */
 ob_start();
-?><div class="wpshop_cart_vouncher_field_container" ><?php _e('Discount coupon','wpshop'); ?> : <input type="text" name="coupon_code" value="" /> <a href="#" class="submit_coupon"><?php _e('Submit the coupon','wpshop'); ?></a></div><?php
+?><div class="wpshop_cart_vouncher_field_container" ><?php _e('Discount coupon','wpshop'); ?> : <input type="text" name="coupon_code" value="" /> <a href="#" class="submit_coupon" data-nonce="<?php echo wp_create_nonce( 'applyCoupon' ); ?>"><?php _e('Submit the coupon','wpshop'); ?></a></div><?php
 $tpl_element['cart_vouncher_part'] = ob_get_contents();
 ob_end_clean();
 

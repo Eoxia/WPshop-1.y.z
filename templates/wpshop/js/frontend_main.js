@@ -307,7 +307,7 @@ wpshop(document).ready(function(){
 		if(coupon_code == '')
 			return false;
 
-		jQuery.getJSON(ajaxurl, { action: "wps_cart_action_apply_coupon", coupon_code: coupon_code },
+		jQuery.getJSON(ajaxurl, { action: "wps_cart_action_apply_coupon", coupon_code: coupon_code, _wpnonce: jQuery(this).data('nonce') },
 			function(data){
 				if(data[0]) {
 					reload_cart();
