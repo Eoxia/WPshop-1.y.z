@@ -321,7 +321,7 @@ ob_start();
 ?>
 <form method="post" action="<?php echo admin_url('admin-ajax.php'); ?>" name="billingAndShippingForm" id="create_new_customer_in_admin">
 	<input type="hidden" name="action" value="create_new_customer" />
-	<?php wp_nonce_field( 'ajax_wpshop_create_new_customer' );
+	<?php wp_nonce_field( 'ajax_wpshop_create_new_customer' ); ?>
 	<div class="col1 wpshopShow" id="register_form_classic">
 		{WPSHOP_CUSTOMER_ADDRESSES_FORM_CONTENT}
 		{WPSHOP_CUSTOMER_ADDRESSES_FORM_BUTTONS} <div class="loading_picture_container wpshopHide" id="create_new_customer_loader_creation"><img src="{WPSHOP_LOADING_ICON}" alt="loading..." /></div>

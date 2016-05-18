@@ -835,6 +835,7 @@ wpshop(document).ready(function(){
 		jQuery( '#send_downlodable_file' ).addClass( 'wps-bton-loading' );
 		var data = {
 				action: "fill_the_downloadable_dialog",
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 				product_identifer : jQuery('#product_identifer_field').val()
 			};
 			jQuery.post(ajaxurl, data, function(response) {

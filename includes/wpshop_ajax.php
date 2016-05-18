@@ -2743,6 +2743,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action('wp_ajax_upload_downloadable_file_action', 'ajax_wpshop_upload_downloadable_file_action');
 
 	function ajax_wpshop_fill_the_downloadable_dialog() {
+		check_ajax_referer( 'ajax_wpshop_fill_the_downloadable_dialog' );
 		$output  = '<form method="post" action="' .admin_url('admin-ajax.php') .'" name="" id="upload_downloadable_file" enctype="multipart/form-data" >';
 		$output .= '<p class="formField"><label for="wpshop_file">' .__('Choose your file to send', 'wpshop'). '</label><input type="file" name="wpshop_file" /></p>';
 		$output .= '<input type="hidden" name="action" value="upload_downloadable_file_action" />';
@@ -2763,6 +2764,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action('wp_ajax_fill_the_downloadable_dialog', 'ajax_wpshop_fill_the_downloadable_dialog');
 
 	function ajax_wpshop_show_downloadable_interface_in_admin() {
+		check_ajax_referer( 'ajax_wpshop_show_downloadable_interface_in_admin' );
 		global $wpdb;
 		$status = false;
 		$selected_value = ( !empty($_POST['selected_value']) ) ? wpshop_tools::varSanitizer( $_POST['selected_value'] ) : '';
