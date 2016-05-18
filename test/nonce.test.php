@@ -31,8 +31,9 @@ if ( $test != '../test/request.test.php' ) {
 
 				if ( !empty( $function[0] ) ) {
 					$function = $function[0];
-					if ( !preg_match( '#wp_verify_nonce#', $function ) ) {
-						$string_post_unsecured[$test][$matched_string] = "wp_security_nonce() not found";
+					if ( !preg_match( '#wp_verify_nonce#', $function ) &&
+					 	!preg_match( '#check_ajax_referer#', $function ) ) {
+						$string_post_unsecured[$test][$matched_string] = "wp_security_nonce() or check_ajax_referer not found";
 						$total_unsecured_line++;
 					}
 				}

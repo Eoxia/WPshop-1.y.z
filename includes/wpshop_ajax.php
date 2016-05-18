@@ -18,6 +18,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	 * Duplicate a product
 	 */
 	function ajax_duplicate_product() {
+		
 		check_ajax_referer( 'wpshop_product_duplication', 'wpshop_ajax_nonce' );
 
 		$current_post_id = isset($_POST['current_post_id']) ? wpshop_tools::varSanitizer($_POST['current_post_id']) : null;
