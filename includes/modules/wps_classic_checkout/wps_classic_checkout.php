@@ -282,6 +282,11 @@ if ( !class_exists("wps_classic_checkout") ) {
 		 * AJAX - Valid Checkout Step three
 		 */
 		function wps_checkout_valid_step_three() {
+			$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+			if ( !wp_verify_nonce( $_wpnonce, 'wps_checkout_valid_step_three' ) )
+				wp_die();
+
 			$response = ''; $status = true;
 
 			$shipping_address = ( !empty($_POST['shipping_address_id']) ) ? wpshop_tools::varSanitizer( $_POST['shipping_address_id'] ): null;
@@ -408,6 +413,11 @@ if ( !class_exists("wps_classic_checkout") ) {
 		 * AJAX - Valid Checkout step four
 		 */
 		function wps_checkout_valid_step_four() {
+			$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+			if ( !wp_verify_nonce( $_wpnonce, 'wps_checkout_valid_step_four' ) )
+				wp_die();
+
 			$shipping_method = ( !empty($_POST['shipping_mode']) ) ? wpshop_tools::varSanitizer($_POST['shipping_mode']) : null;
 			$status = false;
 			$response = '';
@@ -455,6 +465,11 @@ if ( !class_exists("wps_classic_checkout") ) {
 		 * AJAX - Valid Checkout step four
 		 */
 		function wps_checkout_valid_step_five() {
+			$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+			if ( !wp_verify_nonce( $_wpnonce, 'wps_checkout_valid_step_five' ) )
+				wp_die();
+
 			$status = false; $response = '';
 			$payment_method = ( !empty($_POST['wps-payment-method']) ) ? wpshop_tools::varSanitizer( $_POST['wps-payment-method'] ): null;
 			$order_id = ( !empty($_SESSION['cart']['order_id']) ) ? wpshop_tools::varSanitizer($_SESSION['cart']['order_id']) : 0;
