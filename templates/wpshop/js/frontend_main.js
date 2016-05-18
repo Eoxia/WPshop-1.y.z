@@ -13,7 +13,6 @@ jQuery.fn.center = function () {
 
 /*	Check all event on page load	*/
 wpshop(document).ready(function(){
-
 	jQuery('.wpshop_product_container').address(function(event) {
 
 	}).bind('change', function(event) {
@@ -502,24 +501,27 @@ wpshop(document).ready(function(){
 		return false;
 	});
 
-	jQuery('a.remove').live('click',function(){
-		jQuery(this).addClass('loading');
-		var element = jQuery(this).parent().parent();
-		var pid = element.attr('id').substr(8);
-		updateQty(element, pid, 0);
-		return false;
-	});
+	// @TODO : A vérifier
+	// jQuery('a.remove').live('click',function(){
+	// 	jQuery(this).addClass('loading');
+	// 	var element = jQuery(this).parent().parent();
+	// 	var pid = element.attr('id').substr(8);
+	// 	updateQty(element, pid, 0, _wpnonce);
+	// 	return false;
+	// });
 
 	jQuery('input[name=productQty]').live('change',function(){
+		var _wpnonce = jQuery( this ).data( 'nonce' );
 		var input = jQuery(this);
 		var element = input.parent().parent();
 		var pid = element.attr('id').substr(8);
 		var qty = input.val();
-		updateQty(element, pid, qty);
+		updateQty(element, pid, qty, _wpnonce);
 		return false;
 	});
 
 	jQuery('a.productQtyChange').live('click',function(){
+		var _wpnonce = jQuery( this ).data( 'nonce' );
 		var a = jQuery(this);
 		var element = a.parent().parent();
 		var input = jQuery('input[name=productQty]',element);
@@ -527,7 +529,7 @@ wpshop(document).ready(function(){
 		if( a.hasClass('wpshop_more_product_qty_in_cart') )
 			var qty = parseInt(input.val())+1;
 		else var qty = parseInt(input.val())-1;
-		updateQty(element, pid, qty);
+		updateQty(element, pid, qty, _wpnonce);
 		return false;
 	});
 
@@ -782,12 +784,13 @@ function widget_menu_animation(current_element){
 * @param pid
 * @param qty
 */
-function updateQty(element, pid, qty) {
+function updateQty(element, pid, qty, _wpnonce) {
 	qty = qty<0 ? 0 : qty;
 	jQuery('input[name=productQty]',element).val(qty);
 	jQuery('a.remove',element).addClass('loading');
 	var data = {
 		action: "wpshop_set_qtyfor_product_into_cart",
+		_wpnonce: _wpnonce,
 		product_id: pid,
 		product_qty: qty,
 	};
@@ -824,6 +827,7 @@ function wpshop_product_add_to_cart( cart_type, current_element ) {
 	/*	Définition des actions par défaut (ajout d'un produit au panier)	*/
 	var ajax_action = "add_product_to_cart";
 	var replacement = "wpshop_add_to_cart_";
+	var _wpnonce = jQuery( current_element ).data( 'nonce' );
 
 	jQuery( current_element ).addClass( 'wps-bton-loading' );
 
@@ -853,6 +857,7 @@ function wpshop_product_add_to_cart( cart_type, current_element ) {
 	var data = {
 		action:"wpshop_add_product_to_cart",
 		wpshop_pdt: pid,
+		_wpnonce: _wpnonce,
 		wpshop_pdt_qty: jQuery('.wpshop_product_qty_input').val(),
 		wpshop_cart_type: cart_type,
 		wpshop_pdt_variation : variations

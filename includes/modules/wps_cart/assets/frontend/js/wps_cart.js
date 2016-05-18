@@ -4,6 +4,7 @@ jQuery( document ).ready( function() {
 
 	/** Product Qty Management in cart **/
 	jQuery( document ).on( 'click',  '.wps-cart-reduce-product-qty', function(e) {
+		var _wpnonce = jQuery( this ).data( 'nonce' );
 		e.preventDefault();
 		if( jQuery(this).closest( 'li' ).length ) {
 			var li_element = jQuery(this).closest( 'li' );
@@ -16,7 +17,7 @@ jQuery( document ).ready( function() {
 			var qty = jQuery( '#wps-cart-product-qty-' + product_id ).val();
 			qty = parseInt( qty ) - 1;
 			jQuery( '#wpshop_pdt_qty' ).val( qty );
-			change_product_qty_in_cart( product_id, qty);
+			change_product_qty_in_cart( product_id, qty, _wpnonce);
 		}
 		else {
 
@@ -36,6 +37,7 @@ jQuery( document ).ready( function() {
 
 	/** Product Qty Management in cart **/
 	jQuery( document ).on( 'click',  '.wps-cart-add-product-qty', function(e) {
+		var _wpnonce = jQuery( this ).data( 'nonce' );
 		e.preventDefault();
 		if( jQuery(this).closest( 'li' ).length ) {
 			var li_element = jQuery(this).closest( 'li' );
@@ -47,7 +49,7 @@ jQuery( document ).ready( function() {
 			}
 			var qty = jQuery( '#wps-cart-product-qty-' + product_id ).val();
 			qty = parseInt( qty ) + 1;
-			change_product_qty_in_cart( product_id, qty);
+			change_product_qty_in_cart( product_id, qty, _wpnonce);
 		}
 		else {
 			jQuery('.wpshop_product_qty_input').val( parseInt( jQuery('.wpshop_product_qty_input').val() ) + 1 );
@@ -57,6 +59,7 @@ jQuery( document ).ready( function() {
 
 	/** Delete product **/
 	jQuery( document ).on( 'click', '.wps_cart_delete_product', function(e) {
+		var _wpnonce = jQuery( this ).data( 'nonce' );
 		e.preventDefault();
 		var li_element = jQuery(this).closest( 'li' );
 		var product_id;
@@ -65,11 +68,12 @@ jQuery( document ).ready( function() {
 		} else {
 			product_id = li_element.data( 'id' );
 		}
-		change_product_qty_in_cart( product_id, 0 );
+		change_product_qty_in_cart( product_id, 0, _wpnonce );
 	});
 
 	/** Delete product **/
 	jQuery( document ).on( 'click', '.wps_mini_cart_delete_product', function(e) {
+		var _wpnonce = jQuery( this ).data( 'nonce' );
 		e.preventDefault();
 		var li_element = jQuery(this).closest( 'li' );
 		var product_id;
@@ -78,7 +82,7 @@ jQuery( document ).ready( function() {
 		} else {
 			product_id = li_element.data( 'id' );
 		}
-		change_product_qty_in_cart( product_id, 0 );
+		change_product_qty_in_cart( product_id, 0, _wpnonce );
 	});
 
 	/** Apply Coupon Action **/
@@ -140,10 +144,11 @@ jQuery( document ).ready( function() {
 
 
 	/** Change product Qty in cart **/
-	function change_product_qty_in_cart( product_id, product_qty ) {
+	function change_product_qty_in_cart( product_id, product_qty, _wpnonce ) {
 		jQuery( '#wps_cart_container' ).addClass( 'wps-bloc-loading');
 		var data = {
 				action: "wpshop_set_qtyfor_product_into_cart",
+				_wpnonce: _wpnonce,
 				product_id: product_id,
 				product_qty: product_qty,
 			};

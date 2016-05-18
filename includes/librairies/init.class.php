@@ -168,10 +168,10 @@ class wpshop_init{
 		}
 
 		$entity_to_search = !empty( $_GET['entity_to_search'] ) ? sanitize_text_field( $_GET['entity_to_search'] ) : '';
-
+//	var WPSHOP_AJAX_FILE_URL = "'.WPSHOP_AJAX_FILE_URL.'";
 		echo '
 <script type="text/javascript">
-//	var WPSHOP_AJAX_FILE_URL = "'.WPSHOP_AJAX_FILE_URL.'";
+
 	var WPSHOP_MEDIAS_ICON_URL = "'.WPSHOP_MEDIAS_ICON_URL.'";
 	var WPSHOP_PRODUCT_PRICE_PILOT = "'.WPSHOP_PRODUCT_PRICE_PILOT.'";
 	var WPSHOP_PRODUCT_PRICE_HT = "' . WPSHOP_PRODUCT_PRICE_HT . '";

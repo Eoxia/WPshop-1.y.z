@@ -18,7 +18,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	 * Duplicate a product
 	 */
 	function ajax_duplicate_product() {
-		
+
 		check_ajax_referer( 'wpshop_product_duplication', 'wpshop_ajax_nonce' );
 
 		$current_post_id = isset($_POST['current_post_id']) ? wpshop_tools::varSanitizer($_POST['current_post_id']) : null;
@@ -1030,6 +1030,8 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 
 /**	Tools page	*/
 	function wpshop_ajax_db_check_tool() {
+		check_ajax_referer( 'wpshop_ajax_db_check_tool', '_wpnonce' );
+
 		global $wpdb, $wpshop_db_table_operation_list, $wpshop_db_table, $wpshop_update_way;
 		$current_db_version = get_option('wpshop_db_options', 0);
 
@@ -1311,7 +1313,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 			$plugin_install_error = '<img src="' . admin_url('images/no.png') . '" alt="' . __('Error in wpshop install', 'wpshop') . '" title="' . __('Error in wpshop install', 'wpshop') . '" />&nbsp;' . __('There are ne or more errors into your wpshop installation. Please find details below', 'wpshop') . '<br/>
 							<ul>';
 			foreach($error_list as $version => $element_nb){
-				$plugin_install_error .= '<li>' . sprintf(__('There are %d errors into %s version', 'wpshop'), $element_nb, '<a href="#wpshop_plugin_v_' . $version . '" >' . $version . '</a>') . ' - <button id="wpshop_repair_db_version_' . $version  . '" class="wpshop_repair_db_version" >' . __('Repair', 'wpshop') . '</button></li>';
+				$plugin_install_error .= '<li>' . sprintf(__('There are %d errors into %s version', 'wpshop'), $element_nb, '<a href="#wpshop_plugin_v_' . $version . '" >' . $version . '</a>') . ' - <button id="wpshop_repair_db_version_' . $version  . '" data-nonce="' . wp_create_nonce( 'wpshop_ajax_db_repair_tool ' ) .'" class="wpshop_repair_db_version" >' . __('Repair', 'wpshop') . '</button></li>';
 			}
 			$plugin_install_error .= '
 							</ul>';
@@ -1336,6 +1338,8 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action('wp_ajax_wpshop_tool_db_check', 'wpshop_ajax_db_check_tool');
 
 	function wpshop_tool_default_datas_check() {
+		check_ajax_referer( 'wpshop_tool_default_datas_check' );
+
 		$output_ok = $output_error = '';
 
 		/**	Get defined default datas type	*/
@@ -1373,6 +1377,8 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action('wp_ajax_wpshop_tool_default_datas_check', 'wpshop_tool_default_datas_check');
 
 	function wpshop_ajax_repair_default_datas() {
+		check_ajax_referer( 'wpshop_ajax_repair_default_datas' );
+
 		global $wpdb;
 		$output = '';
 		$container = '';
@@ -1396,6 +1402,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action('wp_ajax_wpshop_ajax_repair_default_datas', 'wpshop_ajax_repair_default_datas');
 
 	function wpshop_ajax_translate_default_datas() {
+		check_ajax_referer( 'wpshop_ajax_translate_default_datas' );
 		global $wpdb;
 		$result = array('status' => true);
 
@@ -1420,6 +1427,8 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action('wp_ajax_wpshop_ajax_translate_default_datas', 'wpshop_ajax_translate_default_datas');
 
 	function wpshop_ajax_db_repair_tool() {
+		check_ajax_referer( 'wpshop_ajax_db_repair_tool' );
+
 		$version_id = isset($_POST['version_id']) ? wpshop_tools::varSanitizer($_POST['version_id']) : null;
 
 		echo wpshop_install::alter_db_structure_on_update( $version_id );
@@ -1429,6 +1438,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action('wp_ajax_wpshop_ajax_db_repair_tool', 'wpshop_ajax_db_repair_tool');
 
 	function wps_mass_action_main_interface() {
+		check_ajax_referer( 'wps_mass_action_main_interface' );
 		$tpl_component = array();
 
 		/**	Copy an attribute content to another	*/
@@ -1468,6 +1478,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action('wp_ajax_wps_mass_action', 'wps_mass_action_main_interface');
 
 	function wps_mass_action_update_attribute_value() {
+		check_ajax_referer( 'wps_mass_action_update_attribute_value' );
 		global $wpdb;
 		$response = array();
 
@@ -1589,6 +1600,8 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action('wp_ajax_wps_mass_action_update_attribute', 'wps_mass_action_update_attribute_value');
 
 	function wps_tools_mass_action_load_possible_options_for_variations_attributes() {
+		// @TODO attribute_id est introuvable
+		check_ajax_referer( 'wps_tools_mass_action_load_possible_options_for_variations_attributes' );
 		$output = '';
 		$attribute = wpshop_attributes::getElement( $_POST['attribute_id'], "'valid'" );
 
@@ -1652,6 +1665,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action('wp_ajax_wps_tools_mass_action_load_possible_options_for_variations_attributes', 'wps_tools_mass_action_load_possible_options_for_variations_attributes');
 
 	function wps_mass_action_change_variation_option() {
+		check_ajax_referer( 'wps_mass_action_change_variation_option' );
 		global $wpdb;
 
 		$attribute = wpshop_attributes::getElement( $_POST['attribute_id'], "'valid'" );
@@ -1951,6 +1965,8 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	 * Add product to the end user cart
 	 */
 	function ajax_wpshop_add_to_cart() {
+		check_ajax_referer( 'ajax_pos_product_variation_selection' );
+
 		global $wpdb;
 		$wpshop_cart = new wps_cart();
 
@@ -2103,6 +2119,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	 * Set product qty into customer cart
 	 */
 	function ajax_wpshop_set_qty_for_product_into_cart() {
+		check_ajax_referer( 'ajax_wpshop_set_qty_for_product_into_cart' );
 		$response = array();
 		$wpshop_cart = new wps_cart();
 		$product_id = isset($_POST['product_id']) ? wpshop_tools::varSanitizer($_POST['product_id']) : null;

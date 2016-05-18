@@ -32,7 +32,7 @@ ob_end_clean();
  */
 ob_start();
 ?>
-<button itemprop="availability" content="in_stock" id="wpshop_add_to_cart_{WPSHOP_PRODUCT_ID}" class="wpshop_add_to_cart_button wps-bton-first"><i class="wps-icon-basket"></i><?php _e('Add to cart', 'wpshop'); ?></button>
+<button itemprop="availability" content="in_stock" data-nonce="<?php echo wp_create_nonce( 'ajax_pos_product_variation_selection' ); ?>" id="wpshop_add_to_cart_{WPSHOP_PRODUCT_ID}" class="wpshop_add_to_cart_button wps-bton-first"><i class="wps-icon-basket"></i><?php _e('Add to cart', 'wpshop'); ?></button>
 <?php
 $tpl_element['add_to_cart_button'] = ob_get_contents();
 ob_end_clean();
@@ -155,7 +155,7 @@ ob_end_clean();
 
 /*	Product quantity updater	| 						Panier tableau formulaire + - quantité */
 ob_start();
-?><a href="#" class="productQtyChange wpshop_less_product_qty_in_cart">-</a><input type="text" value="{WPSHOP_CART_LINE_ITEM_QTY}" name="productQty" id="wpshop_product_order_{WPSHOP_CART_LINE_ITEM_ID}"  /><a href="#" class="productQtyChange wpshop_more_product_qty_in_cart">+</a><?php
+?><a href="#" class="productQtyChange wpshop_less_product_qty_in_cart" data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_set_qty_for_product_into_cart' ); ?>">-</a><input type="text" value="{WPSHOP_CART_LINE_ITEM_QTY}" name="productQty" data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_set_qty_for_product_into_cart' ); ?>" id="wpshop_product_order_{WPSHOP_CART_LINE_ITEM_ID}"  /><a href="#" class="productQtyChange wpshop_more_product_qty_in_cart">+</a><?php
 $tpl_element['cart_qty_content'] = ob_get_contents();
 ob_end_clean();
 
@@ -424,7 +424,7 @@ ob_end_clean();
 
 /*	Define variation display	*/
 ob_start();
-?><form action="<?php echo admin_url('admin-ajax.php')?>" method="POST" id="wpshop_add_to_cart_form" >{WPSHOP_FROM_ADMIN_INDICATOR} {WPSHOP_ORDER_ID_INDICATOR} <input type="hidden" name="wpshop_pdt" id="wpshop_pdt" value="{WPSHOP_VARIATION_FORM_ELEMENT_ID}" /><input type="hidden" name="wpshop_pdt_qty" id="wpshop_pdt_qty" value="{WPSHOP_PRODUCT_ADDED_TO_CART_QTY}" /><input type="hidden" name="action" value="wpshop_add_product_to_cart" /><input type="hidden" name="wpshop_cart_type" value="cart" />{WPSHOP_VARIATION_FORM_VARIATION_LIST}</form><?php
+?><form action="<?php echo admin_url('admin-ajax.php')?>" method="POST" id="wpshop_add_to_cart_form" >{WPSHOP_FROM_ADMIN_INDICATOR} {WPSHOP_ORDER_ID_INDICATOR} <input type="hidden" name="wpshop_pdt" id="wpshop_pdt" value="{WPSHOP_VARIATION_FORM_ELEMENT_ID}" /><?php wp_nonce_field( 'ajax_pos_product_variation_selection' ); ?><input type="hidden" name="wpshop_pdt_qty" id="wpshop_pdt_qty" value="{WPSHOP_PRODUCT_ADDED_TO_CART_QTY}" /><input type="hidden" name="action" value="wpshop_add_product_to_cart" /><input type="hidden" name="wpshop_cart_type" value="cart" />{WPSHOP_VARIATION_FORM_VARIATION_LIST}</form><?php
 $tpl_element['product_variation_form'] = ob_get_contents();
 ob_end_clean();
 
@@ -493,9 +493,9 @@ ob_start();
 ?><div class="wps-product-section">
 	<label><?php _e('Quantity', 'wpshop'); ?></label>
 	<div class="wps-productQtyForm">
-		<a class="wps-bton-icon-minus-small wps-cart-reduce-product-qty" href=""><i class="wps-icon-minus"></i></a>
+		<a class="wps-bton-icon-minus-small wps-cart-reduce-product-qty" data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_set_qty_for_product_into_cart' ); ?>" href=""><i class="wps-icon-minus"></i></a>
 		<input id="wps-cart-product-qty-{WPSHOP_PRODUCT_ID}" class="wpshop_product_qty_input" type="text" value="1" />
-		<a class="wps-bton-icon-plus-small wps-cart-add-product-qty" href=""><i class="wps-icon-plus"></i></a>
+		<a class="wps-bton-icon-plus-small wps-cart-add-product-qty" data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_set_qty_for_product_into_cart' ); ?>" href=""><i class="wps-icon-plus"></i></a>
 	</div>
 </div><?php
 $tpl_element['product_complete_sheet_quantity_chooser'] = ob_get_contents();

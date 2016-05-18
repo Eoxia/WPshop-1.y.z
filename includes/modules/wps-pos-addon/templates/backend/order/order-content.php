@@ -38,10 +38,10 @@
 					</ul>
 				<?php endif; ?>
 			</div>
-			<div><button class="wps-bton-second-mini-rounded item_qty" data-action="decrease" data-id="<?php echo $order_item_id; ?>" type="button" >-</button><input type="text" class="wpspos-dashboard-order-summary_qty" data-id="<?php echo $order_item_id; ?>" id="item_qty_<?php echo $order_item_id; ?>" value="<?php echo $order_item['item_qty']; ?>" /><button class="wps-bton-second-mini-rounded item_qty" data-action="increase" data-id="<?php echo $order_item_id; ?>" type="button" >+</button></td></div>
+			<div><button class="wps-bton-second-mini-rounded item_qty" data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_set_qty_for_product_into_cart' ); ?>" data-action="decrease" data-id="<?php echo $order_item_id; ?>" type="button" >-</button><input type="text" class="wpspos-dashboard-order-summary_qty" data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_set_qty_for_product_into_cart' ); ?>" data-id="<?php echo $order_item_id; ?>" id="item_qty_<?php echo $order_item_id; ?>" value="<?php echo $order_item['item_qty']; ?>" /><button class="wps-bton-second-mini-rounded item_qty" data-action="increase" data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_set_qty_for_product_into_cart' ); ?>" data-id="<?php echo $order_item_id; ?>" type="button" >+</button></td></div>
 			<div><input type="text"  class="wpspos-dashboard-order-summary_unit_price" id="price_<?php echo $order_item_id; ?>" value="<?php echo number_format($order_item['item_pu_ttc'], 2, '.', ''); ?>" /><?php echo wpshop_tools::wpshop_get_currency(); ?></td></div>
 			<div><?php echo number_format($order_item['item_total_ttc'], 2, '.', ''); ?> <?php echo wpshop_tools::wpshop_get_currency(); ?></div>
-			<div><button data-id="<?php echo $order_item_id; ?>" class="wps-bton-icon-close wps-pos-delete-product-of-order" type="button"></button></div>
+			<div><button data-id="<?php echo $order_item_id; ?>" data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_set_qty_for_product_into_cart' ); ?>" class="wps-bton-icon-close wps-pos-delete-product-of-order" type="button"></button></div>
 		</li>
 		<?php endforeach; ?>
 	<?php endif; ?>
