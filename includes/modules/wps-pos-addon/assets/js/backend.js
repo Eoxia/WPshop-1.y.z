@@ -316,7 +316,7 @@ jQuery( document ).ready(function(){
 		this_element = jQuery( this );
 		jQuery.post( ajaxurl, {action:'wps-pos-display-order-content', order_id:order_id} , function( response ) {
 			jQuery("#wps_cart_container").html( response );
-			jQuery.post( ajaxurl, {action:'wpspos-finish-order', order_id:order_id, customer_id:customer_id} , function( responseJson ) {
+			jQuery.post( ajaxurl, {action:'wpspos-finish-order', _wpnonce: this_element.data( 'nonce' ), order_id:order_id, customer_id:customer_id} , function( responseJson ) {
 				responseObj = jQuery.parseJSON( responseJson );
 				if ( true == responseObj.status ) {
 					jQuery( ".wpspos-order-final-step-container" ).html( responseObj.output );
@@ -431,6 +431,7 @@ function wps_pos_addon_refresh_cart() {
 	}
 	var data = {
 		action: 'wps-pos-display-order-content',
+		_wpnonce: jQuery( "#wps_cart_container" ).data( 'nonce' ),
 	};
 	jQuery.post( ajaxurl, data, function( response ){
 		jQuery("#wps_cart_container").html( response );

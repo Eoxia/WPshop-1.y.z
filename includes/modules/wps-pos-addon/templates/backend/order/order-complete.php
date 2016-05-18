@@ -31,8 +31,7 @@
 
 <div class="wps-pos-order-completion-button" >
 	<a href="<?php echo admin_url( $new_order ? 'admin.php?page=wps-pos&new_order=yes' : 'admin.php?page=wps-pos' ); ?>" class="wps-bton-first-rounded alignright" role="button"><?php echo $new_order ? __('Create a new order', 'wps-pos-i18n') : __('Return to current order', 'wps-pos-i18n'); ?></a>
-
 	<?php if ( !empty( $order_postmeta ) && !empty( $order_postmeta['order_status'] ) && ( 'completed' !=  $order_postmeta['order_status'] ) ) : ?>
-		<a title="<?php _e( 'New payment', 'wps-pos-i18n' ); ?>" href="<?php echo admin_url( 'admin-ajax.php?action=wpspos-finalize-order&order_id=' . $order_id . '&width=560&height=420' ); ?>" class="thickbox wps-bton-third-rounded alignright" ><?php _e( 'New payment', 'wps-pos-i18n' ); ?></a>
+		<a title="<?php _e( 'New payment', 'wps-pos-i18n' ); ?>" href="<?php print wp_nonce_url( admin_url( 'admin-ajax.php?action=wpspos-finalize-order&order_id=' . $order_id . '&width=560&height=420' ), 'wps_pos_finalize_order', '_wpnonce' ); ?>" class="thickbox wps-bton-third-rounded alignright" ><?php _e( 'New payment', 'wps-pos-i18n' ); ?></a>
 	<?php endif; ?>
 </div>

@@ -97,6 +97,11 @@ class wps_pos_addon_order {
 	 * AJAX - Affiche le contenu de la commande actuelle / Display current order content
 	 */
 	function wps_pos_order_content() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_pos_order_content' ) )
+			wp_die();
+
 		wp_die( $this->display_wps_pos_order_content() );
 	}
 
@@ -104,6 +109,11 @@ class wps_pos_addon_order {
 	 * AJAX - Affiche l'interface de finalisation de commande
 	 */
 	function wps_pos_finalize_order() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_pos_finalize_order' ) )
+			wp_die();
+
 		/**	Get current order content	*/
 		$current_order_id = ( !empty( $_GET ) && !empty( $_GET[ 'order_id' ] ) && is_int( (int)$_GET[ 'order_id' ] ) ) ? (int)$_GET[ 'order_id' ] : null;
 		if ( !empty( $current_order_id) ) {
@@ -138,6 +148,11 @@ class wps_pos_addon_order {
 	 * AJAX - Traite la commande / Process checkout
 	 */
 	function wps_pos_process_checkout() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_pos_process_checkout' ) )
+			wp_die();
+
 		$status = false;
 		$output = $message = '';
 

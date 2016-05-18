@@ -70,8 +70,7 @@
 				<p class="wps-hightlight"><?php _e( 'Total ET', 'wpshop'); ?><span class="alignright"><strong><?php echo number_format($cart_content['order_total_ht'], 2, '.', ''); ?></strong> <?php echo wpshop_tools::wpshop_get_currency(); ?></span></p>
 				<p class="wps-hightlight"><?php _e( 'Total ATI', 'wpshop'); ?><span class="alignright"><strong><?php echo wpshop_tools::formate_number( ( !empty( $cart_content['order_amount_to_pay_now'] ) && !empty($oid) && $cart_content['order_amount_to_pay_now'] > 0 ) ? $cart_content['order_amount_to_pay_now'] : ( (!empty($cart_content['order_grand_total']) ) ? $cart_content['order_grand_total'] : 0 ) ); ?></strong> <?php echo wpshop_tools::wpshop_get_currency(); ?></span></p>
 			</div>
-
-			<a title="<?php _e( 'Finalize order', 'wps-pos-i18n' ); ?>" href="<?php echo admin_url( 'admin-ajax.php?action=wpspos-finalize-order&width=560&height=420' ); ?>" class="thickbox wps-bton-first-rounded alignright" id="wpspos-finalize-order" ><?php _e( 'Finalize order', 'wps-pos-i18n' ); ?></a>
+			<a title="<?php _e( 'Finalize order', 'wps-pos-i18n' ); ?>" href="<?php print wp_nonce_url( admin_url( 'admin-ajax.php?action=wpspos-finalize-order&width=560&height=420' ), 'wps_pos_finalize_order', '_wpnonce' ); ?>" class="thickbox wps-bton-first-rounded alignright" id="wpspos-finalize-order" ><?php _e( 'Finalize order', 'wps-pos-i18n' ); ?></a>
 			<a href="<?php echo admin_url( 'admin.php?page=wps-pos&new_order=yes' ); ?>" class="wps-bton-second-rounded alignright" id="wpspos-neworder" ><?php _e( 'Empty order', 'wps-pos-i18n' ); ?></a>
 		</div>
 	</div>
