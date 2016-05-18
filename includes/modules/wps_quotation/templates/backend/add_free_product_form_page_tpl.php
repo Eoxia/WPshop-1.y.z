@@ -2,6 +2,7 @@
 <form id="wps_create_free_product" data-nonce="<?php echo wp_create_nonce( 'wps_add_product_to_order_admin' ); ?> " method="post" action="<?php echo admin_url('admin-ajax.php'); ?>">
 
 	<input type="hidden" name="action" value="wps_create_new_free_product">
+	<?php wp_nonce_field( 'wps_create_new_free_product' ); ?>
 
 	<div class="wps-boxed" style="margin-top:10px;">
 		<span class="wps-h5"><?php _e( 'Product', 'wpshop'); ?></span>

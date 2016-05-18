@@ -54,6 +54,11 @@ class wps_quotation_backend_ctr {
 	 * Template for display form (AjaxForm) - Call from : Line 3 'templates\backend\add_free_product_form_page_tpl.php'
 	 */
 	public function wps_free_product_form_page_tpl() {
+		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_free_product_form_page_tpl' ) )
+			wp_die();
+
 		$order_id = ( !empty($_GET['oid']) ) ? intval( $_GET['oid']) : null;
 		require ( wpshop_tools::get_template_part( WPS_QUOTATION_DIR, WPS_QUOTATION_TEMPLATES_MAIN_DIR, "backend", "add_free_product_form_page_tpl") );
 		wp_die();
@@ -65,6 +70,11 @@ class wps_quotation_backend_ctr {
 	 * @return integer $pid Product ID
 	 */
 	public function wps_create_new_free_product() {
+		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_create_new_free_product' ) )
+			wp_die();
+
 		global $wpdb;
 		$status = false;
 		$output = __('Error at product creation!', 'wpshop');
@@ -133,6 +143,11 @@ class wps_quotation_backend_ctr {
 	}
 
 	function check_code_for_activation() {
+		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'check_code_for_activation' ) )
+			wp_die();
+
 		$response = array(
 			'status' => false,
 			'message' => __( 'Activation code for quotation addon is invalid, please check it and try again.', 'wpshop' ),
