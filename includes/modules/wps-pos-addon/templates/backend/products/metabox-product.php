@@ -13,7 +13,7 @@
 				$only_barcode = 'checked="checked"';
 			}
 		?>
-		<input type="checkbox" value="only_barcode" name="wps-pos-search-in" <?php echo $only_barcode; ?> />
+		<input data-nonce="<?php echo wp_create_nonce( 'ajax_save_config_barcode_only' ); ?>" type="checkbox" value="only_barcode" name="wps-pos-search-in" <?php echo $only_barcode; ?> />
 		<?php _e( 'Search only in barcode', 'wps-pos-i18n' ); ?>
 	</label>
 </div>

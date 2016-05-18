@@ -51,8 +51,8 @@ class wps_pos_addon {
 		/**	Recharge la liste d'un élément donné ( client ou produit ) pour une lettre donnée / Load element list corresponding to a given letter	*/
 		add_action( 'wp_ajax_wpspos_load_element_from_letter', array( $this, 'ajax_load_element_from_letter' ) );
 		add_action( 'wp_ajax_wpspos_save_config_barcode_only', array( $this, 'ajax_save_config_barcode_only' ) );
-		add_action( 'wp_ajax_wpspos_state_is_quotation', array( $this, 'ajax_wpspos_state_is_quotation' ) );
-		add_action( 'wp_ajax_wpspos_state_is_receipt', array( $this, 'ajax_wpspos_state_is_receipt' ) );
+		// add_action( 'wap_ajax_wpspos_state_is_quotation', array( $this, 'ajax_wpspos_state_is_quotation' ) );
+		// add_action( 'wap_ajax_wpspos_state_is_receipt', array( $this, 'ajax_wpspos_state_is_receipt' ) );
 
 	}
 
@@ -396,6 +396,12 @@ class wps_pos_addon {
 	 * AJAX - Load element list from choosen letter into alphabet list
 	 */
 	function ajax_load_element_from_letter() {
+
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'ajax_load_element_from_letter' ) )
+			wp_die();
+
 		$response = array(
 			'status' => false,
 			'output' => __('An error occured', 'wps-pos-i18n'),
@@ -438,42 +444,44 @@ class wps_pos_addon {
 	 * AJAX - Save state of checkbox
 	 */
 	function ajax_save_config_barcode_only() {
+
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'ajax_save_config_barcode_only' ) )
+			wp_die();
+
 		$option = 'wps_pos_options';
 		$values = get_option( $option );
-		$value_checkbox = !empty( $_POST['value_checkbox'] ) ? sanitize_text_field( $_POST['value_checkbox'] ) : '';
-		if( !empty( $value_checkbox ) && $value_checkbox == 'checked' ) {
-			$values['only_barcode'] = 'checked';
-  			update_option( $option, $values );
-		} elseif( $value_checkbox == '' ) {
-			$values['only_barcode'] = 'unchecked';
-  			update_option( $option, $values );
+		if ( !empty( $values['only_barcode'] ) ) {
+			$values['only_barcode'] = !empty( $_POST['value_checkbox'] ) ? sanitize_text_field( $_POST['value_checkbox' ] ) : '';
+	  	update_option( $option, $values );
 		}
 		wp_die();
 	}
 
-	function ajax_wpspos_state_is_quotation() {
-		@session_start();
-		$value_checkbox = !empty( $_POST['value_checkbox'] ) ? sanitize_text_field( $_POST['value_checkbox'] ) : '';
+	// function ajax_wpspos_state_is_quotation() {
+	// 	@session_start();
+	// 	$value_checkbox = !empty( $_POST['value_checkbox'] ) ? sanitize_text_field( $_POST['value_checkbox'] ) : '';
+	//
+	// 	if( !empty( $value_checkbox ) && $value_checkbox == 'checked' ) {
+	// 		$_SESSION['wpspos_is_quotation'] = true;
+	// 	} elseif( $value_checkbox == '' ) {
+	// 		unset( $_SESSION['wpspos_is_quotation'] );
+	// 	}
+	// 	wp_die();
+	// }
 
-		if( !empty( $value_checkbox ) && $value_checkbox == 'checked' ) {
-			$_SESSION['wpspos_is_quotation'] = true;
-		} elseif( $value_checkbox == '' ) {
-			unset( $_SESSION['wpspos_is_quotation'] );
-		}
-		wp_die();
-	}
-
-	function ajax_wpspos_state_is_receipt() {
-		@session_start();
-		$value_checkbox = !empty( $_POST['value_checkbox'] ) ? sanitize_text_field( $_POST['value_checkbox'] ) : '';
-
-		if( !empty( $value_checkbox ) && $value_checkbox == 'checked' ) {
-			$_SESSION['wpspos_is_receipt'] = true;
-		} elseif( $value_checkbox == '' ) {
-			unset( $_SESSION['wpspos_is_receipt'] );
-		}
-		wp_die();
-	}
+	// function ajax_wpspos_state_is_receipt() {
+	// 	@session_start();
+	// 	$value_checkbox = !empty( $_POST['value_checkbox'] ) ? sanitize_text_field( $_POST['value_checkbox'] ) : '';
+	//
+	// 	if( !empty( $value_checkbox ) && $value_checkbox == 'checked' ) {
+	// 		$_SESSION['wpspos_is_receipt'] = true;
+	// 	} elseif( $value_checkbox == '' ) {
+	// 		unset( $_SESSION['wpspos_is_receipt'] );
+	// 	}
+	// 	wp_die();
+	// }
 
 }
 

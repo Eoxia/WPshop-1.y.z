@@ -1,16 +1,18 @@
 jQuery( document ).ready(function(){
 	/** AutoFocus search */
 	jQuery("input[name='wps-pos-product-to-choose']").focus();
-	
+
 	/** Save state if search only barcode */
 	jQuery( "input[name=wps-pos-search-in]" ).change( function(){
 		/** Save state on db without return */
 		var checkbox = "unchecked";
 		if ( jQuery( "input[name=wps-pos-search-in]" ).is( ":checked" ) ) {
+
 			checkbox = "checked";
 		}
 		var data = {
 			action: "wpspos_save_config_barcode_only",
+			_wpnonce: jQuery( "input[name=wps-pos-search-in]" ).data( 'nonce' ),
 			value_checkbox: checkbox,
 		};
 		jQuery.post( ajaxurl, data, function(){}, 'json');
@@ -22,7 +24,9 @@ jQuery( document ).ready(function(){
 		action: "wpspos_state_is_quotation",
 		value_checkbox: 'unchecked',
 	};
+
 	jQuery.post( ajaxurl, data, function(){}, 'json');
+
 	jQuery( "input[name=wpspos-is-quotation]" ).attr('checked',false);
 	//Save state on session
 	jQuery( "input[name=wpspos-is-quotation]" ).change( function(){
@@ -57,7 +61,7 @@ jQuery( document ).ready(function(){
 		};
 		jQuery.post( ajaxurl, data, function(){}, 'json');
 	});
-	
+
 	/** Add folded class to admin menu on POS page	*/
 	setTimeout( function(){
 		jQuery( "body" ).addClass( "folded" );
@@ -84,6 +88,7 @@ jQuery( document ).ready(function(){
 			/**	Launch an ajax request for displaying	*/
 			var data = {
 				action: "wpspos_load_element_from_letter",
+				_wpnonce: jQuery( this ).data( "nonce" ),
 				element_type: jQuery( this ).attr( "data-type" ),
 				term: jQuery( this ).attr( "data-id" ),
 			};
@@ -292,7 +297,7 @@ jQuery( document ).ready(function(){
 	jQuery( document ).on( "keyup", ".wpspos-order-received-amount", function() {
 		display_money_cash_back();
 	});
-	
+
 	jQuery( document ).on( 'click', '.wpspos_select_address', function() {
 		jQuery( this ).closest( 'ul' ).children( 'li' ).removeClass( 'wps-activ' );
 		jQuery( this ).addClass( 'wps-activ' );
@@ -302,7 +307,7 @@ jQuery( document ).ready(function(){
 		/*var type = jQuery( this ).attr( 'name' ).replace( '_address_id', '' );
 		jQuery( '#wps_order_selected_address_' + type ).val( jQuery( this ) .val() );*/
 	});
-	
+
 	jQuery( document ).on( 'click', ".lnk_load_order", function(e){
 		e.preventDefault();
 		order_id = this.dataset.oid;
@@ -327,7 +332,7 @@ jQuery( document ).ready(function(){
 			});
 		});
 	});
-	
+
 	jQuery( document ).on( 'click', '.toggle-historic', function(e) {
 		e.preventDefault();
 		if( jQuery( this ).hasClass('dashicons-arrow-down') ) {
