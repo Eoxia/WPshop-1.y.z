@@ -160,7 +160,7 @@ class wpshop_products {
 		$wp_rewrite->add_rewrite_tag('%' . WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT . '%', '([^/]+)', WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT . "=");*/
 	//	flush_rewrite_rules();
 	}
-	
+
 	public static function hidden_meta_boxes($hidden, $screen, $use_defaults) {
 		global $wpdb;
 		if ( WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT === $screen->post_type ) {
@@ -1644,7 +1644,7 @@ class wpshop_products {
 		$result_price_piloting = ( !empty($wpshop_price_piloting_option) && $wpshop_price_piloting_option == 'HT') ? $check_product_price['et'] : $check_product_price['ati'];
 		if ( $price_display && !( !empty( $catalog_options ) && ( !empty( $catalog_options[ 'wpshop_catalog_empty_price_behaviour' ] ) && $catalog_options[ 'wpshop_catalog_empty_price_behaviour' ] == 'yes' ) && $result_price_piloting == 0 ) ) {
 			$product_price_infos = wpshop_prices::get_product_price( $product, 'just_price_infos', 'mini_output' );
-			
+
 	 		if ( !empty($product_price_infos) ) {
 	 			$tpl_component_price = array();
 	 			/** Price piloting **/
@@ -2635,7 +2635,7 @@ class wpshop_products {
 						}
 
 						$input_def['options_label']['original'] = true;
-						$input_def['option'] = ' class="wpshop_variation_selector_input' . ($is_required ? ' attribute_is_required_input attribute_is_required_input_' . $attribute_code . ' ' : '') . ( $attribute_db_definition->_display_informations_about_value == 'yes' ? ' wpshop_display_information_about_value' : '' ) . ' ' . (( is_admin() ) ? $attribute_db_definition->backend_css_class : $attribute_db_definition->frontend_css_class) . '" ';
+						$input_def['option'] = 'data-nonce="' . wp_create_nonce( 'wpshop_ajax_wpshop_variation_selection' ) . '" class="wpshop_variation_selector_input' . ($is_required ? ' attribute_is_required_input attribute_is_required_input_' . $attribute_code . ' ' : '') . ( $attribute_db_definition->_display_informations_about_value == 'yes' ? ' wpshop_display_information_about_value' : '' ) . ' ' . (( is_admin() ) ? $attribute_db_definition->backend_css_class : $attribute_db_definition->frontend_css_class) . '" ';
 						if ( !empty(  $real_possible_values ) ) {
 							$tpl_component = array();
 							$attribute_output_def['value'] = isset($head_wpshop_variation_definition['options']['attributes_default_value'][$attribute_code]) ? $head_wpshop_variation_definition['options']['attributes_default_value'][$attribute_code] : $input_def['value'];
@@ -2672,7 +2672,7 @@ class wpshop_products {
 					$attribute_output_def = wpshop_attributes::get_attribute_field_definition( $attribute_not_in_variation_but_user_defined, (is_array($head_wpshop_variation_definition) && isset($head_wpshop_variation_definition['options']['attributes_default_value'][$attribute_not_in_variation_but_user_defined->code]) ? $head_wpshop_variation_definition['options']['attributes_default_value'][$attribute_not_in_variation_but_user_defined->code] : 'Salut' ));
 
 					$tpl_component = array();
-					$attribute_output_def['option'] = ' class="wpshop_variation_selector_input' . ($is_required ? ' attribute_is_required_input attribute_is_required_input_' . $attribute_not_in_variation_but_user_defined->code : '') . ' ' . ( str_replace('"', '', str_replace('class="', '', $attribute_output_def['option'])) ) . ' ' . (( is_admin() ) ? $attribute_not_in_variation_but_user_defined->backend_css_class : $attribute_not_in_variation_but_user_defined->frontend_css_class) . '" ';
+					$attribute_output_def['option'] = 'data-nonce="' . wp_create_nonce( 'wpshop_ajax_wpshop_variation_selection' ) . '" class="wpshop_variation_selector_input' . ($is_required ? ' attribute_is_required_input attribute_is_required_input_' . $attribute_not_in_variation_but_user_defined->code : '') . ' ' . ( str_replace('"', '', str_replace('class="', '', $attribute_output_def['option'])) ) . ' ' . (( is_admin() ) ? $attribute_not_in_variation_but_user_defined->backend_css_class : $attribute_not_in_variation_but_user_defined->frontend_css_class) . '" ';
 					$tpl_component['VARIATION_INPUT'] = wpshop_form::check_input_type($attribute_output_def, WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION . '[free]') . $attribute_output_def['options'];
 					$tpl_component['VARIATION_LABEL'] = ($is_required ? '<span class="attribute_is_required attribute_is_required_' . $attribute_not_in_variation_but_user_defined->code . '" >' . stripslashes($attribute_not_in_variation_but_user_defined->frontend_label) . '</span> <span class="required" >*</span>' : stripslashes($attribute_not_in_variation_but_user_defined->frontend_label) );
 					$tpl_component['VARIATION_CODE'] = $attribute_not_in_variation_but_user_defined->code;
@@ -3413,7 +3413,7 @@ class wpshop_products {
 		$result = explode('__', $ID);
 		return end($result);
 	}
-	
+
 	/**
 	 * Update all variations definitions who not modified
 	 * @param array $new_value

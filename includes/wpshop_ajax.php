@@ -2191,6 +2191,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	 * Refresh Price in complete product sheet and Cart summary display
 	 */
 	function wpshop_ajax_wpshop_variation_selection() {
+		check_ajax_referer( 'wpshop_ajax_wpshop_variation_selection' );
 		$product_id = isset($_POST['wpshop_pdt']) ? intval(wpshop_tools::varSanitizer($_POST['wpshop_pdt'])) : null;
 		$wpshop_variation_selected = isset($_POST['wpshop_variation']) ? $_POST['wpshop_variation'] : null;
 		$wpshop_free_variation = isset($_POST['wpshop_free_variation']) ? $_POST['wpshop_free_variation'] : null;
@@ -2208,6 +2209,8 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 
 	function wpshop_ajax_variation_selection_show_detail_for_value() {
 		global $wpdb;
+
+		check_ajax_referer( 'wpshop_ajax_wpshop_variation_selection' );
 
 		$display = '';
 		$attribute_for_detail = isset($_POST['attribute_for_detail']) ? $_POST['attribute_for_detail'] : null;
@@ -2551,6 +2554,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 // 	add_action('wp_ajax_nopriv_wpshop_quick_add_entity', 'ajax_wpshop_add_entity');
 
 	function ajax_wpshop_reload_attribute_for_quick_add() {
+		check_ajax_referer( 'ajax_wpshop_reload_attribute_for_quick_add' );
 		$output = '';
 		if ( !empty($_POST['attribute_to_reload']) ) {
 			foreach ( $_POST['attribute_to_reload'] as $attribute_code ) {
@@ -2564,6 +2568,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action('wp_ajax_reload_attribute_for_quick_add', 'ajax_wpshop_reload_attribute_for_quick_add');
 
 	function ajax_wpshop_change_address() {
+		check_ajax_referer( 'ajax_wpshop_change_address' );
 		$address_id = ( !empty($_POST['address_id']) ? wpshop_tools::varSanitizer($_POST['address_id']) : null);
 		$address_type = ( !empty($_POST['address_type']) ? wpshop_tools::varSanitizer($_POST['address_type']) : null);
 		$is_allowed_destination  = true;
@@ -2615,6 +2620,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action('wp_ajax_nopriv_change_address', 'ajax_wpshop_change_address');
 
 	function ajax_wpshop_load_create_new_customer_interface() {
+		check_ajax_referer( 'ajax_wpshop_load_create_new_customer_interface' );
 		$billing_address_option = get_option('wpshop_billing_address');
 		$shipping_address_option = get_option('wpshop_shipping_address_choice');
 
@@ -2643,6 +2649,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action('wp_ajax_load_create_new_customer_interface', 'ajax_wpshop_load_create_new_customer_interface');
 
 	function ajax_wpshop_create_new_customer() {
+		check_ajax_referer( 'ajax_wpshop_create_new_customer' );
 		$result = '';
 		if ( $_POST['attribute'][$_REQUEST['billing_address']]['varchar']['address_user_email'] != null ) {
 			/** Crerate the new customer user account */
@@ -2685,6 +2692,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	 * Send a message to customer
 	 */
 	function ajax_wpshop_send_message_by_type () {
+		check_ajax_referer( 'ajax_wpshop_send_message_by_type' );
 		global $wpdb;
 		$result = array();
 		$message_type_id = ( !empty( $_POST['message_type_id'])) ? wpshop_tools::varSanitizer($_POST['message_type_id']) : null;
@@ -2711,6 +2719,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 
 
 	function ajax_wpshop_upload_downloadable_file_action() {
+		check_ajax_referer( 'ajax_wpshop_upload_downloadable_file_action' );
 		$result = '';
 		if ( !empty( $_FILES['wpshop_file'] ) && !empty($_POST['element_identifer']) ) {
 			if(!is_dir(WPSHOP_UPLOAD_DIR)){
@@ -2737,6 +2746,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		$output  = '<form method="post" action="' .admin_url('admin-ajax.php') .'" name="" id="upload_downloadable_file" enctype="multipart/form-data" >';
 		$output .= '<p class="formField"><label for="wpshop_file">' .__('Choose your file to send', 'wpshop'). '</label><input type="file" name="wpshop_file" /></p>';
 		$output .= '<input type="hidden" name="action" value="upload_downloadable_file_action" />';
+		$output .= wp_nonce_field( 'ajax_wpshop_upload_downloadable_file_action' );
 		$output .= '<input type="hidden" name="element_identifer" id="element_identifer" value="' .$_POST['product_identifer']. '" />';
 		$output .= '<p class="formField"><a id="send_downloadable_file_button" class="wps-bton-first-mini-rounded">' .__('Send your file', 'wpshop'). '</a></p>';
 		$output .= '</form>';

@@ -36,7 +36,8 @@ class wpshop_paypal {
 			// read the post from PayPal system and add 'cmd'
 			$req = 'cmd=_notify-validate';
 			// @TODO : REQUEST
-			foreach ($_POST as $key => $value) {
+			$post = !empty($_POST) ? (array) $_POST : array();
+			foreach ( $post as $key => $value) {
 				$value = urlencode(stripslashes($value));
 				$req .= "&$key=$value";
 			}
@@ -71,8 +72,9 @@ class wpshop_paypal {
 			$txn_type = sanitize_text_field( $_POST['txn_type'] );
 
 			// @TODO : Request
-			if ( !empty($_POST) ) {
-				foreach ( $_POST as $key => $value) {
+			$post = !empty($_POST) ? (array) $_POST : array();
+			if ( !empty($post) ) {
+				foreach ( $post as $key => $value) {
 					if ( substr($key, 0, 9) == 'item_name' ) {
 						$_POST[$key] = htmlentities($value);
 					}

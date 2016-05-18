@@ -461,7 +461,9 @@ if ( !class_exists( "wpeologs_ctr" ) ) {
 				die();
 			}
 
-			foreach( $_POST['service'] as &$service ) {
+			$services = !empty($_POST['service']) ? (array) $_POST['service'] : array();
+
+			foreach( $services as &$service ) {
 				// sanitize
 				$service['active'] = sanitize_key( $service['active'] );
 				$service['name'] = sanitize_key( $service['name'] );

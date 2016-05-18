@@ -1334,7 +1334,7 @@ ob_end_clean();
 
 /* ADDRESSES LIST BY TYPE COMBOBOX*/
 ob_start();
-?><select class="alignright address_choice_select" id='{WPSHOP_ADDRESS_TYPE}'>{WPSHOP_ADDRESS_COMBOBOX_OPTION}</select><?php
+?><select class="alignright address_choice_select"  data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_change_address' ); ?>" id='{WPSHOP_ADDRESS_TYPE}'>{WPSHOP_ADDRESS_COMBOBOX_OPTION}</select><?php
 $tpl_element['addresses_type_combobox'] = ob_get_contents();
 ob_end_clean();
 

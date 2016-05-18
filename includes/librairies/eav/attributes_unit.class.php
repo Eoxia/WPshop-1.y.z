@@ -109,8 +109,8 @@ class wpshop_attributes_unit
 	*/
 	function pageTitle()
 	{
-		$action = isset($_REQUEST['action']) ? wpshop_tools::varSanitizer($_REQUEST['action']) : '';
-		$objectInEdition = isset($_REQUEST['id']) ? wpshop_tools::varSanitizer($_REQUEST['id']) : '';
+		$action = isset($_REQUEST['action']) ? sanitize_text_field($_REQUEST['action']) : '';
+		$objectInEdition = isset($_REQUEST['id']) ? sanitize_key($_REQUEST['id']) : '';
 
 		$title = __(self::pageTitle, 'wpshop' );
 		if($action != '')
@@ -125,7 +125,7 @@ class wpshop_attributes_unit
 				$title = __(self::pageAddingTitle, 'wpshop');
 			}
 		}
-		elseif((self::getEditionSlug() != self::getListingSlug()) && ($_GET['page'] == self::getEditionSlug()))
+		elseif((self::getEditionSlug() != self::getListingSlug()) && (sanitize_text_field($_GET['page']) == self::getEditionSlug()))
 		{
 			$title = __(self::pageAddingTitle, 'wpshop');
 		}
@@ -158,27 +158,28 @@ class wpshop_attributes_unit
 		}
 
 		/*	Define the database operation type from action launched by the user	 */
-		$_REQUEST[self::getDbTable()]['default_value'] = str_replace('"', "'", $_REQUEST[self::getDbTable()]['default_value']);
+		$attribute_group_parameter = (!empty($_REQUEST[self::getDbTable()])) ? (array) $_REQUEST[self::getDbTable()] : array();
+		$attribute_group_parameter['default_value'] = str_replace('"', "'", sanitize_text_field( $attribute_group_parameter['default_value']));
 		/*************************		GENERIC				**************************/
 		/*************************************************************************/
 		$pageAction = isset($_REQUEST[self::getDbTable() . '_action']) ? wpshop_tools::varSanitizer($_REQUEST[self::getDbTable() . '_action']) : '';
-		$id = isset($_REQUEST[self::getDbTable()]['id']) ? wpshop_tools::varSanitizer($_REQUEST[self::getDbTable()]['id']) : '';
+		$id = isset($attribute_group_parameter['id']) ? sanitize_key($attribute_group_parameter['id']) : '';
 		if(($pageAction != '') && (($pageAction == 'edit') || ($pageAction == 'editandcontinue'))){
 			if(current_user_can('wpshop_edit_attributes'))
 			{
-				$_REQUEST[self::getDbTable()]['last_update_date'] = date('Y-m-d H:i:s');
+				$attribute_group_parameter['last_update_date'] = date('Y-m-d H:i:s');
 				if($pageAction == 'delete')
 				{
 					if(current_user_can('wpshop_delete_attributes'))
 					{
-						$_REQUEST[self::getDbTable()]['status'] = 'deleted';
+						$attribute_group_parameter['status'] = 'deleted';
 					}
 					else
 					{
 						$actionResult = 'userNotAllowedForActionDelete';
 					}
 				}
-				$actionResult = wpshop_database::update($_REQUEST[self::getDbTable()], $id, self::getDbTable());
+				$actionResult = wpshop_database::update($attribute_group_parameter, $id, self::getDbTable());
 			}
 			else
 			{
@@ -188,9 +189,9 @@ class wpshop_attributes_unit
 		elseif(($pageAction != '') && (($pageAction == 'delete'))){
 			if(current_user_can('wpshop_delete_attributes'))
 			{
-				$_REQUEST[self::getDbTable()]['last_update_date'] = date('Y-m-d H:i:s');
-				$_REQUEST[self::getDbTable()]['status'] = 'deleted';
-				$actionResult = wpshop_database::update($_REQUEST[self::getDbTable()], $id, self::getDbTable());
+				$attribute_group_parameter['last_update_date'] = date('Y-m-d H:i:s');
+				$attribute_group_parameter['status'] = 'deleted';
+				$actionResult = wpshop_database::update($attribute_group_parameter, $id, self::getDbTable());
 			}
 			else
 			{
@@ -199,16 +200,16 @@ class wpshop_attributes_unit
 		}
 		elseif(($pageAction != '') && (($pageAction == 'save') || ($pageAction == 'saveandcontinue') || ($pageAction == 'add'))){
 			if(current_user_can('wpshop_add_attributes')){
-				$_REQUEST[self::getDbTable()]['creation_date'] = date('Y-m-d H:i:s');
-				if(trim($_REQUEST[self::getDbTable()]['code']) == ''){
-					$_REQUEST[self::getDbTable()]['code'] = $_REQUEST[self::getDbTable()]['frontend_label'];
+				$attribute_group_parameter['creation_date'] = date('Y-m-d H:i:s');
+				if(trim($attribute_group_parameter['code']) == ''){
+					$attribute_group_parameter['code'] = $attribute_group_parameter['frontend_label'];
 				}
-				$_REQUEST[self::getDbTable()]['code'] = wpshop_tools::slugify(str_replace("\'", "_", str_replace('\"', "_", $_REQUEST[self::getDbTable()]['code'])), array('noAccent', 'noSpaces', 'lowerCase', 'noPunctuation'));
-				$code_exists = self::getElement($_REQUEST[self::getDbTable()]['code'], "'valid', 'moderated', 'deleted'", 'code');
+				$attribute_group_parameter['code'] = wpshop_tools::slugify(str_replace("\'", "_", str_replace('\"', "_", $attribute_group_parameter['code'])), array('noAccent', 'noSpaces', 'lowerCase', 'noPunctuation'));
+				$code_exists = self::getElement($attribute_group_parameter['code'], "'valid', 'moderated', 'deleted'", 'code');
 				if((is_object($code_exists) || is_array($code_exists)) && (count($code_exists) > 0)){
-					$_REQUEST[self::getDbTable()]['code'] = $_REQUEST[self::getDbTable()]['code'] . '_' . (count($code_exists) + 1);
+					$attribute_group_parameter['code'] = $attribute_group_parameter['code'] . '_' . (count($code_exists) + 1);
 				}
-				$actionResult = wpshop_database::save($_REQUEST[self::getDbTable()], self::getDbTable());
+				$actionResult = wpshop_database::save($attribute_group_parameter, self::getDbTable());
 				$id = $wpdb->insert_id;
 			}
 			else{
@@ -222,7 +223,7 @@ class wpshop_attributes_unit
 		/************		CHANGE ERROR MESSAGE FOR SPECIFIC CASE					*************/
 		/****************************************************************************/
 		if($actionResult != ''){
-			$elementIdentifierForMessage = '<span class="bold" >' . $_REQUEST[self::getDbTable()]['frontend_label'] . '</span>';
+			$elementIdentifierForMessage = '<span class="bold" >' . $attribute_group_parameter['frontend_label'] . '</span>';
 			if ($actionResult == 'error') {
 				$pageMessage .= '<img src="' . WPSHOP_ERROR_ICON . '" alt="action error" class="wpshopPageMessage_Icon" />' . sprintf(__('An error occured while saving %s', 'wpshop'), $elementIdentifierForMessage);
 				if(WPSHOP_DEBUG_MODE)
@@ -400,8 +401,8 @@ class wpshop_attributes_unit
 
 		$the_form_content_hidden = $the_form_general_content = $the_form_option_content = '';
 		foreach($dbFieldList as $input_key => $input_def){
-			$pageAction = isset($_REQUEST[self::getDbTable() . '_action']) ? wpshop_tools::varSanitizer($_REQUEST[self::getDbTable() . '_action']) : '';
-			$requestFormValue = isset($_REQUEST[self::currentPageCode][$input_def['name']]) ? wpshop_tools::varSanitizer($_REQUEST[self::currentPageCode][$input_def['name']]) : '';
+			$pageAction = isset($_REQUEST[self::getDbTable() . '_action']) ? sanitize_text_field($_REQUEST[self::getDbTable() . '_action']) : '';
+			$requestFormValue = isset($_REQUEST[self::currentPageCode][$input_def['name']]) ? sanitize_text_field($_REQUEST[self::currentPageCode][$input_def['name']]) : '';
 			$currentFieldValue = $input_def['value'];
 			if(is_object($editedItem)){
 				$currentFieldValue = $editedItem->{$input_def['name']};
@@ -446,10 +447,8 @@ class wpshop_attributes_unit
 		}
 
 		$the_form = '
-<form name="' . self::getDbTable() . '_form" id="' . self::getDbTable() . '_form" method="post" action="' . admin_ajax() . '" >
-' . wpshop_form::form_input('action', 'action', $_REQUEST['action'], 'hidden') . '
-' . wpshop_form::form_input('post', 'post', 'true' , 'hidden') . '
-' . wpshop_form::form_input('elementCode', 'elementCode', 'attribute_unit_management' , 'hidden') . '
+<form name="' . self::getDbTable() . '_form" id="' . self::getDbTable() . '_form" method="post" action="' . admin_ajax( 'admin_ajax.php' ) . '" >
+' . wpshop_form::form_input('action', 'action', 'wps_attribute_group_unit_edit', 'hidden') . '
 ' . wpshop_form::form_input(self::currentPageCode . '_form_has_modification', self::currentPageCode . '_form_has_modification', 'no' , 'hidden') . '
 	' . $the_form_content_hidden .'' . $the_form_general_content . '
 	<input type="button" value="' . __('Back', 'wpshop') . '" class="button-primary alignright" name="cancel_unit_edition" id="cancel_unit_edition" />

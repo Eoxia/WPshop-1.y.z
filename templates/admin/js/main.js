@@ -376,6 +376,7 @@ wpshop(document).ready(function(){
 
 		var data = {
 				action: "send_message_by_type",
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 				customer_user_id : jQuery('#selected_recipient option:selected').val(),
 				message_type_id : jQuery('#wpshop_postid').val(),
 				message_model_name : jQuery('#wpshop_message_model').val()
@@ -726,10 +727,11 @@ wpshop(document).ready(function(){
 	}
 
 	jQuery("#create_new_customer").click( function(){
-
+		var _wpnonce = jQuery( this ).data( 'nonce' );
 		jQuery("#create_new_customer_dialog").dialog("open");
 		var data = {
 				action: "load_create_new_customer_interface"
+				_wpnonce: _wpnonce,
 			};
 			jQuery.post(ajaxurl, data, function(response) {
 				if ( response[0] ) {
