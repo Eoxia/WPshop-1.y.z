@@ -2751,17 +2751,19 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	function ajax_wpshop_upload_downloadable_file_action() {
 		check_ajax_referer( 'ajax_wpshop_upload_downloadable_file_action' );
 		$result = '';
-		if ( !empty( $_FILES['wpshop_file'] ) && !empty($_POST['element_identifer']) ) {
+		$element_identifier = !empty( $_POST ) && !empty( $_POST[ 'element_identifier' ] ) && is_int( (int)$_POST[ 'element_identifier' ] ) ? (int)$_POST[ 'element_identifier' ] : 0;
+		$wpshop_uploaded_file = !empty( $_FILES ) && !empty( $_FILES[ 'wpshop_file' ] ) && is_array( (array)$_FILES[ 'wpshop_file' ] ) ? (array)$_FILES[ 'wpshop_file' ] : array();
+
+		if ( !empty( $wpshop_uploaded_file ) && !empty( $element_identifier ) ) {
 			if(!is_dir(WPSHOP_UPLOAD_DIR)){
 				mkdir(WPSHOP_UPLOAD_DIR, 0755, true);
 			}
-			$file = $_FILES['wpshop_file'];
+			$file = $wpshop_uploaded_file;
 			$tmp_name = $file['tmp_name'];
 			$name = sanitize_file_name( current_time( 'mysql', 0 ).'__'.$file["name"] );
 			@move_uploaded_file($tmp_name, WPSHOP_UPLOAD_DIR.$name);
 
 			$n = WPSHOP_UPLOAD_URL.'/'.$name;
-			$element_identifer = (int) $_POST['element_identifer'];
 			update_post_meta( $element_identifier, 'attribute_option_is_downloadable_', array('file_url' => $n));
 			$result = '<a href="' .$n. '" target="_blank" download>' .$name. '</a>';
 		}
