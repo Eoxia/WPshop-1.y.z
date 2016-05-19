@@ -375,8 +375,8 @@ class wpshop_attributes_set{
 	    //Fetch, prepare, sort, and filter our data...
 		$status="'valid', 'moderated'";
 		$attribute_set_list = array();
-		$attribute_group_status = !empty( $_REQUEST['attribute_groups_status'] ) ? sanitzie_text_field( $_REQUEST['attribute_groups_status'] ) : '';
-		if(!empty($_REQUEST['attribute_groups_status'])){
+		$attribute_group_status = !empty( $_REQUEST['attribute_groups_status'] ) ? sanitize_text_field( $_REQUEST['attribute_groups_status'] ) : '';
+		if(!empty($attribute_group_status)){
 			$status="'".$attribute_group_status."'";
 		}
 		$attr_set_list = wpshop_attributes_set::getElement('', $status);
