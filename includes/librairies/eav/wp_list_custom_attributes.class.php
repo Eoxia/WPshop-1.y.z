@@ -38,9 +38,11 @@ class wpshop_attributes_custom_List_table extends WP_List_Table{
 		$unactive_nb = wpshop_attributes::getElement('', "'moderated', 'notused'");
 		$deleted_nb = wpshop_attributes::getElement('', "'deleted'");
 
-		$wpshop_attribute_links['wpshop_attributes_links wpshop_attributes_links_valid'.(empty($_REQUEST['attribute_status'])?' current':'')] = '<a href="'.admin_url('admin.php?page=' . WPSHOP_URL_SLUG_ATTRIBUTE_LISTING).'" >'.__('Used attributes', 'wpshop').' ('.count($active_nb).')</a>';
-		$wpshop_attribute_links['wpshop_attributes_links wpshop_attributes_links_moderated'.(!empty($_REQUEST['attribute_status']) && ($_REQUEST['attribute_status']=='unactive')?' current':'')] = '<a href="'.admin_url('admin.php?page=' . WPSHOP_URL_SLUG_ATTRIBUTE_LISTING.'&attribute_status=unactive').'" >'.__('Unactive attributes', 'wpshop').' ('.count($unactive_nb).')</a>';
-		$wpshop_attribute_links['wpshop_attributes_links wpshop_attributes_links_deleted'.(!empty($_REQUEST['attribute_status']) && ($_REQUEST['attribute_status']=='deleted')?' current':'')] = '<a href="'.admin_url('admin.php?page=' . WPSHOP_URL_SLUG_ATTRIBUTE_LISTING.'&attribute_status=deleted').'" >'.__('Trashed attributes', 'wpshop').' ('.count($deleted_nb).')</a>';
+		$attribute_status = !empty( $_REQUEST['attribute_status'] ) ? sanitize_text_field( $_REQUEST['attribute_status'] ) : '';
+
+		$wpshop_attribute_links['wpshop_attributes_links wpshop_attributes_links_valid'.(empty($attribute_status)?' current':'')] = '<a href="'.admin_url('admin.php?page=' . WPSHOP_URL_SLUG_ATTRIBUTE_LISTING).'" >'.__('Used attributes', 'wpshop').' ('.count($active_nb).')</a>';
+		$wpshop_attribute_links['wpshop_attributes_links wpshop_attributes_links_moderated'.(!empty($attribute_status) && ($attribute_status=='unactive')?' current':'')] = '<a href="'.admin_url('admin.php?page=' . WPSHOP_URL_SLUG_ATTRIBUTE_LISTING.'&attribute_status=unactive').'" >'.__('Unactive attributes', 'wpshop').' ('.count($unactive_nb).')</a>';
+		$wpshop_attribute_links['wpshop_attributes_links wpshop_attributes_links_deleted'.(!empty($attribute_status) && ($attribute_status=='deleted')?' current':'')] = '<a href="'.admin_url('admin.php?page=' . WPSHOP_URL_SLUG_ATTRIBUTE_LISTING.'&attribute_status=deleted').'" >'.__('Trashed attributes', 'wpshop').' ('.count($deleted_nb).')</a>';
 		$wpshop_attribute_links['unit_management_link'] = '<a href="#" id="wpshop_attribute_unit_manager_opener" data-nonce="' . wp_create_nonce( 'load_unit_interface' ) . '">'.__('Unit management', 'wpshop').'</a>';
 		$wpshop_attribute_links['unit_management_dialog'] = '<div id="wpshop_attribute_unit_manager"title="' . __('Unit management', 'wpshop') . '" class="wpshopHide" ><div class="loading_picture_container" id="product_chooser_picture" ><img src="' . WPSHOP_LOADING_ICON . '" alt="loading..." /></div></div>';
 		return $wpshop_attribute_links;
@@ -197,7 +199,8 @@ class wpshop_attributes_custom_List_table extends WP_List_Table{
 		$link_format = admin_url('admin.php').'?page=%2$s&amp;action=%3$s&amp;id=%4$s';
 		$default_action='edit';
 		$default_action_text=__('Edit', 'wpshop');
-		if(!empty($_REQUEST['attribute_status']) && ($_REQUEST['attribute_status']=='deleted')){
+		$attribute_status = !empty( $_REQUEST['attribute_status'] ) ? sanitize_text_field( $_REQUEST['attribute_status'] ) : '';
+		if(!empty($attribute_status) && ($attribute_status=='deleted')){
 			$default_action='activate';
 			$default_action_text=__('Restore', 'wpshop');
 		}
@@ -205,7 +208,7 @@ class wpshop_attributes_custom_List_table extends WP_List_Table{
 		$actions = array(
 			'edit'     => sprintf('<a href="'.$link_format.'">'.$default_action_text.'</a>',WPSHOP_NEWTYPE_IDENTIFIER_ENTITIES, WPSHOP_URL_SLUG_ATTRIBUTE_LISTING,$default_action,$item['id'])
 		);
-		if(empty($_REQUEST['attribute_status']) && (!in_array($item['code'], $attribute_undeletable))){
+		if(empty($attribute_status) && (!in_array($item['code'], $attribute_undeletable))){
 			$actions['delete'] = sprintf('<a href="'.$link_format.'">'.__('Delete', 'wpshop').'</a>',WPSHOP_NEWTYPE_IDENTIFIER_ENTITIES, WPSHOP_URL_SLUG_ATTRIBUTE_LISTING,'delete',$item['id']);
 		}
 
