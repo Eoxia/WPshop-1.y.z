@@ -193,16 +193,16 @@ jQuery( document ).ready( function() {
 function reload_wps_cart() {
 	jQuery( '#wps_cart_container' ).addClass( 'wps-bloc-loading');
 	var data = {
-			action: "wps_reload_cart",
-			_wpnonce: jQuery( '#wps_cart_container' ).data( 'nonce' ),
-		};
-		jQuery.post(ajaxurl, data, function(response){
-				//jQuery( '#wps_cart_container').animate({'opacity' : 0.1}, 450, function() {
-				jQuery( '#wps_cart_container').html( response['response']);
-				jQuery( '#wps_cart_error_container' ).hide();
-				jQuery( '#wps_cart_container' ).removeClass( 'wps-bloc-loading');
-				//jQuery( '#wps_cart_container').delay( 200 ).animate({'opacity' : 1}, 450 );
-			//});
+		action: "wps_reload_cart",
+		_wpnonce: jQuery( '#wps_cart_container' ).data( 'nonce' )
+	};
+	jQuery.post( ajaxurl, data, function( response ) {
+		//jQuery( '#wps_cart_container').animate({'opacity' : 0.1}, 450, function() {
+		jQuery( '#wps_cart_container').html( response['response']);
+		jQuery( '#wps_cart_error_container' ).hide();
+		jQuery( '#wps_cart_container' ).removeClass( 'wps-bloc-loading');
+		//jQuery( '#wps_cart_container').delay( 200 ).animate({'opacity' : 1}, 450 );
+		//});
 	}, 'json');
 }
 

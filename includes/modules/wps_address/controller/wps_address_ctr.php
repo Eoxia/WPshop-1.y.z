@@ -583,7 +583,7 @@ class wps_address {
 		$response  = '<div id="wps_address_error_container"></div>';
 		$response .= '<form id="wps_address_form_save" action="' .admin_url('admin-ajax.php'). '" method="post">';
 		$response .= '<input type="hidden" name="action" value="wps_save_address" />';
-		$response .= wp_nonce_field( 'wps_save_address' );
+		$response .= wp_nonce_field( 'wps_save_address', '_wpnonce', true, false );
 		$first_address_checking = false;
 
 		$user_id = ( !empty($user_id) ) ? $user_id : get_current_user_id();
@@ -1368,12 +1368,10 @@ class wps_address {
 		$response = '';
 		$address_id = ( !empty( $_POST['address_id'] ) ) ? (int) $_POST['address_id'] : '';
 		$address_type_id = ( !empty( $_POST['address_type_id']) ) ? sanitize_text_field( $_POST['address_type_id'] ) : '';
-
 		$_wpnonce = ( !empty( $_REQUEST['_wpnonce'] ) ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_load_address_form_' . $address_type_id ) )
 			wp_die();
-
 
 		$form_data = self::loading_address_form( $address_type_id, $address_id, get_current_user_id() );
 		$response = $form_data[0];

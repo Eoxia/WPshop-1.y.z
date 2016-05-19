@@ -279,15 +279,15 @@ wpshop(document).ready(function(){
 		});
 	});
 	jQuery(".wpshop_variation_selector_input, .wpshop_currency_field").live('change', function(){
-		load_variation_summary();
+		load_variation_summary( jQuery( this ).data( 'nonce' ) );
 	});
 	jQuery(".wpshop_variation_selector_input, .wpshop_currency_field").live('keyup', function(){
-		load_variation_summary();
+		load_variation_summary( jQuery( this ).data( 'nonce' ) );
 	});
 	jQuery(".wpshop_variation_selector_input, .wpshop_currency_field").live('blur', function(){
-		load_variation_summary();
+		load_variation_summary( jQuery( this ).data( 'nonce' ) );
 	});
-	load_variation_summary();
+	load_variation_summary( jQuery( '#_wpnonce' ).val() );
 
 
 	/*
@@ -692,7 +692,7 @@ wpshop(document).ready(function(){
 * Define the function allowing to display summary about current variation definition *
 */
 var wpshop_load_variation_summary = null;
-function load_variation_summary() {
+function load_variation_summary( nonce ) {
 	var frontend_attribute_variation_selection = [];
 	var frontend_attribute_free_variation_selection = [];
 	var frontend_currency = null;
@@ -726,11 +726,11 @@ function load_variation_summary() {
 		//jQuery(".wpshop_save_money_message").html('');
 		var data = {
 			action:"wpshop_variation_selection",
-			_wpnonce: jQuery( this ).data( 'nonce' ),
+			_wpnonce: nonce,
 			wpshop_pdt: jQuery("#wpshop_pdt").val(),
 			wpshop_variation: frontend_attribute_variation_selection,
 			wpshop_free_variation: frontend_attribute_free_variation_selection,
-			wpshop_current_for_display: frontend_currency,
+			wpshop_current_for_display: frontend_currency
 		};
 		if ( wpshop_load_variation_summary != null ) {
 			wpshop_load_variation_summary.abort();

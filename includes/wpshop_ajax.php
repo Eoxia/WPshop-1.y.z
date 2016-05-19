@@ -1988,7 +1988,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		$product_id = isset($_POST['wpshop_pdt']) ? intval(wpshop_tools::varSanitizer($_POST['wpshop_pdt'])) : null;
 		$product_qty = isset($_POST['wpshop_pdt_qty']) ? intval(wpshop_tools::varSanitizer($_POST['wpshop_pdt_qty'])) : 1;
 		$cart_option = get_option('wpshop_cart_option', array() );
-		$wpshop_variation_selected = !empty($_POST['wps_pdt_variations']) ? sanitize_text_field( $_POST['wps_pdt_variations'] ) : array();
+		$wpshop_variation_selected = !empty($_POST['wps_pdt_variations']) ? (array)$_POST['wps_pdt_variations'] : array();
 		$from_administration =  ( !empty($_POST['from_admin']) ) ? (int)$_POST['from_admin'] : false;
 		$order_id =  ( !empty($_POST['wps_orders_order_id']) ) ? wpshop_tools::varSanitizer( $_POST['wps_orders_order_id'] ) : null;
 
@@ -2210,8 +2210,8 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	function wpshop_ajax_wpshop_variation_selection() {
 		check_ajax_referer( 'wpshop_ajax_wpshop_variation_selection' );
 		$product_id = isset($_POST['wpshop_pdt']) ? intval(wpshop_tools::varSanitizer($_POST['wpshop_pdt'])) : null;
-		$wpshop_variation_selected = isset($_POST['wpshop_variation']) ? sanitize_text_field( $_POST['wpshop_variation'] ) : null;
-		$wpshop_free_variation = isset($_POST['wpshop_free_variation']) ? sanitize_text_field( $_POST['wpshop_free_variation'] ) : null;
+		$wpshop_variation_selected = isset($_POST['wpshop_variation']) ? (array)$_POST['wpshop_variation'] : null;
+		$wpshop_free_variation = isset($_POST['wpshop_free_variation']) ? (array)$_POST['wpshop_free_variation'] : null;
 		$wpshop_current_for_display = isset($_POST['wpshop_current_for_display']) ? sanitize_text_field( $_POST['wpshop_current_for_display'] ) : null;
 		$product_qty = isset($_POST['product_qty']) ? (int)$_POST['product_qty'] : 1;
 

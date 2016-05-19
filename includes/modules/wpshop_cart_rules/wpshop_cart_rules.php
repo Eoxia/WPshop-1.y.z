@@ -299,7 +299,7 @@ if ( !class_exists("wpshop_cart_rules") ) {
 		 * @param integer_type $cart_amount
 		 * @return array
 		 */
-		function get_cart_rule ($cart_amount) {
+		public static function get_cart_rule ($cart_amount) {
 			$cart_rule_info = array();
 			$cart_rule_exist = false;
 			if ( !empty($cart_amount) ) {

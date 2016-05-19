@@ -424,7 +424,7 @@ ob_end_clean();
 
 /*	Define variation display	*/
 ob_start();
-?><form action="<?php echo admin_url('admin-ajax.php')?>" method="POST" id="wpshop_add_to_cart_form" >{WPSHOP_FROM_ADMIN_INDICATOR} {WPSHOP_ORDER_ID_INDICATOR} <input type="hidden" name="wpshop_pdt" id="wpshop_pdt" value="{WPSHOP_VARIATION_FORM_ELEMENT_ID}" /><?php wp_nonce_field( 'ajax_pos_product_variation_selection' ); ?><input type="hidden" name="wpshop_pdt_qty" id="wpshop_pdt_qty" value="{WPSHOP_PRODUCT_ADDED_TO_CART_QTY}" /><input type="hidden" name="action" value="wpshop_add_product_to_cart" /><input type="hidden" name="wpshop_cart_type" value="cart" />{WPSHOP_VARIATION_FORM_VARIATION_LIST}</form><?php
+?><form action="<?php echo admin_url('admin-ajax.php')?>" method="POST" id="wpshop_add_to_cart_form" >{WPSHOP_FROM_ADMIN_INDICATOR} {WPSHOP_ORDER_ID_INDICATOR} <input type="hidden" name="wpshop_pdt" id="wpshop_pdt" value="{WPSHOP_VARIATION_FORM_ELEMENT_ID}" /><?php wp_nonce_field( 'wpshop_ajax_wpshop_variation_selection' ); ?><input type="hidden" name="wpshop_pdt_qty" id="wpshop_pdt_qty" value="{WPSHOP_PRODUCT_ADDED_TO_CART_QTY}" /><input type="hidden" name="action" value="wpshop_add_product_to_cart" /><input type="hidden" name="wpshop_cart_type" value="cart" />{WPSHOP_VARIATION_FORM_VARIATION_LIST}</form><?php
 $tpl_element['product_variation_form'] = ob_get_contents();
 ob_end_clean();
 

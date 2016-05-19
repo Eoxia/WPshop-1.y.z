@@ -100,13 +100,14 @@ jQuery( document ).ready( function() {
 		var address_id = jQuery( this ).attr( 'id' ).replace( 'wps-address-edit-address-', '' );
 		jQuery( this ).closest( 'li' ).addClass( 'wps-bloc-loading' );
 		var data = {
-				action: "wps_load_address_form",
-				address_id :  address_id
-			};
-			jQuery.post(ajaxurl, data, function(response) {
-				fill_the_modal( response[1], response[0], '' );
-				jQuery( '.wps-address-edit-address' ).closest( 'li' ).removeClass( 'wps-bloc-loading' );
-			}, 'json');
+			action: "wps_load_address_form",
+			_wpnonce: jQuery( this ).data( 'nonce' ),
+			address_id :  address_id
+		};
+		jQuery.post( ajaxurl, data, function(response) {
+			fill_the_modal( response[1], response[0], '' );
+			jQuery( '.wps-address-edit-address' ).closest( 'li' ).removeClass( 'wps-bloc-loading' );
+		}, 'json' );
 	});
 
 	/** Delete an address */

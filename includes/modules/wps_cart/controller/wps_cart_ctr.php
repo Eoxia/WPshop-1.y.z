@@ -820,20 +820,17 @@ class wps_cart {
 
 	/** Ajax action to reload cart **/
 	public static function wps_reload_cart() {
-		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
-
-		if ( !wp_verify_nonce( $_wpnonce, 'wps_reload_cart' ) )
-			wp_die();
+		check_ajax_referer( 'wps_reload_cart' );
 
 		$wps_cart = new wps_cart();
 		$result = $wps_cart->cart_content();
-		echo json_encode( array( 'response' => $result) );
-		die();
+
+		wp_die( json_encode( array( 'response' => $result) ) );
 	}
 
 
 	/** Ajax action to reload mini cart */
-	public static function wps_reload_mini_cart() {
+	public function wps_reload_mini_cart() {
 		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_reload_mini_cart' ) )
@@ -891,15 +888,12 @@ class wps_cart {
 
 	/** Ajax action to reload summary cart */
 	public static function wps_reload_summary_cart() {
-		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
-
-		if ( !wp_verify_nonce( $_wpnonce, 'wps_reload_summary_cart' ) )
-			wp_die();
+		check_ajax_referer( 'wps_reload_summary_cart' );
 
 		$wps_cart = new wps_cart();
 		$result = $wps_cart->resume_cart_content();
-		echo json_encode( array( 'response' => $result) );
-		die();
+
+		wp_die( json_encode( array( 'response' => $result, ) ) );
 	}
 
 
