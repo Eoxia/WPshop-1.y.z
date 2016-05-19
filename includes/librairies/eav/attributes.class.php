@@ -115,7 +115,8 @@ class wpshop_attributes{
 		$action = isset($_REQUEST['action']) ? sanitize_text_field($_REQUEST['action']) : 'add';
 		$saveditem = isset($_REQUEST['saveditem']) ? sanitize_text_field($_REQUEST['saveditem']) : '';
 		$set_section = !empty($_REQUEST[self::getDbTable()]['set_section']) ? sanitize_text_field($_REQUEST[self::getDbTable()]['set_section']) : '';
-		if ( !empty($set_section) ) unset($_REQUEST[self::getDbTable()]['set_section']);
+		//@TODO $_REQUEST
+		// if ( !empty($set_section) ) unset($_REQUEST[self::getDbTable()]['set_section']);
 		$id = !empty($_REQUEST['id']) ? (int) $_REQUEST['id'] : null;
 		if(!empty($action) && ($action=='activate') ){
 			if( isset($id) ) {
@@ -135,7 +136,8 @@ class wpshop_attributes{
 		$attribute_parameter = !empty( $_REQUEST[self::getDbTable()] ) ? (array)$_REQUEST[self::getDbTable()] : array();
 
 		$wpshop_attribute_combo_values_list_order_def = !empty($attribute_parameter['wpshop_attribute_combo_values_list_order_def']) ? $attribute_parameter['wpshop_attribute_combo_values_list_order_def'] : array();
-		unset($_REQUEST[self::getDbTable()]['wpshop_attribute_combo_values_list_order_def']);
+		// @TODO $_REQUEST
+		// unset($_REQUEST[self::getDbTable()]['wpshop_attribute_combo_values_list_order_def']);
 
 		if(!isset($attribute_parameter['status'])){
 			$attribute_parameter['status'] = 'moderated';
@@ -565,8 +567,9 @@ class wpshop_attributes{
 				case 'unactive':
 					$status="'moderated', 'notused'";
 					if(empty($order_by) && empty($order)){
-						$_REQUEST['orderby']='status';
-						$_REQUEST['order']='asc';
+						// @TODO : REQUEST
+						// $_REQUEST['orderby']='status';
+						// $_REQUEST['order']='asc';
 					}
 					break;
 				default:
@@ -1021,9 +1024,10 @@ ob_end_clean();
 		$bloc_list[self::currentPageCode]['options']['title']=__('Options', 'wpshop');
 		$bloc_list[self::currentPageCode]['options']['content']=$the_form_option_content;
 
+		$action = !empty( $_REQUEST['action'] ) ? sanitize_text_field( $_REQUEST['action' ] ) : '';
 		$the_form = '
 <form name="' . se1lf::getDbTable() . '_form" id="' . self::getDbTable() . '_form" method="post" action="#" >
-	' . wpshop_form::form_input(self::getDbTable() . '_action', self::getDbTable() . '_action', (isset($_REQUEST['action']) && ($_REQUEST['action'] != '') ? sanitize_text_field($_REQUEST['action']) : 'save') , 'hidden') . '
+	' . wpshop_form::form_input(self::getDbTable() . '_action', self::getDbTable() . '_action', (isset($action) && ($action != '') ? sanitize_text_field($action) : 'save') , 'hidden') . '
 	' . wpshop_form::form_input(self::currentPageCode . '_form_has_modification', self::currentPageCode . '_form_has_modification', 'no' , 'hidden') . $the_form_content_hidden . wpshop_display::custom_page_output_builder($bloc_list, WPSHOP_ATTRIBUTE_EDITION_PAGE_LAYOUT) . '
 </form>
 <div title="' . __('Change data type for selected attribute', 'wpshop') . '" id="wpshop_dialog_change_select_data_type" ><div id="wpshop_dialog_change_select_data_type_container" ></div></div>';
@@ -1269,14 +1273,17 @@ ob_end_clean();
 		$moreQuery = "";
 		$moreArgs = array( 1, );
 
+		$orderby = !empty( $_REQUEST['orderby'] ) ? sanitize_text_field( $_REQUEST['orderby'] ) : '';
+		$order = !empty( $_REQUEST['order'] ) ? sanitize_text_field( $_REQUEST['order'] ) : '';
+
 		if($element_id != ''){
 			$moreQuery .= "
 					AND CURRENT_ELEMENT." . $field_to_search . " = %s ";
 			$moreArgs[] = $element_id;
 		}
-		if(!empty($_REQUEST['orderby']) && !empty($_REQUEST['order'])){
+		if(!empty($orderby) && !empty($order)){
 			$moreQuery .= "
-					ORDER BY " . sanitize_text_field($_REQUEST['orderby']) . "  " . sanitize_text_field($_REQUEST['order']);
+					ORDER BY " . $orderby . "  " . $order;
 		}
 
 		$query = $wpdb->prepare(
