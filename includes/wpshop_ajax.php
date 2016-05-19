@@ -2308,10 +2308,10 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		}
 		$cart_url = !empty($_SESSION['cart']['order_items']) ? get_permalink(wpshop_tools::get_page_id( get_option('wpshop_checkout_page_id') )) : get_permalink(wpshop_tools::get_page_id(get_option('wpshop_myaccount_page_id')));
 
-
-		$validate_personal_form_infos = ( !empty( $_POST['account_form_type'] ) && $_POST['account_form_type'] == 'partial' ) ? $wpshop->validateForm($wpshop_account->partial_personal_infos_fields, array(), '', true) : $wpshop->validateForm($wpshop_account->personal_info_fields);
+		$account_form_type = !empty( $_POST['account_form_type'] ) ? sanitize_text_field( $_POST['account_form_type'] ) : '';
+		$validate_personal_form_infos = ( !empty( $account_form_type ) && $account_form_type == 'partial' ) ? $wpshop->validateForm($wpshop_account->partial_personal_infos_fields, array(), '', true) : $wpshop->validateForm($wpshop_account->personal_info_fields);
 		if( $validate && $validate_personal_form_infos ) {
-			$account_creation_result = $wpshop_account->save_account_form($user_id,  ( ( !empty($_POST['account_form_type']) && $_POST['account_form_type'] == 'partial' ) ? 'partial' : 'complete') );
+			$account_creation_result = $wpshop_account->save_account_form($user_id,  ( ( !empty($account_form_type) && $account_form_type == 'partial' ) ? 'partial' : 'complete') );
 			$status = $account_creation_result[0];
 			$user_id = $account_creation_result[1];
 			$is_partial_account_creation  = $account_creation_result[2];
@@ -2583,8 +2583,8 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		check_ajax_referer( 'ajax_wpshop_reload_attribute_for_quick_add' );
 		$output = '';
 		$attribute_to_reload = !empty( $_POST['attribute_to_reload'] ) ? (array) $_POST['attribute_to_reload'] : array();
-		if ( !empty($_POST['attribute_to_reload']) ) {
-			foreach ( $_POST['attribute_to_reload'] as $attribute_code ) {
+		if ( !empty($attribute_to_reload) ) {
+			foreach ( $attribute_to_reload as $attribute_code ) {
 				$attr_field = wpshop_attributes::display_attribute( $attribute_code, 'frontend' );
 				$output[$attribute_code]['result'] = $attr_field['field_definition']['output'] . $attr_field['field_definition']['options'];
 			}
@@ -2688,13 +2688,14 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 			$email = $username;
 			if ( !empty($username) && !username_exists($username) && !empty($email) && !email_exists($email) ) {
 				$user_id = wp_create_user( $username, $password, $email );
-				$_REQUEST['user']['customer_id'] = $user_id;
+				// @TODO : REQUEST
+				// $_REQUEST['user']['customer_id'] = $user_id;
 				/** Save addresses */
 				$billing_set_infos = get_option('wpshop_billing_address');
 				$shipping_set_infos = get_option('wpshop_shipping_address_choice');
 				/** If it's same addresses for Shipping and Billing */
 				if (isset($shiptobilling) && $shiptobilling == "on") {
-					wpshop_account::same_billing_and_shipping_address($_REQUEST['billing_address'], $_REQUEST['shipping_address']);
+					wpshop_account::same_billing_and_shipping_address($billing_address, $shipping_address);
 				}
 
 				if ( !empty($billing_address) ) {
