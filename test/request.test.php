@@ -23,7 +23,7 @@ foreach ( $unitList as $file_url )
 		foreach ( $lines as $key => $line ) {
 	    if ( preg_match( $pattern, $line ) ) {
 	      $lines[$key] = preg_replace( '#!empty\(.+?(\$_POST|\$_GET|\$_REQUEST)\[\'.+\'\].+?\) \?#isU', '', $lines[$key] );
-			if ( $file_url != "..\\test\\request.test.php" ) {
+			if ( $file_url != "../wpshop/test/request.test.php" ) {
 			  if ( !preg_match( '#sanitize_.+#', $lines[$key] ) &&
         !preg_match( '#esc_.+#', $lines[$key] ) &&
 				!preg_match( '#\*#', $lines[$key] ) &&
