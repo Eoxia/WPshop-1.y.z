@@ -30,7 +30,7 @@ class wps_pos_addon_bank_deposit_histo {
 	}
 	public function vars_js() {
 		wp_localize_script( 'wpspos-backend-bank-deposit-js', 'historics', $this->get_historic() );
-		wp_localize_script( 'wpspos-backend-bank-deposit-js', 'templates_url', admin_url( 'admin-post.php' ); );
+		wp_localize_script( 'wpspos-backend-bank-deposit-js', 'templates_url', admin_url( 'admin-post.php' ) );
 	}
 	public function save_historic_ajax() {
 		$list_payments = !empty( $_POST['payments'] ) ? (array) $_POST['payments'] : array();
