@@ -107,9 +107,10 @@ class wpshop_attributes_set{
 		/****************************************************************************/
 		$saveditem = isset($_REQUEST['saveditem']) ? sanitize_text_field($_REQUEST['saveditem']) : '';
 		$action = isset($_REQUEST['action']) ? sanitize_text_field($_REQUEST['action']) : 'add';
-		if(!empty($action) && ($action=='activate') && (!empty($_REQUEST['id']))){
-			$query = $wpdb->update(self::getDbTable(), array('status'=>'moderated'), array('id'=>sanitize_key($_REQUEST['id'])));
-			wpshop_tools::wpshop_safe_redirect(admin_url('admin.php?page=' . self::getListingSlug() . "&action=edit&id=" . sanitize_key($_REQUEST['id'])));
+		$id = !empty( $_REQUEST['id'] ) ? (int)$_REQUEST['id'] : 0;
+		if(!empty($action) && ($action=='activate') && (!empty($id))){
+			$query = $wpdb->update(self::getDbTable(), array('status'=>'moderated'), array('id'=>sanitize_key($id)));
+			wpshop_tools::wpshop_safe_redirect(admin_url('admin.php?page=' . self::getListingSlug() . "&action=edit&id=" . sanitize_key($id)));
 		}
 		if(($action != '') && ($action == 'saveok') && ($saveditem > 0)){
 			$editedElement = self::getElement($saveditem);
@@ -153,22 +154,24 @@ class wpshop_attributes_set{
 			}
 
 			/** Address display managment **/
-				if ( !empty($_REQUEST['id']) ) {
+				if ( !empty($id) ) {
 					$is_billing = $is_shipping = false;
 					/** Get billing option **/
 					$billing_option = get_option( 'wpshop_billing_address' );
 					$shipping_option = get_option( 'wpshop_shipping_address_choice' );
 
-					if( !empty($billing_option) && !empty($billing_option['choice']) && $billing_option['choice'] == $_REQUEST['id'] ) {
+					if( !empty($billing_option) && !empty($billing_option['choice']) && $billing_option['choice'] == $id ) {
 						$is_billing = true;
 					}
 
-					if( !empty($shipping_option) && !empty($shipping_option['choice']) && $shipping_option['choice'] == $_REQUEST['id'] ) {
+					if( !empty($shipping_option) && !empty($shipping_option['choice']) && $shipping_option['choice'] == $id ) {
 						$is_shipping = true;
 					}
 
+					$attribute_group_order = !empty( $_REQUEST['attribute_group_order'] ) ? (array) $_REQUEST['attribute_group_order'] : array();
+
 					$attribute_display = array();
-					if ( !empty($_REQUEST['attribute_group_order']) && $attribute_group_order = (array) $_REQUEST['attribute_group_order'] ) {
+					if ( !empty($attribute_group_order)) {
 
 						foreach( $attribute_group_order as $group_id => $group_def ) {
 							$end_line_element_id = 0;
@@ -263,15 +266,18 @@ class wpshop_attributes_set{
 				/*****************************************************************************************************************/
 				/*************************			CHANGE FOR SPECIFIC ACTION FOR CURRENT ELEMENT				******************/
 				/*****************************************************************************************************************/
-				if ( !empty($_REQUEST['wpshop_attribute_set_section_order']) ) {
-					$newOrder = str_replace('attribute_group_', '', sanitize_key($_REQUEST['wpshop_attribute_set_section_order']));
+				$wpshop_attribute_set_section_order = !empty( $_POST['wpshop_attribute_set_section_order'] ) ? (array)$_POST['wpshop_attribute_set_section_order'] : array();
+				$wpshop_attribute_set_section = !empty( $_POST['wpshop_attribute_set_section'] ) ? (array)$_POST['wpshop_attribute_set_section'] : array();
+				if ( !empty($wpshop_attribute_set_section_order) ) {
+					$newOrder = str_replace('attribute_group_', '', $wpshop_attribute_set_section_order);
 					$order = explode(',', $newOrder);
 					foreach($order as $position => $set_section_id){
-						$_REQUEST['wpshop_attribute_set_section'][$set_section_id]['position']=$position;
+						$wpshop_attribute_set_section[$set_section_id]['position']=$position;
 					}
 				}
 
-				if(isset($_REQUEST['attribute_group_order']) && ($attribute_group_order = (array) $_REQUEST['attribute_group_order']) && ($attribute_group_order != '')){
+				$attribute_group_order = !empty( $_REQUEST['attribute_group_order'] ) ? (array)$_REQUEST['attribute_group_order'] : array();
+				if(isset($attribute_group_order){
 					foreach($attribute_group_order as $groupIdentifier => $newOrder){
 						$newOrder = str_replace('attribute_', '', $newOrder);
 						$order = explode(',', $newOrder);
@@ -298,10 +304,12 @@ class wpshop_attributes_set{
 						}
 					}
 				}
-				if(!empty($_REQUEST['wpshop_attribute_set_section']) && $wpshop_attribute_set_section = (array) $_REQUEST['wpshop_attribute_set_section']){
+
+				$wpshop_attribute_set_section_is_default_of_set = !empty( $_REQUEST['wpshop_attribute_set_section_is_default_of_set'] ) ? sanitize_key( $_REQUEST['wpshop_attribute_set_section_is_default_of_set'] ) : '';
+				if(!empty($wpshop_attribute_set_section)){
 					foreach($wpshop_attribute_set_section as $set_section_id => $set_section_options){
 						if(!empty($set_section_options) && is_array($set_section_options)){
-							$set_section_options['default_group'] = (!empty($_REQUEST['wpshop_attribute_set_section_is_default_of_set']) && (sanitize_key($_REQUEST['wpshop_attribute_set_section_is_default_of_set']) == $set_section_id)) ? 'yes' : 'no';
+							$set_section_options['default_group'] = (!empty($wpshop_attribute_set_section_is_default_of_set) && $wpshop_attribute_set_section_is_default_of_set == $set_section_id) ? 'yes' : 'no';
 							$set_section_options['last_update_date'] = current_time('mysql', 0);
 							$set_section_options['display_on_frontend'] = (!empty($set_section_options['display_on_frontend']) && ($set_section_options['display_on_frontend'] == 'yes')) ? 'yes' : 'no';
 							$wpdb->update(WPSHOP_DBT_ATTRIBUTE_GROUP, $set_section_options, array('id'=>$set_section_id), array('%s'), array('%d'));
@@ -324,11 +332,12 @@ class wpshop_attributes_set{
 					}
 				}
 
+				$attribute_set_group_id = !empty( $_REQUEST['attribute_set_group_id'] ) ? (int) $_REQUEST['attribute_set_group_id'] : 0;
 				/*	If the current group is selected as default group set all others for current entity at no	*/
 				if($attribute_set_parameter['default_set'] == 'yes'){
 					$entity_to_take = 0;
-					if(isset($_REQUEST['attribute_set_group_id']) && ($_REQUEST['attribute_set_group_id'] != '')){
-						$entity_to_take = sanitize_key($_REQUEST['attribute_set_group_id']);
+					if(isset($attribute_set_group_id) && ($attribute_set_group_id != '')){
+						$entity_to_take = $attribute_set_group_id;
 					}
 					if(isset($attribute_set_parameter['entity_id']) && ($attribute_set_parameter['entity_id'] != '')){
 						$entity_to_take = $attribute_set_parameter['entity_id'];
@@ -366,8 +375,9 @@ class wpshop_attributes_set{
 	    //Fetch, prepare, sort, and filter our data...
 		$status="'valid', 'moderated'";
 		$attribute_set_list = array();
+		$attribute_group_status = !empty( $_REQUEST['attribute_groups_status'] ) ? sanitzie_text_field( $_REQUEST['attribute_groups_status'] ) : '';
 		if(!empty($_REQUEST['attribute_groups_status'])){
-			$status="'".sanitize_text_field($_REQUEST['attribute_groups_status'])."'";
+			$status="'".$attribute_group_status."'";
 		}
 		$attr_set_list = wpshop_attributes_set::getElement('', $status);
 		$i=0;
