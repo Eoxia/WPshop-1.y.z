@@ -114,16 +114,14 @@ if ( !class_exists( "wpeologs_ctr" ) ) {
 		}
 
 		private function check_page() {
-			if( empty( $_GET['action'] ) || empty( $_GET['type'] ) )
+			$action = !empty( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
+			$type = !empty( $_GET['type'] ) ? sanitize_text_field( $_GET['type'] ) : '';
+
+			if( empty( $action ) || empty( $type ) )
 				return false;
 
-			$action = sanitize_text_field( $_GET['action'] );
-			$type = sanitize_text_field( !empty( $_GET['type'] ) ?  $_GET['type'] : '' );
-
-			if ( !isset( $_GET['service_id'] ) ) return false;
-			else $service_id = (int) $_GET['service_id'];
-
-			if ( isset( $_GET['key'] ) && 0 !== (int) $_GET['key'] ) $key = (int) $_GET['key'];
+			$service_id = !empty( $_GET['service_id'] ) ? (int) $_GET['service_id'] : 0;
+			$key = !empty( $_GET['key'] ) ? (int) $_GET['key'] : 0;
 
 			if ( 'view' == $action && isset( $service_id ) ) {
 				$service = self::get_service_by_id( $service_id );
@@ -455,13 +453,14 @@ if ( !class_exists( "wpeologs_ctr" ) ) {
 		}
 
 		public function edit_service() {
-			if ( empty( $_POST['service'] ) || !is_array( $_POST['service'] ) ) {
+			$services = !empty($_POST['service']) ? (array) $_POST['service'] : array();
+
+			if ( empty( $services ) || !is_array( $services ) ) {
 				set_transient( 'log_message', json_encode( array( 'type' => 'error', 'message' => __( 'Invalid data to update service' ), 'wpeolog-i18n' ) ) );
 				wp_safe_redirect( wp_get_referer() );
 				die();
 			}
 
-			$services = !empty($_POST['service']) ? (array) $_POST['service'] : array();
 
 			foreach( $services as &$service ) {
 				// sanitize
@@ -494,19 +493,14 @@ if ( !class_exists( "wpeologs_ctr" ) ) {
 		}
 
 		public function to_trash() {
-			if( empty( $_GET['_wpnonce'] ) ) {
-				wp_safe_redirect( wp_get_referer() );
-				die();
-			}
-			$wpnonce = sanitize_text_field( $_GET['_wpnonce'] );
+			$wpnonce = !empty( $_GET['_wpnonce'] ) ? sanitize_text_field( $_GET['_wpnonce'] ) : '';
 
-			if ( 0 === (int) $_GET['service_id'] ) {
+			if( empty( $wpnonce ) ) {
 				wp_safe_redirect( wp_get_referer() );
 				die();
 			}
-			else {
-				$service_id = (int) $_GET['service_id'];
-			}
+
+			$service_id = !empty( $_GET['service_id'] ) ? (int) $_GET['service_id'] : 0;
 
 			if ( !isset( $wpnonce ) || !wp_verify_nonce( $wpnonce, 'to_trash_' . $service_id ) ) {
 				wp_safe_redirect( wp_get_referer() );
