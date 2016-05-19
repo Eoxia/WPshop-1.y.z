@@ -2,11 +2,11 @@
 
 class wps_download_file_ctr {
 	public function __construct() {
-		add_action( 'admin_post_download_file', array( $this, 'wpshop_download_file' ) );
+		add_action( 'admin_post_wps_download_file', array( $this, 'wps_download_file' ) );
 	}
 
 	// Download product downloadable
-	public function wpshop_download_file() {
+	public function wps_download_file() {
 		$download = !empty( $_GET['download'] ) ? sanitize_text_field( $_GET['download'] ) : '';
 		$oid = !empty( $_GET['oid'] ) ? (int) $_GET['oid'] : 0;
 

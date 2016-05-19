@@ -15,8 +15,9 @@
 		<td><?php echo ( !empty($payment_received['method']) ) ? __( $payment_received['method'], 'wpshop' ) : ''; ?></td>
 		<td><?php echo ( !empty($payment_received['received_amount']) ) ?  number_format( $payment_received['received_amount'], 2, '.', '' ) : ''; ?><?php echo wpshop_tools::wpshop_get_currency(); ?></td>
 		<td>
-			<a class="wps-bton-third-mini-rounded" href="<?php echo WPSHOP_TEMPLATES_URL . 'invoice.php?order_id=' . $order_id . '&mode=pdf' . ( !empty( $payment_received['invoice_ref'] ) ? '&invoice_ref=' . $payment_received['invoice_ref'] : '' ); ?>" ><?php _e( 'Download', 'wpshop' ); ?></a>
-			<a class="wps-bton-third-mini-rounded" target="_blank" href="<?php echo WPSHOP_TEMPLATES_URL . 'invoice.php?order_id=' . $order_id . ( !empty( $payment_received['invoice_ref'] ) ? '&invoice_ref=' . $payment_received['invoice_ref'] : '' ); ?>" ><?php _e( 'View', 'wpshop' ); ?></a>
+			<a class="wps-bton-third-mini-rounded" href="<?php echo admin_url( 'admin-post.php?action=wps_invoice&order_id=' . $order_id . '&mode=pdf' . ( !empty( $payment_received['invoice_ref'] ) ? '&invoice_ref=' . $payment_received['invoice_ref'] : '' ) ); ?>">
+			<?php _e( 'Download', 'wpshop' ); ?></a>
+			<a class="wps-bton-third-mini-rounded" target="_blank" href="<?php echo admin_url( 'admin-post.php?action=wps_invoice&order_id=' . $order_id . ( !empty( $payment_received['invoice_ref'] ) ? '&invoice_ref=' . $payment_received['invoice_ref'] : '' ) ); ?>" ><?php _e( 'View', 'wpshop' ); ?></a>
 		</td>
 	</tr>
     <?php endforeach; ?>

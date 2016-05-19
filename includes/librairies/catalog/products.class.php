@@ -381,7 +381,7 @@ class wpshop_products {
 		$template_part = 'wpshop_duplicate_product';
 		$tpl_component = array();
 		$tpl_component['PRODUCT_ID'] = $post->ID;
-		$tpl_component['PRINT_PRODUCT_SHEET_LINK'] = WPSHOP_TEMPLATES_URL.'product_sheet.php?pid='.$post->ID;
+		$tpl_component['PRINT_PRODUCT_SHEET_LINK'] = admin_url( 'admin-post.php?action=wps_product_sheet&pid='.$post->ID );
 		/*
 		 * Build template
 		*/
