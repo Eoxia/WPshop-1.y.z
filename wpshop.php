@@ -3,7 +3,7 @@
  * Plugin Name: WP-Shop
  * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/
  * Description: With this plugin you will be able to manage the products you want to sell and user would be able to buy this products
- * Version: 1.4.1.6
+ * Version: 1.4.1.7
  * Author: Eoxia
  * Author URI: http://eoxia.com/
  */
@@ -25,7 +25,7 @@ if ( !defined( 'ABSPATH' ) ) {
 }
 
 /**	Allows to refresh css and js file in final user browser	*/
-DEFINE('WPSHOP_VERSION', '1.4.1.6');
+DEFINE('WPSHOP_VERSION', '1.4.1.7');
 
 /**	Allows to avoid problem with theme not supporting thumbnail for post	*/
 add_theme_support( 'post-thumbnails' );
@@ -104,6 +104,28 @@ if ( ( defined( 'WPSINSTALLER_STEPS_COUNT' ) && ( WPSINSTALLER_STEPS_COUNT <= $c
 		add_action( 'admin_init', array( 'wpshop_install', 'update_wpshop_dev' ) );
 	}
 }
+
+// $file   = basename( __FILE__ );
+// $folder = basename( dirname( __FILE__ ) );
+// $hook = "in_plugin_update_message-{$folder}/{$file}";
+// add_action( $hook, 'wps_update_message', 10, 2 ); // 10:priority, 2:arguments #
+// function wps_update_message( $currentPluginMetadata, $newPluginMetadata){
+// 	$message = '';
+//
+// 	if ( '1.4.1.6' == $currentPluginMetadata[ 'Version' ] ) {
+// 		$message = sprintf( __( 'For security reason %splease read this post%s', 'wpshop' ), '<a href="" >', '</a>');
+// 	}
+//
+// 	// check "upgrade_notice"
+// 	 if (isset( $newPluginMetadata->upgrade_notice) && strlen(trim($newPluginMetadata->upgrade_notice)) > 0 ) {
+// 	 	$message = esc_html( $newPluginMetadata->upgrade_notice );
+// 	}
+//
+// 	if ( !empty( $message ) ) {
+// 	 	echo '<p style="background-color: #d54e21; padding: 10px; color: #f9f9f9; margin-top: 10px"><strong>Important Upgrade Notice: </strong>' . $message . '</p>';
+// 	}
+//
+// }
 
 // Start session
 @session_start();

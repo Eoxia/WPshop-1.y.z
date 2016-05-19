@@ -14,7 +14,7 @@
 	$valid_dates = array();
 	$valid_dates['relation'] = 'OR';
 
-	$from_to = !empty( $_GET['todate'] ) : sanitize_text_field( $_GET['todate'] ) : date( 'Y-m-d' );
+	$from_to = !empty( $_GET['todate'] ) ? sanitize_text_field( $_GET['todate'] ) : date( 'Y-m-d' );
 
 	$fromdate = DateTime::createFromFormat( 'Y-m-d', $fromdate );
 	$todate = DateTime::createFromFormat( 'Y-m-d', ($from_to) ? $from_to : $fromdate );
