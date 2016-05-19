@@ -3607,7 +3607,6 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		$products_id = !empty($products_id) ? $products_id : $_REQUEST['pid'];
 		$page_number = $_REQUEST['page_number'];
 
-
 		if ( !empty($_GET['page_product']) ) {
 			$page_number = wpshop_tools::varSanitizer($_GET['page_product']);
 		}
@@ -3619,6 +3618,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		} else echo json_encode(array(false,__('No product found','wpshop')));
 	}
 	add_action( 'wp_ajax_wps_products_by_criteria', 'products_by_criteria' );
+	add_action( 'wp_ajax_nopriv_wps_products_by_criteria', 'products_by_criteria' );
 
 	function ajax_sendMessage() {
 		check_ajax_referer( 'sendMessage' );
