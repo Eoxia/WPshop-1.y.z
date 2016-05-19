@@ -587,7 +587,6 @@ class wps_address {
 		$first_address_checking = false;
 
 		$user_id = ( !empty($user_id) ) ? $user_id : get_current_user_id();
-
 		if ( !empty($address_id) ) {
 			$address_type = get_post_meta( $address_id, '_wpshop_address_attribute_set_id', true);
 			$response .= self::display_form_fields($address_type, $address_id, '', '', array(), array(), array(), $user_id);
@@ -621,11 +620,8 @@ class wps_address {
 	 * @return array
 	 */
 	public static function get_addresss_form_fields_by_type ( $typeof, $id ='' ) {
-		// Sanitize all $_POST
-
 		$submit_billing_and_shipping_info = !empty( $_POST['submitbillingAndShippingInfo'] ) ? sanitize_key( $_POST['submitbillingAndShippingInfo'] ) : '';
 
-		$current_item_edited = isset($id) ? (int)wpshop_tools::varSanitizer($id) : null;
 		$address = array();
 		$all_addresses = '';
 		$attribute = !empty( $_POST['attribute'] ) ? (array) $_POST['attribute'] : array();
@@ -644,7 +640,7 @@ class wps_address {
 								$value = $attribute[$typeof][$attribute->data_type][$attribute->code];
 							}
 							else {
-								$value = wpshop_attributes::getAttributeValueForEntityInSet($attribute->data_type, $attribute->id, wpshop_entities::get_entity_identifier_from_code(WPSHOP_NEWTYPE_IDENTIFIER_ADDRESS), $current_item_edited, array('intrinsic' => $attribute->is_intrinsic, 'backend_input' => $attribute->backend_input));
+								$value = wpshop_attributes::getAttributeValueForEntityInSet($attribute->data_type, $attribute->id, wpshop_entities::get_entity_identifier_from_code(WPSHOP_NEWTYPE_IDENTIFIER_ADDRESS), (int)$id, array('intrinsic' => $attribute->is_intrinsic, 'backend_input' => $attribute->backend_input));
 							}
 							$attribute_output_def = wpshop_attributes::get_attribute_field_definition( $attribute, $value, array() );
 							$attribute_output_def['id'] = 'address_' . $typeof . '_' .$attribute_output_def['id'];
@@ -658,7 +654,6 @@ class wps_address {
 				$all_addresses[$productAttributeSetDetail['attribute_set_id']][$productAttributeSetDetail['id']]['id'] = str_replace('-', '_', sanitize_title($group_name));
 				$all_addresses[$productAttributeSetDetail['attribute_set_id']][$productAttributeSetDetail['id']]['attribute_set_id'] = $productAttributeSetDetail['attribute_set_id'];
 			}
-
 		}
 		return $all_addresses;
 	}
@@ -803,7 +798,6 @@ class wps_address {
 		$output_form_fields = $form_model = '';
 
 		$user_id = ( !empty($other_customer) ) ? $other_customer : get_current_user_id();
-
 
 		if ( empty($type) ) {
 			$type = $choosen_address['choice'];
