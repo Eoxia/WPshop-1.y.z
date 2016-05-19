@@ -52,10 +52,10 @@
 					if( $order->_order_postmeta['order_invoice_ref'] ) {
 					?>
 				<span class="invoice_order">
-					<a href="<?php echo WPSHOP_TEMPLATES_URL; ?>invoice.php?order_id=<?php echo $order->ID; ?>&invoice_ref=<?php echo $order->_order_postmeta['order_invoice_ref']; ?>" target="_blank" role="button">
+					<a href="" target="_blank" role="button">
 						<i class="dashicons dashicons-welcome-view-site"></i>
 					</a>
-					<a href="<?php echo WPSHOP_TEMPLATES_URL; ?>invoice.php?order_id=<?php echo $order->ID; ?>&invoice_ref=<?php echo $order->_order_postmeta['order_invoice_ref']; ?>&mode=pdf" target="_blank" role="button">
+					<a href="<?php echo admin_url( 'admin-post.php?action=wps_invoice&mode=pdf&order_id=' . $order->ID . '&invoice_ref='.$order->_order_postmeta['order_invoice_ref']); ?>" target="_blank" role="button">
 						<i class="dashicons dashicons-download"></i>
 					</a>
 				</span>

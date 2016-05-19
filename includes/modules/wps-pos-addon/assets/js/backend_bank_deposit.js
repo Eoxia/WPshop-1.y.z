@@ -150,7 +150,7 @@ jQuery( document ).ready( function(){
 	} );
 	function download_histo( date, amount, payments_dl ) {
 		redirect_post(
-			templates_url + 'bank_deposit.php?mode=pdf',
+			templates_url + '?action=wps_bank_deposit&mode=pdf',
 			{
 				date: date,
 				amount: amount,

@@ -54,6 +54,8 @@ class wps_pos_addon {
 		// add_action( 'wap_ajax_wpspos_state_is_quotation', array( $this, 'ajax_wpspos_state_is_quotation' ) );
 		// add_action( 'wap_ajax_wpspos_state_is_receipt', array( $this, 'ajax_wpspos_state_is_receipt' ) );
 
+		/** Bank deposit Page **/
+		add_action( 'admin_post_wps_bank_deposit', array( 'wps_pos_addon_bank_deposit', 'wps_pos_bank_deposit_output' ) );
 	}
 
 	/**

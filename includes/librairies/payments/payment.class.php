@@ -610,7 +610,7 @@ class wpshop_payment {
 								$download_codes = get_user_meta($order_meta['customer_id'], '_order_download_codes_'.$order_id, true);
 
 								if ( !empty($download_codes) && !empty($download_codes[$key_value]) && !empty($download_codes[$key_value]['download_code']) ) {
-									$link = '<a href="' . admin_url( 'admin-post.php?action=download_file&amp;oid=' . $order_id . '&amp;download=' . $download_codes[$key_value]['download_code'] ) . '">' . __('Download','wpshop') . '</a>';
+									$link = '<a href="' . admin_url( 'admin-post.php?action=wps_download_file&amp;oid=' . $order_id . '&amp;download=' . $download_codes[$key_value]['download_code'] ) . '">' . __('Download','wpshop') . '</a>';
 									$wps_message->wpshop_prepared_email($email, 'WPSHOP_DOWNLOADABLE_FILE_IS_AVAILABLE', array('order_key' => $order_meta['order_key'], 'customer_first_name' => $first_name, 'customer_last_name' => $last_name, 'order_date' => $order_meta['order_date'], 'download_product_link' => $link), array() );
 								}
 							}

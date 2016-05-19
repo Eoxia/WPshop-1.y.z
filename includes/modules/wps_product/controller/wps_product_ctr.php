@@ -18,6 +18,9 @@ class wps_product_ctr {
 		add_shortcode( 'wpshop_product_title', array( $this, 'wpshop_product_title' ) );
 		add_shortcode( 'wpshop_product_content', array( $this, 'wpshop_product_content' ) );
 		add_shortcode( 'wpshop_product_thumbnail', array( $this, 'wpshop_product_thumbnail' ) );
+
+		/** Product sheet Page **/
+		add_action( 'admin_post_wps_product_sheet', array( $this, 'wpshop_product_sheet_output' ) );
 	}
 
 	/**
@@ -368,5 +371,30 @@ class wps_product_ctr {
 		$output = ob_get_clean();
 
 		return $output;
+	}
+
+	/**
+	 *	Output product sheet to PDF
+	 */
+	public function wpshop_product_sheet_output() {
+		$product_id = ( !empty($_GET['pid']) ) ? (int) $_GET['pid'] : null;
+		$user_id = get_current_user_id();
+		if( !empty($product_id) && get_post_type( $product_id ) == WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT && $user_id != 0 && current_user_can( 'manage_options' ) ) {
+			$wps_product_administration_ctr = new wps_product_administration_ctr();
+			$html_content = $wps_product_administration_ctr->generate_product_sheet_datas( $product_id );
+			$product_post = get_post( $product_id );
+			require_once(WPSHOP_LIBRAIRIES_DIR.'HTML2PDF/html2pdf.class.php');
+			try {
+				$html2pdf = new HTML2PDF('P', 'A4', 'fr');
+				$html2pdf->pdf->SetDisplayMode('fullpage');
+				$html2pdf->setDefaultFont('Arial');
+				$html2pdf->writeHTML($html_content);
+				$html2pdf->Output('product-' .$product_id.'-'.$product_post->post_name.'.pdf', 'D');
+			}
+			catch (HTML2PDF_exception $e) {
+				echo $e;
+			}
+		}
+		die();
 	}
 }

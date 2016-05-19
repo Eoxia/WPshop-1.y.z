@@ -50,8 +50,8 @@ $waited_amount_sum = $received_amount_sum = $i = 0;
 				</div>
 				<?php if( !empty( $received_payment ) && !empty($received_payment['invoice_ref']) ) { ?>
 					<div>
-					<div class="wps-product-section"><a href="<?php echo WPSHOP_TEMPLATES_URL; ?>invoice.php?order_id=<?php echo $order->ID; ?>&invoice_ref=<?php echo $received_payment['invoice_ref']; ?>&mode=pdf" target="_blank" class="wps-bton-second-mini-rounded" role="button"><i class="dashicons dashicons-download"></i><?php _e( 'Download invoice', 'wpshop' ); ?></a></div>
-					<div class="wps-product-section"><a href="<?php echo WPSHOP_TEMPLATES_URL; ?>invoice.php?order_id=<?php echo $order->ID; ?>&invoice_ref=<?php echo $received_payment['invoice_ref']; ?>" target="_blank" class="wps-bton-fourth-mini-third" role="button"><i class="dashicons dashicons-welcome-view-site"></i><?php _e( 'Watch invoice', 'wpshop' ); ?></a></div>
+					<div class="wps-product-section"><a href="<?php echo admin_url( 'admin-post.php?action=wps_invoice&order_id='.$order->ID.'&invoice_ref='.$received_payment['invoice_ref'].'&mode=pdf' ); ?>" target="_blank" class="wps-bton-second-mini-rounded" role="button"><i class="dashicons dashicons-download"></i><?php _e( 'Download invoice', 'wpshop' ); ?></a></div>
+					<div class="wps-product-section"><a href="<?php echo admin_url( 'admin-post.php?action=wps_invoice&order_id='.$order->ID.'&invoice_ref='.$received_payment['invoice_ref'] ); ?>" target="_blank" class="wps-bton-fourth-mini-third" role="button"><i class="dashicons dashicons-welcome-view-site"></i><?php _e( 'Watch invoice', 'wpshop' ); ?></a></div>
 					</div>
 				<?php } elseif( !empty( $received_payment ) && empty( $received_payment['invoice_ref'] ) && $received_payment['status'] == 'payment_received' ) { ?>
 					<div>

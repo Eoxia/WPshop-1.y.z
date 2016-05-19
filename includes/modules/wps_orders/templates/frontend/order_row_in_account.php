@@ -31,7 +31,7 @@
 			<?php endif; ?>
 
 			<?php if ( !empty( $order_meta ) && !empty( $order_meta[ 'order_invoice_ref' ] ) ) : ?>
-			<br/><a href="<?php echo WPSHOP_TEMPLATES_URL; ?>invoice.php?order_id=<?php echo $order_id; ?>&invoice_ref=<?php echo $order_meta[ 'order_invoice_ref' ]; ?>&mode=pdf" target="_blank" class="wps-bton-third" role="button"><?php _e( 'Download invoice', 'wpshop' ); ?></a>
+			<br/><a href="<?php echo admin_url( 'admin-post.php?action=wps_invoice&order_id='.$order_id.'&invoice_ref='.$order_meta[ 'order_invoice_ref' ].'&mode=pdf' ); ?>" target="_blank" class="wps-bton-third" role="button"><?php _e( 'Download invoice', 'wpshop' ); ?></a>
 			<?php endif; ?>
 
 			<!-- Display delete order -->
