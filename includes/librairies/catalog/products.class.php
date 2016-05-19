@@ -2011,9 +2011,10 @@ class wpshop_products {
 			 */
 			$entity_type_id	= wpshop_entities::get_entity_identifier_from_code(WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT);
 			$language 		= WPSHOP_CURRENT_LOCALE;
+			$icl_post_language = !empty( $_REQUEST['icl_post_language'] ) ? sanitize_text_field( $_REQUEST['icl_post_language'] ) : '';
 
-			if ( !empty($_REQUEST['icl_post_language']) ) {
-				$query = $wpdb->prepare("SELECT locale FROM " . $wpdb->prefix . "icl_locale_map WHERE code = %s", sanitize_text_field($_REQUEST['icl_post_language']));
+			if ( !empty($icl_post_language) ) {
+				$query = $wpdb->prepare("SELECT locale FROM " . $wpdb->prefix . "icl_locale_map WHERE code = %s", $icl_post_language );
 				$language = $wpdb->get_var($query);
 			}
 
