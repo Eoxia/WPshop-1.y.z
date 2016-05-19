@@ -82,15 +82,3 @@ if ( $total_unsecured_line != 0 )
 
 echo "[+] Request Tests Finished" . PHP_EOL;
 
-function search_files($folder, $pattern)
-{
-	$dir = new RecursiveDirectoryIterator($folder);
-	$ite = new RecursiveIteratorIterator($dir);
-	$files = new RegexIterator($ite, $pattern, RegexIterator::GET_MATCH);
-	$fileList = array();
-	foreach($files as $file)
-	{
-		$fileList[] = $file[0];
-	}
-	return $fileList;
-}
