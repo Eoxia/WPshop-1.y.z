@@ -111,6 +111,7 @@ class wpshop_attributes_unit
 	{
 		$action = isset($_REQUEST['action']) ? sanitize_text_field($_REQUEST['action']) : '';
 		$objectInEdition = isset($_REQUEST['id']) ? sanitize_key($_REQUEST['id']) : '';
+		$page = !empty( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : '';
 
 		$title = __(self::pageTitle, 'wpshop' );
 		if($action != '')
@@ -125,7 +126,7 @@ class wpshop_attributes_unit
 				$title = __(self::pageAddingTitle, 'wpshop');
 			}
 		}
-		elseif((self::getEditionSlug() != self::getListingSlug()) && (sanitize_text_field($_GET['page']) == self::getEditionSlug()))
+		elseif((self::getEditionSlug() != self::getListingSlug()) && (sanitize_text_field($page) == self::getEditionSlug()))
 		{
 			$title = __(self::pageAddingTitle, 'wpshop');
 		}
@@ -394,10 +395,11 @@ class wpshop_attributes_unit
 		$dbFieldList = wpshop_database::fields_to_input(self::getDbTable());
 
 		$editedItem = '';
-		$_REQUEST['action'] = 'save_new_attribute_unit';
+		// @TODO : Request
+		// $_REQUEST['action'] = 'save_new_attribute_unit';
 		if($itemToEdit != ''){
 			$editedItem = self::getElement($itemToEdit);
-			$_REQUEST['action'] = 'update_attribute_unit';
+			// $_REQUEST['action'] = 'update_attribute_unit';
 		}
 		$query = $wpdb->prepare('SELECT unit FROM ' .WPSHOP_DBT_ATTRIBUTE_UNIT. ' WHERE id = ' .get_option('wpshop_shop_default_currency'). '', '');
  		$default_unit = $wpdb->get_var($query);
@@ -737,7 +739,7 @@ class wpshop_attributes_unit
 		/*$_REQUEST['action'] = 'save_new_attribute_unit_group';
 		if($itemToEdit != ''){
 			$editedItem = self::get_unit_group($itemToEdit);
-			$_REQUEST['action'] = 'update_attribute_unit_group';
+			// $_REQUEST['action'] = 'update_attribute_unit_group';
 		}*/
 
 		$the_form_content_hidden = $the_form_general_content = $the_form_option_content = '';

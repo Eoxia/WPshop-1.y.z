@@ -71,12 +71,12 @@ class wpshop_paypal {
 			$payer_email = $_POST['payer_email']; // email du client
 			$txn_type = sanitize_text_field( $_POST['txn_type'] );
 
-			// @TODO : Request
+			// @TODO : REQUEST
 			$post = !empty($_POST) ? (array) $_POST : array();
 			if ( !empty($post) ) {
 				foreach ( $post as $key => $value) {
 					if ( substr($key, 0, 9) == 'item_name' ) {
-						$_POST[$key] = htmlentities($value);
+						//$_POST[$key] = htmlentities($value);
 					}
 				}
 			}

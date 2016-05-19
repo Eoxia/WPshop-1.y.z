@@ -137,8 +137,9 @@ class wpshop_entities {
 
 	public static function wpshop_display_entity_in_admin_menu() {
 		$checked = '';
-		if ( !empty($_GET['post']) ) {
-			$current_entity_params = get_post_meta(sanitize_text_field($_GET['post']), '_wpshop_entity_params', true);
+		$post = !empty( $_GET['post'] ) ? (int) $_GET['post'] : 0;
+		if ( !empty($post) ) {
+			$current_entity_params = get_post_meta( $post, '_wpshop_entity_params', true);
 
 			if ( !empty($current_entity_params['display_admin_menu']) ) {
 				$checked = 'checked ="checked"';
@@ -277,7 +278,7 @@ class wpshop_entities {
 				$caps = 'wpshop_view_dashboard';
 			}
 		}
-		
+
 		return $caps;
 	}
 
@@ -420,22 +421,23 @@ class wpshop_entities {
 	 * Save informations for current entity
 	 */
 	public static function save_entities_custom_informations( $post ) {
-       global $wpdb;
-       global $wpshop_account;
+     global $wpdb;
+     global $wpshop_account;
 		$post_id = !empty($_REQUEST['post_ID']) ? intval( sanitize_key($_REQUEST['post_ID']) ) : null;
+		$edit_other_thing = !empty( $_POST['edit_other_thing'] ) ? (int) $_POST['edit_other_thing'] : 0;
+		$post_type = !empty( $_REQUEST['post_type'] ) ? sanitize_text_field( $_REQUEST['post_type'] ) : '';
 
-		if ( !empty($post_id) && empty($_POST['edit_other_thing']) || ( !empty($_REQUEST['post_ID']) && !(bool)$_POST['edit_other_thing'] && get_post_type(sanitize_key($_REQUEST['post_ID'])) != WPSHOP_NEWTYPE_IDENTIFIER_ORDER  ) ) {
+
+		if ( !empty($post_id) && empty($edit_other_thing) || ( !empty($post_id) && !(bool)$edit_other_thing && get_post_type($post_id)) != WPSHOP_NEWTYPE_IDENTIFIER_ORDER  ) ) {
 			$current_post_type = get_post_type($post_id);
-
-
-
+			$current_post_type_text = !empty( $_REQUEST[$current_post_type . '_attribute_set_id'] ) ? sanitize_text_field( $_REQUEST[$current_post_type . '_attribute_set_id'] );
 
 			/*	Vérification de l'existence de l'envoi de l'identifiant du set d'attribut	*/
-			if	( !empty($_REQUEST[$current_post_type . '_attribute_set_id']) ) {
-				$attribute_set_id = intval( sanitize_key($_REQUEST[$current_post_type . '_attribute_set_id']) );
+			if	( !empty($current_post_type_text) ) {
+				$attribute_set_id = intval( $current_post_type_text );
 				$attribet_set_infos = wpshop_attributes_set::getElement($attribute_set_id, "'valid'", 'id');
 
-				if ( $attribet_set_infos->entity == sanitize_key($_REQUEST['post_type']) ) {
+				if ( $attribet_set_infos->entity == sanitize_key($post_type) ) {
 					/*	Enregistrement de l'identifiant du set d'attribut associé à l'entité	*/
 					update_post_meta($post_id, sprintf(WPSHOP_ATTRIBUTE_SET_ID_META_KEY, $current_post_type), $attribute_set_id);
 
@@ -481,7 +483,8 @@ class wpshop_entities {
 						}
 					}
 					if( !empty( $ad_id ) ) {
-						$_REQUEST['item_id'] = $ad_id;
+						// @TODO : REQUEST
+						// $_REQUEST['item_id'] = $ad_id;
 						$result = wps_address::save_address_infos( $key );
 						$current_id[] = $result['current_id'];
 					}
@@ -720,8 +723,9 @@ class wpshop_entities {
 	public static function wpshop_entities_shortcode( $shortcode_args ) {
 		global $wpshop_account, $wpdb;
 		$output = $form_content = '';
+		$quick_entity_add_button = !empty( $_POST['quick_entity_add_button'] ) ? (int) $_POST['quick_entity_add_button'] : 0;
 		if ( get_current_user_id() > 0 ) {
-			if ( !empty( $_POST['quick_entity_add_button'] ) ) {
+			if ( !empty( $quick_entity_add_button ) ) {
 				$attributes = array();
 				$attribute = !empty($_POST['attribute']) ? (array) $_POST['attribute'] : array();
 				foreach ( $attribute as $attribute_type => $attribute ) {
