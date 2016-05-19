@@ -466,20 +466,19 @@ if ( !class_exists("wps_classic_checkout") ) {
 		 */
 		function wps_checkout_valid_step_five() {
 			$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
-
 			if ( !wp_verify_nonce( $_wpnonce, 'wps_checkout_valid_step_five' ) )
 				wp_die();
 
-			$status = false; $response = '';
+			$status = false;
+			$response = '';
 			$payment_method = ( !empty($_POST['wps-payment-method']) ) ? wpshop_tools::varSanitizer( $_POST['wps-payment-method'] ): null;
 			$order_id = ( !empty($_SESSION['cart']['order_id']) ) ? wpshop_tools::varSanitizer($_SESSION['cart']['order_id']) : 0;
 			$customer_comment = ( !empty($_POST['wps-customer-comment']) ) ? wpshop_tools::varSanitizer( $_POST['wps-customer-comment'] ) : null;
-			$terms_of_sale_indicator = !empty( $_POST['terms_of_sale_indicator'] ) ? sanitize_text_field( $_POST['terms_of_sale_indicator'] ) : '';
-			$terms_of_sale = !empty( $_POST['terms_of_sale'] ) ? sanitize_text_field( $_POST['terms_of_sale'] ) : '';
 
-			$terms_of_sale_checking = ( ( isset($terms_of_sale_indicator) && !empty($terms_of_sale) ) || ( !empty($terms_of_sale) ) || ( !isset($terms_of_sale_indicator) && empty($terms_of_sale) ) ) ? true : false;
+			$terms_of_sale_required = isset( $_POST['terms_of_sale_indicator'] ) && !empty( $_POST['terms_of_sale_indicator'] ) ? true : false;
+			$terms_of_sale_checked = isset( $_POST['terms_of_sale'] ) && !empty( $_POST['terms_of_sale'] ) ? true : false;
 
-			if ($terms_of_sale_checking) {
+			if ( ( $terms_of_sale_required && $terms_of_sale_checked ) || !$terms_of_sale_required ) {
 				if ( !empty($payment_method) ) {
 					/** Check if the payment method exist for the shop **/
 					$payment_option = get_option( 'wps_payment_mode' );

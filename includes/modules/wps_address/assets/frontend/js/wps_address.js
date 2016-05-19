@@ -102,7 +102,8 @@ jQuery( document ).ready( function() {
 		var data = {
 			action: "wps_load_address_form",
 			_wpnonce: jQuery( this ).data( 'nonce' ),
-			address_id :  address_id
+			address_id :  address_id,
+			address_type_id: jQuery( this ).data( "address_type" )
 		};
 		jQuery.post( ajaxurl, data, function(response) {
 			fill_the_modal( response[1], response[0], '' );
