@@ -16,7 +16,6 @@ class wps_product_quick_add {
 
 	/**
 	 * Instanciation des différents composants pour le module / Main module components for quick produict creation module
-	 * @TODO : NONCE
 	 */
 	public function __construct() {
 		/**	Affiche un formulaire permettant de créer un produit / Display a form allowing to add a new product	*/

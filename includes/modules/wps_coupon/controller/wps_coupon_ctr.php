@@ -128,13 +128,12 @@ class wps_coupon_ctr {
 
 	/**
 	 * Save custom informations on Save post action
-	 * @TODO REQUEST
 	 */
 	function save_coupon_custom_informations() {
 		$post_ID = !empty( $_REQUEST['post_ID'] ) ? (int) $_REQUEST['post_ID'] : 0;
 		if( !empty($post_ID) && (get_post_type($post_ID) == WPSHOP_NEWTYPE_IDENTIFIER_COUPON) ) {
 			$wps_coupon_mdl = new wps_coupon_model();
-			
+
 			$data = array(
 				'wpshop_coupon_mini_amount' => !empty( $_REQUEST['wpshop_coupon_mini_amount'] ) ? sanitize_text_field( $_REQUEST['wpshop_coupon_mini_amount'] ) : '',
 				'wpshop_coupon_min_mount_shipping_rule' => !empty( $_REQUEST['wpshop_coupon_min_mount_shipping_rule'] ) ? sanitize_text_field( $_REQUEST['wpshop_coupon_min_mount_shipping_rule'] ) : '',

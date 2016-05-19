@@ -46,7 +46,6 @@ class wps_address_admin {
 
 	/**
 	 * Load address edit form in thicbox
-	 * @TODO : NONCE
 	 */
 	function load_address_form_action() {
 		$address_type_id = ( !empty($_GET['address_type']) ) ? intval( $_GET['address_type'] ) : null;
@@ -65,7 +64,6 @@ class wps_address_admin {
 
 	/**
 	 * Reload address panel
-	 * @TODO : NONCE
 	 */
 	function reload_addresses_for_customer() {
 		$_wpnonce = ( !empty( $_REQUEST['_wpnonce'] ) ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
@@ -87,7 +85,6 @@ class wps_address_admin {
 
 	/**
 	 * Delete address in order
-	 * @TODO : NONCE
 	 */
 	function delete_address_in_order_panel() {
 		$status = false;

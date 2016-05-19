@@ -6,7 +6,6 @@ class wps_barcode_ajax {
 		add_action( 'wp_ajax_barcode_img_coupons', array($this, 'imgCoupons') );
 	}
 
-	// @TODO : NONCE
 	public function imgProduct() {
 		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
 

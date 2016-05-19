@@ -335,7 +335,7 @@ wpshop(document).ready(function(){
 
 		_this.toggleClass('inversed');
 
-		var wpshop_sorting_bloc = _this.closest('.wpshop_products_block').children('.sorting_bloc');
+		var wpshop_sorting_bloc = _this.closest('.wpshop_products_block').children('.wps-catalog-sorting');
 
 		var order = jQuery('input[name=order]',wpshop_sorting_bloc).val()=='ASC'?'DESC':'ASC';
 		// On enregistre la config
@@ -438,9 +438,11 @@ wpshop(document).ready(function(){
 				if(data[0]) {
 					// On injecte le nouveau contenu
 					// console.log( data[1] );
+
 					jQuery(wpshop_product_container).html(data[1]);
 
-					eventElement.closest('.wpshop_products_block').find('.wps-catalog-container').removeClass('wps-bloc-loading');
+					jQuery(wpshop_product_container).removeClass('wps-bloc-loading');
+					//eventElement.closest('.wpshop_products_block').find('.wps-catalog-container').removeClass('wps-bloc-loading');
 					//desanimate_container(wpshop_product_container);
 					// On remonte en haut de page
 					//var offset = wpshop_sorting_bloc.offset();
