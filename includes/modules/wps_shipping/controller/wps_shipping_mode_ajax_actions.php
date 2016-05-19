@@ -275,10 +275,7 @@ class wps_shipping_mode_ajax_actions {
 
 
 	function wps_add_new_shipping_mode() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
-
-		if ( !wp_verify_nonce( $_wpnonce, 'wps_add_new_shipping_mode' ) )
-			wp_die();
+		check_ajax_referer( 'wps_add_new_shipping_mode' );
 
 		$status = false; $reponse = '';
 

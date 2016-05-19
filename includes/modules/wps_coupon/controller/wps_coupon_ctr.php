@@ -129,9 +129,11 @@ class wps_coupon_ctr {
 	/**
 	 * Save custom informations on Save post action
 	 */
-	function save_coupon_custom_informations() {
-		$post_ID = !empty( $_REQUEST['post_ID'] ) ? (int) $_REQUEST['post_ID'] : 0;
-		if( !empty($post_ID) && (get_post_type($post_ID) == WPSHOP_NEWTYPE_IDENTIFIER_COUPON) ) {
+	function save_coupon_custom_informations( $post_id ) {
+		if ( wp_is_post_revision( $post_id ) )
+			return;
+
+		if( !empty($post_id) && (get_post_type($post_id) == WPSHOP_NEWTYPE_IDENTIFIER_COUPON) ) {
 			$wps_coupon_mdl = new wps_coupon_model();
 
 			$data = array(
@@ -142,6 +144,7 @@ class wps_coupon_ctr {
 				'wpshop_coupon_discount_type' => !empty( $_REQUEST['wpshop_coupon_discount_type'] ) ? sanitize_text_field( $_REQUEST['wpshop_coupon_discount_type'] ) : '',
 				'coupon_receiver' => !empty( $_REQUEST['coupon_receiver'] ) ? sanitize_text_field( $_REQUEST['coupon_receiver'] ) : '',
 				'coupon_usage_limit' => !empty( $_REQUEST['coupon_usage_limit'] ) ? sanitize_text_field( $_REQUEST['coupon_usage_limit'] ) : '',
+				'post_ID' => $post_id,
 			);
 			$wps_coupon_mdl->save_coupons_informations( $data );
 		}

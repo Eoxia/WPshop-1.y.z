@@ -121,22 +121,22 @@ jQuery(document).ready(function() {
 		jQuery( this ).attr( 'disabled', true );
 		jQuery("#wps_shipping_mode_list_container").addClass( 'wps-bloc-loading' );
 		var data = {
-				action: "wps_add_new_shipping_mode",
-        _wpnonce: jQuery( this ).data( 'nonce' ),
-			};
-			jQuery.post(ajaxurl, data, function(response){
-				if ( response["status"] )  {
-					jQuery("#wps_shipping_mode_list_container").append( response['response'] );
-					jQuery( '.wps_create_new_shipping_mode' ).addClass( 'wps-bton-loading' );
-					jQuery( '.wps_create_new_shipping_mode' ).attr( 'disabled', false );
-					jQuery("#wps_shipping_mode_list_container").removeClass( 'wps-bloc-loading' );
-				}
-				else {
-					alert( wps_an_error_occured );
-					jQuery( '.wps_create_new_shipping_mode' ).addClass( 'wps-bton-loading' );
-					jQuery( '.wps_create_new_shipping_mode' ).attr( 'disabled', false );
-					jQuery("#wps_shipping_mode_list_container").removeClass( 'wps-bloc-loading' );
-				}
+			action: "wps_add_new_shipping_mode",
+	        _wpnonce: jQuery( this ).data( 'nonce' ),
+		};
+		jQuery.post(ajaxurl, data, function(response){
+			if ( response["status"] )  {
+				jQuery("#wps_shipping_mode_list_container").append( response['response'] );
+				jQuery( '.wps_create_new_shipping_mode' ).addClass( 'wps-bton-loading' );
+				jQuery( '.wps_create_new_shipping_mode' ).attr( 'disabled', false );
+				jQuery("#wps_shipping_mode_list_container").removeClass( 'wps-bloc-loading' );
+			}
+			else {
+				alert( wps_an_error_occured );
+				jQuery( '.wps_create_new_shipping_mode' ).addClass( 'wps-bton-loading' );
+				jQuery( '.wps_create_new_shipping_mode' ).attr( 'disabled', false );
+				jQuery("#wps_shipping_mode_list_container").removeClass( 'wps-bloc-loading' );
+			}
 		}, "json");
 	});
 

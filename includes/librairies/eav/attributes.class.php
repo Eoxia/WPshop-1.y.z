@@ -116,7 +116,6 @@ class wpshop_attributes{
 		$saveditem = isset($_REQUEST['saveditem']) ? sanitize_text_field($_REQUEST['saveditem']) : '';
 		$set_section = !empty($_REQUEST[self::getDbTable()]['set_section']) ? sanitize_text_field($_REQUEST[self::getDbTable()]['set_section']) : '';
 		//@TODO $_REQUEST
-		// if ( !empty($set_section) ) unset($_REQUEST[self::getDbTable()]['set_section']);
 		$id = !empty($_REQUEST['id']) ? (int) $_REQUEST['id'] : null;
 		if(!empty($action) && ($action=='activate') ){
 			if( isset($id) ) {
@@ -134,6 +133,7 @@ class wpshop_attributes{
 		}
 
 		$attribute_parameter = !empty( $_REQUEST[self::getDbTable()] ) ? (array)$_REQUEST[self::getDbTable()] : array();
+		 if ( !empty($set_section) ) unset($attribute_parameter['set_section']);
 
 		$wpshop_attribute_combo_values_list_order_def = !empty($attribute_parameter['wpshop_attribute_combo_values_list_order_def']) ? $attribute_parameter['wpshop_attribute_combo_values_list_order_def'] : array();
 		// @TODO $_REQUEST
@@ -630,6 +630,8 @@ ob_end_clean();
 	 *	@return string The html code that output the interface for adding a nem item
 	 */
 	function elementEdition($itemToEdit = '') {
+		ini_set('display_errors', true);
+		error_reporting(E_ALL);
 		global $attribute_displayed_field, $attribute_options_group;
 		$dbFieldList = wpshop_database::fields_to_input(self::getDbTable());
 		$editedItem = '';
@@ -1026,7 +1028,7 @@ ob_end_clean();
 
 		$action = !empty( $_REQUEST['action'] ) ? sanitize_text_field( $_REQUEST['action' ] ) : '';
 		$the_form = '
-<form name="' . se1lf::getDbTable() . '_form" id="' . self::getDbTable() . '_form" method="post" action="#" >
+<form name="' . self::getDbTable() . '_form" id="' . self::getDbTable() . '_form" method="post" action="#" >
 	' . wpshop_form::form_input(self::getDbTable() . '_action', self::getDbTable() . '_action', (isset($action) && ($action != '') ? sanitize_text_field($action) : 'save') , 'hidden') . '
 	' . wpshop_form::form_input(self::currentPageCode . '_form_has_modification', self::currentPageCode . '_form_has_modification', 'no' , 'hidden') . $the_form_content_hidden . wpshop_display::custom_page_output_builder($bloc_list, WPSHOP_ATTRIBUTE_EDITION_PAGE_LAYOUT) . '
 </form>
