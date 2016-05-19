@@ -109,7 +109,7 @@ class wps_pos_addon_order {
 	 * AJAX - Affiche l'interface de finalisation de commande
 	 */
 	function wps_pos_finalize_order() {
-		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_GET['_wpnonce'] ) ? sanitize_text_field( $_GET['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_pos_finalize_order' ) )
 			wp_die();

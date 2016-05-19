@@ -28,7 +28,7 @@ class wpspos_customer_quick_add {
 	 * AJAX - Charge le fomulaire d'ajout rapide d'un client / Load the form for new customer quick add
 	 */
 	function customer_creation() {
-		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_GET['_wpnonce'] ) ? sanitize_text_field( $_GET['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps-customer-quick-nonce' ) )
 			wp_die();

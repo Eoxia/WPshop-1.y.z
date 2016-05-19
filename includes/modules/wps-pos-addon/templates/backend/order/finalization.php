@@ -9,6 +9,7 @@
 <h3><?php _e( 'Order payment', 'wps-pos-i18n' ); ?></h3>
 <form class="wpspos-order-payment-form" action="<?php echo admin_url( "admin-ajax.php" ); ?>" method="post" >
 	<input type="hidden" name="action" value="wpspos-finish-order" />
+	<?php wp_nonce_field( 'wps_pos_process_checkout', '_wpnonce' ); ?>
 	<input type="hidden" name="wps-pos-total-order-amount" value="<?php echo $cart_content['order_amount_to_pay_now']; ?>" />
 	<input type="hidden" name="order_id" value="<?php echo $current_order_id; ?>" />
 	<ul class="wpspos-order-payment-method" >

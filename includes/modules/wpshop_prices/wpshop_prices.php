@@ -170,7 +170,7 @@ if ( !class_exists("wpshop_prices") ) {
 			$wpshop_price_piloting_option = get_option('wpshop_shop_price_piloting');
 // 			$wpshop_price_piloting_option = 'TTC';
  			/** Price for Mini-output **/
-			if( !$price_checking_done ) {
+			if( !empty($product['product_id']) && !$price_checking_done ) {
 
 				/** Checking if it's a product with variation **/
 				$variation_option_checking = get_post_meta( $product['product_id'], '_wpshop_variation_defining', true );

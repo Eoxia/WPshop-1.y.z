@@ -4,6 +4,12 @@ jQuery( document ).ready( function(){
     	dateFormat : 'yy-mm-dd'
     });
 	var total_payments;
+	if(typeof payments == 'undefined') {
+		payments = [];
+	}
+	if(typeof historics == 'undefined') {
+		historics = [];
+	}
 	var payments_by_dates = payments;
 	var payments_method = payments_by_dates;
 	var payments_final = payments_method;

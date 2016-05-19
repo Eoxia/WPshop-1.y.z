@@ -154,6 +154,7 @@ class wpshop_categories
 		$category_id = (int) $_REQUEST["tag_ID"];
 		$category_meta_information = get_option(WPSHOP_NEWTYPE_IDENTIFIER_CATEGORIES . '_' . $category_id);
 		$tpl_component = array();
+		wp_enqueue_media();
 		$category_thumbnail_preview = '<img src="' .WPSHOP_DEFAULT_CATEGORY_PICTURE. '" alt="No picture" class="category_thumbnail_preview" />';
 		/*	Check if there is already a picture for the selected category	*/
 

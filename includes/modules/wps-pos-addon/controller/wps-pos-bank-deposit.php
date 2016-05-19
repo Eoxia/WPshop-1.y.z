@@ -67,6 +67,7 @@ class wps_pos_addon_bank_deposit {
 		return array( 'id' => $id, 'order_key' => $order_key, 'date' => $date, 'products' => $products_simplified, 'amount' => $amount, 'method' => $method );
 	}
 	public function vars_js() {
+		echo 'salut';
 		wp_localize_script( 'wpspos-backend-bank-deposit-js', 'payments', $this->get_payments() );
 	}
 

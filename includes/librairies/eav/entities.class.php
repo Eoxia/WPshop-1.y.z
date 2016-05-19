@@ -468,7 +468,7 @@ class wpshop_entities {
 				}
 			}
 			$attribute = !empty($_REQUEST['attribute']) ? (array) $_REQUEST['attribute'] : null;
-			$post_id = sanitize_key($_REQUEST['post_ID']);
+			$post_id = !empty($_REQUEST['post_ID']) ? (int) $_REQUEST['post_ID'] : null;
 			if ( isset($attribute) ) {
 				$current_id = array();
 				foreach ( $attribute as $key=>$values ) {

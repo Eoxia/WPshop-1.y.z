@@ -25,7 +25,7 @@ class wps_pos_addon {
 
 		$tab = ( !empty( $_GET['tab'] ) ) ? sanitize_text_field( $_GET['tab'] ) : '';
 
-		if( !empty( $tab ) || $tab == 'dashboard' ) {
+		if( empty( $tab ) || $tab == 'dashboard' ) {
 			/**	Instanciation des différents composants du logiciel de caisse / Instanciate the different component for POS addon	*/
 			$this->wps_pos_customer = new wps_pos_addon_customer();
 			$this->wps_pos_product = new wps_pos_addon_product();
@@ -74,7 +74,7 @@ class wps_pos_addon {
 
 			$tab = ( !empty( $_GET['tab'] ) ) ? sanitize_text_field( $_GET['tab'] ) : '';
 
-			if( empty( $tab ) || $tab == 'bank_deposit' ) {
+			if( !empty( $tab ) && $tab == 'bank_deposit' ) {
 				wp_enqueue_script('wpspos-backend-bank-deposit-js',  WPSPOS_URL . 'assets/js/backend_bank_deposit.js', '', WPSPOS_VERSION);
 			} else {
 				wp_enqueue_script('wpspos-backend-js',  WPSPOS_URL . 'assets/js/backend.js', '', WPSPOS_VERSION);
@@ -357,7 +357,7 @@ class wps_pos_addon {
 		if( is_dir( $module_folder ) ) {
 			$parent_folder_content = scandir( $module_folder );
 			foreach ( $parent_folder_content as $folder ) {
-				if ( $folder && substr( $folder, 0, 1) != '.' && is_dir( $folder ) ) {
+				if ( $folder && substr( $folder, 0, 1) != '.' && is_dir( $module_folder . $folder ) ) {
 					$child_folder_content = scandir( $module_folder . $folder );
 					if ( file_exists( $module_folder . $folder . '/' . $folder . '.php') ) {
 						$f =  $module_folder . $folder . '/' . $folder . '.php';

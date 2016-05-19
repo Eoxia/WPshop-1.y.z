@@ -1,5 +1,4 @@
 <?php if ( !defined( 'ABSPATH' ) ) exit;
-?>
 	$billing_option = get_option( 'wpshop_billing_address' );
 	if( !empty( $billing_option ) && is_array( $billing_option ) ) {
 		$attribute_set_id = $billing_option['choice'];
