@@ -2775,11 +2775,12 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 
 	function ajax_wpshop_fill_the_downloadable_dialog() {
 		check_ajax_referer( 'ajax_wpshop_fill_the_downloadable_dialog' );
+		$product_id = !empty( $_POST ) && !empty( $_POST[ 'product_identifier' ] ) && is_int( (int)$_POST[ 'product_identifier' ] ) ? (int)$_POST[ 'product_identifier' ] : 0;
 		$output  = '<form method="post" action="' .admin_url('admin-ajax.php') .'" name="" id="upload_downloadable_file" enctype="multipart/form-data" >';
 		$output .= '<p class="formField"><label for="wpshop_file">' .__('Choose your file to send', 'wpshop'). '</label><input type="file" name="wpshop_file" /></p>';
 		$output .= '<input type="hidden" name="action" value="upload_downloadable_file_action" />';
 		$output .= wp_nonce_field( 'ajax_wpshop_upload_downloadable_file_action' );
-		$output .= '<input type="hidden" name="element_identifer" id="element_identifer" value="' .esc_attr($_POST['product_identifer']). '" />';
+		$output .= '<input type="hidden" name="element_identifer" id="element_identifer" value="' .esc_attr( $product_id). '" />';
 		$output .= '<p class="formField"><a id="send_downloadable_file_button" class="wps-bton-first-mini-rounded">' .__('Send your file', 'wpshop'). '</a></p>';
 		$output .= '</form>';
 		$output .='<script type="text/javascript">jQuery("#upload_downloadable_file").ajaxForm({
@@ -3648,14 +3649,15 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 			$products_id = wpshop_products::get_products_matching_attribute($att[0],$att[1]);
 		}
 		$products_id = !empty($products_id) ? $products_id : (int) $_REQUEST['pid'];
-		$page_number = (int) $_REQUEST['page_number'];
+		$page_number = !empty( $_REQUEST ) && !empty( $_REQUEST[ 'page_number' ] ) && is_int( (int) $_REQUEST['page_number'] ) ? (int) $_REQUEST['page_number'] : 0;
 
-		if ( !empty($_GET['page_product']) ) {
-			$page_number = (int) $_GET['page_product'];
-		}
-		$data = wpshop_products::wpshop_get_product_by_criteria(
-			$_REQUEST['criteria'], $_REQUEST['cid'], $products_id, $_REQUEST['display_type'], $_REQUEST['order'], $page_number, $_REQUEST['products_per_page']
-		);
+		$criteria = !empty( $_REQUEST ) && !empty( $_REQUEST[ 'criteria' ] ) ? sanitize_text_field( $_REQUEST[ 'criteria' ] ) : null;
+		$cid = !empty( $_REQUEST ) && !empty( $_REQUEST[ 'cid' ] ) && is_int( (int)$_REQUEST[ 'cid' ] ) ? (int)$_REQUEST[ 'cid' ] : null;
+		$display_type = !empty( $_REQUEST ) && !empty( $_REQUEST[ 'display_type' ] ) ? sanitize_text_field( $_REQUEST[ 'display_type' ] ) : null;
+		$order = !empty( $_REQUEST ) && !empty( $_REQUEST[ 'order' ] ) ? sanitize_text_field( $_REQUEST[ 'order' ] ) : null;
+		$products_per_page = !empty( $_REQUEST ) && !empty( $_REQUEST[ 'products_per_page' ] ) && is_int( (int)$_REQUEST[ 'products_per_page' ] ) ? (int)$_REQUEST[ 'products_per_page' ] : 0;
+
+		$data = wpshop_products::wpshop_get_product_by_criteria( $criteria, $cid, $products_id, $display_type, $order, $page_number, $products_per_page );
 		if($data[0]) {
 			echo json_encode(array(true, do_shortcode($data[1])));
 		} else echo json_encode(array(false,__('No product found','wpshop')));
