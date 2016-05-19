@@ -428,9 +428,9 @@ class wpshop_entities {
 		$post_type = !empty( $_REQUEST['post_type'] ) ? sanitize_text_field( $_REQUEST['post_type'] ) : '';
 
 
-		if ( !empty($post_id) && empty($edit_other_thing) || ( !empty($post_id) && !(bool)$edit_other_thing && get_post_type($post_id)) != WPSHOP_NEWTYPE_IDENTIFIER_ORDER  ) ) {
+		if ( !empty($post_id) && empty($edit_other_thing) || ( !empty($post_id) && !(bool)$edit_other_thing && get_post_type($post_id)) != WPSHOP_NEWTYPE_IDENTIFIER_ORDER  ) {
 			$current_post_type = get_post_type($post_id);
-			$current_post_type_text = !empty( $_REQUEST[$current_post_type . '_attribute_set_id'] ) ? sanitize_text_field( $_REQUEST[$current_post_type . '_attribute_set_id'] );
+			$current_post_type_text = !empty( $_REQUEST[$current_post_type . '_attribute_set_id'] ) ? sanitize_text_field( $_REQUEST[$current_post_type . '_attribute_set_id'] ) : '';
 
 			/*	Vérification de l'existence de l'envoi de l'identifiant du set d'attribut	*/
 			if	( !empty($current_post_type_text) ) {

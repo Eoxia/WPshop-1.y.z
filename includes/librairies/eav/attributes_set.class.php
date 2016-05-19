@@ -277,7 +277,7 @@ class wpshop_attributes_set{
 				}
 
 				$attribute_group_order = !empty( $_REQUEST['attribute_group_order'] ) ? (array)$_REQUEST['attribute_group_order'] : array();
-				if(isset($attribute_group_order){
+				if(isset($attribute_group_order)){
 					foreach($attribute_group_order as $groupIdentifier => $newOrder){
 						$newOrder = str_replace('attribute_', '', $newOrder);
 						$order = explode(',', $newOrder);
