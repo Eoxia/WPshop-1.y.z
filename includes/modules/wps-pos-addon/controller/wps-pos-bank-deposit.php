@@ -141,19 +141,41 @@ class wps_pos_addon_bank_deposit {
 		if ( !empty( $mode ) && $mode == 'pdf') {
 			require_once(WPSHOP_LIBRAIRIES_DIR.'HTML2PDF/html2pdf.class.php');
 			try {
-				$html_content = $content_css . '<page>' . $content . '</page>';
+				ob_start(); ?>
+				<?php require( wpshop_tools::get_template_part( WPSPOS_DIR, WPSPOS_TEMPLATES_MAIN_DIR, 'backend/bank_deposit', 'bank_deposit_style' ) ); ?>
+				<page>
+					<?php require( wpshop_tools::get_template_part( WPSPOS_DIR, WPSPOS_TEMPLATES_MAIN_DIR, 'backend/bank_deposit', 'bank_deposit' ) ); ?>
+				</page>
+				<?php $html_content = ob_get_contents();
+				ob_end_clean();
 				$html2pdf = new HTML2PDF('P', 'A4', 'fr');
 
 				$html2pdf->setDefaultFont('Arial');
 				$html2pdf->writeHTML($html_content);
 
-				$html2pdf->Output( __('Bank deposit', 'wpshop') . ' - ' . mysql2date( get_option( 'date_format' ), $fromdate ) . '.pdf', 'D');
+				$html2pdf->Output( __('Bank deposit', 'wpshop') . ' - ' . mysql2date( get_option( 'date_format' ), (string) $fromdate->format('Y-m-d') ) . '.pdf', 'D');
 			}
 			catch (HTML2PDF_exception $e) {
 				echo $e;
 			}
-		} else {
-			require( wpshop_tools::get_template_part( WPSPOS_DIR, WPSPOS_TEMPLATES_MAIN_DIR, 'backend/bank_deposit', 'bank_deposit' ) );
+		} else { ?>
+			<!DOCTYPE html>
+			<!--[if IE 8]>
+			<html xmlns="http://www.w3.org/1999/xhtml" class="ie8 wp-toolbar"  dir="ltr" lang="en-US">
+			<![endif]-->
+			<!--[if !(IE 8) ]><!-->
+			<html xmlns="http://www.w3.org/1999/xhtml" class="wp-toolbar"  dir="ltr" lang="en-US">
+			<!--<![endif]-->
+				<head>
+					<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+					<title><?php _e('Bank deposit', 'wpshop'); ?> - <?php echo mysql2date( get_option( 'date_format' ), (string) $fromdate->format('Y-m-d') ); ?></title>
+					<?php require( wpshop_tools::get_template_part( WPSPOS_DIR, WPSPOS_TEMPLATES_MAIN_DIR, 'backend/bank_deposit', 'bank_deposit_style' ) ); ?>
+				</head>
+				<body>
+					<?php require( wpshop_tools::get_template_part( WPSPOS_DIR, WPSPOS_TEMPLATES_MAIN_DIR, 'backend/bank_deposit', 'bank_deposit' ) ); ?>
+				</body>
+			</html>
+			<?php
 		}
 
 		die();

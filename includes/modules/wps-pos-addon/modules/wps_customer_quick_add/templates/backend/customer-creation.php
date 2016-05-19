@@ -53,7 +53,7 @@
 				if ( responseText[ 'status' ] ) {
 					message_status = 'wps-alert-success';
 					$form[0].reset();
-					wpspos_set_customer_for_order( responseText[ 'customer_id' ] );
+					wpspos_set_customer_for_order( responseText[ 'customer_id' ], '<?php echo wp_create_nonce( 'ajax_pos_customer_choice' ); ?>' );
 
 					if ( jQuery( ".wps-pos-customer-letter-choice-" + responseText[ 'letter' ] ).hasClass( "wps-bton-third-rounded" ) ) {
 						jQuery( ".wps-pos-customer-letter-choice-" + responseText[ 'letter' ] ).click();
