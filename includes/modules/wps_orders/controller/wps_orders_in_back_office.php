@@ -350,13 +350,13 @@ class wps_orders_in_back_office {
 	 * AJAX - Refresh product listing in order back-office
 	 */
 	function refresh_product_list() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+		$letter = ( !empty($_POST['letter']) ) ? sanitize_title( $_POST['letter'] ) : '';
 
-		if ( !wp_verify_nonce( $_wpnonce, 'refresh_product_list' ) )
+		if ( !wp_verify_nonce( $_wpnonce, 'refresh_product_list_'.strtolower($letter) ) )
 			wp_die();
 
 		$status = false; $response = '';
-		$letter = ( !empty($_POST['letter']) ) ? sanitize_title( $_POST['letter'] ) : '';
 		$oid = !empty( $_POST['oid'] ) ? (int) $_POST['oid'] : 0;
 
 		if( !empty($oid) ) {
