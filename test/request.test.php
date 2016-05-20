@@ -23,7 +23,8 @@ foreach ( $unitList as $file_url )
 		foreach ( $lines as $key => $line ) {
 	    if ( preg_match( $pattern, $line ) ) {
 	      $lines[$key] = preg_replace( '#!empty\(.+?(\$_POST|\$_GET|\$_REQUEST)\[\'.+\'\].+?\) \?#isU', '', $lines[$key] );
-			if ( $file_url != "../wpshop/test/request.test.php" ) {
+
+			if ( basename( $file_url ) != "request.test.php" ) {
 			  if ( !preg_match( '#sanitize_.+#', $lines[$key] ) &&
         !preg_match( '#esc_.+#', $lines[$key] ) &&
 				!preg_match( '#\*#', $lines[$key] ) &&
@@ -82,3 +83,16 @@ if ( $total_unsecured_line != 0 )
 
 echo "[+] Request Tests Finished" . PHP_EOL;
 
+if ( !function_exists( 'search_files' ) ) {
+	function search_files($folder, $pattern) {
+		$dir = new RecursiveDirectoryIterator($folder);
+		$ite = new RecursiveIteratorIterator($dir);
+		$files = new RegexIterator($ite, $pattern, RegexIterator::GET_MATCH);
+		$fileList = array();
+		foreach($files as $file)
+		{
+			$fileList[] = $file[0];
+		}
+		return $fileList;
+	}
+}
