@@ -1381,7 +1381,6 @@ class wps_address {
 		global $wpshop, $wpdb;
 
 		$_wpnonce = ( !empty( $_REQUEST['_wpnonce'] ) ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
-
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_save_address' ) )
 			wp_die();
 
@@ -1435,7 +1434,7 @@ class wps_address {
 					}
 
 					$status = true;
-					if ( !empty( $tmp_array ) && !empty( $adress_save_the_first ) ) {
+					if ( !empty( $adress_save_the_first ) ) {
 						$query = $wpdb->prepare( 'SELECT name FROM ' . WPSHOP_DBT_ATTRIBUTE_SET . ' WHERE id = %d ', $address_type );
 						$address_title = __( $wpdb->get_var( $query ), 'wpshop' );
 						$result = self::display_address_interface_content( $address_type, $address_title, $shipping_save[ 'current_id' ], $adress_save_the_first );
