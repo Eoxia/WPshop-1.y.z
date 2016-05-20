@@ -3357,7 +3357,9 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 
 	function saveNewAttributeSetSection() {
 		check_ajax_referer( 'saveNewAttributeSetSection' );
+		global $wpdb;
 		$attributeSetSectionName = sanitize_text_field($_REQUEST['attributeSetSectionName']);
+		$elementIdentifier = (int)$_REQUEST['elementIdentifier'];
 		$attributeSetInfos = array();
 		$attributeSetInfos['id'] = '';
 		$attributeSetInfos['status'] = 'valid';
@@ -3374,10 +3376,12 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 			$attributeSetSectionCreation_Result = '<img src=\'' . WPSHOP_SUCCES_ICON . '\' alt=\'action_success\' class=\'wpshopPageMessage_Icon\' />' . __('New section has been created successfully', 'wpshop');
 			$more_script = 'wpshop_go_to("#attribute_group_'.$wpdb->insert_id.'")';
 		}
-		else
+		else {
 			$attributeSetSectionCreation_Result = '<img src=\'' . WPSHOP_ERROR_ICON . '\' alt=\'action_error\' class=\'wpshopPageMessage_Icon\' />' . __('An error occured while saving new section', 'wpshop');
-		echo wpshop_attributes_set::attributeSetDetailsManagement($elementIdentifier) . '<script type="text/javascript" >wpshop(document).ready(function(){	jQuery("#wpshop_new_set_section_add").dialog("close");jQuery("#wpshop_new_set_section_add").children("img").hide(); });wpshopShowMessage("' . $attributeSetSectionCreation_Result . '");hideShowMessage(5000);'.$more_script.'</script>';
-		wp_die();
+		}
+
+		$script = '<script type="text/javascript" >wpshop(document).ready(function(){	jQuery("#wpshop_new_set_section_add").dialog("close");jQuery("#wpshop_new_set_section_add").children("img").hide(); });wpshopShowMessage("' . $attributeSetSectionCreation_Result . '");hideShowMessage(5000);'.$more_script.'</script>';
+		wp_die( wpshop_attributes_set::attributeSetDetailsManagement($elementIdentifier) . $script );
 	}
 	add_action( 'wp_ajax_wps_attribute_set_section_new', 'saveNewAttributeSetSection' );
 

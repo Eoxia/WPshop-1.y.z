@@ -663,7 +663,7 @@ class wps_address {
 	/** Treat the differents fields of form and classified them by form
 	 * @return boolean
 	 */
-	public static function save_address_infos( $attribute_set_id ) {
+	public static function save_address_infos( $attribute_set_id, $address_id_to_copy = 0 ) {
 		global $wpdb;
 		$adress_save_the_first = !empty( $_POST['wps-address-save-the-first'] ) ? sanitize_text_field( $_POST['wps-address-save-the-first'] ) : '';
 		$attribute = !empty( $_POST['attribute'] ) ? (array)$_POST['attribute'] : '';
@@ -691,15 +691,15 @@ class wps_address {
 		$current_item_edited = !empty($_POST['attribute'][$attribute_set_id]['item_id']) ? (int)wpshop_tools::varSanitizer($_POST['attribute'][$attribute_set_id]['item_id']) : null;
 		$current_attribute_set_id = !empty( $_POST['current_attribute_set_id'] ) ? (int)$_POST['current_attribute_set_id'] : '';
 		$shipping_to_billing = !empty( $_POST['wps-shipping-to-billing'] ) ? sanitize_text_field( $_POST['wps-shipping-to-billing'] ) : '';
-		$shipping_to_billing_id = !empty( $_POST['wps-shipping-to-billing-id'] ) ? (int)$_POST['wps-shipping-to-billing-id'] : '';
+		$shipping_to_billing_id = !empty( $_POST['wps-shipping-to-billing-id'] ) ? (int)$_POST['wps-shipping-to-billing-id'] : $address_id_to_copy;
 
 		// Create or update the post address
 
 		// @TODO : REQUEST
 		$post_parent = '';
 		$post_author = get_current_user_id();
-		$customer_id = !empty( $_REQUEST['user']['customer_id'] ) ? (int) $_REQUEST['user']['customer_id'] : 0;
-		$post_ID = !empty( $_REQUEST['post_ID'] ) ? (int) $_REQUEST['post_ID'] : 0;
+		$customer_id = !empty( $_REQUEST['user']['customer_id'] ) ? (int)$_REQUEST['user']['customer_id'] : 0;
+		$post_ID = !empty( $_REQUEST['post_ID'] ) ? (int)$_REQUEST['post_ID'] : 0;
 
 		if ( !empty($customer_id) ) {
 			$post_parent = $customer_id;
@@ -1411,7 +1411,6 @@ class wps_address {
 		$current_item_edited = !empty($_POST['attribute'][$attribute_set_id]['item_id']) ? (int)wpshop_tools::varSanitizer($_POST['attribute'][$attribute_set_id]['item_id']) : null;
 		$current_attribute_set_id = !empty( $_POST['current_attribute_set_id'] ) ? (int)$_POST['current_attribute_set_id'] : '';
 		$shipping_to_billing = !empty( $_POST['wps-shipping-to-billing'] ) ? sanitize_text_field( $_POST['wps-shipping-to-billing'] ) : '';
-		$shipping_to_billing_id = !empty( $_POST['wps-shipping-to-billing-id'] ) ? (int)$_POST['wps-shipping-to-billing-id'] : '';
 
 		$status = false;
 		$result = $address_type = $same_address_type = '';
@@ -1428,12 +1427,10 @@ class wps_address {
 
 					$wps_shipping_to_billing = !empty( $_POST['wps-shipping-to-billing'] ) ? sanitize_text_field( $_POST['wps-shipping-to-billing'] ) : '';
 					if( !empty( $wps_shipping_to_billing ) ) {
-						// @TODO
-						// $_POST['wps-shipping-to-billing-id'] = $shipping_save['current_id'];
 						$billing_option = get_option( 'wpshop_billing_address' );
 						$shipping_option = get_option( 'wpshop_shipping_address_choice' );
 						self::shipping_to_billing( $shipping_option['choice'], $billing_option['choice'] );
-						self::save_address_infos( $billing_option['choice'] );
+						self::save_address_infos( $billing_option['choice'], $shipping_save['current_id'] );
 						$same_address_type = $billing_option['choice'];
 					}
 

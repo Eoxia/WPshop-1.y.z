@@ -287,7 +287,7 @@ class wps_orders_ctr {
 				}
 				else {
 					$html_content =  wpshop_modules_billing::generate_html_invoice($order_id, $invoice_ref);
-					
+
 				}
 
 				if ( $mode == 'pdf') {
@@ -323,10 +323,7 @@ class wps_orders_ctr {
 		 * AJAX - Load order details in customer account
 		 */
 		function wps_orders_load_details() {
-			$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
-
-			if ( !wp_verify_nonce( $_wpnonce, 'wps_orders_load_details' ) )
-				wp_die();
+			check_ajax_referer( 'wps_orders_load_details' );
 
 			$order_id = ( !empty($_POST['order_id']) ) ? wpshop_tools::varSanitizer( $_POST['order_id'] ) : '';
 			$user_id = get_current_user_id();

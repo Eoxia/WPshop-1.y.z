@@ -16,10 +16,7 @@ class wps_shipping_mode_ajax_actions {
 	 * AJAX - Save custom Rules
 	 **/
 	function wpshop_ajax_save_shipping_rule(){
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
-
-		if ( !wp_verify_nonce( $_wpnonce, 'wpshop_ajax_save_shipping_rule' ) )
-			wp_die();
+		check_ajax_referer( 'wpshop_ajax_save_shipping_rule' );
 
 		global $wpdb;
 		$wps_shipping = new wps_shipping();
@@ -126,10 +123,7 @@ class wps_shipping_mode_ajax_actions {
 	 * AJAX - Display Created custom shipping rules
 	 */
 	function wpshop_ajax_display_shipping_rules () {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
-
-		if ( !wp_verify_nonce( $_wpnonce, 'wpshop_ajax_display_shipping_rules' ) )
-			wp_die();
+		check_ajax_referer( 'wpshop_ajax_display_shipping_rules' );
 
 		$status = false;
 		$fees_data = ( !empty($_POST['fees_data']) ) ? sanitize_text_field( $_POST['fees_data'] ) : null;
