@@ -100,11 +100,11 @@
 				endif;
 		endforeach; ?>
 		<?php endif; ?>
-			<?php if( $cart_type == 'admin-panel' ) : ?>
+			<?php if( !empty($cart_content['order_discount_value']) || ( $cart_type == 'admin-panel' ) ) : ?>
 				<p>
 					<?php _e( 'Discount', 'wpshop'); ?>
 					<span class="wps-alignRight">
-						<?php if( empty( $cart_content['order_status'] ) || $cart_content['order_status'] == 'awaiting_payment' || ( ( !empty( $cart_content['cart_type'] ) && $cart_content['cart_type'] == 'quotation' ) && $cart_content['order_status'] != 'completed' ) ) : ?>
+						<?php if( ( $cart_type == 'admin-panel' ) && ( empty( $cart_content['order_status'] ) || $cart_content['order_status'] == 'awaiting_payment' || ( ( !empty( $cart_content['cart_type'] ) && $cart_content['cart_type'] == 'quotation' ) && $cart_content['order_status'] != 'completed' ) ) ) : ?>
 							<span class="wps-form-group"><span class="wps-form"><input type="text" id="wps-orders-discount-value" size="5" style="text-align : right" value="<?php echo ( !empty($cart_content['order_discount_value']) ) ? $cart_content['order_discount_value'] : ''; ?>"/></span></span>
 						<?php else : ?>
 							<?php if( !empty($cart_content['order_discount_value']) ) : ?>
@@ -115,7 +115,7 @@
 						<?php endif; ?>
 					</span>
 				</p>
-				<?php if( empty( $cart_content['order_status'] ) || $cart_content['order_status'] == 'awaiting_payment' || ( ( !empty( $cart_content['cart_type'] ) && $cart_content['cart_type'] == 'quotation' ) && $cart_content['order_status'] != 'completed' ) ) : ?>
+				<?php if( ( $cart_type == 'admin-panel' ) && ( empty( $cart_content['order_status'] ) || $cart_content['order_status'] == 'awaiting_payment' || ( ( !empty( $cart_content['cart_type'] ) && $cart_content['cart_type'] == 'quotation' ) && $cart_content['order_status'] != 'completed' ) ) ) : ?>
 					<p>
 						<?php _e( 'Discount type', 'wpshop'); ?>
 						<span class="wps-alignRight">

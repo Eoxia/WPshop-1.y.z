@@ -723,7 +723,14 @@ class wps_cart {
 		// Apply cart rules
 		$cart_rule = wpshop_cart_rules::get_cart_rule( $cart_infos['order_grand_total'] );
 		if( $cart_rule['cart_rule_exist'] ) {
-			$cart_infos['order_discount_type'] = $cart_rule['cart_rule_info']['discount_type'];
+			if ( !empty( $cart_rule['cart_rule_info']['discount_type'] ) ) {
+				if ( $cart_rule['cart_rule_info']['discount_type'] == 'absolute_discount' ) {
+					$cart_infos['order_discount_type'] = 'amount';
+				}
+				if ( $cart_rule['cart_rule_info']['discount_type'] == 'percent_discount' ) {
+					$cart_infos['order_discount_type'] = 'percent';
+				}
+			}
 			$cart_infos['order_discount_value'] = $cart_rule['cart_rule_info']['discount_value'];
 		}
 
@@ -749,11 +756,9 @@ class wps_cart {
 			// Calcul discount on Order
 			switch ($cart_infos['order_discount_type']) {
 				case 'amount':
-				case 'absolute_discount':
 					$cart_infos['order_discount_amount_total_cart'] = number_format( str_replace( ',', '.', $cart_infos['order_discount_value'] ), 2, '.', '');
 				break;
 				case 'percent':
-				case 'percent_discount':
 					$cart_infos['order_discount_amount_total_cart'] = number_format( $cart_infos['order_grand_total'], 2, '.', '') * ( number_format( str_replace( ',', '.', $cart_infos['order_discount_value']), 2, '.', '') / 100);
 				break;
 			}
