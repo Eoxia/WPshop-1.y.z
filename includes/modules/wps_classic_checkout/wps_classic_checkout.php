@@ -404,9 +404,7 @@ if ( !class_exists("wps_classic_checkout") ) {
 			//Stock checking verification
 			$this->checking_stock();
 
-
-			echo json_encode( array( 'status' => $status, 'response' => $response ) );
-			die();
+			wp_die( json_encode( array( 'status' => $status, 'response' => $response ) ) );
 		}
 
 		/**

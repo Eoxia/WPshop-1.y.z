@@ -1112,6 +1112,7 @@ class wps_address {
 		$output = $extra_class = $billing_address_display = $shipping_address_display = $first_address_checking = '';
 		$is_from_admin = ( !empty($customer_id) ) ? true : false;
 		$user_id = ( !empty($customer_id) ) ? $customer_id : get_current_user_id();
+
 		if ( $user_id != 0 ) {
 
 			$shipping_option = get_option( 'wpshop_shipping_address_choice' );
@@ -1171,8 +1172,8 @@ class wps_address {
 					ob_end_clean();
 				}
 			}
-
 		}
+
 		return $output;
 	}
 
@@ -1182,18 +1183,20 @@ class wps_address {
 		$is_from_admin = ( !empty($customer_id) ) ? true : false;
 		$select_id = ( !empty($type) && $type == 'shipping') ?  'shipping_address_address_list' : 'billing_address_address_list';
 		$output = '';
+
 		if( !empty($address_type_id) ) {
 			$addresses = self::get_addresses_list( $user_id );
 			$list_addresses = ( !empty($addresses[ $address_type_id ]) ) ? $addresses[ $address_type_id ] : array();
 			if ( empty($list_addresses) ) {
 				$form = self::display_form_fields($address_type_id);
 			}
-			$output = '';
+
 			ob_start();
-			require( wpshop_tools::get_template_part( WPS_ADDRESS_DIR, WPS_LOCALISATION_TEMPLATES_MAIN_DIR, ( ($admin_display) ? 'backend' : 'frontend' ), "address", "content") );
+			require( wpshop_tools::get_template_part( WPS_ADDRESS_DIR, WPS_LOCALISATION_TEMPLATES_MAIN_DIR, ( $admin_display ? 'backend' : 'frontend' ), "address", "content" ) );
 			$output .= ob_get_contents();
 			ob_end_clean();
 		}
+
 		return $output;
 	}
 
