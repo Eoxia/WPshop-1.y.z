@@ -233,10 +233,10 @@ class wps_shortcodes_ctr
 
 	public static function wysiwyg_button() {
 		if ( ! current_user_can('edit_posts') && ! current_user_can('edit_pages') ) return;
-		if ( get_user_option('rich_editing') == 'true') :
+		//if ( get_user_option('rich_editing') == 'true') :
 		add_filter('mce_external_plugins', array('wps_shortcodes_ctr', 'add_button_to_wysiwyg'));
 		add_filter('mce_buttons', array('wps_shortcodes_ctr', 'register_wysiwyg_button'));
-		endif;
+		//endif;
 	}
 	function refresh_wysiwyg() {
 		$ver += 3;
@@ -247,7 +247,7 @@ class wps_shortcodes_ctr
 		return $plugin_array;
 	}
 	public static function register_wysiwyg_button($existing_button){
-		array_push($existing_button, "|", "wpshop_wysiwyg_button");
+		array_push($existing_button, "|", "wpshop_wysiwyg_shortcodes");
 		return $existing_button;
 	}
 
@@ -306,5 +306,11 @@ class wps_shortcodes_ctr
 		ob_end_clean();
 		global $wps_help_tabs;
 		$wps_help_tabs->set_help_tab( 'shortcodes', __( 'Shortcodes', 'wpshop' ), $content, array('edit-post', 'post', 'edit-page', 'page', 'edit-comments', 'comments', 'edit-wpshop_product', 'wpshop_product', 'edit-wpshop_product_category') );
+	}
+
+	public static function wps_shortcodes_wysiwyg_dialog(){
+		global $wpdb;
+		require( wpshop_tools::get_template_part( WPS_SHORTCODES_DIR, WPS_SHORTCODES_TEMPLATES_MAIN_DIR, "backend", 'wysiwyg_dialog', 'shortcode' ) );
+		die();
 	}
 }

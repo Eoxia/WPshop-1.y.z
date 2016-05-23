@@ -1146,7 +1146,7 @@ class wpshop_products {
 	 * @param string $product_search Optionnal Define a search term for request
 	 * @return object|string If $formated is set to true will display an html output with all product. Else return a wordpress database object with the product list
 	 */
-	function product_list($formated=false, $product_search=null) {
+	public static function product_list($formated=false, $product_search=null) {
 		global $wpdb;
 
 		$query_extra_params = $query_extra_params_value = '';

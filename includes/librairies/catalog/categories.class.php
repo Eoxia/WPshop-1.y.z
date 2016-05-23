@@ -29,7 +29,7 @@ class wpshop_categories
 	* @param string $product_search : recherche demand�e
 	* @return mixed
 	**/
-	function product_list_cats($formated=false, $product_search=null) {
+	public static function product_list_cats($formated=false, $product_search=null) {
 		$where  = array('hide_empty' => false);
 		if(!empty($product_search))
 			$where = array_merge($where, array('name__like'=>$product_search));

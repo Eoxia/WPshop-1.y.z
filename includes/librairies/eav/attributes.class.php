@@ -2943,7 +2943,7 @@ GROUP BY ATT.id, chosen_val", $element_id, $attribute_code);
 	 *
 	 * @return string The html output
 	 */
-	function get_attribute_list($entity_id = 0, $list_for = 'product_by_attribute', $current_post_type = '') {
+	public static function get_attribute_list($entity_id = 0, $list_for = 'product_by_attribute', $current_post_type = '') {
 		global $wpdb;
 		$output = '';
 
