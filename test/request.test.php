@@ -3,6 +3,20 @@
 * @author: Jimmy Latour lelabodudev@gmail.com
 */
 
+if ( !function_exists( 'search_files' ) ) {
+	function search_files($folder, $pattern) {
+		$dir = new RecursiveDirectoryIterator($folder);
+		$ite = new RecursiveIteratorIterator($dir);
+		$files = new RegexIterator($ite, $pattern, RegexIterator::GET_MATCH);
+		$fileList = array();
+		foreach($files as $file)
+		{
+			$fileList[] = $file[0];
+		}
+		return $fileList;
+	}
+}
+
 echo "[+] Starting Request Tests" . PHP_EOL . PHP_EOL;
 
 // Search for test files
@@ -32,6 +46,7 @@ foreach ( $unitList as $file_url )
 				!preg_match( '#\( ?int ?\)#', $lines[$key] ) &&
 				!preg_match( '#\( ?array ?\)#', $lines[$key] ) &&
 				!preg_match( '#\( ?float ?\)#', $lines[$key] ) &&
+				!preg_match( '#\( ?bool ?\)#', $lines[$key] ) &&
 				!preg_match( '#intval#', $lines[$key] ) &&
 				!preg_match( '#varSanitizer#', $lines[$key] ) ) {
 				  $string_post_unsecured[$file_url][$key + 1] = htmlentities( $lines[$key] );
@@ -82,17 +97,3 @@ if ( $total_unsecured_line != 0 )
   trigger_error( "[+] Total unsecured line : " . $total_unsecured_line, E_USER_ERROR );
 
 echo "[+] Request Tests Finished" . PHP_EOL;
-
-if ( !function_exists( 'search_files' ) ) {
-	function search_files($folder, $pattern) {
-		$dir = new RecursiveDirectoryIterator($folder);
-		$ite = new RecursiveIteratorIterator($dir);
-		$files = new RegexIterator($ite, $pattern, RegexIterator::GET_MATCH);
-		$fileList = array();
-		foreach($files as $file)
-		{
-			$fileList[] = $file[0];
-		}
-		return $fileList;
-	}
-}

@@ -20,7 +20,7 @@
 		<!-- Terms of sale -->
 		<?php $terms_page_id = get_option( 'wpshop_terms_of_sale_page_id' );
 		if(0 != $terms_page_id): ?>
-			<div class="wps-cgv-line"><input type="hidden" name="terms_of_sale_indicator" value="terms_required" /><input id="terms_of_sale" type="checkbox" value="Terms of sale" name="terms_of_sale"> <label for="terms_of_sale"><?php printf( __('I have read and I accept the %sterms of sale%s.', 'wpshop'), '<a href="' . get_permalink( wpshop_tools::get_page_id( get_option('wpshop_terms_of_sale_page_id') ) ) . '" target="_blank">', '</a>'); ?></label></div>
+			<div class="wps-cgv-line"><input type="hidden" name="terms_of_sale_indicator" value="1" /><input id="terms_of_sale" type="checkbox" value="1" name="terms_of_sale"> <label for="terms_of_sale"><?php printf( __('I have read and I accept the %sterms of sale%s.', 'wpshop'), '<a href="' . get_permalink( wpshop_tools::get_page_id( get_option('wpshop_terms_of_sale_page_id') ) ) . '" target="_blank">', '</a>'); ?></label></div>
 		<?php endif; ?>
 
 		<div id="wps-checkout-step-errors"></div>
