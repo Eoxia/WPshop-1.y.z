@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 //============================================================+
 // File name   : qrcode.php
 // Begin       : 2010-03-22

@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 class wps_customer_mdl {
 
 	function __construct() {
@@ -61,7 +61,7 @@ class wps_customer_mdl {
 	function wps_customer_search_extend( $where, &$wp_query = "" ) {
 		global $wpdb;
 
-		$search_term = !empty( $_GET[ 'term' ] ) ? $_GET[ 'term' ] : ( !empty( $_GET[ 's' ] ) ? $_GET[ 's' ] : '' );
+		$search_term = !empty( $_GET[ 'term' ] ) ? sanitize_text_field($_GET[ 'term' ] ) : ( !empty( $_GET[ 's' ] ) ? sanitize_text_field( $_GET[ 's' ] ) : '' );
 		if ( !empty( $search_term ) ) {
 			$where .= " AND (
 						( {$wpdb->posts}.post_title LIKE '%" . esc_sql( $wpdb->esc_like( $search_term ) ) . "%' )

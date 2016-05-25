@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 
 /*	Check if file is include. No direct access possible with file url	*/
 if ( !defined( 'WPSHOP_VERSION' ) ) {
@@ -257,10 +257,9 @@ class wpshop_dashboard {
 				<?php
 					global $current_month_offset;
 
-					$current_month_offset = (int) date('m');
+					$current_month_offset = (isset($_GET['month'])) ? (int) $_GET['month'] : (int) date('m');
 
-					if (isset($_GET['month'])) $current_month_offset = (int) $_GET['month'];
-				?>
+									?>
 				<div class="postbox stats" id="wpshop-stats">
 					<h3 class="hndle">
 						<?php if ($current_month_offset!=date('m')) : ?>
@@ -610,10 +609,10 @@ class wpshop_dashboard {
 					}
 					
 					if ( ( $order_meta['order_status'] == 'partially_paid' || $order_meta['order_status'] == 'completed' || $order_meta['order_status'] == 'shipped' ) && !empty($invoice_ref) ) {
-						$output .= ' <a href="' .WPSHOP_TEMPLATES_URL. 'invoice.php?order_id=' .$order->ID. '&invoice_ref&=' .$invoice_ref. '&mode=pdf"><img src="' .WPSHOP_MEDIAS_ICON_URL. 'icon_invoice.png" alt="' .__('Invoice', 'wpshop'). '" /></a>';
+						$output .= ' <a href="' .admin_url( 'admin-post.php?action=wps_invoice&order_id=' .$order->ID. '&invoice_ref&=' .$invoice_ref. '&mode=pdf' ). '"><img src="' .WPSHOP_MEDIAS_ICON_URL. 'icon_invoice.png" alt="' .__('Invoice', 'wpshop'). '" /></a>';
 					}
 					if ( $order_meta['order_status'] == 'shipped' ) {
-						$output .= ' <a href="'.WPSHOP_TEMPLATES_URL. 'invoice.php?order_id=' .$order->ID. '&bon_colisage=ok&mode=pdf"><img src="' .WPSHOP_MEDIAS_ICON_URL. 'bon_colisage_icon.png" alt="' .__('Shipping Slip', 'wpshop'). '" /></a>';
+						$output .= ' <a href="'.admin_url( 'admin-post.php?action=wps_invoice&order_id=' .$order->ID. '&bon_colisage=ok&mode=pdf' ) . '"><img src="' .WPSHOP_MEDIAS_ICON_URL. 'bon_colisage_icon.png" alt="' .__('Shipping Slip', 'wpshop'). '" /></a>';
 					}
 					$output .= '</td>';
 				}

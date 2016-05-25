@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wrap wpshopMainWrap" >
 	<div id="wpshopLoadingPicture" class="wpshopHide" ><img src="<?php echo WPSHOP_LOADING_ICON; ?>" alt="loading picture" class="wpshopPageMessage_Icon" /></div>
 	<div id="wpshopMessage" class="fade below-h2 wpshopPageMessage <?php echo ( !empty( $actionInformationMessage ) ? 'wpshopPageMessage_Updated' : ''); ?>" ><?php !empty( $actionInformationMessage ) ? _e( $actionInformationMessage, 'wpshop' ) : ''; ?></div>
@@ -156,7 +158,7 @@
 							<div class="wps-table-cell"><?php echo ( !empty($result) ) ? '<a href="' . admin_url(). 'admin.php?page=wpshop_dashboard&download_users=users_all" role="button" id="download_all_users_contacts" class="wps-bton-first-rounded">' .__( 'Download the list', 'wpshop' ). '</a>' : ''; ?></div>
 						</div>
 
-						
+
 
 						<div class="wps-table-header wps-table-row">
 							<?php
@@ -205,8 +207,7 @@
 				global $current_month_offset;
 
 				$current_month_offset = (int) date('m');
-
-				if (isset($_GET['month'])) $current_month_offset = (int) $_GET['month'];
+				$current_month_offset = isset( $_GET['month'] ) ? (int) $_GET['month'] : $current_month_offset;
 			?>
 			<div class="postbox stats" id="wpshop-stats">
 				<h3 class="hndle"><span class="dashicons dashicons-chart-area"></span>

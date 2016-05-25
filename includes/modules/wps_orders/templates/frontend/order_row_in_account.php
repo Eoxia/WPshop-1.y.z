@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wps-table-content wps-table-row">
 	<?php $order_status = unserialize( WPSHOP_ORDER_STATUS ); ?>
 	<?php $color_label = array( 'awaiting_payment' => 'jaune', 'canceled' => 'rouge', 'partially_paid' => 'orange', 'incorrect_amount' => 'orange', 'denied' => 'rouge', 'shipped' => 'bleu', 'payment_refused' => 'rouge', 'completed' => 'vert', 'refunded' => 'rouge', 'pos' => 'bleu' ); ?>
@@ -22,20 +24,20 @@
 	</div>
 	<?php if( !is_admin() ): ?>
 		<div class="wps-table-cell wps-customer-order-list-actions">
-			<button class="wps-bton-third wps-orders-details-opener" id="wps-order-details-opener-<?php echo $order_id; ?>"><?php _e( 'Order details', 'wpshop' ); ?></button>
-			
+			<button data-nonce="<?php echo wp_create_nonce( 'wps_orders_load_details' ); ?>" class="wps-bton-third wps-orders-details-opener" id="wps-order-details-opener-<?php echo $order_id; ?>"><?php _e( 'Order details', 'wpshop' ); ?></button>
+
 			<?php if( !empty( $order_meta ) && $order_meta['order_status'] != 'canceled' && ( ( !empty($order_meta['cart_type']) && $order_meta['cart_type'] == 'quotation' ) || !empty( $order_meta['order_temporary_key'] ) ) && isset( $order_meta['pay_quotation'] ) && (float) $order_meta['order_amount_to_pay_now'] != (float) 0 ) : ?>
-				<button class="wps-bton-third wps-quotation-checkout button-thrid" data-oid="<?php echo $order_id; ?>"><?php _e( 'Pay quotation', 'wpshop' ); ?></button>
+				<button data-nonce="<?php echo wp_create_nonce( 'wps_checkout_quotation' ); ?>" class="wps-bton-third wps-quotation-checkout button-thrid" data-oid="<?php echo $order_id; ?>"><?php _e( 'Pay quotation', 'wpshop' ); ?></button>
 			<?php endif; ?>
-			
+
 			<?php if ( !empty( $order_meta ) && !empty( $order_meta[ 'order_invoice_ref' ] ) ) : ?>
-			<br/><a href="<?php echo WPSHOP_TEMPLATES_URL; ?>invoice.php?order_id=<?php echo $order_id; ?>&invoice_ref=<?php echo $order_meta[ 'order_invoice_ref' ]; ?>&mode=pdf" target="_blank" class="wps-bton-third" role="button"><?php _e( 'Download invoice', 'wpshop' ); ?></a>
+			<br/><a href="<?php echo admin_url( 'admin-post.php?action=wps_invoice&order_id='.$order_id.'&invoice_ref='.$order_meta[ 'order_invoice_ref' ].'&mode=pdf' ); ?>" target="_blank" class="wps-bton-third" role="button"><?php _e( 'Download invoice', 'wpshop' ); ?></a>
 			<?php endif; ?>
 
 			<!-- Display delete order -->
 			<?php $wpshop_display_delete_order_option = get_option('wpshop_display_option'); ?>
 			<?php if( !empty($wpshop_display_delete_order_option) && !empty($wpshop_display_delete_order_option['wpshop_display_delete_order']) && $wpshop_display_delete_order_option['wpshop_display_delete_order'] && !empty( $order_meta ) && $order_meta['order_status'] == 'awaiting_payment' ):?>
-			<br/><button class="wps-bton-first-mini-rounded wps-orders-delete button-secondary" data-id="<?php echo $order_id; ?>"><?php _e( 'Delete order', 'wpshop' ); ?></button>
+			<br/><button data-nonce="<?php echo wp_create_nonce( 'wps_delete_order' ); ?>" class="wps-bton-first-mini-rounded wps-orders-delete button-secondary" data-id="<?php echo $order_id; ?>"><?php _e( 'Delete order', 'wpshop' ); ?></button>
 			<?php endif; ?>
 		</div>
 	<?php else : ?>

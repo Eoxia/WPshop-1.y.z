@@ -1,4 +1,5 @@
-<?php if( $messages ) : ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ if( $messages ) : ?>
 <?php 
 	$formated_message_tab = array();
 	foreach( $messages as $message_by_month) : 

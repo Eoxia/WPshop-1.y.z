@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 
 /*	Check if file is include. No direct access possible with file url	*/
 if ( !defined( 'WPSHOP_VERSION' ) ) {
@@ -37,8 +37,10 @@ class wpshop_attributes_set_custom_List_table extends WP_List_Table{
 		$active_nb = wpshop_attributes_set::getElement('', "'moderated','valid'");
 		$deleted_nb = wpshop_attributes_set::getElement('', "'deleted'");
 
-		$wpshop_attribute_links['wpshop_attribute_groups_links wpshop_attribute_groups_links_valid'.(empty($_REQUEST['attribute_groups_status'])?' current':'')] = '<a href="'.admin_url('admin.php?page='.wpshop_attributes_set::getEditionSlug()).'" >'.__('Attribute groups', 'wpshop').' ('.count($active_nb).')</a>';
-		$wpshop_attribute_links['wpshop_attribute_groups_links wpshop_attribute_groups_links_deleted'.(!empty($_REQUEST['attribute_groups_status']) && ($_REQUEST['attribute_groups_status']=='deleted')?' current':'')] = '<a href="'.admin_url('admin.php?page='.wpshop_attributes_set::getEditionSlug().'&attribute_groups_status=deleted').'" >'.__('Trashed attribute groups', 'wpshop').' ('.count($deleted_nb).')</a>';
+		$attribute_group_status = !empty( $_REQUEST['attribute_groups_status'] ) ? sanitize_text_field( $_REQUEST['attribute_groups_status'] ) : '';
+
+		$wpshop_attribute_links['wpshop_attribute_groups_links wpshop_attribute_groups_links_valid'.(empty($attribute_group_status)?' current':'')] = '<a href="'.admin_url('admin.php?page='.wpshop_attributes_set::getEditionSlug()).'" >'.__('Attribute groups', 'wpshop').' ('.count($active_nb).')</a>';
+		$wpshop_attribute_links['wpshop_attribute_groups_links wpshop_attribute_groups_links_deleted'.(!empty($attribute_group_status) && ($attribute_group_status=='deleted')?' current':'')] = '<a href="'.admin_url('admin.php?page='.wpshop_attributes_set::getEditionSlug().'&attribute_groups_status=deleted').'" >'.__('Trashed attribute groups', 'wpshop').' ('.count($deleted_nb).')</a>';
 
 		return $wpshop_attribute_links;
 	}
@@ -192,13 +194,14 @@ class wpshop_attributes_set_custom_List_table extends WP_List_Table{
 		//Build row actions
 		$default_action='edit';
 		$default_action_text=__('Edit', 'wpshop');
-		if(!empty($_REQUEST['attribute_groups_status']) && ($_REQUEST['attribute_groups_status']=='deleted')){
+		$attribute_groups_status = !empty( $_REQUEST['attribute_groups_status'] ) ? sanitize_text_field( $_REQUEST['attribute_groups_status'] ) : '';
+		if( !empty( $attribute_groups_status ) && ( $attribute_groups_status=='deleted' ) ){
 			$default_action='activate';
 			$default_action_text=__('Restore', 'wpshop');
 		}
 		$actions['edit']=sprintf('<a href="'.admin_url('admin.php').'?page=%2$s&amp;action=%3$s&amp;id=%4$s">'.$default_action_text.'</a>',WPSHOP_NEWTYPE_IDENTIFIER_ENTITIES, WPSHOP_URL_SLUG_ATTRIBUTE_SET_LISTING,$default_action,$item['id']);
 
-		if (empty($_REQUEST['attribute_groups_status']))
+		if (empty($attribute_groups_status))
 			$actions['delete']=sprintf('<a href="'.admin_url('admin.php').'?page=%2$s&amp;action=%3$s&amp;id=%4$s">'.__('Delete', 'wpshop').'</a>',WPSHOP_NEWTYPE_IDENTIFIER_ENTITIES, WPSHOP_URL_SLUG_ATTRIBUTE_SET_LISTING,'delete',$item['id']);
 
 		//Return the title contents

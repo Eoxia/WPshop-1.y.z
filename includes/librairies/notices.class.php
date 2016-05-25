@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /*	Check if file is include. No direct access possible with file url	*/
 if ( !defined( 'WPSHOP_VERSION' ) ) {
 	die( __('Access is not allowed by this way', 'wpshop') );
@@ -58,10 +58,12 @@ class wpshop_notices{
 			$messages_to_hide .= 'SLICKSHOP,';
 		}
 
-		if(!empty($notice) && ( empty( $_GET ) || ( empty( $_GET[ 'install' ] ) ) ) ) {
+		$install = !empty( $_GET[ 'install' ] ) ? sanitize_text_field( $_GET[ 'install' ] ) : '';
+
+		if(!empty($notice) && ( empty( $install ) ) ) {
 			$notice='<p>'.__('You configure your shop to be a sale shop. But some configuration are missing for this type of shop using', 'wpshop').'</p><ul>'.$notice.'</ul>';
 			if ( !empty($messages_to_hide) ) {
-				$notice .= '<button class="wps_hide_notice_message button-secondary" id="wps_hide_notice_message">' .__('Hide this message', 'wpshop'). '</button>';
+				$notice .= '<button data-nonce="' . wp_create_nonce( 'wps_hide_notice_messages' ) . '" class="wps_hide_notice_message button-secondary" id="wps_hide_notice_message">' .__('Hide this message', 'wpshop'). '</button>';
 				$notice .= '<input type="hidden" id="hide_messages_indicator" value="' .$messages_to_hide. '"/>';
 			}
 			self::admin_notice_container($notice, 'wpshop_shop_sale_type_notice');

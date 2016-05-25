@@ -1,11 +1,4 @@
-<?php
-/**
- * Plugin Name: WP-Shop - Ajout de client rapide / Customer quick creation
- * Version: 1.0
- * Description: Permet de créer des clients au travers d'une infterface d'ajout rapide / Allows to add a new customer with quick interface
- * Author: Eoxia <dev@eoxia.com>
- * Author URI: http://www.eoxia.com
- */
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 
 DEFINE( 'WPSPOSCLTQUICK_VERSION', 1.0 );
 DEFINE( 'WPSPOSCLTQUICK_DIR', basename( dirname( __FILE__ ) ) );

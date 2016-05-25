@@ -4,6 +4,12 @@ jQuery( document ).ready( function(){
     	dateFormat : 'yy-mm-dd'
     });
 	var total_payments;
+	if(typeof payments == 'undefined') {
+		payments = [];
+	}
+	if(typeof historics == 'undefined') {
+		historics = [];
+	}
 	var payments_by_dates = payments;
 	var payments_method = payments_by_dates;
 	var payments_final = payments_method;
@@ -150,7 +156,7 @@ jQuery( document ).ready( function(){
 	} );
 	function download_histo( date, amount, payments_dl ) {
 		redirect_post(
-			templates_url + 'bank_deposit.php?mode=pdf',
+			templates_url + '?action=wps_bank_deposit&mode=pdf',
 			{
 				date: date,
 				amount: amount,

@@ -1,4 +1,5 @@
-<?php echo $customer_post->post_title; ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ echo $customer_post->post_title; ?>
 
 <div class="wps-customer-name-container" >
 	<div class="wps-customer-last_name" >

@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Fichier du controleur des metaboxes pour l'administration des clients dans wpshop / Controller file for managing metaboxes into customer administration interface
  *
@@ -55,11 +55,11 @@ class wps_customer_metaboxe_controller_01 extends wps_customer_ctr {
 	 */
 	function wps_customer_addresses_list( $post ) {
 		global $wpdb;
-		
+
 		$wps_addresses = new wps_address();
 		$output = $wps_addresses->display_addresses_interface( $post->post_author, true );
 		echo '<input type="hidden" name="wps_customer_id" id="wps_orders_selected_customer" value="' . $post->post_author . '">';
-		echo '<div id="wps_customer_addresses" class="wps-gridwrapper2-padded">' . $output . '</div>';
+		echo '<div data-nonce="' . wp_create_nonce( 'reload_addresses_for_customer' ) . '" id="wps_customer_addresses" class="wps-gridwrapper2-padded">' . $output . '</div>';
 	}
 
 	/**
@@ -88,7 +88,7 @@ class wps_customer_metaboxe_controller_01 extends wps_customer_ctr {
 		$output = $wps_account->display_account_informations( $post->post_author );
 		echo $output;
 	}
-	
+
 	function wps_customer_informations_save() {
 		echo '<div class="wps-boxed"><button class="wps-bton-first-rounded" id="wps_signup_button">' . __('Save') . '</button></div>';
 	}

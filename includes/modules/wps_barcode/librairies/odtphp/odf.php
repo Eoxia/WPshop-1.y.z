@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 require 'zip/PclZipProxy.php';
 require 'zip/PhpZipProxy.php';
 require 'Segment.php';

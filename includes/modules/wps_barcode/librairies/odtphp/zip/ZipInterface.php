@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Interface for Zip libraries used in odtPHP
  * You need PHP 5.2 at least

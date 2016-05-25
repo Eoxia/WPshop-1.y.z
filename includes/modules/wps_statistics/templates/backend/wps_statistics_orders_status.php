@@ -1,4 +1,5 @@
-<?php if( !empty($orders_status) ) : ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ if( !empty($orders_status) ) : ?>
 <canvas id="wps_orders_status" width="" height=""></canvas>
 <script type="text/javascript">
 	jQuery( document ).ready( function() {

@@ -1,13 +1,4 @@
-<?php
-/**
- * Plugin Name: WP Shop Credit
- * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/
- * Description: WP Shop Credit
- * Version: 0.1
- * Author: Eoxia
- * Author URI: http://eoxia.com/
- */
-
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * WP Shop Credit bootstrap file
  * @author Jérôme ALLEGRE - Eoxia dev team <dev@eoxia.com>
@@ -17,9 +8,6 @@
  *
  */
 
-if ( !defined( 'WPSHOP_VERSION' ) ) {
-	die( __("You are not allowed to use this service.", 'wpshop') );
-}
 if ( !class_exists('wps_credit') ) {
 	class wps_credit {
 		function __construct() {
@@ -33,9 +21,12 @@ if ( !class_exists('wps_credit') ) {
 			add_action( 'wp_ajax_wps_credit_make_credit', array( &$this, 'wps_credit_make_credit_interface'));
 			add_action( 'wp_ajax_wps_make_credit_action', array( &$this, 'wps_make_credit_action') );
 			add_action( 'wp_ajax_wps_credit_change_status', array( &$this, 'wps_credit_change_status') );
-			
+
 			// Filter
 			add_filter( 'wps_order_saving_admin_extra_action', array( $this, 'wps_credit_actions_on_order_save'), 10, 2 );
+
+			/** Credit slip Page **/
+			add_action( 'admin_post_wps_credit_slip', array( $this, 'wps_credit_slip_output' ) );
 		}
 
 		/**
@@ -72,7 +63,8 @@ if ( !class_exists('wps_credit') ) {
 					$output .= self::display_credit_list($post->ID);
 					$output .= '</div>';
 				}
-				$output .= '<a href="' .admin_url( 'admin-ajax.php'). '?action=wps_credit_make_credit&oid='.$post->ID.'" id="make_credit_button" class="thickbox button">' . __('Make a credit', 'wpshop') . '</a>';
+				$url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wps_credit_make_credit&oid='.$post->ID ), 'wps_credit_make_credit_interface', '_wpnonce' );
+				$output .= '<a href="' . $url . '" id="make_credit_button" class="thickbox button">' . __('Make a credit', 'wpshop') . '</a>';
 				$output .= '<img src="' .WPSHOP_LOADING_ICON. '" alt="' .__('Loading', 'wpshop'). '" class="wpshopHide" id="change_credit_status_loader" />';
 			}
 			echo $output;
@@ -237,8 +229,8 @@ if ( !class_exists('wps_credit') ) {
 						$tpl_component['CREDIT_STATUS_ELEMENTS'] .= '<option value="paid" ' .( ( !empty($credit['credit_status']) && $credit['credit_status'] == 'paid') ? 'selected="selected"' : ''). '>' .__('Paid', 'wpshop'). '</option>';
 						$tpl_component['CREDIT_STATUS'] = ( !empty($credit['credit_status']) ) ? $credit['credit_status'] : '';
 						$tpl_component['CREDIT_STATUS_ICON'] = ( !empty($credit['credit_status']) && $credit['credit_status'] == 'paid' ) ? 'wpshop_order_payment_received_icon' : 'wpshop_order_incorrect_amount_icon';
-						$tpl_component['CREDIT_PDF_LINK'] = '<a href="' .WPSHOP_TEMPLATES_URL. 'credit_slip.php?order_id=' .$order_id. '&credit_ref=' .$credit['ref']. '" target="_blank">' .$credit['ref']. '</a>';
-						$tpl_component['CREDIT_PDF_LINK'] .= ' | <a href="' .WPSHOP_TEMPLATES_URL. 'credit_slip.php?order_id=' .$order_id. '&credit_ref=' .$credit['ref']. '&mode=pdf" target="_blank">PDF</a>';
+						$tpl_component['CREDIT_PDF_LINK'] = '<a href="' .admin_url( 'admin-post.php?action=wps_credit_slip&order_id=' .$order_id. '&credit_ref=' .$credit['ref'] ). '" target="_blank">' .$credit['ref']. '</a>';
+						$tpl_component['CREDIT_PDF_LINK'] .= ' | <a href="' .admin_url( 'admin-post.php?action=wps_credit_slip&order_id=' .$order_id. '&credit_ref=' .$credit['ref']. '&mode=pdf' ). '" target="_blank">PDF</a>';
 						$credit_list .=  wpshop_display::display_template_element('wps_credit_list_element', $tpl_component, array(), 'admin');
 					}
 					$output = wpshop_display::display_template_element('wps_credit_list', array( 'WPS_CREDIT_LIST_ELEMENTS' => $credit_list ), array(), 'admin');
@@ -252,6 +244,11 @@ if ( !class_exists('wps_credit') ) {
 
 		/** Display Configuration interface to make credit **/
 		function wps_credit_make_credit_interface() {
+			$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+			if ( !wp_verify_nonce( $_wpnonce, 'wps_credit_make_credit_interface' ) )
+				wp_die();
+
 			$order_id = ( !empty($_REQUEST['oid']) ) ? wpshop_tools::varSanitizer($_REQUEST['oid']) : null;
 			$tab_lines = '';
 			$price_piloting_option = get_option( 'wpshop_shop_price_piloting' );
@@ -295,20 +292,28 @@ if ( !class_exists('wps_credit') ) {
 
 		/** Make a credit action Ajax Form **/
 		function wps_make_credit_action() {
+			$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+			if ( !wp_verify_nonce( $_wpnonce, 'wps_make_credit_action' ) )
+				wp_die();
+
 			$status = false; $result = '';
 			$price_piloting_option = get_option( 'wpshop_shop_price_piloting' );
 			$product_list_to_return = array();
 			$order_id = ( !empty($_POST['order_id']) ) ? wpshop_tools::varSanitizer( $_POST['order_id'] ) : null;
+			$wps_credit_return = !empty( $_POST['wps_credit_return'] ) ? (array) $_POST['wps_credit_return'] : array();
+			$wps_credit_item_quantity = !empty( $_POST['wps_credit_item_quantity'] ) ? (array) $_POST['wps_credit_item_quantity'] : array();
+			$wps_credit_item_price = !empty( $_POST['wps_credit_item_price'] ) ? (array) $_POST['wps_credit_item_price'] : array();
 			if ( !empty($order_id) ) {
-				if( !empty($_POST['wps_credit_return']) ) {
+				if( !empty($wps_credit_return) ) {
 					$order_postmeta = get_post_meta( $order_id, '_order_postmeta', true );
 					if ( !empty($order_postmeta) && $order_postmeta['order_items'] ) {
-						if ( !empty( $_POST['wps_credit_return'] ) && is_array($_POST['wps_credit_return']) ) {
-							foreach( $_POST['wps_credit_return'] as $item_key => $returned_item ) {
-	 							if ( !empty( $_POST['wps_credit_item_quantity'][$item_key] ) && $_POST['wps_credit_item_quantity'][$item_key] <= $order_postmeta['order_items'][$item_key]['item_qty'] ) {
-	 								if ( !empty( $_POST['wps_credit_item_price'][$item_key] ) && $_POST['wps_credit_item_price'][$item_key] <= ( ( !empty($price_piloting_option) && $price_piloting_option == 'HT' ) ? $order_postmeta['order_items'][$item_key]['item_pu_ht'] : $order_postmeta['order_items'][$item_key]['item_pu_ttc'] ) ){
-	 									$product_list_to_return[ $item_key ]['qty'] = $_POST['wps_credit_item_quantity'][$item_key];
-	 									$product_list_to_return[ $item_key ]['price'] = $_POST['wps_credit_item_price'][$item_key];
+						if ( !empty( $wps_credit_return ) && is_array($wps_credit_return) ) {
+							foreach( $wps_credit_return as $item_key => $returned_item ) {
+	 							if ( !empty( $wps_credit_item_quantity[$item_key] ) && $wps_credit_item_quantity[$item_key] <= $order_postmeta['order_items'][$item_key]['item_qty'] ) {
+	 								if ( !empty( $wps_credit_item_price[$item_key] ) && $wps_credit_item_price[$item_key] <= ( ( !empty($price_piloting_option) && $price_piloting_option == 'HT' ) ? $order_postmeta['order_items'][$item_key]['item_pu_ht'] : $order_postmeta['order_items'][$item_key]['item_pu_ttc'] ) ){
+	 									$product_list_to_return[ $item_key ]['qty'] = sanitize_key( $wps_credit_item_quantity[$item_key] );
+	 									$product_list_to_return[ $item_key ]['price'] = sanitize_key( $wps_credit_item_price[$item_key] );
 	 								}
 	 								else {
 	 									$result = __( 'You try to return a product more expensive than what was purchased', 'wpshop' );
@@ -319,7 +324,8 @@ if ( !class_exists('wps_credit') ) {
 	 							}
 							}
 
-							if( !empty( $_POST['wps_credit_shipping_cost'] ) ) {
+							$wps_credit_shipping_cost = !empty( $_POST['wps_credit_shipping_cost'] ) ? sanitize_text_field( $_POST['wps_credit_shipping_cost'] ) : '';
+							if( !empty( $wps_credit_shipping_cost ) ) {
 								$product_list_to_return['shipping_cost']['price'] = $order_postmeta['order_shipping_cost'];
 							}
 
@@ -327,11 +333,14 @@ if ( !class_exists('wps_credit') ) {
 							if ( !empty($product_list_to_return) ) {
 								/** Check restock Item **/
 								$products_list_to_restock = array();
-								if ( !empty($_POST['wps_credit_restock']) ) {
-									$products_list_to_restock = $_POST['wps_credit_restock'];
+								$wps_credit_restock = !empty( $_POST['wps_credit_restock'] ) ? sanitize_text_field( $_POST['wps_credit_restock'] ) : '';
+								if ( !empty($wps_credit_restock) ) {
+									$products_list_to_restock = $wps_credit_restock;
 								}
-								$credit_status = ( !empty($_POST['wps_credit_status']) ) ? $_POST['wps_credit_status'] : '';
-								$add_credit_value = ( !empty($_POST['wps_add_credit_value']) ) ? $_POST['wps_add_credit_value'] : '';
+								$wps_credit_status = !empty( $_POST['wps_credit_status'] ) ? sanitize_text_field( $_POST['wps_credit_status'] ) : '';
+								$wps_add_credit_value = !empty( $_POST['wps_add_credit_value'] ) ? sanitize_text_field( $_POST['wps_add_credit_value'] ) : '';
+								$credit_status = $wps_credit_status;
+								$add_credit_value = $wps_add_credit_value;
 								$status = self::create_an_credit( $order_id, $product_list_to_return, $credit_status, $add_credit_value, $products_list_to_restock );
 							}
 
@@ -489,6 +498,11 @@ if ( !class_exists('wps_credit') ) {
 		}
 
 		function wps_credit_change_status() {
+			$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+			if ( !wp_verify_nonce( $_wpnonce, 'wps_credit_change_status' ) )
+				wp_die();
+
 			$status = false; $result = '';
 			$order_id = ( !empty($_POST['order_id']) ) ? wpshop_tools::varSanitizer( $_POST['order_id'] ): null;
 			$credit_ref = ( !empty($_POST['credit_ref']) ) ? wpshop_tools::varSanitizer( $_POST['credit_ref'] ): null;
@@ -552,7 +566,46 @@ if ( !class_exists('wps_credit') ) {
 			}
 			return $order_metadata;
 		}
-		
+
+		/**
+		 *	Output credit slip
+		 */
+		function wps_credit_slip_output() {
+			$order_id = (!empty($_GET['order_id'])) ? (int) $_GET['order_id'] : null;
+			$invoice_ref = (!empty($_GET['credit_ref'])) ? sanitize_text_field($_GET['credit_ref']) : null;
+			$mode = (!empty($_GET['mode'])) ? sanitize_text_field($_GET['mode']) : 'html';
+			// $is_credit_slip = (!empty($_GET['credit_slip'])) ? wpshop_tools::varSanitizer($_GET['credit_slip']) : null;
+
+			if ( !empty($order_id) ) {
+			// 	/**	Order reading	*/
+				$order_postmeta = get_post_meta($order_id, '_order_postmeta', true);
+				$html_content = wps_credit::generate_credit_slip($order_id, $invoice_ref );
+
+				if ( $mode == 'pdf') {
+					require_once(WPSHOP_LIBRAIRIES_DIR.'HTML2PDF/html2pdf.class.php');
+					try {
+						$html_content = wpshop_display::display_template_element('invoice_page_content_css', array(), array(), 'common') . '<page>' . $html_content . '</page>';
+						$html2pdf = new HTML2PDF('P', 'A4', 'fr');
+
+						$html2pdf->setDefaultFont('Arial');
+						$html2pdf->writeHTML($html_content);
+
+						$html2pdf->Output('order_' .$order_id. '.pdf', 'D');
+					}
+					catch (HTML2PDF_exception $e) {
+						echo $e;
+					}
+				}
+				else {
+					$tpl_component['INVOICE_CSS'] =  wpshop_display::display_template_element('invoice_page_content_css', array(), array(), 'common');
+					$tpl_component['INVOICE_MAIN_PAGE'] = $html_content;
+					$tpl_component['INVOICE_TITLE_PAGE'] = sprintf( __('Credit slip #%s for Order #%s', 'wpshop'), $invoice_ref, $order_postmeta['order_key']);
+					echo wpshop_display::display_template_element('invoice_page', $tpl_component, array(), 'common');
+				}
+			}
+			die();
+		}
+
 	}
 }
 if ( class_exists('wps_credit') ) {

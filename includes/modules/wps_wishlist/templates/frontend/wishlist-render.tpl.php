@@ -1,4 +1,5 @@
-<?php if( is_user_logged_in() ): ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ if( is_user_logged_in() ): ?>
 	<?php if(!empty($user_meta)):?>
 		<?php foreach($user_meta as $name => $meta):?>
 			<button class="wps-add-product-to-wishlist wps-bton-first-mini-rounded"><?php echo $name; ?></button>

@@ -1,11 +1,4 @@
-<?php
-/**
- Plugin Name: WPShop Media Manager v3
- Description: Manage media for WPShop
- Version: 1.0
- Author: Eoxia
- Author URI: http://eoxia.com/
- */
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 
 DEFINE('WPS_MEDIA_MANAGER_DIR', basename(dirname(__FILE__)));
 DEFINE('WPS_MEDIA_MANAGER_PATH', str_replace( "\\", "/", str_replace( WPS_MEDIA_MANAGER_DIR, "", dirname( __FILE__ ) ) ) );

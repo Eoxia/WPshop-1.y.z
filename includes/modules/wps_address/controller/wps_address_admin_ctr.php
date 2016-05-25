@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 class wps_address_admin {
 	function __construct() {
 		/**	Include the different javascript	*/
@@ -51,6 +51,10 @@ class wps_address_admin {
 		$address_type_id = ( !empty($_GET['address_type']) ) ? intval( $_GET['address_type'] ) : null;
 		$address_id = ( !empty($_GET['address_id']) ) ? intval( $_GET['address_id'] ) : null;
 		$customer_id = ( !empty($_GET['customer_id']) ) ? intval( $_GET['customer_id'] ) : null;
+		$_wpnonce = ( !empty( $_REQUEST['_wpnonce'] ) ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'load_adress_edit_form' ) )
+			wp_die();
 
 		$wps_address = new wps_address();
 		$form = $wps_address->loading_address_form( $address_type_id, $address_id, $customer_id );
@@ -62,6 +66,11 @@ class wps_address_admin {
 	 * Reload address panel
 	 */
 	function reload_addresses_for_customer() {
+		$_wpnonce = ( !empty( $_REQUEST['_wpnonce'] ) ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'reload_addresses_for_customer' ) )
+			wp_die();
+
 		$status = false; $response = '';
 		$customer_id = ( !empty($_POST['customer_id']) ) ? intval($_POST['customer_id']) : '';
 		$order_id = ( !empty($_POST['order_id']) ) ? intval($_POST['order_id']) : '';
@@ -80,6 +89,12 @@ class wps_address_admin {
 	function delete_address_in_order_panel() {
 		$status = false;
 		$address_datas = ( !empty($_POST['address_id']) ) ? wpshop_tools::varSanitizer($_POST['address_id']): null;
+		$_wpnonce = ( !empty( $_REQUEST['_wpnonce'] ) ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'delete_address_in_order_panel_' . $address_datas ) )
+			wp_die();
+
+
 		if( !empty($address_datas) ) {
 			$address_datas = explode( '-', $address_datas );
 			if( !empty($address_datas) && !empty($address_datas[0]) ) {

@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 class wps_help_tabs_ctr
 {
 	private $help_tabs;

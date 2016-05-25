@@ -1,4 +1,5 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+
 /**
  * Fichier du controlleur principal de l'extension de caisse pour WP-Shop / Main controller file for point of sale management plugin
  *
@@ -22,15 +23,17 @@ class wps_pos_addon {
 		add_action( 'init', array( $this, 'wps_pos_addon_session' ) );
 		add_action( 'init', array( $this, 'wps_pos_option_db' ) );
 
-		if( !isset( $_GET['tab'] ) || ( isset( $_GET['tab'] ) && $_GET['tab'] == 'dashboard' ) ) {
+		$tab = ( !empty( $_GET['tab'] ) ) ? sanitize_text_field( $_GET['tab'] ) : '';
+
+		if( empty( $tab ) || $tab == 'dashboard' ) {
 			/**	Instanciation des différents composants du logiciel de caisse / Instanciate the different component for POS addon	*/
 			$this->wps_pos_customer = new wps_pos_addon_customer();
 			$this->wps_pos_product = new wps_pos_addon_product();
 			$this->wps_pos_order = new wps_pos_addon_order();
-		} elseif( $_GET['tab'] == 'bank_deposit' ) {
+		} elseif( $tab == 'bank_deposit' ) {
 			$this->wps_pos_addon_bank_deposit = new wps_pos_addon_bank_deposit();
 			$this->wps_pos_addon_bank_deposit_histo = new wps_pos_addon_bank_deposit_histo();
-			
+
 			/** AJAX Bank Deposit **/
 			add_action( 'wp_ajax_save_historic_query', array( $this->wps_pos_addon_bank_deposit_histo, 'save_historic_ajax' ) );
 		}
@@ -48,9 +51,11 @@ class wps_pos_addon {
 		/**	Recharge la liste d'un élément donné ( client ou produit ) pour une lettre donnée / Load element list corresponding to a given letter	*/
 		add_action( 'wp_ajax_wpspos_load_element_from_letter', array( $this, 'ajax_load_element_from_letter' ) );
 		add_action( 'wp_ajax_wpspos_save_config_barcode_only', array( $this, 'ajax_save_config_barcode_only' ) );
-		add_action( 'wp_ajax_wpspos_state_is_quotation', array( $this, 'ajax_wpspos_state_is_quotation' ) );
-		add_action( 'wp_ajax_wpspos_state_is_receipt', array( $this, 'ajax_wpspos_state_is_receipt' ) );
-		
+		// add_action( 'wap_ajax_wpspos_state_is_quotation', array( $this, 'ajax_wpspos_state_is_quotation' ) );
+		// add_action( 'wap_ajax_wpspos_state_is_receipt', array( $this, 'ajax_wpspos_state_is_receipt' ) );
+
+		/** Bank deposit Page **/
+		add_action( 'admin_post_wps_bank_deposit', array( 'wps_pos_addon_bank_deposit', 'wps_pos_bank_deposit_output' ) );
 	}
 
 	/**
@@ -66,7 +71,10 @@ class wps_pos_addon {
 		if ( $screen->id == $wps_pos_addon_menu ) {
 			wp_register_style( 'wpspos-common-styles', WPSPOS_URL . 'assets/css/backend.css', '', WPSPOS_VERSION );
 			wp_enqueue_style( 'wpspos-common-styles' );
-			if( isset( $_GET['tab'] ) && $_GET['tab'] == 'bank_deposit' ) {
+
+			$tab = ( !empty( $_GET['tab'] ) ) ? sanitize_text_field( $_GET['tab'] ) : '';
+
+			if( !empty( $tab ) && $tab == 'bank_deposit' ) {
 				wp_enqueue_script('wpspos-backend-bank-deposit-js',  WPSPOS_URL . 'assets/js/backend_bank_deposit.js', '', WPSPOS_VERSION);
 			} else {
 				wp_enqueue_script('wpspos-backend-js',  WPSPOS_URL . 'assets/js/backend.js', '', WPSPOS_VERSION);
@@ -137,22 +145,25 @@ class wps_pos_addon {
 	 */
 	function wps_pos_addon_session() {
 		@session_start();
-		
-		if ( !empty( $_GET ) && !empty( $_GET[ 'new_order' ] ) && ( 'yes' == $_GET[ 'new_order' ] ) ) {
+
+		$new_order = ( !empty( $_GET['new_order'] ) ) ? sanitize_text_field( $_GET['new_order'] ) : '';
+		$page = ( !empty( $_GET['page'] ) ) ? sanitize_text_field( $_GET['page'] ) : '';
+
+		if ( 'yes' == $new_order ) {
 			unset( $_SESSION[ 'cart' ] );
 			unset( $_SESSION[ 'wps-pos-addon' ] );
 			delete_user_meta( get_current_user_id(), '_wpshop_persistent_cart' );
 			session_destroy();
-			
+
 			wp_safe_redirect( admin_url( 'admin.php?page=wps-pos' ) );
 		}
-		
-		if( empty( $_GET[ 'page' ] ) || ( 'wps-pos' != $_GET[ 'page' ] ) ) {
+
+		if( empty( $page ) || ( 'wps-pos' != $page ) ) {
 			unset( $_SESSION[ 'wps-pos-addon' ] );
 		}
-		
+
 	}
-	
+
 	/**
 	 * Add or update options in DB
 	 */
@@ -169,7 +180,7 @@ class wps_pos_addon {
 			 * If want to treat options case by case */
 			/*
 			foreach( $options as $option ) {
-				
+
 			}
 			*/
 		}
@@ -226,7 +237,7 @@ class wps_pos_addon {
 		/* $customer_entity_id = wpshop_entities::get_entity_identifier_from_code( WPSHOP_NEWTYPE_IDENTIFIER_ADDRESS );
 		$query = $wpdb->prepare( 'SELECT id FROM ' .WPSHOP_DBT_ATTRIBUTE_SET. ' WHERE name = %s',  __('Shop Customer', 'wps-pos-i18n') );
 		$exist_attribute_group = $wpdb->get_var( $query ); */
-		
+
 		$exist_attribute_group = 'Nope';
 
 		if ( empty($exist_attribute_group) ) {
@@ -346,7 +357,7 @@ class wps_pos_addon {
 		if( is_dir( $module_folder ) ) {
 			$parent_folder_content = scandir( $module_folder );
 			foreach ( $parent_folder_content as $folder ) {
-				if ( $folder && substr( $folder, 0, 1) != '.' ) {
+				if ( $folder && substr( $folder, 0, 1) != '.' && is_dir( $module_folder . $folder ) ) {
 					$child_folder_content = scandir( $module_folder . $folder );
 					if ( file_exists( $module_folder . $folder . '/' . $folder . '.php') ) {
 						$f =  $module_folder . $folder . '/' . $folder . '.php';
@@ -387,14 +398,20 @@ class wps_pos_addon {
 	 * AJAX - Load element list from choosen letter into alphabet list
 	 */
 	function ajax_load_element_from_letter() {
+
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'ajax_load_element_from_letter' ) )
+			wp_die();
+
 		$response = array(
 			'status' => false,
 			'output' => __('An error occured', 'wps-pos-i18n'),
 		);
 
 		$alphabet = unserialize( WPSPOS_ALPHABET_LETTERS );
-		$letter = !empty( $_POST['term'] ) && in_array( $_POST['term'], $alphabet )	? $_POST['term'] : null;
-		$element_type = !empty( $_POST['element_type'] ) ? wpshop_tools::varSanitizer( $_POST['element_type'] ) : 'customer';
+		$letter = !empty( $_POST['term'] ) && in_array( $_POST['term'], $alphabet )	? sanitize_text_field( $_POST['term'] ) : null;
+		$element_type = !empty( $_POST['element_type'] ) ? sanitize_text_field( $_POST['element_type'] ) : 'customer';
 		$response[ 'element_type' ] = $element_type;
 
 		if ( !empty( $letter ) ) {
@@ -419,48 +436,55 @@ class wps_pos_addon {
 
 		}
 		else {
-			$response[ 'output' ] = sprintf( __( 'THe requested term (%s) to search is invalid. Please check your request and try again', 'wps-pos-i18n' ), $_POST['term'] );
+			$response[ 'output' ] = sprintf( __( 'THe requested term (%s) to search is invalid. Please check your request and try again', 'wps-pos-i18n' ), $letter );
 		}
 
 		wp_die( json_encode( $response ) );
 	}
 
 	/**
-	 * AJAX - Save state of checkbox 
+	 * AJAX - Save state of checkbox
 	 */
 	function ajax_save_config_barcode_only() {
+
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'ajax_save_config_barcode_only' ) )
+			wp_die();
+
 		$option = 'wps_pos_options';
 		$values = get_option( $option );
-		if( !empty( $_POST['value_checkbox'] ) && $_POST['value_checkbox'] == 'checked' ) {
-			$values['only_barcode'] = 'checked';
-  			update_option( $option, $values );
-		} elseif( !empty( $_POST['value_checkbox'] ) && $_POST['value_checkbox'] == 'unchecked' ) {
-			$values['only_barcode'] = 'unchecked';
-  			update_option( $option, $values );
+		if ( !empty( $values['only_barcode'] ) ) {
+			$values['only_barcode'] = !empty( $_POST['value_checkbox'] ) ? sanitize_text_field( $_POST['value_checkbox' ] ) : '';
+	  	update_option( $option, $values );
 		}
 		wp_die();
 	}
 
-	function ajax_wpspos_state_is_quotation() {
-		@session_start();
-		if( !empty( $_POST['value_checkbox'] ) && $_POST['value_checkbox'] == 'checked' ) {
-			$_SESSION['wpspos_is_quotation'] = true;
-		} elseif( !empty( $_POST['value_checkbox'] ) && $_POST['value_checkbox'] == 'unchecked' ) {
-			unset( $_SESSION['wpspos_is_quotation'] );
-		}
-		wp_die();
-	}
-	
-	function ajax_wpspos_state_is_receipt() {
-		@session_start();
-		if( !empty( $_POST['value_checkbox'] ) && $_POST['value_checkbox'] == 'checked' ) {
-			$_SESSION['wpspos_is_receipt'] = true;
-		} elseif( !empty( $_POST['value_checkbox'] ) && $_POST['value_checkbox'] == 'unchecked' ) {
-			unset( $_SESSION['wpspos_is_receipt'] );
-		}
-		wp_die();
-	}
-	
+	// function ajax_wpspos_state_is_quotation() {
+	// 	@session_start();
+	// 	$value_checkbox = !empty( $_POST['value_checkbox'] ) ? sanitize_text_field( $_POST['value_checkbox'] ) : '';
+	//
+	// 	if( !empty( $value_checkbox ) && $value_checkbox == 'checked' ) {
+	// 		$_SESSION['wpspos_is_quotation'] = true;
+	// 	} elseif( $value_checkbox == '' ) {
+	// 		unset( $_SESSION['wpspos_is_quotation'] );
+	// 	}
+	// 	wp_die();
+	// }
+
+	// function ajax_wpspos_state_is_receipt() {
+	// 	@session_start();
+	// 	$value_checkbox = !empty( $_POST['value_checkbox'] ) ? sanitize_text_field( $_POST['value_checkbox'] ) : '';
+	//
+	// 	if( !empty( $value_checkbox ) && $value_checkbox == 'checked' ) {
+	// 		$_SESSION['wpspos_is_receipt'] = true;
+	// 	} elseif( $value_checkbox == '' ) {
+	// 		unset( $_SESSION['wpspos_is_receipt'] );
+	// 	}
+	// 	wp_die();
+	// }
+
 }
 
 ?>

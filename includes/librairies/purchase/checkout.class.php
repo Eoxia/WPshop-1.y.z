@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 
 /*	Check if file is include. No direct access possible with file url	*/
 if ( !defined( 'WPSHOP_VERSION' ) ) {
@@ -68,7 +68,7 @@ class wpshop_checkout {
 					'post_type' => WPSHOP_NEWTYPE_IDENTIFIER_ORDER,
 					'post_title' => sprintf(__('Order - %s','wpshop'), mysql2date('d M Y\, H:i:s', current_time('mysql', 0), true)),
 					'post_status' => 'publish',
-					'post_excerpt' => !empty($_POST['wps-customer-comment']) ? $_POST['wps-customer-comment'] : '',
+					'post_excerpt' => !empty($_POST['wps-customer-comment']) ? sanitize_text_field( $_POST['wps-customer-comment'] ) : '',
 					'post_author' => $user_id,
 					'comment_status' => 'closed'
 				);
@@ -147,9 +147,9 @@ class wpshop_checkout {
 
 				do_action( 'wps_order_extra_save', $order_id );
 
-
 				//Add an action to extra actions on order save
-				$args = array( 'order_id' => $order_id, 'posted_data' => $_REQUEST);
+				// @TODO : REQUEST
+				// $args = array( 'order_id' => $order_id, 'posted_data' => $_REQUEST);
 				wpshop_tools::create_custom_hook( 'wps_order_extra_save_action', $args );
 
 				/**	Set custmer information for the order	*/
@@ -196,7 +196,7 @@ class wpshop_checkout {
 					if ( empty($email_option['send_confirmation_order_message']) ) {
 						$payment_method_option = get_option( 'wps_payment_mode' );
 						$order_payment_method = ( !empty($payment_method_option) && !empty($payment_method_option['mode']) && !empty($order_meta['order_payment']['customer_choice']['method']) && !empty($payment_method_option['mode'][$order_meta['order_payment']['customer_choice']['method']])  ) ? $payment_method_option['mode'][$order_meta['order_payment']['customer_choice']['method']]['name'] : $order_meta['order_payment']['customer_choice']['method'];
-	
+
 						$wps_message->wpshop_prepared_email($email, 'WPSHOP_ORDER_CONFIRMATION_MESSAGE', array('order_id' => $order_id,'customer_first_name' => $first_name, 'customer_last_name' => $last_name, 'customer_email' => $email, 'order_key' => ( ( !empty($order_meta['order_key']) ) ? $order_meta['order_key'] : ''),'order_date' => current_time('mysql', 0),  'order_payment_method' => $order_payment_method, 'order_content' => '', 'order_addresses' => '', 'order_customer_comments' => '', 'order_billing_address' => '', 'order_shipping_address' => '',  'order_shipping_method' => $shipping_method, 'order_personnal_informations' => '' ) );
 					}
 				}

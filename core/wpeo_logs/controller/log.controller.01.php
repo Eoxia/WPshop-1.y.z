@@ -114,16 +114,14 @@ if ( !class_exists( "wpeologs_ctr" ) ) {
 		}
 
 		private function check_page() {
-			if( empty( $_GET['action'] ) || empty( $_GET['type'] ) )
+			$action = !empty( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
+			$type = !empty( $_GET['type'] ) ? sanitize_text_field( $_GET['type'] ) : '';
+
+			if( empty( $action ) || empty( $type ) )
 				return false;
 
-			$action = sanitize_text_field( $_GET['action'] );
-			$type = sanitize_text_field( !empty( $_GET['type'] ) ?  $_GET['type'] : '' );
-
-			if ( !isset( $_GET['service_id'] ) ) return false;
-			else $service_id = (int) $_GET['service_id'];
-
-			if ( isset( $_GET['key'] ) && 0 !== (int) $_GET['key'] ) $key = (int) $_GET['key'];
+			$service_id = !empty( $_GET['service_id'] ) ? (int) $_GET['service_id'] : 0;
+			$key = !empty( $_GET['key'] ) ? (int) $_GET['key'] : 0;
 
 			if ( 'view' == $action && isset( $service_id ) ) {
 				$service = self::get_service_by_id( $service_id );
@@ -455,13 +453,16 @@ if ( !class_exists( "wpeologs_ctr" ) ) {
 		}
 
 		public function edit_service() {
-			if ( empty( $_POST['service'] ) || !is_array( $_POST['service'] ) ) {
+			$services = !empty($_POST['service']) ? (array) $_POST['service'] : array();
+
+			if ( empty( $services ) || !is_array( $services ) ) {
 				set_transient( 'log_message', json_encode( array( 'type' => 'error', 'message' => __( 'Invalid data to update service' ), 'wpeolog-i18n' ) ) );
 				wp_safe_redirect( wp_get_referer() );
 				die();
 			}
 
-			foreach( $_POST['service'] as &$service ) {
+
+			foreach( $services as &$service ) {
 				// sanitize
 				$service['active'] = sanitize_key( $service['active'] );
 				$service['name'] = sanitize_key( $service['name'] );
@@ -477,7 +478,8 @@ if ( !class_exists( "wpeologs_ctr" ) ) {
 			$array_current_setting = get_option( '_wpeo_log_settings' );
 			$array_current_setting = json_decode( $array_current_setting, true );
 
-			$array_current_setting = array_replace( $array_current_setting, $_POST['service'] );
+			$service = !empty($_POST['service']) ? (array) $_POST['service'] : array();
+			$array_current_setting = array_replace( $array_current_setting, $service );
 
 			$success = update_option( '_wpeo_log_settings', json_encode( $array_current_setting ) );
 
@@ -491,19 +493,14 @@ if ( !class_exists( "wpeologs_ctr" ) ) {
 		}
 
 		public function to_trash() {
-			if( empty( $_GET['_wpnonce'] ) ) {
-				wp_safe_redirect( wp_get_referer() );
-				die();
-			}
-			$wpnonce = sanitize_text_field( $_GET['_wpnonce'] );
+			$wpnonce = !empty( $_GET['_wpnonce'] ) ? sanitize_text_field( $_GET['_wpnonce'] ) : '';
 
-			if ( 0 === (int) $_GET['service_id'] ) {
+			if( empty( $wpnonce ) ) {
 				wp_safe_redirect( wp_get_referer() );
 				die();
 			}
-			else {
-				$service_id = (int) $_GET['service_id'];
-			}
+
+			$service_id = !empty( $_GET['service_id'] ) ? (int) $_GET['service_id'] : 0;
 
 			if ( !isset( $wpnonce ) || !wp_verify_nonce( $wpnonce, 'to_trash_' . $service_id ) ) {
 				wp_safe_redirect( wp_get_referer() );
@@ -553,19 +550,17 @@ if ( !class_exists( "wpeologs_ctr" ) ) {
 
 			$new_array_service = array();
 
-			if( !empty( $array_service['my_services'] ) ) {
-				if ( !empty( $array_service['my_services'] ) ) {
-				  foreach ( $array_service['my_services'] as $element ) {
-						$new_array_service[] = array(
-							"active" => $element["service_active"] == 1 ? true : false,
-							"name" => $element["service_name"],
-							"size" => $element["service_size"],
-							"format" => $element["service_size_format"],
-							"rotate" => $element["service_rotate"] == 1 ? true : false,
-							"number" => $element["service_file"],
-							"created_date" => current_time( "mysql" )
-						);
-				  }
+			if( !empty( $array_service['my_services'] ) && is_array( $array_service['my_services'] ) ) {
+			  foreach ( $array_service['my_services'] as $element ) {
+					$new_array_service[] = array(
+						"active" => $element["service_active"] == 1 ? true : false,
+						"name" => $element["service_name"],
+						"size" => $element["service_size"],
+						"format" => $element["service_size_format"],
+						"rotate" => $element["service_rotate"] == 1 ? true : false,
+						"number" => $element["service_file"],
+						"created_date" => current_time( "mysql" )
+					);
 				}
 
 				update_option( '_wpeo_log_settings', json_encode( $new_array_service ) );

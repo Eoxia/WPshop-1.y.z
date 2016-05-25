@@ -1,4 +1,5 @@
-<?php if ( !$force_login ) : ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ if ( !$force_login ) : ?>
 <?php echo do_shortcode( '[wps_first_login]' ); ?>
 
 <?php endif; ?>
@@ -13,6 +14,7 @@
 	<form action="<?php echo admin_url('admin-ajax.php'); ?>" method="post" id="wps_login_form">
 		<?php echo apply_filters( 'login_form_top', '', $args ); ?>
 		<input type="hidden" name="action" value="wps_login_request" />
+    <?php wp_nonce_field( 'control_login_form_request' ); ?>
 		<input type="hidden" name="wps-checking-origin" value="<?php echo $post->ID; ?>" />
 		<div class="wps-form-group">
 			<label for="wps_login_email_address"><?php _e('Email address', 'wpshop');?></label>
@@ -29,7 +31,7 @@
 			<?php do_action( 'login_form' ); ?>
 		</div>
 		<div class="wps-form-group wps-password-reminder">
-			<a href="#" class="wps-modal-forgot-password-opener wps-password-reminder-link"><?php _e( 'Forgotten password', 'wpshop'); ?> ?</a> <button class="wps-bton-first-alignRight-rounded" id="wps_login_button"><?php _e('Connexion', 'wpshop'); ?></button>
+			<a href="#" data-nonce="<?php echo wp_create_nonce( 'wps_fill_forgot_password_modal' ); ?>" class="wps-modal-forgot-password-opener wps-password-reminder-link"><?php _e( 'Forgotten password', 'wpshop'); ?> ?</a> <button class="wps-bton-first-alignRight-rounded" id="wps_login_button"><?php _e('Connexion', 'wpshop'); ?></button>
 			<div class="wps-password-reminder-content">
 
 			</div>

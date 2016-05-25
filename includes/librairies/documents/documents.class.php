@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 
 /*	Check if file is include. No direct access possible with file url	*/
 if ( !defined( 'WPSHOP_VERSION' ) ) {
@@ -7,7 +7,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 
 /**
 * Document management method file
-* 
+*
 *	This file contains the different methods for document management
 * @author Eoxia <dev@eoxia.com>
 * @version 1.2
@@ -37,9 +37,11 @@ class wpshop_documents
 	*/
 	public static function change_picture_translation($translation, $text, $domain = 'wpshop'){
 
-		if(($text == 'Use as featured image') && isset($_REQUEST['post_id'])){
+		$post_id = !empty( $_REQUEST['post_id'] ) ? (int) $_REQUEST['post_id'] : 0;
 
-			$post = get_post( $_REQUEST['post_id'] );
+		if(($text == 'Use as featured image') && isset($post_id)){
+
+			$post = get_post( $post_id );
 			if (!empty($post->post_type) && $post->post_type != WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT) return $translation;
 			$translations = get_translations_for_domain($domain);
 			if ( empty($translations->entries['Use as product thumbnail']->translations[0]) ) return $translation;
@@ -50,12 +52,13 @@ class wpshop_documents
 	}
 
 	/**
-	*	
+	*
 	*/
 	public static function attachment_fields($form_fields, $post){
 		/*	Get the current post informations	*/
-		if(isset($_GET["post_id"])){
-			$parent_post = get_post( absint($_GET["post_id"]) );
+		$id = isset($_GET["post_id"]) ? absint( (int) $_GET["post_id"] ) : null;
+		if(isset($id)){
+			$parent_post = get_post( $id );
 		}
 		else{
 			$parent_post = get_post( $post->post_parent );

@@ -1,5 +1,7 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <!--  <div class="wps-gridwrapper">-->
-<?php 
+<?php
 $wps_coupon_ctr = new wps_coupon_ctr();
 $results = $wps_coupon_ctr->getCoupons();
 unset($wps_coupon_ctr);
@@ -12,15 +14,15 @@ if( !empty($results) ) :
 		</label>
 		<div class="wps-form-inliner">
 			<input type="text" value="" id="wps_coupon_code" />
-			<button id="wps_apply_coupon" class="wps-bton-first wpsjs-apply-coupon">
+			<button id="wps_apply_coupon" data-nonce="<?php echo wp_create_nonce( 'wps_apply_coupon' ); ?>" class="wps-bton-first wpsjs-apply-coupon">
 				<?php _e( 'Apply', 'wpshop' ); ?>
-			</button>	
+			</button>
 		</div> <!-- wps-form-inliner -->
 	</div> <!-- wps-form-group-inline -->
 	<div id="wps_coupon_alert_container"></div>
 
 	<!-- Tableau qui liste les coupons actifs avec possibilité de les supprimer ? -->
-	
+
 <!-- 	<div class="wps-table">
 		<div class="wps-table-header">
 			<div>Code</div>
@@ -36,11 +38,9 @@ if( !empty($results) ) :
 				<div></div>
 				<div><a href="#"><i class="wps-icon-close"></i></a></div>
 			</div>
-		<?php endforeach; ?>	
+		<?php endforeach; ?>
 	</div> -->
 
 
 </div> <!-- wps-coupon -->
 <?php endif; ?>
-
-

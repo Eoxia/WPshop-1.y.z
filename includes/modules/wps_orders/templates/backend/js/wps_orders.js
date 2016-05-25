@@ -1,7 +1,7 @@
 jQuery( document ).ready( function() {
 	var xhr = null;
-	
-	
+
+
 	/** Add a product to quotation **/
 	jQuery( document ).on( 'click', '.add_product_to_order_quotation', function() {
 		var id = jQuery( this ).attr('id').replace( 'add_product_to_cart_', '' );
@@ -39,21 +39,21 @@ jQuery( document ).ready( function() {
 			}, 'json');
 	});
 
-	
+
 	/** Action on button "Recalculate order in admin" **/
 	jQuery( document ).on('click', '#wpshop_admin_order_recalculate', function() {
 		update_order_product_content( jQuery( '#post_ID' ).val(), 0);
 	});
-	
-	
+
+
 	jQuery( document ).on( 'click', '.remove', function() {
 		var id = jQuery(this).parent().parent().attr('id');
-		id = id.replace( 'product_', ''); 
+		id = id.replace( 'product_', '');
 		update_order_product_content( jQuery( '#post_ID' ).val() , id);
 	});
-	
-	
-	
+
+
+
 	/** Change Product list **/
 	jQuery( document ).on( 'click', '.product_list_change', function() {
 		var letter = jQuery( this ).attr('id').replace( 'products_', '' );
@@ -72,8 +72,8 @@ jQuery( document ).ready( function() {
 				}
 			}, 'json');
 	});
-	
-	
+
+
 	/** Add a product with varaition **/
 	jQuery( document ).on('click', '#wps_order_product_with_variation', function() {
 		jQuery('#wps_orders_add_to_cart_variation_loader').show();
@@ -83,14 +83,15 @@ jQuery( document ).ready( function() {
 			};
 		jQuery('#wpshop_add_to_cart_form').ajaxForm( form_options_add_to_cart ).submit();
 	});
-	
-	
+
+
 	jQuery( document ).on( 'click', '#wps_order_choose_customer', function( e ) {
 		e.preventDefault();
-		jQuery( this ).addClass( 'wps-bton-loading' );	
-		
+		jQuery( this ).addClass( 'wps-bton-loading' );
+
 		var data = {
 				action: "wps_order_choose_customer",
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 				customer_id : jQuery( '#user_customer_id').val()
 			};
 		jQuery.post(ajaxurl, data, function( response ){
@@ -105,8 +106,8 @@ jQuery( document ).ready( function() {
 			}
 		}, 'json');
 	});
-	
-	
+
+
 	/** Success actions of Ajax form **/
 	function function_after_form_success() {
 		jQuery( '.tb-close-icon' ).click();
@@ -119,10 +120,10 @@ jQuery( document ).ready( function() {
 					jQuery('#order_product_container').html( response['response'] );
 				}
 		}, 'json');
-		
+
 		jQuery( '.add_to_cart_loader' ).hide();
 	}
-	
+
 	function update_order_product_content(order_id, product_to_delete){
 		var product_list_qty_to_update = new Array();
 		jQuery("input[name=productQty]").each(function(){
@@ -140,9 +141,9 @@ jQuery( document ).ready( function() {
 					jQuery('#wps_order_content_container').html( response['response'] );
 				}
 			}, 'json');
-		
+
 	}
-	
-	
-	
+
+
+
 });

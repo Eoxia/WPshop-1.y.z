@@ -1,4 +1,5 @@
-<?php if( !empty($shipping_method_name) ) : ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ if( !empty($shipping_method_name) ) : ?>
 	<div class="wps-alert-info"><strong><?php _e( 'Selected shipping method', 'wpshop'); ?></strong> : <?php echo $shipping_method_name; ?></div>
 <?php else : ?>
 	<div class="wps-alert-info"><?php _e( 'No selected shipping method', 'wpshop'); ?></div>
@@ -20,6 +21,6 @@
 <?php endif; ?>
 
 <?php if ( !empty($order_postmeta['order_invoice_ref']) ) : ?>
-	<div><a href="<?php echo WPSHOP_TEMPLATES_URL; ?>invoice.php?order_id=<?php echo $order->ID; ?>&invoice_ref=<?php echo $order_postmeta['order_invoice_ref']; ?>&bon_colisage=ok&mode=pdf" target="_blank" class="wps-bton-second-mini-rounded" ><?php _e('Download the product list', 'wpshop'); ?></a></div>
+	<div><a href="<?php echo admin_url( 'admin-post.php?action=wps_invoice&order_id='.$order->ID.'&invoice_ref='.$order_postmeta['order_invoice_ref'].'&bon_colisage=ok&mode=pdf' ); ?>" target="_blank" class="wps-bton-second-mini-rounded" ><?php _e('Download the product list', 'wpshop'); ?></a></div>
 <?php endif; ?>
 </div>

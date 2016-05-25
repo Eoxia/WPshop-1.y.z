@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wps-boxed" id="wps_signup_form_container">
 <span class="wps-h5"><?php _e ('Sign up', 'wpshop'); ?></span>
 <div id="wps_signup_error_container"></div>
@@ -5,7 +7,9 @@
 		<?php if( !empty($args) ) : ?>
 			<input type="hidden" name="wps_sign_up_request_from_admin" value="admin" />
 		<?php endif; ?>
-			<input type="hidden" name="action" value="wps_signup_request" />
+
+		<input type="hidden" name="action" value="wps_signup_request" />
+		<?php wp_nonce_field( 'wps_save_signup_form' ); ?>
 
 		<?php
 		if( !empty($signup_fields) ) :
@@ -16,7 +20,7 @@
 			if( isset( $signup_field->code ) && $signup_field->code == 'is_provider' ) {
 				continue;
 			}
-			$value = ( !empty($signup_field->frontend_input) && $signup_field->frontend_input != 'password' && !empty($_POST) && !empty($_POST['attribute']) && !empty($_POST['attribute'][$signup_field->data_type]) && !empty( $_POST['attribute'][$signup_field->data_type][$signup_field->code]) ) ? $_POST['attribute'][$signup_field->data_type][$signup_field->code] : '';
+			$value = ( !empty($signup_field->frontend_input) && $signup_field->frontend_input != 'password' && !empty($_POST) && !empty($_POST['attribute']) && !empty($_POST['attribute'][$signup_field->data_type]) && !empty( $_POST['attribute'][$signup_field->data_type][$signup_field->code]) ) ? sanitize_text_field( $_POST['attribute'][$signup_field->data_type][$signup_field->code] ) : '';
 			$attribute_output_def = wpshop_attributes::get_attribute_field_definition( $signup_field, $value, array( 'from' => 'frontend', ) );
 		?>
 			<div class="wps-form-group">

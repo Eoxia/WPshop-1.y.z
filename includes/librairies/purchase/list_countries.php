@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 $wpshop_tab_countries = array(
 	'AF' => __('Afghanistan', 'wpshop'),
 	'AX' => __('&#197;land Islands', 'wpshop'),

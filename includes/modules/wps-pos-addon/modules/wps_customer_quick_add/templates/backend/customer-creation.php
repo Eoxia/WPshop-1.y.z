@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wps-customer-quick-add-alert-box wps-alert hidden" ></div>
 <form id="create_new_customer_pos_addon" action="<?php echo admin_url('admin-ajax.php'); ?>" method="post" >
 <?php
@@ -6,6 +8,7 @@
 	$attribute_set_id = $wpdb->get_var( $query );
 ?>
 	<input type="hidden" name="action" value="wpspos-customer-quick-add" />
+	<?php wp_nonce_field( 'create_customer' ); ?>
 	<input type="hidden" name="wps-customer-account-set-id" value="<?php echo $attribute_set_id; ?>" />
 
 	<?php if ( !empty( $customer_attributes ) ) : ?>
@@ -50,7 +53,7 @@
 				if ( responseText[ 'status' ] ) {
 					message_status = 'wps-alert-success';
 					$form[0].reset();
-					wpspos_set_customer_for_order( responseText[ 'customer_id' ] );
+					wpspos_set_customer_for_order( responseText[ 'customer_id' ], '<?php echo wp_create_nonce( 'ajax_pos_customer_choice' ); ?>' );
 
 					if ( jQuery( ".wps-pos-customer-letter-choice-" + responseText[ 'letter' ] ).hasClass( "wps-bton-third-rounded" ) ) {
 						jQuery( ".wps-pos-customer-letter-choice-" + responseText[ 'letter' ] ).click();

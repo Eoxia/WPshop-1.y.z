@@ -5,6 +5,7 @@ jQuery( document ).ready( function() {
 		var id = jQuery( this ).val();
 		var data = {
 				action: "wps_hourly_order_day",
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 				day : id,
 				date_begin : jQuery( '#wps_statistics_begin_date' ).val(),
 				date_end : jQuery( '#wps_statistics_end_date' ).val(),
@@ -19,7 +20,7 @@ jQuery( document ).ready( function() {
 				else {
 					jQuery( '#wps-hourly-orders-loader' ).hide();
 				}
-				
+
 			}, 'json');
 	});
 });

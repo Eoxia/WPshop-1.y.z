@@ -1,4 +1,5 @@
-<?php if ( !empty( $paginate ) ) : ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ if ( !empty( $paginate ) ) : ?>
 	<ul class="wps-mass-product-pagination">
 	<?php $i = 1; ?>
 	<?php foreach ( $paginate as $page ) : ?>

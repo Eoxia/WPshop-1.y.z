@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <!-- <div id="welcome-panel" class="welcome-panel wps-welcome-panel" >
 	<input id="wps_installer_welcome_close_nonce" type="hidden" value="<?php echo wp_create_nonce("wps-installer-welcome-panel-close"); ?>" name="wps_installer_welcome_close_nonce">
 	<a class="welcome-panel-close wps-welcome-panel-close" href="<?php echo admin_url( 'admin.php?page=wpshop_dashboard?welcome=0' ); ?>"><?php _e( 'Close', 'wpshop'); ?></a>

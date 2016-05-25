@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 
 /*	Check if file is include. No direct access possible with file url	*/
 if ( !defined( 'WPSHOP_VERSION' ) ) {
@@ -88,7 +88,8 @@ class wpshop_display {
 				$pageAddButton = false;
 				$objectType = new wpshop_messages();
 				$current_user_can_edit = true;
-				if(!empty($_GET['mid'])){
+				$mid = !empty( $_GET['mid'] ) ? sanitize_text_field( $_GET['mid'] ) : '';
+				if(!empty($mid)){
 					$action = 'edit';
 				}
 			break;
@@ -641,8 +642,10 @@ class wpshop_display {
 					add_action($tax . '_add_form_fields', array('wpshop_display','wpshop_add_form'));
 				}
 			}
+			$action = !empty( $_REQUEST['action'] ) ? sanitize_text_field( $_REQUEST['action'] ) : '';
+			$taxonomy = !empty( $_REQUEST['taxonomy'] ) ? sanitize_text_field( $_REQUEST['taxonomy'] ) : '';
 
-			if ($pagenow == 'edit-tags.php' && isset($_REQUEST['action']) && $_REQUEST['action'] == 'edit' && empty($_REQUEST['taxonomy'])) {
+			if ($pagenow == 'edit-tags.php' && isset($action) && $action == 'edit' && empty($taxonomy)) {
 				add_action('edit_term',array('wpshop_display','wpshop_rt_taxonomy_save'));
 			}
 
@@ -669,7 +672,8 @@ class wpshop_display {
 
 		$a = array('description');
 		foreach ($a as $v) {
-			wp_update_term($tag_ID,$v,$_POST[$v]);
+			$term = (array) $_POST[$v];
+			wp_update_term($tag_ID,$v,$term);
 		}
 	}
 
@@ -709,22 +713,6 @@ class wpshop_display {
 		ob_end_clean();
 		echo wpshop_display::display_template_element($template_part, $tpl_component, array(), 'admin');
 		unset($tpl_component);
-		
-		// Old way to display wysiwyg on categories (Yoast incompatibilities)
-		/*$template_part = 'wpshop_transform_taxonomy_description_field_into_wysiwyg';
-		if ( !empty($_GET['action']) && ($_GET['action'] == 'edit') ) {
-			$template_part = 'wpshop_transform_taxonomy_description_field_into_wysiwyg_for_full_page';
-		}
-		$tpl_component = array();
-		ob_start();
-		wp_editor($content, $editor_id, array(
-			'textarea_name' => $editor_selector,
-			'editor_css' => wpshop_display::display_template_element('wpshop_taxonomy_wysiwyg_editor_css', array(), array(), 'admin'),
-		));
-		$tpl_component['ADMIN_TAXONOMY_WYSIWYG'] = ob_get_contents();
-		ob_end_clean();
-		echo wpshop_display::display_template_element($template_part, $tpl_component, array(), 'admin');
-		unset($tpl_component);*/
 	}
 
 	public static function wps_hide_admin_bar_for_customers() {

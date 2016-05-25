@@ -1,4 +1,5 @@
-<?php if( !empty($products) ) : ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ if( !empty($products) ) : ?>
 	<?php $tab_def = array(); ?>
 	<?php
 		foreach( $quick_add_form_attributes as $id_att => $att ) {
@@ -8,6 +9,7 @@
 
 	<form method="post" id="wps_mass_edit_product_form" action="<?php echo admin_url( 'admin-ajax.php' ); ?>">
 		<input type="hidden" name="action" value="wps_mass_edit_product_save_action" />
+    <?php wp_nonce_field( 'wps_save_product_quick_interface' ); ?>
 		<table class="wp-list-table widefat wps-product-mass-interface-table">
 			<thead>
 				<tr>

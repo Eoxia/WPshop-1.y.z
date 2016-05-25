@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 
 class wps_wishlist {
 	public function __construct() {
@@ -52,7 +52,7 @@ class wps_wishlist {
 
 		$response['title'] = __('My wishlist', 'wps_wishlist_i18n');
 
-		$postID = $_POST['postID'];
+		$postID = (int)$_POST['postID'];
 
 		$user_meta = get_user_meta(get_current_user_id(), 'wpshop_user_wishlist', true);
 
@@ -65,10 +65,11 @@ class wps_wishlist {
 
 	public function ajax_create_wishlist_and_add_product() {
 		$user_meta = get_user_meta(get_current_user_id(), 'wpshop_user_wishlist', true);
+		$name_wishlist = !empty( $_POST['name_wishlist'] ) ? sanitize_text_field( $_POST['name_wishlist'] ) : '';
+		$post_id = !empty( $_POST['id'] ) ? (int) $_POST['id'] : 0;
 
-
-		if(empty($user_meta[$_POST['name_wishlist']]) || (!empty($user_meta[$_POST['name_wishlist']]) && !in_array($_POST['postID'], $user_meta[$_POST['name_wishlist']])))
-			$user_meta[$_POST['name_wishlist']][] = $_POST['postID'];
+		if(empty($user_meta[$name_wishlist]) || (!empty($user_meta[$name_wishlist]) && !in_array($post_id, $user_meta[$name_wishlist])))
+			$user_meta[$name_wishlist][] = $post_id;
 
 		update_user_meta(get_current_user_id(), 'wpshop_user_wishlist', $user_meta);
 	}
@@ -108,7 +109,7 @@ class wps_wishlist {
 	function ajax_load_wishlist() {
 		$wishlist_list = get_user_meta(get_current_user_id(), 'wpshop_user_wishlist', true);
 
-		$my_wishlist = !empty($wishlist_list[$_POST['name_wishlist']]) ? $wishlist_list[$_POST['name_wishlist']] : null;
+		$my_wishlist = !empty($wishlist_list[$_POST['name_wishlist']]) ? $wishlist_list[sanitize_text_field($_POST['name_wishlist'])] : null;
 
 		$products = new wpshop_products();
 
@@ -116,7 +117,7 @@ class wps_wishlist {
 		$post = get_posts(get_current_user_id(), array('post_type' => WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS));
 		$id_customer = $post[0]->ID;
 
-		$name_wishlist = $_POST['name_wishlist'];
+		$name_wishlist = sanitize_text_field( $_POST['name_wishlist'] );
 
 		$name_user = wp_get_current_user();
 
@@ -144,13 +145,14 @@ class wps_wishlist {
 
 	/** Add filter - content */
 	function filter_content($content) {
+		$name_wishlist = !empty( $_GET['name_wishlist'] ) ? sanitize_text_field( $_GET['name_wishlist'] ) : '';
 		// If post type customers
-		if(WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS == get_post_type(get_the_ID()) && !empty($_GET['name_wishlist'])) {
+		if(WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS == get_post_type(get_the_ID()) && !empty($name_wishlist)) {
 			$post = get_posts(get_the_ID(), array('post_type' => WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS));
 			$id_customer = $post[0]->post_author;
 
 			$wishlist_list = get_user_meta($id_customer, 'wpshop_user_wishlist', true);
-			$my_wishlist = !empty($wishlist_list[$_GET['name_wishlist']]) ? $wishlist_list[$_GET['name_wishlist']] : null;
+			$my_wishlist = !empty($wishlist_list[$name_wishlist]) ? $wishlist_list[$name_wishlist] : null;
 
 			$products = new wpshop_products();
 

@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wps-form-group">
 	<?php 
 	foreach( $stored_available_attribute_values as $stored_available_attribute_value ) : ?>

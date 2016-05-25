@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 $type = 'cidfont0';
 $name = 'KozMinPro-Regular-Acro';
 $displayname = 'Kozuka Mincho Pro (Japanese Serif)';

@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
 * Products management method file
 *
@@ -29,7 +29,7 @@ class wpshop_categories
 	* @param string $product_search : recherche demand�e
 	* @return mixed
 	**/
-	function product_list_cats($formated=false, $product_search=null) {
+	public static function product_list_cats($formated=false, $product_search=null) {
 		$where  = array('hide_empty' => false);
 		if(!empty($product_search))
 			$where = array_merge($where, array('name__like'=>$product_search));
@@ -151,9 +151,10 @@ class wpshop_categories
 	*	Add additionnal fields to the category edition form
 	*/
 	public static function category_edit_fields(){
-		$category_id = wpshop_tools::varSanitizer($_REQUEST["tag_ID"]);
+		$category_id = (int) $_REQUEST["tag_ID"];
 		$category_meta_information = get_option(WPSHOP_NEWTYPE_IDENTIFIER_CATEGORIES . '_' . $category_id);
 		$tpl_component = array();
+		wp_enqueue_media();
 		$category_thumbnail_preview = '<img src="' .WPSHOP_DEFAULT_CATEGORY_PICTURE. '" alt="No picture" class="category_thumbnail_preview" />';
 		/*	Check if there is already a picture for the selected category	*/
 
@@ -165,15 +166,15 @@ class wpshop_categories
 
 		$tpl_component['CATEGORY_DELETE_PICTURE_BUTTON'] = '';
 		if( !empty($category_meta_information) && !empty($category_meta_information['wpshop_category_picture']) ) {
-			$tpl_component['CATEGORY_DELETE_PICTURE_BUTTON'] = '<a href="#" role="button" id="wps-delete-category-picture" class="wps-bton-second-mini-rounded">' .__( 'Delete the category picture', 'wpshop' ). '</a> ';
+			$tpl_component['CATEGORY_DELETE_PICTURE_BUTTON'] = '<a href="#" role="button" id="wps-delete-category-picture" data-nonce="' . wp_create_nonce( 'wps_delete_picture_category' ) . '" class="wps-bton-second-mini-rounded">' .__( 'Delete the category picture', 'wpshop' ). '</a> ';
 		}
 		$tpl_component['CATEGORY_PICTURE_ID'] = ( ( !empty($category_meta_information['wpshop_category_picture']) ) ? $category_meta_information['wpshop_category_picture'] : '' );
 
 		$tpl_component['CATEGORY_THUMBNAIL_PREVIEW'] = $category_thumbnail_preview;
-		if(isset($_GET['tag_ID'])){
-			$tpl_component['CATEGORY_TAG_ID'] = $_GET['tag_ID'];
+		if(isset($category_id)){
+			$tpl_component['CATEGORY_TAG_ID'] = $category_id;
 			$tpl_component['CATEGORY_FILTERABLE_ATTRIBUTES'] = '';
-			$wpshop_category_products = wpshop_categories::get_product_of_category( $_GET['tag_ID'] );
+			$wpshop_category_products = wpshop_categories::get_product_of_category( $category_id );
 			$filterable_attributes_list = array();
 			foreach ( $wpshop_category_products as $wpshop_category_product ) {
 				$elementId = wpshop_entities::get_entity_identifier_from_code(WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT);
@@ -222,13 +223,16 @@ class wpshop_categories
 		$category_meta = array();
 		$category_option = get_option( WPSHOP_NEWTYPE_IDENTIFIER_CATEGORIES . '_' . $category_id);
 
-		if ( !empty($_POST['wps_category_picture_id']) ) {
-			$attach_id = intval( $_POST['wps_category_picture_id'] );
+		$wps_category_picture_id = !empty($_POST['wps_category_picture_id']) ? (int) $_POST['wps_category_picture_id'] : null;
+		$filterable_attribute_for_category = ( !empty($_POST['filterable_attribute_for_category']) && is_array($_POST['filterable_attribute_for_category']) ) ? (array) $_POST['filterable_attribute_for_category'] : null;
+
+		if ( isset( $wps_category_picture_id ) ) {
+			$attach_id = intval( $wps_category_picture_id );
 			$category_option['wpshop_category_picture'] = $attach_id;
 		}
 
-		if ( !empty($_POST['filterable_attribute_for_category']) && is_array($_POST['filterable_attribute_for_category']) ) {
-			$category_option['wpshop_category_filterable_attributes'] = $_POST['filterable_attribute_for_category'];
+		if ( isset( $filterable_attribute_for_category ) ) {
+			$category_option['wpshop_category_filterable_attributes'] = $filterable_attribute_for_category;
 		}
 		else {
 			$category_option['wpshop_category_filterable_attributes'] = array();
@@ -306,7 +310,7 @@ class wpshop_categories
 		// $item_width = null;
 		// /*	Make some treatment in case we are in grid mode	*/
 		// if($output_type == 'grid'){
-		// 		Determine the width of a component in a line grid	
+		// 		Determine the width of a component in a line grid
 		// 	$element_width = (100 / WPSHOP_DISPLAY_GRID_ELEMENT_NUMBER_PER_LINE);
 		// 	$item_width = (round($element_width) - 1) . '%';
 		// }
@@ -409,13 +413,13 @@ class wpshop_categories
 	}
 
 	/**
-	 * Get the category thumbnail by the category id. Get the option 
-	 * wpshop_product_category_$id, check if the option is an array and if the key 
-	 * wpshop_category_picture(id post value) it's not empty, if it is the case set the  
-	 * previously value in $id_picture. Use wp_get_attachment_image_src with the 
+	 * Get the category thumbnail by the category id. Get the option
+	 * wpshop_product_category_$id, check if the option is an array and if the key
+	 * wpshop_category_picture(id post value) it's not empty, if it is the case set the
+	 * previously value in $id_picture. Use wp_get_attachment_image_src with the
 	 * $id_picture for get the informations of attachment like: url, with, height and
-	 * resized image (true for resized image, false if it is the original). 
-	 *  
+	 * resized image (true for resized image, false if it is the original).
+	 *
 	 * @see get_option
 	 * @see wp_get_attachment_image_src
 	 * @param unknown_type $id
@@ -426,23 +430,23 @@ class wpshop_categories
 	public static function get_the_category_thumbnail($id, $size = 'thumbnail', $icon = false) {
 		/** Get the attachment/post ID */
 		$array_option_category 	= get_option('wpshop_product_category_' . $id);
-		
+
 		/** If not attachment/post ID in the category, return "No thumbnail in the category" */
 		if(is_array($array_option_category) && empty($array_option_category['wpshop_category_picture']))
 			return __('No thumbnail in the category', 'wpshop');
-		
+
 		/** Set attachment/post ID in $id_picture */
 		$id_picture = $array_option_category['wpshop_category_picture'];
-		
-		/** 
-		 * Set the post thumbnail in $post_thumbnail 
+
+		/**
+		 * Set the post thumbnail in $post_thumbnail
 		 * @get_the_post_thumbnail - WordPress function
 		 */
 		$post_thumbnail = wp_get_attachment_image_src($id_picture, $size, $icon);
-		
+
 		if(!$post_thumbnail)
 			return __('No thumbnail in this post', 'wpshop');
-			
+
 		return $post_thumbnail;
 	}
 }

@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 
 /*	Check if file is include. No direct access possible with file url	*/
 if ( !defined( 'WPSHOP_VERSION' ) ) {
@@ -27,7 +27,6 @@ include_once(WPSHOP_LIBRAIRIES_DIR . 'install.class.php');
 include_once(WPSHOP_LIBRAIRIES_DIR . 'permissions.class.php');
 include_once(WPSHOP_LIBRAIRIES_DIR . 'options/options.class.php');
 include_once(WPSHOP_LIBRAIRIES_DIR . 'notices.class.php');
-include_once(WPSHOP_LIBRAIRIES_DIR . 'shortcodes.class.php');
 
 
 /* Purchase management */

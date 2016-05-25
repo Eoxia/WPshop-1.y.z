@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Manage Customer general and front-end functions
  * @author ALLEGRE Jérôme - EOXIA
@@ -20,7 +20,7 @@ class wps_customer_ctr {
 		/**	When a wordpress user is created, create a customer (post type)	*/
 		add_action( 'user_register', array( $this, 'create_entity_customer_when_user_is_created') );
 		add_action( 'edit_user_profile_update', array( $this, 'update_entity_customer_when_profile_user_is_update' ) );
-		
+
 		/** When save customer update */
 		add_action( 'save_post', array( $this, 'save_entity_customer' ), 10, 2 );
 		//add_action( 'admin_notices', array( $this, 'notice_save_post_customer_informations' ) );
@@ -43,9 +43,17 @@ class wps_customer_ctr {
 	 * Customer options for the shop
 	 */
 	public static function declare_options() {
-		if((WPSHOP_DEFINED_SHOP_TYPE == 'sale') && !isset($_POST['wpshop_shop_type']) || (isset($_POST['wpshop_shop_type']) && ($_POST['wpshop_shop_type'] != 'presentation')) && !isset($_POST['old_wpshop_shop_type']) || (isset($_POST['old_wpshop_shop_type']) && ($_POST['old_wpshop_shop_type'] != 'presentation'))){
-			register_setting('wpshop_options', 'wpshop_cart_option', array('wps_customer_ctr', 'wpshop_options_validate_customers_newsleters'));
-			add_settings_field('display_newsletters_subscriptions', __('Display newsletters subscriptions', 'wpshop'), array('wps_customer_ctr', 'display_newsletters_subscriptions'), 'wpshop_cart_info', 'wpshop_cart_info');
+		if ( WPSHOP_DEFINED_SHOP_TYPE == 'sale' ) {
+			$wpshop_shop_type = !empty( $_POST['wpshop_shop_type'] ) ? sanitize_text_field( $_POST['wpshop_shop_type'] ) : '';
+			$old_wpshop_shop_type = !empty( $_POST['old_wpshop_shop_type'] ) ? sanitize_text_field( $_POST['old_wpshop_shop_type'] ) : '';
+
+			if ( ( $wpshop_shop_type == '' || $wpshop_shop_type != 'presentation' )
+				&& ( $old_wpshop_shop_type == '' && $old_wpshop_shop_type != 'presentation' ) ) {
+					/**	Add module option to wpshop general options	*/
+					register_setting('wpshop_options', 'wpshop_cart_option', array('wps_customer_ctr', 'wpshop_options_validate_customers_newsleters'));
+					add_settings_field('display_newsletters_subscriptions', __('Display newsletters subscriptions', 'wpshop'), array('wps_customer_ctr', 'display_newsletters_subscriptions'), 'wpshop_cart_info', 'wpshop_cart_info');
+
+				}
 		}
 	}
 
@@ -180,7 +188,7 @@ class wps_customer_ctr {
 		);
 		register_post_type( WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, $post_type_params );
 	}
-	
+
 	/**
 	 * Link for redirect new customer to new user
 	 */
@@ -188,13 +196,13 @@ class wps_customer_ctr {
 		global $submenu;
 		//$submenu['edit.php?post_type=' . WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS][10] = array( __( 'New customer', 'wpshop' ), 'create_users', admin_url( 'user-new.php?redirect_to=edit.php%3Fpost_type%3D' . WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ) );
 	}
-	
+
 	/**
 	 * Redirect when create new customer in admin
 	 */
 	public function redirect_new_user(){
 		global $pagenow;
-				
+
 		/* Check current admin page. */
 		if( $pagenow != 'user-new.php' && isset( $_SESSION['redirect_to_customer'] ) ) {
 			$redirect = $_SESSION['redirect_to_customer'];
@@ -206,7 +214,8 @@ class wps_customer_ctr {
 		}
 
 		/* Redirect to new user */
-		if( $pagenow == 'post-new.php' && isset( $_GET['post_type'] ) && $_GET['post_type'] == WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ) {
+		$post_type = !empty(  $_GET['post_type'] ) ? sanitize_text_field(  $_GET['post_type'] ) : '';
+		if( $pagenow == 'post-new.php' && isset( $post_type ) && $post_type == WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ) {
 			$_SESSION['redirect_to_customer'] = 'edit.php?post_type=' . WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS;
 			wp_redirect( admin_url('user-new.php', 'http' ), 301 );
 			exit;
@@ -224,7 +233,7 @@ class wps_customer_ctr {
         echo "\n$('#role').val('customer').change();";
         echo "\n});\n</script>";
     }
-	
+
 	/**
 	 * Create an entity of customer type when a new user is created
 	 *
@@ -249,7 +258,7 @@ class wps_customer_ctr {
 	private static function array_map_create_entity_customer_when_user_is_created( $a ) {
 		return $a[0];
 	}
-	
+
 	/**
 	 * Update an entity of customer type when a user profile is update
 	 *
@@ -277,26 +286,29 @@ class wps_customer_ctr {
 		}
 		$user_id = $post->post_author;
 		$user_info = array();
-		if( !empty( $_POST['attribute'] ) ) {
-			foreach( $_POST['attribute'] as $type => $attributes ) {
+		$attribute = !empty( $_POST['attribute'] ) ? (array)$_POST['attribute'] : array();
+		if( !empty( $attribute ) ) {
+			foreach( $attribute as $type => $attributes ) {
 				foreach( $attributes as $meta => $attribute ) {
-					$user_info[$meta] = $attribute;
+					$user_info[$meta] = sanitize_text_field( $attribute );
 				}
 			}
 		}
 		self::save_customer_synchronize( $customer_post_ID, $user_id, $user_info );
 		/** Update newsletter user preferences **/
 		$newsletter_preferences = array();
-		if( !empty($_POST['newsletters_site']) ) {
+		$newsletter_site = !empty( $_POST['newsletters_site'] ) ? sanitize_text_field( $_POST['newsletters_site'] ) : '';
+		if( !empty($newsletter_site) ) {
 			$newsletter_preferences['newsletters_site'] = 1;
 		}
-		if( !empty($_POST['newsletters_site_partners']) ) {
+		$newsletters_site_partners = !empty( $_POST['newsletters_site_partners'] ) ? sanitize_text_field( $_POST['newsletters_site_partners'] ) : '';
+		if( !empty($newsletters_site_partners) ) {
 			$newsletter_preferences['newsletters_site_partners'] = 1;
 		}
 		update_user_meta( $user_id, 'user_preferences', $newsletter_preferences);
 		return;
 	}
-	
+
 	public static function save_customer_synchronize( $customer_post_ID, $user_id, $user_info ) {
 		global $wpdb;
 		global $wpshop;
@@ -378,25 +390,6 @@ class wps_customer_ctr {
 	 * Notice for errors on admin
 	 */
 	function notice_save_post_customer_informations() {
-		/*global $wpdb;
-		$wps_entities = new wpshop_entities();
-		$query = $wpdb->prepare('SELECT id FROM ' . WPSHOP_DBT_ATTRIBUTE_SET . ' WHERE entity_id = %d', $wps_entities->get_entity_identifier_from_code( WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ) );
-		$attribute_set_id = $wpdb->get_var( $query );
-		if ( !empty($attribute_set_id) ) {
-			$group  = wps_address::get_addresss_form_fields_by_type( $attribute_set_id );
-			foreach ( $group as $attribute_sets ) {
-				foreach ( $attribute_sets as $attribute_set_field ) {
-					global $wpshop;
-					$validate = $wpshop->validateForm($attribute_set_field['content'], $_POST['attribute'] );
-					if( !empty( $wpshop->errors ) ) {
-						if( empty( $_SESSION['save_post_customer_informations_errors'] ) ) {
-							$_SESSION['save_post_customer_informations_errors'] = array();
-						}
-						$_SESSION['save_post_customer_informations_errors'] = array_merge( $_SESSION['save_post_customer_informations_errors'], $wpshop->errors );
-					}
-				}
-			}
-		}*/
 		$errors = isset( $_SESSION['save_post_customer_informations_errors'] ) ? $_SESSION['save_post_customer_informations_errors'] : '';
 		if( !empty( $errors ) ) {
 			foreach( $errors as $error ) {
@@ -493,24 +486,25 @@ class wps_customer_ctr {
 	}
 
 	function list_table_filters() {
-		if (isset($_GET['post_type'])) {
-			$post_type = $_GET['post_type'];
+		$post_type = !empty( $_GET['post_type'] ) ? sanitize_text_field( $_GET['post_type'] ) : '';
+		if (isset($post_type)) {
 			if (post_type_exists($post_type) && ($post_type == WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS)) {
 				$filter_possibilities = array();
 				$filter_possibilities[''] = __('-- Select Filter --', 'wpshop');
 				$filter_possibilities['orders'] = __('List customers with orders', 'wpshop');
 				$filter_possibilities['no_orders'] = __('List customers without orders', 'wpshop');
-				echo wpshop_form::form_input_select('entity_filter', 'entity_filter', $filter_possibilities, (!empty($_GET['entity_filter']) ? $_GET['entity_filter'] : ''), '', 'index');
+				echo wpshop_form::form_input_select('entity_filter', 'entity_filter', $filter_possibilities, (!empty($_GET['entity_filter']) ? sanitize_text_field( $_GET['entity_filter'] ) : ''), '', 'index');
 			}
 		}
 	}
 
 	function list_table_filter_parse_query($query) {
 		global $pagenow, $wpdb;
-
-		if ( is_admin() && ($pagenow == 'edit.php') && !empty( $_GET['post_type'] ) && ( $_GET['post_type'] == WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ) && !empty( $_GET['entity_filter'] ) ) {
+		$post_type = !empty( $_GET['post_type'] ) ? sanitize_text_field( $_GET['post_type'] ) : '';
+		$entity_filter = !empty( $_GET['entity_filter'] ) ? sanitize_text_field( $_GET['entity_filter'] ) : '';
+		if ( is_admin() && ($pagenow == 'edit.php') && !empty( $post_type ) && ( $post_type == WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ) && !empty( $entity_filter ) ) {
 			$check = null;
-			switch ( $_GET['entity_filter'] ) {
+			switch ( $entity_filter ) {
 				case 'orders':
 					$sql_query = $wpdb->prepare(
 						"SELECT ID
@@ -591,10 +585,10 @@ class wps_customer_ctr {
 
 		return $customer_id;
 	}
-	
+
 	/**
 	 * Essaie de créer une corrélation entre le formulaire que l'on passe et customer ( ex: billing_address => customer )
-	 * 
+	 *
 	 * @param array $form Passer directement le $_POST pour créer un client.
 	 * @return array ou int : 1 = Aucun mail, 2 = L'utilisateur existe déjà
 	 */
@@ -607,20 +601,20 @@ class wps_customer_ctr {
 			$customer_entity_id = $wpdb->get_var( $query );
 			$attributes_set = wpshop_attributes_set::getElement($customer_entity_id);
 			$account_attributes = wpshop_attributes_set::getAttributeSetDetails( ( !empty($attributes_set->id) ) ? $attributes_set->id : '', "'valid'");
-				
+
 			$customer_attributes_to_save = $customer_attributes_to_save_temp = array();
-			
+
 			foreach ( $form[ 'attribute' ] as $attribute_type => $attributes ) {
 				foreach ( $attributes as $attribute_code => $attribute_value ) {
 					$customer_attributes_compare[$attribute_code] = $attribute_type;
 				}
 			}
-				
+
 			foreach( $account_attributes as $account_attribute_group ) {
 				foreach ( $account_attribute_group[ 'attribut' ] as $attribute ) {
 					foreach( preg_grep ( '/' . $attribute->code . '/' , array_keys( $customer_attributes_compare ) ) as $codeForm ) {
 						if( $customer_attributes_compare[$codeForm] == $attribute->data_type ) {
-							$user[ $attribute->code ] = array( 'attribute_id' => $attribute->id, 'data_type' => $attribute->data_type, 'value' => $_POST[ 'attribute' ][ $attribute->data_type ][ $codeForm ] );
+							$user[ $attribute->code ] = array( 'attribute_id' => $attribute->id, 'data_type' => $attribute->data_type, 'value' => sanitize_text_field( $_POST[ 'attribute' ][ $attribute->data_type ][ $codeForm ] ) );
 							if( $attribute->code == 'user_email' ) {
 								$email_founded = true;
 							}
@@ -628,20 +622,20 @@ class wps_customer_ctr {
 					}
 				}
 			}
-			
+
 			if ( $email_founded && is_email( $user['user_email']['value'] ) ) {
 				$user_id = username_exists( $user['user_email']['value'] );
 				if ( empty( $user_id ) ) {
 					$user_name = isset( $user['user_login']['value'] ) ? $user['user_login']['value'] : $user['user_email']['value'];
 					$user_pass = isset( $user['user_pass']['value'] ) ? $user['user_pass']['value'] : wp_generate_password( 12, false );
 					$user_id = wp_create_user( $user_name, $user_pass, $user['user_email']['value'] );
-			
+
 					if ( !is_wp_error( $user_id ) ) {
 						$customer_entity_request = $wpdb->prepare( 'SELECT ID FROM ' . $wpdb->posts . ' WHERE post_type = %s AND post_author = %d', WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, $user_id);
 						$customer_entity_id = $wpdb->get_var( $customer_entity_request );
 						$return = array();
 						$return['integer']['ID'] = $user_id;
-						
+
 						foreach( $user as $meta_key => $meta_values ) {
 							update_user_meta( $user_id, $meta_key, $meta_values['value'] );
 							$wpdb->insert( WPSHOP_DBT_ATTRIBUTE_VALUES_PREFIX.strtolower( $meta_values['data_type'] ), array( 'entity_type_id' => $customer_type_id, 'attribute_id' => $meta_values['attribute_id'], 'entity_id' => $customer_entity_id, 'user_id' => $user_id, 'creation_date_value' => current_time( 'mysql', 0), 'language' => 'fr_FR', 'value' => $meta_values['value'] ) );
@@ -653,7 +647,7 @@ class wps_customer_ctr {
 				}
 			}
 		}
-		
+
 		return $return;
 	}
 }

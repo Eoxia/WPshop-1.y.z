@@ -1,12 +1,4 @@
-<?php
-/**
- * Plugin Name: WP Shop Shipping Mode
- * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/
- * Description: WP Shop Shipping Mode
- * Version: 0.1
- * Author: Eoxia
- * Author URI: http://eoxia.com/
- */
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
  * Cart rules bootstrap file
@@ -16,7 +8,7 @@
  * @subpackage modules
  *
  */
- 
+
 
 /** Template Global vars **/
 DEFINE('WPS_SHIPPING_MODE_DIR', basename(dirname(__FILE__)));
@@ -30,4 +22,3 @@ include( plugin_dir_path( __FILE__ ).'/controller/wps_shipping_mode_ajax_actions
 
 $wps_shipping_mode_ctr = new wps_shipping_mode_ctr();
 $wps_shipping_mode_ajax_actions = new wps_shipping_mode_ajax_actions();
-	

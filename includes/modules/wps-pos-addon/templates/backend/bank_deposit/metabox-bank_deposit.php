@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div>
 	<div class="fullSize">
 		<label for="fromdate" class="width-100p inline">

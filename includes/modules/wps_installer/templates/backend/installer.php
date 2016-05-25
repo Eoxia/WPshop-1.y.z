@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wpshop_full_page_tabs">
 	<h1><span class="wps-shop-icon" ></span><?php _e( 'Welcome on wpshop', 'wpshop'); ?></h1>
 	<h2><?php _e( 'Before you start to use WPShop you will need to configure some parameters', 'wpshop'); ?></h2>

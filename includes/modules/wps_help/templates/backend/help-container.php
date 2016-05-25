@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <script type="text/javascript">
 	//<![CDATA[
 	jQuery(document).ready( function($) {
@@ -12,6 +14,7 @@
 	        close: function() {
 	        	var data = {
 					action: "close_wps_help_window",
+					_wpnonce: '<?php echo wp_create_nonce( "wps_ajax_close_wps_help_window" ); ?>',
 					pointer_id : '<?php echo $help_id; ?>'
 				};
 				jQuery.post(ajaxurl, data, function(response) {}, 'json');

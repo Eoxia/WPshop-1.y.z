@@ -1,7 +1,9 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div><span class="wps-h2"><?php _e( 'Payment mode choice', 'wpshop' ); ?> :</span></div>
 <?php if( !empty($payment_modes) ) : ?>
 <?php $count_payment_mode = count( $payment_modes ); ?>
-<ul class="wps-itemList" id="wps-shipping-method-list-container">
+<ul class="wps-itemList" id="wps-shipping-method-list-container" data-nonce="<?php echo wp_create_nonce( 'wps_load_shipping_methods' ); ?>">
 	<?php foreach( $payment_modes as $payment_mode_id => $payment_mode ) : ?>
 		<?php if( $default_choice == $payment_mode_id ):
 			$class = 'wps-activ'; $checked = 'checked="checked"';

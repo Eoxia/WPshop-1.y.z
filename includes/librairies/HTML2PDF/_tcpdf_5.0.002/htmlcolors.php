@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 //============================================================+
 // File name   : htmlcolors.php
 // Begin       : 2002-04-09

@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Fichier du controlleur principal du module de création de produit rapide / Controller file for quick product creation
  *
@@ -20,7 +20,7 @@ class wpspos_product_quick_add {
 	public function __construct() {
 		/**	Affiche un formulaire permettant de créer un produit / Display a form allowing to add a new product	*/
 		add_action( 'wp_ajax_wpspos-product-quick-creation', array( $this, 'product_creation' ) );
-	//	add_action( 'wp_ajax_wpspos-product-quick-add-reload-attribute-list', array( $this, 'attribute_list_reload' ) );
+	//	add_action( 'wap_ajax_wpspos-product-quick-add-reload-attribute-list', array( $this, 'attribute_list_reload' ) );
 		add_action( 'wp_ajax_wpspos-product-quick-add', array( $this, 'create_product' ) );
 	}
 
@@ -37,7 +37,11 @@ class wpspos_product_quick_add {
 	 * AJAX - Charge le fomulaire d'ajout rapide d'un produit / Load the form for new product quick add
 	 */
 	function product_creation() {
-		check_ajax_referer( 'wps-product-quick-nonce', 'wps-nonce' );
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps-product-quick-nonce' ) )
+			wp_die();
+
 		require_once( wpshop_tools::get_template_part( WPSPOSPDTQUICK_DIR, WPSPOSPDTQUICK_TEMPLATES_MAIN_DIR, "backend", "product_creation" ) );
 		wp_die( );
 	}
@@ -46,7 +50,8 @@ class wpspos_product_quick_add {
 	 * AJAX - Recharge la liste des attributs du groupe sélectionné par l'administratuer pour la création du nouveau produit / Reload attribute list for the selected attribute set, choosen by administrator for new product creation
 	 */
 	function attribute_list_reload() {
-		$this->display_attribute( $_POST[ 'attribute_set' ] );
+		$attribute_id = !empty( $_POST['attribute_set'] ) ? (int) $_POST['attribute_set'] : 0;
+		$this->display_attribute( $attribute_id );
 		wp_die( );
 	}
 
@@ -54,6 +59,11 @@ class wpspos_product_quick_add {
 	 * AJAX - Création d'un nouveau produit / Create a new product
 	 */
 	function create_product() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'create_product' ) )
+			wp_die();
+
 		global $wpdb;
 		$response = array(
 			'status' => false,
@@ -61,11 +71,11 @@ class wpspos_product_quick_add {
 			'pid' => -1,
 		);
 
-		$post_title = ( !empty($_POST['post_title']) ) ? $_POST['post_title'] : -1;
-		$post_content = ( !empty($_POST['post_content']) ) ? $_POST['post_content'] : '';
-		$attributes = ( !empty($_POST['attribute']) ) ? $_POST['attribute'] : -1;
-		$id_attribute_set = ( !empty($_POST['wps-product-attribute-set']) ) ? $_POST['wps-product-attribute-set'] : -1;
-		
+		$post_title = ( !empty($_POST['post_title']) ) ? sanitize_text_field( $_POST['post_title'] ) : -1;
+		$post_content = ( !empty($_POST['post_content']) ) ? sanitize_text_field( $_POST['post_content'] ) : '';
+		$attributes = ( !empty($_POST['attribute']) ) ? (array)$_POST['attribute'] : array();
+		$id_attribute_set = ( !empty($_POST['wps-product-attribute-set']) ) ? (int)$_POST['wps-product-attribute-set'] : -1;
+
 		$post_type = WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT;
 		$attribute_set_list = wpshop_attributes_set::get_attribute_set_list_for_entity( wpshop_entities::get_entity_identifier_from_code( 'wpshop_product' ) );
 		foreach( $attribute_set_list as $attribute_set ) {
@@ -88,7 +98,7 @@ class wpspos_product_quick_add {
 				$data_to_save['wpshop_product_attribute'] = ( !empty($attributes) ) ? $attributes : array();
 				$data_to_save['user_ID'] = get_current_user_id();
 				$data_to_save['action'] = 'editpost';
-				
+
 				// Get current barcode
 				if(empty($data_to_save['wpshop_product_attribute']['varchar']['barcode'])) {
 					// Get current barcode
@@ -97,7 +107,7 @@ class wpspos_product_quick_add {
 					$barcode_value = wpshop_attributes::wpshop_att_val_func(array('pid' => $new_product_id, 'attid' => $attid));
 					$data_to_save['wpshop_product_attribute']['varchar']['barcode'] = $barcode_value;
 				}
-				
+
 				$response[ 'pid' ] = $new_product_id;
 				$response[ 'status' ] = false;
 				$response[ 'output' ] = __('Product created partially!', 'wpshop');

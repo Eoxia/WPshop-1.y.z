@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Products management method file
  *
@@ -139,13 +139,14 @@ class wpshop_orders {
 			}
 			if(!empty($order_postmeta['order_temporary_key'])){
 				$order_main_info .=  '<span class="dashicons dashicons-arrow-right"></span> <strong>'.__('Pre-order reference','wpshop').': </strong>'.$order_postmeta['order_temporary_key'].'<br/>';
-				$order_main_info .= '<a href="' .WPSHOP_TEMPLATES_URL . 'invoice.php?order_id=' . $_GET['post']. '&mode=pdf">' .__('Download the quotation', 'wpshop'). '</a><br />';
+				$post_ID = !empty( $_GET['post'] ) ? (int) $_GET['post'] : 0;
+				$order_main_info .= '<a href="' .admin_url( 'admin-post.php?action=wps_invoice&order_id=' . $post_ID . '&mode=pdf' ) . '">' .__('Download the quotation', 'wpshop'). '</a><br />';
 			}
 			if(!empty($order_postmeta['order_invoice_ref'])){
 				$sub_tpl_component = array();
 				$sub_tpl_component['ADMIN_ORDER_RECEIVED_PAYMENT_INVOICE_REF'] = $order_postmeta['order_invoice_ref'];
 				$sub_tpl_component['ADMIN_ORDER_PAYMENT_RECEIVED_LINE_CLASSES'] = '';
-				$sub_tpl_component['ADMIN_ORDER_INVOICE_DOWNLOAD_LINK'] = WPSHOP_TEMPLATES_URL . 'invoice.php?order_id=' . $order->ID;
+				$sub_tpl_component['ADMIN_ORDER_INVOICE_DOWNLOAD_LINK'] = admin_url( 'admin-post.php?action=wps_invoice&order_id=' . $order->ID );
 				$order_invoice_download = wpshop_display::display_template_element('wpshop_admin_order_payment_received_invoice_download_links', $sub_tpl_component, array(), 'admin');
 				$order_main_info .= '<span class="dashicons dashicons-arrow-right"></span> <strong>'. __('Invoice number','wpshop').': </strong>'.$order_postmeta['order_invoice_ref'].'<br/>' . $order_invoice_download . '';
 			}
@@ -174,16 +175,16 @@ class wpshop_orders {
 				<!-- <br/><input type="checkbox" name="notif_the_customer_sendsms" id="wpshop_order_notif_the_customer_sendsms_on_update" /> <label for="wpshop_order_nnotif_the_customer_sendsms_on_update" >'.__('Send a SMS to the customer', 'wpshop').'</label> -->
 			</div>';
 		}
-		
+
 		if( ( ( !empty($order_postmeta['cart_type']) && $order_postmeta['cart_type'] == 'quotation' ) || !empty( $order_postmeta['order_temporary_key'] ) ) && $order_postmeta['order_status'] != 'canceled' && (float) $order_postmeta['order_amount_to_pay_now'] != (float) 0 ) {
 			$tpl_component['ADMIN_ORDER_ACTIONS_LIST'] .= '<div class="wps-product-section">' . self::display_customer_pay_quotation( isset( $order_postmeta['pay_quotation'] ), $order->ID ) . '</div>';
 		}
-		
+
 		/*Add the button regarding the order status**/
 		if ( !empty($order_postmeta['order_status']) ) {
 			switch ( $order_postmeta['order_status'] ) {
 				case 'awaiting_payment':
-					$tpl_component['ADMIN_ORDER_ACTIONS_LIST'] .= '<div class="wps-product-section"><a role="button" class="wps-bton-second-mini-rounded send_direct_payment_link" href="#" >'.__('Send a payment link to customer', 'wpshop').'</a></div>';
+					$tpl_component['ADMIN_ORDER_ACTIONS_LIST'] .= '<div class="wps-product-section"><a data-nonce="' . wp_create_nonce( 'wps_send_direct_payment_link' ) . '" role="button" class="wps-bton-second-mini-rounded send_direct_payment_link" href="#" >'.__('Send a payment link to customer', 'wpshop').'</a></div>';
 					$tpl_component['ADMIN_ORDER_ACTIONS_LIST'] .= '<div class="wps-product-section"><button class="wps-bton-second-mini-rounded markAsCanceled order_'.$order->ID.'" >'.__('Cancel this order', 'wpshop').'</button><input type="hidden" id="markascanceled_order_hidden_indicator" name="markascanceled_order_hidden_indicator" /></div>';
 				break;
 				/*case 'completed' || 'shipped':
@@ -194,7 +195,7 @@ class wpshop_orders {
 
 			if ( empty($credit_meta) ) {
 				if( $order_postmeta['order_status'] == 'refunded') {
-					$tpl_component['ADMIN_ORDER_ACTIONS_LIST'] .= '<div class="wps-product-section wps_markAsRefunded_container">' .__('Credit Slip number', 'wpshop'). ' : <strong>'. ( (!empty($order_postmeta) && !empty($order_postmeta['order_payment']) && !empty($order_postmeta['order_payment']['refunded_action']) && !empty($order_postmeta['order_payment']['refunded_action']['credit_slip_ref']) ) ? '<a href="' .WPSHOP_TEMPLATES_URL. 'invoice.php?order_id=' .$order->ID. '&amp;invoice_ref=' .$order_postmeta['order_payment']['refunded_action']['credit_slip_ref'].'&credit_slip=ok" target="_blank">'.$order_postmeta['order_payment']['refunded_action']['credit_slip_ref'].'</a>' : '') .'</strong></div>';
+					$tpl_component['ADMIN_ORDER_ACTIONS_LIST'] .= '<div class="wps-product-section wps_markAsRefunded_container">' .__('Credit Slip number', 'wpshop'). ' : <strong>'. ( (!empty($order_postmeta) && !empty($order_postmeta['order_payment']) && !empty($order_postmeta['order_payment']['refunded_action']) && !empty($order_postmeta['order_payment']['refunded_action']['credit_slip_ref']) ) ? '<a href="' .admin_url( 'admin-post.php?action=wps_invoice&order_id=' .$order->ID. '&amp;invoice_ref=' .$order_postmeta['order_payment']['refunded_action']['credit_slip_ref'].'&credit_slip=ok' ). '" target="_blank">'.$order_postmeta['order_payment']['refunded_action']['credit_slip_ref'].'</a>' : '') .'</strong></div>';
 				}
 				else {
 					$tpl_component['ADMIN_ORDER_ACTIONS_LIST'] .= '<div class="wps-product-section wps_markAsRefunded_container" ><button class="wps-bton-second-mini-rounded markAsRefunded order_' .$order->ID. '">' .__('Refund this order', 'wpshop'). '</button><input type="hidden" id="markasrefunded_order_hidden_indicator" name="markasrefunded_order_hidden_indicator" /></div>';
@@ -477,17 +478,21 @@ class wpshop_orders {
 	}
 
 	public static function list_table_filters() {
-		if (isset($_GET['post_type'])) {
-			$post_type = $_GET['post_type'];
+		$post_type = !empty( $_GET['post_type'] ) ? sanitize_text_field( $_GET['post_type'] ) : '';
+		$entity_filter = !empty( $_GET['entity_filter'] ) ? sanitize_text_field( $_GET['entity_filter'] ) : '';
+		$entity_filter_btpf = !empty( $_GET['entity_filter_btpf'] ) ? sanitize_text_field( $_GET['entity_filter_btpf'] ) : '';
+		$entity_filter_btps = !empty( $_GET['entity_filter_btps'] ) ? sanitize_text_field( $_GET['entity_filter_btps'] ) : '';
+
+		if (isset($post_type)) {
 			if (post_type_exists($post_type) && ($post_type == WPSHOP_NEWTYPE_IDENTIFIER_ORDER)) {
 				$filter_possibilities = array();
 				$filter_possibilities['all'] = __('-- Select Filter --', 'wpshop');
 				$filter_possibilities['only_orders'] = __('List orders only', 'wpshop');
 				$filter_possibilities['quotations'] = __('List quotations only', 'wpshop');
 				$filter_possibilities['free_orders'] = __('List orders free', 'wpshop');
-				echo wpshop_form::form_input_select('entity_filter', 'entity_filter', $filter_possibilities, (!empty($_GET['entity_filter']) ? $_GET['entity_filter'] : ''), '', 'index');
-				$min = ( !empty($_GET['entity_filter_btpf']) && is_numeric($_GET['entity_filter_btpf']) ) ? $_GET['entity_filter_btpf'] : '';
-				$max = ( !empty($_GET['entity_filter_btps']) && is_numeric($_GET['entity_filter_btps']) ) ? $_GET['entity_filter_btps'] : '';
+				echo wpshop_form::form_input_select('entity_filter', 'entity_filter', $filter_possibilities, $entity_filter, '', 'index');
+				$min = $entity_filter_btpf;
+				$max = $entity_filter_btps;
 				echo ' <label for="entity_filter_btpf">'.__('Between two prices', 'wpshop').'</label> ';
 				echo wpshop_form::form_input('entity_filter_btpf', 'entity_filter_btpf', $min, 'text', 'placeholder="'.__('Minimum price', 'wpshop').'"', null);
 				echo wpshop_form::form_input('entity_filter_btps', 'entity_filter_btps', $max, 'text', 'placeholder="'.__('Maximum price', 'wpshop').'"', null);
@@ -497,10 +502,14 @@ class wpshop_orders {
 
 	public static function list_table_filter_parse_query($query) {
 		global $pagenow, $wpdb;
+		$post_type = !empty( $_GET['post_type'] ) ? sanitize_text_field( $_GET['post_type'] ) : '';
+		$entity_filter = !empty( $_GET['entity_filter'] ) ? sanitize_text_field( $_GET['entity_filter'] ) : '';
+		$entity_filter_btpf = !empty( $_GET['entity_filter_btpf'] ) ? sanitize_text_field( $_GET['entity_filter_btpf'] ) : '';
+		$entity_filter_btps = !empty( $_GET['entity_filter_btps'] ) ? sanitize_text_field( $_GET['entity_filter_btps'] ) : '';
 
-		if ( is_admin() && ($pagenow == 'edit.php') && !empty( $_GET['post_type'] ) && ( $_GET['post_type'] == WPSHOP_NEWTYPE_IDENTIFIER_ORDER ) && !empty( $_GET['entity_filter'] ) ) {
+		if ( is_admin() && ($pagenow == 'edit.php') && !empty( $post_type ) && ( $post_type == WPSHOP_NEWTYPE_IDENTIFIER_ORDER ) && !empty( $entity_filter ) ) {
 			$check = null;
-			switch ( $_GET['entity_filter'] ) {
+			switch ( $entity_filter ) {
 				case 'all':
 					$sql_query = $wpdb->prepare(
 						"SELECT ID
@@ -569,8 +578,8 @@ class wpshop_orders {
 					$min = 'minimum';
 					$max = 'maximum';
 				} else {
-					$min = ( !empty($_GET['entity_filter_btpf']) && is_numeric($_GET['entity_filter_btpf']) ) ? $_GET['entity_filter_btpf'] : 'minimum';
-					$max = ( !empty($_GET['entity_filter_btps']) && is_numeric($_GET['entity_filter_btps']) ) ? $_GET['entity_filter_btps'] : 'maximum';
+					$min = ( !empty($_GET['entity_filter_btpf']) && is_numeric($_GET['entity_filter_btpf']) ) ? sanitize_text_field( $_GET['entity_filter_btpf'] ) : 'minimum';
+					$max = ( !empty($_GET['entity_filter_btps']) && is_numeric($_GET['entity_filter_btps']) ) ? sanitize_text_field( $_GET['entity_filter_btps'] ) : 'maximum';
 				}
 				$results = $wpdb->get_results($sql_query);
 				$post_id_list = array();
@@ -651,9 +660,10 @@ class wpshop_orders {
 		return $output;
 	}
 	static function display_customer_pay_quotation( $state, $oid ) {
-		$btn = '<a role="button" class="wps-bton-' . ( ( $state ) ? 'third' : 'second' ) . '-mini-rounded quotation_is_payable_by_customer" href="#" >'.__('Customer can pay', 'wpshop').'</a>';
+		$btn = '<a role="button" data-nonce="' . wp_create_nonce( 'wps_quotation_is_payable_by_customer' ) . '" class="wps-bton-' . ( ( $state ) ? 'third' : 'second' ) . '-mini-rounded quotation_is_payable_by_customer" href="#" >'.__('Customer can pay', 'wpshop').'</a>';
 		if( $state ) {
-			$btn .= '<br><a href="' . admin_url() . 'admin-ajax.php?action=wps_checkout_quotation&order_id=' . $oid . '&is_link=link">' . __( 'Pay link', 'wpshop' ) . '</a>';
+			$url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wps_checkout_quotation&order_id=' . $oid . '&is_link=link' ), 'wps_checkout_quotation', '_wpnonce' );
+			$btn .= '<br><a href="' . $url . '">' . __( 'Pay link', 'wpshop' ) . '</a>';
 		}
 		return $btn;
 	}

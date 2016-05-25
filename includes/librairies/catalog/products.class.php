@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
 * Products management method file
 *
@@ -160,7 +160,7 @@ class wpshop_products {
 		$wp_rewrite->add_rewrite_tag('%' . WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT . '%', '([^/]+)', WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT . "=");*/
 	//	flush_rewrite_rules();
 	}
-	
+
 	public static function hidden_meta_boxes($hidden, $screen, $use_defaults) {
 		global $wpdb;
 		if ( WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT === $screen->post_type ) {
@@ -343,7 +343,7 @@ class wpshop_products {
 
 		return $content;
 	}
-	
+
 	/**
 	 * Output the content for related product metabox
 	 * @param object $post The current edited post
@@ -351,7 +351,7 @@ class wpshop_products {
 	 */
 	public static function provider_products_meta_box_content( $post ) {
 		$content = $existing_selection = '';
-	
+
 		if( !empty($post->ID) ) {
 			$providers_id = get_post_meta($post->ID, WPSHOP_PRODUCT_PROVIDER, true);
 			if( !empty($providers_id) && !empty($providers_id[0]) ) {
@@ -360,12 +360,12 @@ class wpshop_products {
 				}
 			}
 		}
-	
+
 		$content = '<p>' . __('Type the begin of a provider last name/first name in the field below to add', 'wpshop') . '</p>
 			<select name="provider_list[]" id="provider_list" class="ajax_chosen_select_provider_products" multiple >' . $existing_selection . '</select>
 			<input type="hidden" id="wpshop_ajax_search_element_type_provider_products" name="wpshop_ajax_search_element_type" value="' . WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS . '" />
 			<input type="hidden" id="wpshop_nonce_ajax_search_provider_products" name="wpshop_nonce_ajax_search" value="' . wp_create_nonce("wpshop_element_search") . '" />';
-	
+
 		return $content;
 	}
 
@@ -381,7 +381,7 @@ class wpshop_products {
 		$template_part = 'wpshop_duplicate_product';
 		$tpl_component = array();
 		$tpl_component['PRODUCT_ID'] = $post->ID;
-		$tpl_component['PRINT_PRODUCT_SHEET_LINK'] = WPSHOP_TEMPLATES_URL.'product_sheet.php?pid='.$post->ID;
+		$tpl_component['PRINT_PRODUCT_SHEET_LINK'] = admin_url( 'admin-post.php?action=wps_product_sheet&pid='.$post->ID );
 		/*
 		 * Build template
 		*/
@@ -532,7 +532,7 @@ class wpshop_products {
 							INNER JOIN {$wpdb->posts} AS P ON ( ( P.ID = ".$table_name.".entity_id ) AND ( P.post_status = 'publish' ) )
 							LEFT JOIN ".WPSHOP_DBT_ATTRIBUTE." AS ATT ON ATT.id = ".$table_name.".attribute_id
 							LEFT JOIN ".WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS." AS ATT_OPT ON ".$table_name.".value = ATT_OPT.id
-							WHERE ATT.code=%s AND ATT_OPT.value=%s", $attr_name, strtolower( __( $attr_value, 'wpshop' ) )
+							WHERE ATT.code=%s AND ( ATT_OPT.value=%s OR ATT_OPT.value=%s )", $attr_name, strtolower( __( $attr_value, 'wpshop' ) ), $attr_value
 						);
 						$data = $wpdb->get_results($query);
 					}
@@ -760,10 +760,10 @@ class wpshop_products {
 			unset($tpl_component);
 
 			if ( !empty( $atts) && !empty($atts['container']) && $atts['container'] == 'no') {
-				$string = $sorting.'<div class="wps-catalog-container wps-bloc-loader">'.$string.'</div>';
+				$string = $sorting.'<div data-nonce="' . wp_create_nonce( 'products_by_criteria' ) . '" class="wps-catalog-container wps-bloc-loader">'.$string.'</div>';
 			}
 			else {
-				$string = '<div class="wpshop_products_block">'.$sorting.'<div class="wps-catalog-container wps-bloc-loader">'.$string.'</div></div>';
+				$string = '<div class="wpshop_products_block">'.$sorting.'<div data-nonce="' . wp_create_nonce( 'products_by_criteria' ) . '" class="wps-catalog-container wps-bloc-loader">'.$string.'</div></div>';
 			}
 		}
 		else if ( empty($atts['no_result_message']) || ($atts['no_result_message'] != 'no') ) {
@@ -1146,7 +1146,7 @@ class wpshop_products {
 	 * @param string $product_search Optionnal Define a search term for request
 	 * @return object|string If $formated is set to true will display an html output with all product. Else return a wordpress database object with the product list
 	 */
-	function product_list($formated=false, $product_search=null) {
+	public static function product_list($formated=false, $product_search=null) {
 		global $wpdb;
 
 		$query_extra_params = $query_extra_params_value = '';
@@ -1183,7 +1183,7 @@ class wpshop_products {
 	function save_product_custom_informations( $post_id , $data_to_save = array() ) {
 		global $wpdb;
 
-		$data_to_save = ( !empty($data_to_save) ) ? $data_to_save : $_REQUEST;
+		$data_to_save = ( !empty($data_to_save) ) ? $data_to_save : (array) $_REQUEST;
 		// Apply a filter to extra actions
 		$data_to_save = apply_filters( 'wps_save_product_extra_filter', $data_to_save );
 
@@ -1328,7 +1328,7 @@ class wpshop_products {
 			}
 			else if ( $data_to_save['action'] != 'autosave') {
 				delete_post_meta($data_to_save['post_ID'], WPSHOP_PRODUCT_RELATED_PRODUCTS);
-			}			
+			}
 			/*	Update the provider list*/
 			if ( !empty($data_to_save['provider_list']) ) {
 				update_post_meta($data_to_save['post_ID'], WPSHOP_PRODUCT_PROVIDER, $data_to_save['provider_list']);
@@ -1644,7 +1644,7 @@ class wpshop_products {
 		$result_price_piloting = ( !empty($wpshop_price_piloting_option) && $wpshop_price_piloting_option == 'HT') ? $check_product_price['et'] : $check_product_price['ati'];
 		if ( $price_display && !( !empty( $catalog_options ) && ( !empty( $catalog_options[ 'wpshop_catalog_empty_price_behaviour' ] ) && $catalog_options[ 'wpshop_catalog_empty_price_behaviour' ] == 'yes' ) && $result_price_piloting == 0 ) ) {
 			$product_price_infos = wpshop_prices::get_product_price( $product, 'just_price_infos', 'mini_output' );
-			
+
 	 		if ( !empty($product_price_infos) ) {
 	 			$tpl_component_price = array();
 	 			/** Price piloting **/
@@ -2011,9 +2011,10 @@ class wpshop_products {
 			 */
 			$entity_type_id	= wpshop_entities::get_entity_identifier_from_code(WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT);
 			$language 		= WPSHOP_CURRENT_LOCALE;
+			$icl_post_language = !empty( $_REQUEST['icl_post_language'] ) ? sanitize_text_field( $_REQUEST['icl_post_language'] ) : '';
 
-			if ( !empty($_REQUEST['icl_post_language']) ) {
-				$query = $wpdb->prepare("SELECT locale FROM " . $wpdb->prefix . "icl_locale_map WHERE code = %s", $_REQUEST['icl_post_language']);
+			if ( !empty($icl_post_language) ) {
+				$query = $wpdb->prepare("SELECT locale FROM " . $wpdb->prefix . "icl_locale_map WHERE code = %s", $icl_post_language );
 				$language = $wpdb->get_var($query);
 			}
 
@@ -2635,7 +2636,7 @@ class wpshop_products {
 						}
 
 						$input_def['options_label']['original'] = true;
-						$input_def['option'] = ' class="wpshop_variation_selector_input' . ($is_required ? ' attribute_is_required_input attribute_is_required_input_' . $attribute_code . ' ' : '') . ( $attribute_db_definition->_display_informations_about_value == 'yes' ? ' wpshop_display_information_about_value' : '' ) . ' ' . (( is_admin() ) ? $attribute_db_definition->backend_css_class : $attribute_db_definition->frontend_css_class) . '" ';
+						$input_def['option'] = 'data-nonce="' . wp_create_nonce( 'wpshop_ajax_wpshop_variation_selection' ) . '" class="wpshop_variation_selector_input' . ($is_required ? ' attribute_is_required_input attribute_is_required_input_' . $attribute_code . ' ' : '') . ( $attribute_db_definition->_display_informations_about_value == 'yes' ? ' wpshop_display_information_about_value' : '' ) . ' ' . (( is_admin() ) ? $attribute_db_definition->backend_css_class : $attribute_db_definition->frontend_css_class) . '" ';
 						if ( !empty(  $real_possible_values ) ) {
 							$tpl_component = array();
 							$attribute_output_def['value'] = isset($head_wpshop_variation_definition['options']['attributes_default_value'][$attribute_code]) ? $head_wpshop_variation_definition['options']['attributes_default_value'][$attribute_code] : $input_def['value'];
@@ -2672,7 +2673,7 @@ class wpshop_products {
 					$attribute_output_def = wpshop_attributes::get_attribute_field_definition( $attribute_not_in_variation_but_user_defined, (is_array($head_wpshop_variation_definition) && isset($head_wpshop_variation_definition['options']['attributes_default_value'][$attribute_not_in_variation_but_user_defined->code]) ? $head_wpshop_variation_definition['options']['attributes_default_value'][$attribute_not_in_variation_but_user_defined->code] : 'Salut' ));
 
 					$tpl_component = array();
-					$attribute_output_def['option'] = ' class="wpshop_variation_selector_input' . ($is_required ? ' attribute_is_required_input attribute_is_required_input_' . $attribute_not_in_variation_but_user_defined->code : '') . ' ' . ( str_replace('"', '', str_replace('class="', '', $attribute_output_def['option'])) ) . ' ' . (( is_admin() ) ? $attribute_not_in_variation_but_user_defined->backend_css_class : $attribute_not_in_variation_but_user_defined->frontend_css_class) . '" ';
+					$attribute_output_def['option'] = 'data-nonce="' . wp_create_nonce( 'wpshop_ajax_wpshop_variation_selection' ) . '" class="wpshop_variation_selector_input' . ($is_required ? ' attribute_is_required_input attribute_is_required_input_' . $attribute_not_in_variation_but_user_defined->code : '') . ' ' . ( str_replace('"', '', str_replace('class="', '', $attribute_output_def['option'])) ) . ' ' . (( is_admin() ) ? $attribute_not_in_variation_but_user_defined->backend_css_class : $attribute_not_in_variation_but_user_defined->frontend_css_class) . '" ';
 					$tpl_component['VARIATION_INPUT'] = wpshop_form::check_input_type($attribute_output_def, WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION . '[free]') . $attribute_output_def['options'];
 					$tpl_component['VARIATION_LABEL'] = ($is_required ? '<span class="attribute_is_required attribute_is_required_' . $attribute_not_in_variation_but_user_defined->code . '" >' . stripslashes($attribute_not_in_variation_but_user_defined->frontend_label) . '</span> <span class="required" >*</span>' : stripslashes($attribute_not_in_variation_but_user_defined->frontend_label) );
 					$tpl_component['VARIATION_CODE'] = $attribute_not_in_variation_but_user_defined->code;
@@ -3413,7 +3414,7 @@ class wpshop_products {
 		$result = explode('__', $ID);
 		return end($result);
 	}
-	
+
 	/**
 	 * Update all variations definitions who not modified
 	 * @param array $new_value

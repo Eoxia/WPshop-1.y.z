@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wrap wps-pos-dashboard-wrap">
 	<div class="wps-pos-dahboard-header" >
 		<h2><?php _e('WP-Shop POS Software', 'wps-pos-i18n'); ?> <a class="add-new-h2" href="<?php echo admin_url( 'admin.php?page=wps-pos&new_order=yes' ); ?>"><?php _e('Create a new order', 'wps-pos-i18n')?></a></h2>

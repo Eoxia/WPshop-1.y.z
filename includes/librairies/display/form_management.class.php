@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 
 /*	Check if file is include. No direct access possible with file url	*/
 if ( !defined( 'WPSHOP_VERSION' ) ) {
@@ -77,7 +77,7 @@ class wpshop_form_management {
 		
 		$user_id = empty( $user ) ? get_current_user_id() : $user;
 		foreach($array as $attribute_id => $attribute_definition):
-			$values_array = !empty($values) ? $values : $_POST['attribute'];
+			$values_array = !empty($values) ? $values : (array) $_POST['attribute'];
 			$value = ( !empty($values_array[$attribute_definition['data_type']][$attribute_definition['name']]) ) ? $values_array[$attribute_definition['data_type']][$attribute_definition['name']] : '';
 		
 			// Si le champ est obligatoire

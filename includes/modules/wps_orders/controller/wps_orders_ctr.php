@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 class wps_orders_ctr {
 	/** Define the main directory containing the template for the current plugin
 	 * @var string
@@ -26,11 +26,11 @@ class wps_orders_ctr {
 
 
 			/** Ajax Actions **/
-			add_action( 'wp_ajax_wps_add_product_to_quotation', array( &$this, 'wps_add_product_to_quotation') );
-// 			add_action( 'wp_ajax_wps_change_product_list', array( &$this, 'wps_change_product_list') );
+			// add_action( 'wp_ajax_wps_add_product_to_quotation', array( &$this, 'wps_add_product_to_quotation') );
+// 			add_action( 'wap_ajax_wps_change_product_list', array( &$this, 'wps_change_product_list') );
 
-// 			add_action( 'wp_ajax_wps_orders_load_variations_container', array( &$this, 'wps_orders_load_variations_container') );
-// 			add_action( 'wp_ajax_wps_order_refresh_in_admin', array( &$this, 'wps_order_refresh_in_admin') );
+// 			add_action( 'wap_ajax_wps_orders_load_variations_container', array( &$this, 'wps_orders_load_variations_container') );
+// 			add_action( 'wap_ajax_wps_order_refresh_in_admin', array( &$this, 'wps_order_refresh_in_admin') );
 
 			add_action( 'wp_ajax_wps_orders_load_details', array( $this, 'wps_orders_load_details') );
 
@@ -43,6 +43,9 @@ class wps_orders_ctr {
 			/** For pay billing */
 			add_action( 'wp_ajax_wps_checkout_quotation', array( $this, 'wps_checkout_quotation' ) );
 			add_action( 'wp_ajax_nopriv_wps_checkout_quotation', array( $this, 'wps_checkout_quotation_no_login' ) );
+
+			/** Invoice Page **/
+			add_action( 'admin_post_wps_invoice', array( $this, 'wps_invoice_output' ) );
 
 		}
 
@@ -265,11 +268,63 @@ class wps_orders_ctr {
 			return $item;
 		}
 
+		/**
+		 *	Output invoice
+		 */
+		function wps_invoice_output() {
+			$order_id = (!empty($_GET['order_id'])) ? (int) $_GET['order_id'] : null;
+			$invoice_ref = (!empty($_GET['invoice_ref'])) ? sanitize_text_field($_GET['invoice_ref']) : null;
+			$mode = (!empty($_GET['mode'])) ? sanitize_text_field($_GET['mode']) : 'html';
+			$is_credit_slip = (!empty($_GET['credit_slip'])) ? sanitize_text_field($_GET['credit_slip']) : null;
+			$user_id = get_current_user_id();
+			if ( !empty($order_id) && $user_id != 0 ) {
+				/**	Order reading	*/
+				$order_postmeta = get_post_meta($order_id, '_order_postmeta', true);
+
+				/**	Start invoice display	*/
+				if ( !empty( $is_credit_slip) ) {
+					$html_content =  wpshop_modules_billing::generate_html_invoice($order_id, $invoice_ref, 'credit_slip');
+				}
+				else {
+					$html_content =  wpshop_modules_billing::generate_html_invoice($order_id, $invoice_ref);
+
+				}
+
+				if ( $mode == 'pdf') {
+					require_once(WPSHOP_LIBRAIRIES_DIR.'HTML2PDF/html2pdf.class.php');
+					try {
+						//$html_content = wpshop_display::display_template_element('invoice_print_page_content_css', array(), array(), 'common') . '<page>' . $html_content . '</page>';
+						$html_content = wpshop_display::display_template_element('invoice_page_content_css', array(), array(), 'common') . '<page>' . $html_content . '</page>';
+						$html2pdf = new HTML2PDF('P', 'A4', 'fr');
+
+						$html2pdf->setDefaultFont('Arial');
+						$html2pdf->writeHTML($html_content);
+
+						$html2pdf->Output('order_' .$order_id. '.pdf', 'D');
+					}
+					catch (HTML2PDF_exception $e) {
+						echo $e;
+						exit;
+					}
+				}
+				else {
+					$order_invoice_ref = ( !empty($order_postmeta['order_invoice_ref']) ) ? $order_postmeta['order_invoice_ref'] : '';
+					$tpl_component['INVOICE_CSS'] =  wpshop_display::display_template_element('invoice_page_content_css', array(), array(), 'common');
+					$tpl_component['INVOICE_MAIN_PAGE'] = $html_content;
+					$tpl_component['INVOICE_TITLE_PAGE'] = sprintf( __('Invoice %1$s for order %3$s (#%2$s)', 'wpshop'), $order_invoice_ref, $order_id, $order_postmeta['order_key']);
+					echo wpshop_display::display_template_element('invoice_page', $tpl_component, array(), 'common');
+				}
+			}
+			die();
+		}
+
 
 		/**
 		 * AJAX - Load order details in customer account
 		 */
 		function wps_orders_load_details() {
+			check_ajax_referer( 'wps_orders_load_details' );
+
 			$order_id = ( !empty($_POST['order_id']) ) ? wpshop_tools::varSanitizer( $_POST['order_id'] ) : '';
 			$user_id = get_current_user_id();
 			$status = false; $result = '';
@@ -290,6 +345,11 @@ class wps_orders_ctr {
 		 * AJAX - Choose customer to create order
 		 */
 		function wps_order_choose_customer() {
+			$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+			if ( !wp_verify_nonce( $_wpnonce, 'wps_order_choose_customer' ) )
+				wp_die();
+
 			$status = false; $billing_data = $shipping_data = '';
 			$customer_id = ( !empty($_POST['customer_id']) ) ? intval( $_POST['customer_id'] ): null;
 			if( !empty($customer_id) ) {
@@ -339,10 +399,15 @@ class wps_orders_ctr {
 		 * AJAX - Delete order by order_id
 		 */
 		public function wps_delete_order() {
+			$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+			if ( !wp_verify_nonce( $_wpnonce, 'wps_delete_order' ) )
+				wp_die();
+
 			$status = false;
 			$output = '';
-			if( $_POST['order_id'] ) {
-				$order_id = $_POST['order_id'];
+			$order_id = !empty( $_POST['order_id'] ) ? (int) $_POST['order_id'] : 0;
+			if( $order_id ) {
 				$order_meta = get_post_meta( $order_id, '_order_postmeta', true );
 				$wps_credit = new wps_credit();
 				$wps_credit->create_an_credit( $order_id );
@@ -364,12 +429,22 @@ class wps_orders_ctr {
 		 * AJAX - Pay billing
 		 */
 		public function wps_checkout_quotation() {
+			$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+			if ( !wp_verify_nonce( $_wpnonce, 'wps_checkout_quotation' ) )
+				wp_die();
+
 			$status = true;
-			if( !empty( $_REQUEST['order_id'] ) ) {
-				$pay_quotation = self::pay_quotation( $_REQUEST['order_id'] );
+			$order_id = !empty( $_REQUEST['order_id'] ) ? (int) $_REQUEST['order_id'] : 0;
+
+			if( !empty( $order_id ) ) {
+				$pay_quotation = self::pay_quotation( $order_id );
 				$status = $pay_quotation['status'];
 			}
-			if( !empty( $_REQUEST['is_link'] ) ) {
+
+			$is_link = !empty( $_REQUEST['is_link'] ) ? sanitize_text_field( $_REQUEST['is_link'] ) : '';
+
+			if( !empty( $is_link ) ) {
 				wp_redirect( $pay_quotation['permalink'] );
 				exit();
 			} else {
@@ -378,7 +453,13 @@ class wps_orders_ctr {
 			}
 		}
 		public function wps_checkout_quotation_no_login() {
-			wp_redirect( home_url('/wp-login.php') . '?redirect_to=' . urlencode( admin_url() . 'admin-ajax.php?action=wps_checkout_quotation&order_id=' . $_REQUEST['order_id'] . '&is_link=link' ) );
+			$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+			if ( !wp_verify_nonce( $_wpnonce, 'wps_checkout_quotation' ) )
+				wp_die();
+
+			$order_id = !empty( $_REQUEST['order_id'] ) ? (int) $_REQUEST['order_id'] : 0;
+			wp_redirect( home_url('/wp-login.php') . '?redirect_to=' . urlencode( admin_url() . 'admin-ajax.php?action=wps_checkout_quotation&order_id=' . $order_id . '&is_link=link' ) );
 			exit();
 		}
 }

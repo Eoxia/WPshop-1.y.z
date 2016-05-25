@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 class wps_message_ctr {
 	/** Define the main directory containing the template for the current plugin
 	 * @var string
@@ -9,7 +9,7 @@ class wps_message_ctr {
 	 * @var string
 	 */
 	private $plugin_dirname = WPS_MESSAGE_DIR;
-	
+
 	public static $mails_display = 5;
 
 	function __construct() {
@@ -595,9 +595,15 @@ class wps_message_ctr {
 	 * Récupères le contenu du message
 	 */
 	public function get_content_message() {
-		global $wpdb;
+		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
-		$result = $wpdb->get_results($wpdb->prepare('SELECT meta_value FROM ' . $wpdb->postmeta . ' WHERE meta_id=%d', array($_GET['meta_id'])));
+		if ( !wp_verify_nonce( $_wpnonce, 'get_content_message' ) )
+			wp_die();
+
+		global $wpdb;
+		$meta_id = (int)$_GET['meta_id'];
+
+		$result = $wpdb->get_results($wpdb->prepare('SELECT meta_value FROM ' . $wpdb->postmeta . ' WHERE meta_id=%d', array(($meta_id))));
 		$result = unserialize($result[0]->meta_value);
 		$result = $result[0]['mess_message'];
 

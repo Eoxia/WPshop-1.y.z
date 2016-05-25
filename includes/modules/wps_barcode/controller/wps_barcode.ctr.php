@@ -1,23 +1,24 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 class wps_barcode {
 	public function __construct() {
 		global $post_ID;
-		
+
 		add_action( 'admin_init', array($this, 'add_scripts') );
 		$this->install();
 		add_action( 'save_post', array($this, 'insert_barcode' ) );
 	}
-	
+
 	/**
 	 * Install default configuration in database if not present
 	 */
 	public function install() {
 		global $table_prefix, $wpdb;
-		
+
 		/*Create config informations*/
 		$conf = get_option('wps_barcode');
-		
+
 		if ( empty($conf) ) {
+			$conf['generate_barcode'] = false;
 			$conf['type'] = 'internal';
 			$conf['internal_client'] = '040';
 			$conf['internal_provider'] = '041';
@@ -31,14 +32,14 @@ class wps_barcode {
 
 			$conf['normal_country_code'] = '320';
 			$conf['normal_enterprise_code'] = '0001';
-			
+
 			add_option('wps_barcode', $conf);
-			
+
 			/*Adding barcode for existing products*/
 			$posts = get_posts( array('posts_per_page' => -1 ,'post_type' => 'wpshop_product'));
 			foreach ( $posts as $post ) {
 				$meta = get_post_meta($post->ID);
-				
+
 				$attr = wpshop_attributes_set::getAttributeSetDetails($meta['_wpshop_product_attribute_set_id']);
 				$output_order = array();
 
@@ -50,7 +51,7 @@ class wps_barcode {
 									as $position => $attribute_def) {
 								if ( !empty($attribute_def->code)
 										AND $attribute_def->code === 'barcode') {
-									
+
 									$types_with_barcode = array(
 											WPSHOP_IDENTIFIER_PRODUCT,
 											WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT,
@@ -58,22 +59,22 @@ class wps_barcode {
 											WPSHOP_NEWTYPE_IDENTIFIER_COUPON,
 											WPSHOP_NEWTYPE_IDENTIFIER_ORDER,
 									);
-									
+
 									if ( !empty( $post->post_type ) &&
 											in_array( $post->post_type,
 											$types_with_barcode ) ) {
-											
+
 										$ref = '';
-											
+
 										if ( strlen($post->ID) < 5 ) {
 											$length = 5-strlen($post->ID);
 											for ($i = 0; $i < $length; $i++) {
 												$ref .= '0';
 											}
 										}
-											
+
 										$ref .= strval($post->ID);
-											
+
 										if ( $conf['type'] === 'normal' ) {
 											$array['normal'] = array('country' =>
 													$conf['normal_country_code'],
@@ -83,7 +84,7 @@ class wps_barcode {
 										else if ( $conf['type'] === 'internal' ) {
 											$pDate = new DateTime($post->post_date);
 											$date = $pDate->format('my');
-									
+
 											if ($post->post_type === WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT ||
 													$post->post_type === WPSHOP_IDENTIFIER_PRODUCT) {
 												$type = $conf['internal_product'];
@@ -97,12 +98,12 @@ class wps_barcode {
 											else {
 												$type = '000';
 											}
-									
+
 											$array['internal'] = array('type' => $type,
 													'date' => $date,
 													'ID' => $ref);
 										}
-											
+
 										$barcode = $this->wps_generate_barcode($array);
 										$data = array('entity_type_id' => 4,
 												'attribute_id' => '12',
@@ -110,8 +111,8 @@ class wps_barcode {
 												'user_id' => $post->post_author,
 												'value' => $barcode,
 												'creation_date_value' => date( 'Y-m-d H:i:s' ));
-										
-										
+
+
 										$query = $wpdb->prepare( "
 											SELECT *
 											FROM " . WPSHOP_DBT_ATTRIBUTE_VALUES_VARCHAR . "
@@ -122,7 +123,7 @@ class wps_barcode {
 													WHERE code = %s
 												)" , $post->ID, 'barcode' );
 											$result = $wpdb->get_results( $query, ARRAY_A );
-										
+
 										if ( empty($result) ) {
 											$wpdb->insert($table_prefix.
 													'wpshop__attribute_value_varchar', $data);
@@ -137,7 +138,7 @@ class wps_barcode {
 					}
 				}
 			}
-			
+
 			/*Adding barcode for existing coupon*/
 			$posts = get_posts( array('posts_per_page' => -1 ,'post_type' => 'wpshop_shop_coupon') );
 			foreach ( $posts as $post ) {
@@ -152,14 +153,14 @@ class wps_barcode {
 					else if ( $conf['type'] === 'internal' ) {
 						$pDate = new DateTime($post->post_date);
 						$date = $pDate->format('my');
-							
+
 						if ($post->post_type === WPSHOP_NEWTYPE_IDENTIFIER_COUPON) {
 							$type = $conf['internal_coupons'];
 						}
 						else {
 							$type = '000';
 						}
-							
+
 						$ref = '';
 						var_dump($post->ID);
 						if ( strlen($post->ID) < 5 ) {
@@ -168,7 +169,7 @@ class wps_barcode {
 								$ref .= '0';
 							}
 						}
-							
+
 						$ref .= strval($post->ID);
 						$array['internal'] = array('type' => $type,
 								'date' => $date,
@@ -180,14 +181,14 @@ class wps_barcode {
 			}
 		}
 	}
-	
+
 	/**
 	 * Verifty post identifier and run a barcode generator
 	 * @param string $post_ID Ident of post
 	 */
 	public function insert_barcode( $post_ID ) {
 		global $wpdb;
-		
+
 		$types_with_barcode = array(
 			WPSHOP_IDENTIFIER_PRODUCT,
 			WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT,
@@ -195,25 +196,25 @@ class wps_barcode {
 			WPSHOP_NEWTYPE_IDENTIFIER_COUPON,
 			WPSHOP_NEWTYPE_IDENTIFIER_ORDER,
 		);
-		
+
 		$post = get_post( $post_ID );
-		
+
 		/** Si c'est un type qui est dans le tableau $types_with_barcode */
 		if ( !empty( $post->post_type ) && in_array( $post->post_type,
 				$types_with_barcode ) ) {
-			
+
 			$conf = get_option('wps_barcode');
 			$ref = '';
-			
+
 			if ( strlen($post_ID) < 5 ) {
 				$length = 5-strlen($post_ID);
 				for ($i = 0; $i < $length; $i++) {
 					$ref .= '0';
 				}
 			}
-					
+
 			$ref .= strval($post_ID);
-			
+
 			if ( $conf['type'] === 'normal' ) {
 				$array['normal'] = array(
 					'country' 		=> $conf['normal_country_code'],
@@ -224,7 +225,7 @@ class wps_barcode {
 			else if ( $conf['type'] === 'internal' ) {
 				$pDate = new DateTime($post->post_date);
 				$date = $pDate->format('my');
-				
+
 				if ($post->post_type === WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT || $post->post_type === WPSHOP_IDENTIFIER_PRODUCT) {
 					$type = $conf['internal_product'];
 				}
@@ -237,24 +238,25 @@ class wps_barcode {
 				else {
 					$type = '000';
 				}
-				
+
 				$array['internal'] = array(
-					'type' => $type, 
+					'type' => $type,
 					'date' => $date,
 					'ID' => $ref
 				);
 			}
-			
+
 			$barcode = $this->wps_generate_barcode($array);
 			/** For add a product */
-			if (  isset($_REQUEST['wpshop_product_attribute']['varchar']['barcode']) ) {
-				if ($_REQUEST['wpshop_product_attribute']['varchar']['barcode'] !== '') {
+			$barcode = !empty( $_REQUEST['wpshop_product_attribute']['varchar']['barcode'] ) ? sanitize_text_field( $_REQUEST['wpshop_product_attribute']['varchar']['barcode'] ) : '';
+			if (  isset($barcode) ) {
+				if ($barcode !== '') {
 					wpeologs_ctr::log_datas_in_files( 'wps_barcode',
 					array(
 					'object_id' => $post_ID,
-					'message' => sprintf( __('Change barcode: %s replacing %s for %s object ID', 'wps_barcode'), '<b>'.$_REQUEST['wpshop_product_attribute']['varchar']['barcode'].'</b>', '<b>'.$barcode.'</b>', '<b>'.$post_ID.'</b>') ), 0);
-				
-					$barcode = $_REQUEST['wpshop_product_attribute']['varchar']['barcode'];
+					'message' => sprintf( __('Change barcode: %s replacing %s for %s object ID', 'wps_barcode'), '<b>'.sanitize_text_field( $_REQUEST['wpshop_product_attribute']['varchar']['barcode'] ).'</b>', '<b>'.$barcode.'</b>', '<b>'.$post_ID.'</b>') ), 0);
+
+					$barcode = sanitize_text_field( $_REQUEST['wpshop_product_attribute']['varchar']['barcode'] );
 				}
 				else {
 					wpeologs_ctr::log_datas_in_files( 'wps_barcode',
@@ -262,8 +264,8 @@ class wps_barcode {
 						'object_id' => $post_ID,
 						'message' => sprintf( __('Adding barcode: %s for %s object ID', 'wps_barcode'), '<b>'.$barcode.'</b>', '<b>'.$post_ID.'</b>') ),
 					0);
-				
-					$_REQUEST['wpshop_product_attribute']['varchar']['barcode'] = $barcode;
+
+					// $_REQUEST['wpshop_product_attribute']['varchar']['barcode'] = $barcode;
 				}
 			}
 			else {
@@ -273,7 +275,7 @@ class wps_barcode {
 			}
 		}
 	}
-	
+
 	/**
 	 * Adding JQuery scripts
 	 */
@@ -288,7 +290,7 @@ class wps_barcode {
 	 * @param string $post_type Constant identifier of post
 	 * @param string $post_date Date of creation post
 	 * @param string $post_ID Ident of post
-	 * @return string Number code of barcode 
+	 * @return string Number code of barcode
 	 */
 	//private function wps_generate_barcode($post_type, $post_date, $post_ID) {
 	private function wps_generate_barcode($array) {
@@ -297,38 +299,38 @@ class wps_barcode {
 		$code = '';
 		$ref = '';
 		$barcode = new wps_barcodegen;
-		
+
 		$conf = get_option('wps_barcode');
-		
+
 		if ( array_key_exists('normal', $array) ) {
 			$code .= $array['normal']['country'];
 			$code .= $array['normal']['enterprise'];
 			$code .= $array['normal']['ID'];
-			
+
 			$id = $array['normal']['ID'];
-			
+
 		}
 		else if ( array_key_exists('internal', $array) ) {
 			$code.= $array['internal']['type'];
 			$code .= $array['internal']['date'];
 			$code .= $array['internal']['ID'];
-			
+
 			$id = $array['internal']['ID'];
 		}
-		
+
 		$gencode = $barcode->checksum($code);
-		
+
 		$barcode->writeLog( sprintf( __("Checksum generate: %s from %s <br />",
 		'wps_barcode'), '<b>'.$gencode.'</b>',
 		'<b>'.$code.'</b>') );
-		
+
 		$message = sprintf( __("Log generated by wps_barcodegen for add/update product: <br /> %s",
 				'wps_barcode'), $barcode->getLog() );
-		
+
 		if ( class_exists('wpeologs_ctr') ) {
 			wpeologs_ctr::log_datas_in_files( 'wps_barcode', array('object_id' => $id, 'message' => $message), 0);
 		}
-			
+
 		return $gencode;
 	}
 }

@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <!-- BOX EXPORTS -->
 <div class="postbox">
 	<h3 class="hndle"><span class="dashicons dashicons-download"></span> <span><?php _e('Exports CSV', 'wps_export'); ?></span></h3>

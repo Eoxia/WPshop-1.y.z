@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wps-cart-cartouche">
 	<div class="wps-cart-message">
 		<?php if( $cart_type != 'admin-panel' ) : ?>
@@ -8,7 +10,7 @@
 				<?php if( !$account_origin ) :
 							echo do_shortcode('[wps_apply_coupon]');
 						else : ?>
-					<button id="<?php echo $oid; ?>" class="wps-bton-first-mini-rounded make_order_again"><?php _e( 'Make this order again', 'wpshop'); ?></button>
+					<button id="<?php echo $oid; ?>" class="wps-bton-first-mini-rounded make_order_again" data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_restart_the_order' ); ?>"><?php _e( 'Make this order again', 'wpshop'); ?></button>
 				<?php endif; ?>
 				<?php if( !empty($tracking) ) : ?>
 					<p><br />
@@ -28,7 +30,7 @@
 			<?php endif; ?>
 		<?php endif; ?>
 	</div><!-- wps-cart-message -->
-	<div class="wps-cart-total">		
+	<div class="wps-cart-total">
 		<?php $shipping_price_from = get_option( 'wpshop_shipping_cost_from' ); ?>
 
 		<!--	Recap shipping	-->
@@ -98,11 +100,11 @@
 				endif;
 		endforeach; ?>
 		<?php endif; ?>
-			<?php if( $cart_type == 'admin-panel' ) : ?>
+			<?php if( !empty($cart_content['order_discount_value']) || ( $cart_type == 'admin-panel' ) ) : ?>
 				<p>
 					<?php _e( 'Discount', 'wpshop'); ?>
 					<span class="wps-alignRight">
-						<?php if( empty( $cart_content['order_status'] ) || $cart_content['order_status'] == 'awaiting_payment' || ( ( !empty( $cart_content['cart_type'] ) && $cart_content['cart_type'] == 'quotation' ) && $cart_content['order_status'] != 'completed' ) ) : ?>
+						<?php if( ( $cart_type == 'admin-panel' ) && ( empty( $cart_content['order_status'] ) || $cart_content['order_status'] == 'awaiting_payment' || ( ( !empty( $cart_content['cart_type'] ) && $cart_content['cart_type'] == 'quotation' ) && $cart_content['order_status'] != 'completed' ) ) ) : ?>
 							<span class="wps-form-group"><span class="wps-form"><input type="text" id="wps-orders-discount-value" size="5" style="text-align : right" value="<?php echo ( !empty($cart_content['order_discount_value']) ) ? $cart_content['order_discount_value'] : ''; ?>"/></span></span>
 						<?php else : ?>
 							<?php if( !empty($cart_content['order_discount_value']) ) : ?>
@@ -113,7 +115,7 @@
 						<?php endif; ?>
 					</span>
 				</p>
-				<?php if( empty( $cart_content['order_status'] ) || $cart_content['order_status'] == 'awaiting_payment' || ( ( !empty( $cart_content['cart_type'] ) && $cart_content['cart_type'] == 'quotation' ) && $cart_content['order_status'] != 'completed' ) ) : ?>
+				<?php if( ( $cart_type == 'admin-panel' ) && ( empty( $cart_content['order_status'] ) || $cart_content['order_status'] == 'awaiting_payment' || ( ( !empty( $cart_content['cart_type'] ) && $cart_content['cart_type'] == 'quotation' ) && $cart_content['order_status'] != 'completed' ) ) ) : ?>
 					<p>
 						<?php _e( 'Discount type', 'wpshop'); ?>
 						<span class="wps-alignRight">
@@ -165,18 +167,18 @@
 				<?php else: ?>
 				<p class="wps-hightlight"><?php _e( 'Total ATI', 'wpshop'); ?><span class="wps-alignRight"><strong><?php echo wpshop_tools::formate_number( $total_ati ); ?></strong> <?php echo $currency; ?></span></p>
 				<?php endif; ?>
-			<?php endif; ?>		
+			<?php endif; ?>
 	</div><!-- wps-cart-total -->
 </div><!-- wps-cart-cartouche -->
 
 <?php if ( empty($cart_type) || ( !empty($cart_type) && $cart_type != 'summary' && $cart_type != 'admin-panel')  ) : ?>
 <div class="wps-checkout-actions">
-	<button class="wps-bton-second emptyCart"><?php _e( 'Empty the cart', 'wpshop' ); ?></button>
+	<button data-nonce="<?php echo wp_create_nonce( 'wps_empty_cart' ); ?>" class="wps-bton-second emptyCart"><?php _e( 'Empty the cart', 'wpshop' ); ?></button>
 	<?php if( !empty( $_SESSION) && !empty($_SESSION['cart']) && !empty($_SESSION['cart']['cart_type']) && $_SESSION['cart']['cart_type'] == 'quotation' ) : ?>
-		<button class="wps-bton-first" id="wps-cart-order-action"><?php _e( 'Validate my quotation', 'wpshop' ); ?></button>
+		<button class="wps-bton-first" data-nonce="<?php echo wp_create_nonce( 'wps_cart_pass_to_step_two' ); ?>" id="wps-cart-order-action"><?php _e( 'Validate my quotation', 'wpshop' ); ?></button>
 	<?php else : ?>
-		<button class="wps-bton-first" id="wps-cart-order-action"><?php _e( 'Order', 'wpshop' ); ?></button>
-	<?php endif; ?>	
+		<button class="wps-bton-first" data-nonce="<?php echo wp_create_nonce( 'wps_cart_pass_to_step_two' ); ?>" id="wps-cart-order-action"><?php _e( 'Order', 'wpshop' ); ?></button>
+	<?php endif; ?>
 </div>
 <div class="wps-cart-notices">
 	<span class="wps-mini-cart-free-shipping-alert">
@@ -186,7 +188,7 @@
 <?php endif; ?>
 
 <?php if( !empty($cart_type) && $cart_type == 'admin-panel' && ( empty( $cart_content['order_status'] ) || $cart_content['order_status'] == 'awaiting_payment' || ( ( !empty( $cart_content['cart_type'] ) && $cart_content['cart_type'] == 'quotation' ) && $cart_content['order_status'] != 'completed' ) ) ) : ?>
-	<button class="wps-bton-second-rounded alignRight" id="wps-orders-update-cart-informations">
+	<button class="wps-bton-second-rounded alignRight" data-nonce="<?php echo wp_create_nonce( 'wps_orders_update_cart_informations' ); ?>" id="wps-orders-update-cart-informations">
 		<i class="dashicons dashicons-update"></i>
 		<?php _e( 'Update order informations', 'wpshop'); ?>
 	</button>

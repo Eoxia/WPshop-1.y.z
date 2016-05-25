@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Main controller file for product mass modification module
  *
@@ -305,11 +305,18 @@ class wpshop_tools {
 	 * @return array The different element send by request method
 	 */
 	public static function getMethode(){
+		$request_method = null;
 		if ($_SERVER["REQUEST_METHOD"] == "GET")
-			return $_GET;
+			$request_method = (array)$_GET;
 		if ($_SERVER["REQUEST_METHOD"] == "POST")
-			return $_POST;
-		die ('Invalid REQUEST_METHOD (not GET, not POST).');
+			$request_method = (array)$_POST;
+
+		if ( null !== $request_method ) {
+			die ('Invalid REQUEST_METHOD (not GET, not POST).');
+		}
+		else {
+			return $request_method;
+		}
 	}
 
 	/**

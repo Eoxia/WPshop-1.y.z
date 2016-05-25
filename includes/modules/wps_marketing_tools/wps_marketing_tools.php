@@ -1,12 +1,4 @@
-<?php
-/**
- * Plugin Name: WPSHOP MArketing tools
- * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/
- * Description : Group all WPShop marketing tools
- * Version: 0.1
- * Author: Eoxia
- * Author URI: http://eoxia.com/
- */
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
  * @author ALLEGRE Jérôme - Eoxia dev team <dev@eoxia.com>

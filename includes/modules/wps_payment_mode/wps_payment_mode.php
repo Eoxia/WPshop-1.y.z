@@ -1,13 +1,4 @@
-<?php
-/**
- * Plugin Name: WP Shop Payment Mode
- * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/
- * Description: WPShop Payment Mode
- * Version: 0.1
- * Author: Eoxia
- * Author URI: http://eoxia.com/
- */
-
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * WPShop Payment Mode bootstrap file
  * @author Jérôme ALLEGRE - Eoxia dev team <dev@eoxia.com>
@@ -17,9 +8,6 @@
  *
  */
 
-if ( !defined( 'WPSHOP_VERSION' ) ) {
-	die( __("You are not allowed to use this service.", 'wpshop') );
-}
 if ( !class_exists("wps_payment_mode") ) {
 
 	/** Template Global vars **/

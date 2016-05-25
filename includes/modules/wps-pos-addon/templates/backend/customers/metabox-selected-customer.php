@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wpspos-customer-selected" >
 	<?php if ( !empty( $customer_infos ) ) : ?>
 		<div class="customer_info wps-boxed">
@@ -7,7 +9,7 @@
 			<div class="wps-form-group"><?php _e('Customer email', 'wps-pos-i18n')?> : <?php echo $customer_infos->user_email; ?></div>
 			<input type="hidden" id="wps_pos_selected_customer" value="<?php echo $customer_id; ?>" />
 		</div>
-		
+
 		<div class="customer_address wps-boxed">
 			<span class="wps-h4"><?php _e( 'Billing address', 'wpshop' ); ?></span>
 			<?php
@@ -22,7 +24,7 @@
 				}
 			?>
 		</div>
-		
+
 		<div class="order_historic wps-boxed">
 			<a href="#" class="toggle-historic dashicons dashicons-arrow-down alignright"></a>
 			<span class="wps-h4"><?php _e( 'Historic', 'wpshop' ); ?></span>
@@ -30,8 +32,8 @@
 				foreach( $this->get_orders_customer( 3, $customer_id ) as $order ) {
 			?>
 			<div class="wps-form-group toggle-historic-group">
-				<a href="#" class="lnk_load_order" data-oid="<?php echo $order->ID; ?>" data-cid="<?php echo $customer_id; ?>">
-					<?php 
+				<a href="#" class="lnk_load_order" data-nonce="<?php echo wp_create_nonce( 'wps_pos_process_checkout' ); ?>" data-oid="<?php echo $order->ID; ?>" data-cid="<?php echo $customer_id; ?>">
+					<?php
 					if( $order->_order_postmeta['order_key'] ) {
 						if( $order->_order_postmeta['order_invoice_ref'] ) {
 							$link = $order->_order_postmeta['order_invoice_ref'];
@@ -50,10 +52,10 @@
 					if( $order->_order_postmeta['order_invoice_ref'] ) {
 					?>
 				<span class="invoice_order">
-					<a href="<?php echo WPSHOP_TEMPLATES_URL; ?>invoice.php?order_id=<?php echo $order->ID; ?>&invoice_ref=<?php echo $order->_order_postmeta['order_invoice_ref']; ?>" target="_blank" role="button">
+					<a href="" target="_blank" role="button">
 						<i class="dashicons dashicons-welcome-view-site"></i>
 					</a>
-					<a href="<?php echo WPSHOP_TEMPLATES_URL; ?>invoice.php?order_id=<?php echo $order->ID; ?>&invoice_ref=<?php echo $order->_order_postmeta['order_invoice_ref']; ?>&mode=pdf" target="_blank" role="button">
+					<a href="<?php echo admin_url( 'admin-post.php?action=wps_invoice&mode=pdf&order_id=' . $order->ID . '&invoice_ref='.$order->_order_postmeta['order_invoice_ref']); ?>" target="_blank" role="button">
 						<i class="dashicons dashicons-download"></i>
 					</a>
 				</span>
@@ -65,7 +67,7 @@
 				}
 			?>
 		</div>
-		
+
 	<?php else : ?>
 		<?php _e( 'Nothing was found for selected customer. Please check this customer account before continuing', 'wps-pos-i18n' ); ?>
 	<?php endif; ?>

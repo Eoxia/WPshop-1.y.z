@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wps-header-mini-cart wps-cart-activator">
 	<div class="wps-mini-cart-header">
 		<a href="<?php echo get_permalink( wpshop_tools::get_page_id( get_option('wpshop_checkout_page_id ') ) ); ?>" class="wps-mini-cart-opener">

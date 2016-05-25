@@ -1,17 +1,4 @@
-<?php
-/**
- * Plugin Name: WPShop Products mass administration interface
- * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/
- * Description: Manage your products from a mass update interface, that allow you to change a lot of information easoer
- * Version: 01.0
- * Author: Eoxia
- * Author URI: http://eoxia.com/
- */
-
-
-if ( !defined( 'WPSHOP_VERSION' ) ) {
-	die( __("You are not allowed to use this service.", 'wpshop') );
-}
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 
 DEFINE( 'WPS_PDCT_MASS_VERSION', '2.0' );
 DEFINE( 'WPS_PDCT_MASS_DIR', basename(dirname(__FILE__)));

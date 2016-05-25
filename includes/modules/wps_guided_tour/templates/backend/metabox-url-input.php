@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <li>
   <h4><?php _e("Url", self::$name_i18n); ?> #<span><?php echo $key; ?></span></h4>
   <label for="paramater"><span><?php _e("Paramater", self::$name_i18n); ?></span>

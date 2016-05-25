@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /*
  * General
 	{WPSHOP_CART_LINK}		=> Link for the cart page
@@ -32,7 +32,7 @@ ob_end_clean();
  */
 ob_start();
 ?>
-<button itemprop="availability" content="in_stock" id="wpshop_add_to_cart_{WPSHOP_PRODUCT_ID}" class="wpshop_add_to_cart_button wps-bton-first"><i class="wps-icon-basket"></i><?php _e('Add to cart', 'wpshop'); ?></button>
+<button itemprop="availability" content="in_stock" data-nonce="<?php echo wp_create_nonce( 'ajax_pos_product_variation_selection' ); ?>" id="wpshop_add_to_cart_{WPSHOP_PRODUCT_ID}" class="wpshop_add_to_cart_button wps-bton-first"><i class="wps-icon-basket"></i><?php _e('Add to cart', 'wpshop'); ?></button>
 <?php
 $tpl_element['add_to_cart_button'] = ob_get_contents();
 ob_end_clean();
@@ -74,7 +74,7 @@ ob_end_clean();
 ob_start();
 ?>
 <div class="wpshop_cart_summary_detail" ></div><div class="wpshop_cart_alert" ></div>
-<div class="wpshop_cart_summary" >{WPSHOP_CART_MINI_CONTENT}</div>
+<div class="wpshop_cart_summary" data-nonce="<?php echo wp_create_nonce( '' ); ?>" >{WPSHOP_CART_MINI_CONTENT}</div>
 <?php
 $tpl_element['mini_cart_container'] = ob_get_contents();
 ob_end_clean();
@@ -155,7 +155,7 @@ ob_end_clean();
 
 /*	Product quantity updater	| 						Panier tableau formulaire + - quantité */
 ob_start();
-?><a href="#" class="productQtyChange wpshop_less_product_qty_in_cart">-</a><input type="text" value="{WPSHOP_CART_LINE_ITEM_QTY}" name="productQty" id="wpshop_product_order_{WPSHOP_CART_LINE_ITEM_ID}"  /><a href="#" class="productQtyChange wpshop_more_product_qty_in_cart">+</a><?php
+?><a href="#" class="productQtyChange wpshop_less_product_qty_in_cart" data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_set_qty_for_product_into_cart' ); ?>">-</a><input type="text" value="{WPSHOP_CART_LINE_ITEM_QTY}" name="productQty" data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_set_qty_for_product_into_cart' ); ?>" id="wpshop_product_order_{WPSHOP_CART_LINE_ITEM_ID}"  /><a href="#" class="productQtyChange wpshop_more_product_qty_in_cart">+</a><?php
 $tpl_element['cart_qty_content'] = ob_get_contents();
 ob_end_clean();
 
@@ -176,20 +176,20 @@ ob_end_clean();
 
 /*	Vouncher field into cart							Coupons de reduction */
 ob_start();
-?><div class="wpshop_cart_vouncher_field_container" ><?php _e('Discount coupon','wpshop'); ?> : <input type="text" name="coupon_code" value="" /> <a href="#" class="submit_coupon"><?php _e('Submit the coupon','wpshop'); ?></a></div><?php
+?><div class="wpshop_cart_vouncher_field_container" ><?php _e('Discount coupon','wpshop'); ?> : <input type="text" name="coupon_code" value="" /> <a href="#" class="submit_coupon" data-nonce="<?php echo wp_create_nonce( 'applyCoupon' ); ?>"><?php _e('Submit the coupon','wpshop'); ?></a></div><?php
 $tpl_element['cart_vouncher_part'] = ob_get_contents();
 ob_end_clean();
 
 
 /*	Empty Quotation button									Vidage du panier */
 ob_start();
-?><div class="wpshop_cart_buttons_container" ><div class="alignright" ><input type="submit" value="<?php _e('Validate my quotation','wpshop'); ?>" name="cartCheckout" class="alignright" /><br/><a href="#" class="emptyCart alignright" ><?php _e('Empty the quotation','wpshop'); ?></a></div></div><?php
+?><div class="wpshop_cart_buttons_container" ><div class="alignright" ><input type="submit" value="<?php _e('Validate my quotation','wpshop'); ?>" name="cartCheckout" class="alignright" /><br/><a href="#" data-nonce="<?php echo wp_create_nonce( 'wps_empty_cart' ); ?>" class="emptyCart alignright" ><?php _e('Empty the quotation','wpshop'); ?></a></div></div><?php
 $tpl_element['cart_quotation_buttons'] = ob_get_contents();
 ob_end_clean();
 
 /*	Empty cart button									Vidage du panier */
 ob_start();
-?><div class="wpshop_cart_buttons_container" ><div class="alignright" ><input type="submit" value="<?php _e('Validate my cart','wpshop'); ?>" name="cartCheckout" class="alignright" /><br/><a href="#" class="emptyCart alignright" ><?php _e('Empty the cart','wpshop'); ?></a></div></div><?php
+?><div class="wpshop_cart_buttons_container" ><div class="alignright" ><input type="submit" value="<?php _e('Validate my cart','wpshop'); ?>" name="cartCheckout" class="alignright" /><br/><a href="#" data-nonce="<?php echo wp_create_nonce( 'wps_empty_cart' ); ?>" class="emptyCart alignright" ><?php _e('Empty the cart','wpshop'); ?></a></div></div><?php
 $tpl_element['cart_buttons'] = ob_get_contents();
 ob_end_clean();
 
@@ -424,7 +424,7 @@ ob_end_clean();
 
 /*	Define variation display	*/
 ob_start();
-?><form action="<?php echo admin_url('admin-ajax.php')?>" method="POST" id="wpshop_add_to_cart_form" >{WPSHOP_FROM_ADMIN_INDICATOR} {WPSHOP_ORDER_ID_INDICATOR} <input type="hidden" name="wpshop_pdt" id="wpshop_pdt" value="{WPSHOP_VARIATION_FORM_ELEMENT_ID}" /><input type="hidden" name="wpshop_pdt_qty" id="wpshop_pdt_qty" value="{WPSHOP_PRODUCT_ADDED_TO_CART_QTY}" /><input type="hidden" name="action" value="wpshop_add_product_to_cart" /><input type="hidden" name="wpshop_cart_type" value="cart" />{WPSHOP_VARIATION_FORM_VARIATION_LIST}</form><?php
+?><form action="<?php echo admin_url('admin-ajax.php')?>" method="POST" id="wpshop_add_to_cart_form" >{WPSHOP_FROM_ADMIN_INDICATOR} {WPSHOP_ORDER_ID_INDICATOR} <input type="hidden" name="wpshop_pdt" id="wpshop_pdt" value="{WPSHOP_VARIATION_FORM_ELEMENT_ID}" /><?php wp_nonce_field( 'ajax_pos_product_variation_selection' ); ?><input type="hidden" name="wpshop_pdt_qty" id="wpshop_pdt_qty" value="{WPSHOP_PRODUCT_ADDED_TO_CART_QTY}" /><input type="hidden" name="action" value="wpshop_add_product_to_cart" /><input type="hidden" name="wpshop_cart_type" value="cart" />{WPSHOP_VARIATION_FORM_VARIATION_LIST}</form><?php
 $tpl_element['product_variation_form'] = ob_get_contents();
 ob_end_clean();
 
@@ -460,7 +460,7 @@ ob_start();
 				<div class="wps-product-section">
 					<h1 itemprop="name" class="entry-title">{WPSHOP_PRODUCT_TITLE}</h1>
 					<div class="wps-productRating">[wps_star_rate_product pid="{WPSHOP_PRODUCT_ID}"]</div>
-					
+
 					<div class="wps-prices" itemscope itemtype="http://schema.org/Offer">{WPSHOP_PRODUCT_PRICE}</div>
 				</div>
 				<div class="wps-product-section">[wps_low_stock_alert id="{WPSHOP_PRODUCT_ID}"]</div>
@@ -493,9 +493,9 @@ ob_start();
 ?><div class="wps-product-section">
 	<label><?php _e('Quantity', 'wpshop'); ?></label>
 	<div class="wps-productQtyForm">
-		<a class="wps-bton-icon-minus-small wps-cart-reduce-product-qty" href=""><i class="wps-icon-minus"></i></a>
+		<a class="wps-bton-icon-minus-small wps-cart-reduce-product-qty" data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_set_qty_for_product_into_cart' ); ?>" href=""><i class="wps-icon-minus"></i></a>
 		<input id="wps-cart-product-qty-{WPSHOP_PRODUCT_ID}" class="wpshop_product_qty_input" type="text" value="1" />
-		<a class="wps-bton-icon-plus-small wps-cart-add-product-qty" href=""><i class="wps-icon-plus"></i></a>
+		<a class="wps-bton-icon-plus-small wps-cart-add-product-qty" data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_set_qty_for_product_into_cart' ); ?>" href=""><i class="wps-icon-plus"></i></a>
 	</div>
 </div><?php
 $tpl_element['product_complete_sheet_quantity_chooser'] = ob_get_contents();
@@ -532,9 +532,9 @@ ob_end_clean();
 ob_start();
 ?>
 <li class="{WPSHOP_PRODUCT_CLASS}" itemscope itemtype="http://data-vocabulary.org/Product" >
-	
+
 	<a href="{WPSHOP_PRODUCT_PERMALINK}" class="" title="{WPSHOP_PRODUCT_TITLE}">
-		{WPSHOP_PRODUCT_THUMBNAIL}		
+		{WPSHOP_PRODUCT_THUMBNAIL}
 	</a>
 	<span class="product_information-mini-list" itemprop="offers" itemscope itemtype="http://data-vocabulary.org/Offers">
 		<a href="{WPSHOP_PRODUCT_PERMALINK}" title="{WPSHOP_PRODUCT_TITLE}" class="wpshop_clearfix">
@@ -543,7 +543,7 @@ ob_start();
 			{WPSHOP_LOW_STOCK_ALERT_MESSAGE}
 			<p itemprop="description" class="wpshop_liste_description">{WPSHOP_PRODUCT_EXCERPT}</p>
 		</a>
-		{WPSHOP_PRODUCT_BUTTONS}		
+		{WPSHOP_PRODUCT_BUTTONS}
 		<div class="wps-extras">
 			{WPSHOP_PRODUCT_EXTRA_STATE}
 		</div>
@@ -557,7 +557,7 @@ ob_start();
 ?>
 <li itemscope="" itemtype="http://data-vocabulary.org/Product">
 	<div>
-		<a href="{WPSHOP_PRODUCT_PERMALINK}" title="{WPSHOP_PRODUCT_TITLE}" itemprop="offers" itemscope itemtype="http://data-vocabulary.org/Offers">			
+		<a href="{WPSHOP_PRODUCT_PERMALINK}" title="{WPSHOP_PRODUCT_TITLE}" itemprop="offers" itemscope itemtype="http://data-vocabulary.org/Offers">
 			<span class="wps-thumbnail">
 				{WPSHOP_PRODUCT_THUMBNAIL_WPSHOP-PRODUCT-GALERY}
 				<span class="wps-extras">
@@ -565,16 +565,16 @@ ob_start();
 				</span>
 				<span class="wps-hover">voir</span>
 			</span>
-			<span class="wps-caption">		
+			<span class="wps-caption">
 				<span class="wps-title" itemprop="name" >{WPSHOP_PRODUCT_TITLE}</span>
 				<span itemprop="price" class="wps-price-container">
-			    	<span class="wps-price">{WPSHOP_PRODUCT_PRICE}</span>  
+			    	<span class="wps-price">{WPSHOP_PRODUCT_PRICE}</span>
 			    </span>
 			</span>
 		</a>
 		<div class="wps-action-container">
 			{WPSHOP_PRODUCT_BUTTONS}
-		</div>		
+		</div>
 	</div>
 </li><?php
 $tpl_element['product_mini_grid'] = ob_get_contents();
@@ -664,7 +664,7 @@ ob_start();
 			</li>
 		</ul>
 	</div>
-	
+
 </div><?php
 $tpl_element['product_listing_sorting'] = ob_get_contents();
 ob_end_clean();
@@ -1037,7 +1037,7 @@ ob_start();
 ?><form method="post" name="checkoutForm" action="<?php echo get_permalink(wpshop_tools::get_page_id( get_option('wpshop_checkout_page_id'))); ?>" >
 	{WPSHOP_CHECKOUT_CUSTOMER_BILLING_ADDRESS}
 	<h2><?php _e('Shipping method choice', 'wpshop'); ?></h2>
-	<div id="wps_shipping_modes_choice">{WPSHOP_CHECKOUT_CUSTOMER_SHIPPING_CHOICE}</div>
+	<div id="wps_shipping_modes_choice" data-nonce="<?php echo wp_create_nonce( 'wps_shipping_modes_choice' ); ?>">{WPSHOP_CHECKOUT_CUSTOMER_SHIPPING_CHOICE}</div>
 	<?php
 	//echo do_shortcode('[wps_book_shipping]'); ?>
 
@@ -1334,7 +1334,7 @@ ob_end_clean();
 
 /* ADDRESSES LIST BY TYPE COMBOBOX*/
 ob_start();
-?><select class="alignright address_choice_select" id='{WPSHOP_ADDRESS_TYPE}'>{WPSHOP_ADDRESS_COMBOBOX_OPTION}</select><?php
+?><select class="alignright address_choice_select"  data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_change_address' ); ?>" id='{WPSHOP_ADDRESS_TYPE}'>{WPSHOP_ADDRESS_COMBOBOX_OPTION}</select><?php
 $tpl_element['addresses_type_combobox'] = ob_get_contents();
 ob_end_clean();
 
@@ -1365,7 +1365,7 @@ ob_end_clean();
 /** Shipping Method **/
 ob_start();
 ?>
-<div class="wps_shipping_method_choice wps_shipping_method_{WPSHOP_SHIPPING_METHOD_CODE}" ><input type="radio" name="wps_shipping_method_choice" id="{WPSHOP_SHIPPING_METHOD_CODE}" value="{WPSHOP_SHIPPING_METHOD_NAME}" {WPSHOP_DEFAULT_SHIPPING_METHOD} /> <img src="{WPSHOP_SHIPPING_METHOD_IMG}" alt="" /> {WPSHOP_SHIPPING_METHOD_NAME} {WPSHOP_SHIPPING_METHOD_EXTRA_PARAMS}</div>
+<div class="wps_shipping_method_choice wps_shipping_method_{WPSHOP_SHIPPING_METHOD_CODE}" ><input type="radio" data-nonce="<?php echo wp_create_nonce( 'wps_calculate_shipping_cost' ); ?>" name="wps_shipping_method_choice" id="{WPSHOP_SHIPPING_METHOD_CODE}" value="{WPSHOP_SHIPPING_METHOD_NAME}" {WPSHOP_DEFAULT_SHIPPING_METHOD} /> <img src="{WPSHOP_SHIPPING_METHOD_IMG}" alt="" /> {WPSHOP_SHIPPING_METHOD_NAME} {WPSHOP_SHIPPING_METHOD_EXTRA_PARAMS}</div>
 <div class="wps_shipping_method_additional_element_container {WPSHOP_SHIPPING_METHOD_CONTAINER_CLASS}" id="container_{WPSHOP_SHIPPING_METHOD_CODE}">{WPSHOP_SHIPPING_METHOD_CONTENT}</div>
 <div class="clear"></div>
 <?php
@@ -1376,7 +1376,7 @@ ob_end_clean();
 /** Restart the order Button **/
 ob_start();
 ?>
-<img src="{WPSHOP_RESTART_ORDER_LOADER}" alt="Loading..." id="restart_order_loader" class="alignright" style="border:0px solid #FFF" /><button id="restart_order" class="alignright wps-restart-order-btn" ><?php _e('Restart the order', 'wpshop'); ?></button>
+<img src="{WPSHOP_RESTART_ORDER_LOADER}" alt="Loading..." id="restart_order_loader" class="alignright" style="border:0px solid #FFF" /><button data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_restart_the_order' ); ?>" id="restart_order" class="alignright wps-restart-order-btn" ><?php _e('Restart the order', 'wpshop'); ?></button>
 <?php
 $tpl_element['button_restart_the_order'] = ob_get_contents();
 ob_end_clean();
@@ -1420,9 +1420,3 @@ ob_start();
 <?php
 $tpl_element['wps_new_add_to_cart_confirmation_modal'] = ob_get_contents();
 ob_end_clean();
-
-
-
-
-
-

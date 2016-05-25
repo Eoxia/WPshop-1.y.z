@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <ul id="product_media_list">
 <?php if( $media_id ) : ?>
 	<?php foreach( $media_id as $id ) : ?>

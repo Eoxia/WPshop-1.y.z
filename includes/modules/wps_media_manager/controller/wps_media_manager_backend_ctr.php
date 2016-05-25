@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 class wps_media_manager_backend_ctr {
 	/** Define the main directory containing the template for the current plugin
 	 * @var string
@@ -61,8 +61,13 @@ class wps_media_manager_backend_ctr {
 	 * AJAX - Display pictures in backend panel
 	 */
 	function wp_ajax_display_pictures_in_backend() {
+		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wp_ajax_display_pictures_in_backend' ) )
+			wp_die();
+
 		$status = true; $response = '';
-		$media_indicator = !empty($_POST['media_id']) ? $_POST['media_id'] : null;
+		$media_indicator = !empty($_POST['media_id']) ? (int)$_POST['media_id'] : null;
 		if( !empty($media_indicator) ) {
 			$media_id = explode( ',', $media_indicator );
 			if( !empty($media_id) ) {
@@ -76,9 +81,16 @@ class wps_media_manager_backend_ctr {
 		wp_die();
 	}
 
+	// @TODO: NONCE et vérifier product_media
 	function save_post_actions() {
-		if ( !empty($_POST['post_type']) && !empty($_POST['product_media_form']) && $_POST['product_media_form'] == 'post' && $_POST['post_type'] == WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT && !empty( $_POST['action'] ) && $_POST['action'] != 'autosave' ) {
-			update_post_meta( $_POST['post_ID'], '_wps_product_media', $_POST['product_media'] );
+		$post_type = !empty( $_POST['post_type'] ) ? sanitize_text_field( $_POST['post_type'] ) : '';
+		$product_media_form = !empty( $_POST['product_media_form'] ) ? sanitize_text_field( $_POST['product_media_form'] ) : '';
+		$action = !empty( $_POST['action'] ) ? sanitize_text_field( $_POST['action'] ) : '';
+		$product_media = !empty( $_POST['product_media'] ) ? sanitize_text_field( $_POST['product_media'] ) : '';
+		$post_ID = !empty( $_POST['post_ID'] ) ? (int) $_POST['post_ID'] : 0;
+
+		if ( !empty($post_type) && !empty($product_media_form) && $product_media_form == 'post' && $post_type == WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT && !empty( $action ) && $action != 'autosave' ) {
+			update_post_meta( $post_ID, '_wps_product_media', $product_media );
 		}
 	}
 

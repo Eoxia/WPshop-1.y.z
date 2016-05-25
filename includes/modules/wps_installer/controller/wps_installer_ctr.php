@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * File for installer control class definition
  *
@@ -35,8 +35,9 @@ class wps_installer_ctr {
 		/**	Instanciate datas saver components */
 		$wps_installer_model = new wps_installer_model();
 
+		$action = !empty( $_POST[ 'action' ] ) ? sanitize_text_field( $_POST[ 'action' ] ) : '';
 		/**	Call datas saver	*/
-		if ( !empty( $current_step ) && !empty( $_POST ) && !empty( $_POST[ 'action' ] ) && ( "wps-installation" == $_POST[ 'action' ] ) ) {
+		if ( !empty( $current_step ) && !empty( $action ) && ( "wps-installation" == $action ) ) {
 			$step_to_save = $current_step - 1;
 			$wps_installer_model->save_step( $step_to_save );
 			if ( WPSINSTALLER_STEPS_COUNT == $current_step ) {
@@ -51,8 +52,10 @@ class wps_installer_ctr {
 		$wps_current_db_version = get_option( 'wpshop_db_options', 0 );
 
 		/**	Check the configuration state	*/
-		if ( isset( $_GET[ 'installation_state' ] ) && !empty( $_GET[ 'installation_state' ] ) && !empty( $wps_current_db_version ) && (empty( $wps_current_db_version[ 'installation_state' ] ) || ( $wps_current_db_version[ 'installation_state' ] != 'completed' ) ) ) {
-			$wps_current_db_version = $wps_installer_model->installer_state_saver( $_GET[ 'installation_state' ], $wps_current_db_version );
+		$installation_state = !empty( $_GET[ 'installation_state' ] ) ? sanitize_text_field( $_GET[ 'installation_state' ] ) : '';
+		if ( isset( $installation_state ) && !empty( $installation_state ) && !empty( $wps_current_db_version )
+		&& (empty( $wps_current_db_version[ 'installation_state' ] ) || ( $wps_current_db_version[ 'installation_state' ] != 'completed' ) ) ) {
+			$wps_current_db_version = $wps_installer_model->installer_state_saver( $installation_state, $wps_current_db_version );
 		}
 
 		/**	Do verification for shop who are configured for being sale shop	*/
@@ -217,7 +220,10 @@ class wps_installer_ctr {
 	 * AJAX - Launch ajax action allowing to hide welcome panel for current user
 	 */
 	function wps_hide_welcome_panel() {
-		check_ajax_referer( 'wps-installer-welcome-panel-close', 'wpshop_ajax_nonce' );
+		$wpshop_ajax_nonce = !empty( $_REQUEST['wpshop_ajax_nonce'] ) ? sanitize_text_field( $_REQUEST['wpshop_ajax_nonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps-installer-welcome-panel-close' ) )
+			wp_die();
 
 		$user_pref = get_user_meta( get_current_user_id(), '_wps_hide_notice_messages_indicator', true );
 		$user_pref[ 'welcome-banner' ] = true;

@@ -1,12 +1,4 @@
-<?php
-/**
- * Plugin Name: WPSHOP Options
- * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/
- * Description : WPSHOP Options, manages settings section for WPShop
- * Version: 0.1
- * Author: Eoxia
- * Author URI: http://eoxia.com/
- */
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
  * @author ALLEGRE Jérôme - Eoxia dev team <dev@eoxia.com>
@@ -14,7 +6,7 @@
  * @package includes
  * @subpackage modules
  */
- 
+
 /** Template Global vars **/
 DEFINE('WPS_OPTIONS_DIR', basename(dirname(__FILE__)));
 DEFINE('WPS_OPTIONS_PATH', str_replace( "\\", "/", str_replace( WPS_OPTIONS_DIR, "", dirname( __FILE__ ) ) ) );

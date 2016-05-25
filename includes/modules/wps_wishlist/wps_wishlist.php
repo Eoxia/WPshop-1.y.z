@@ -1,13 +1,4 @@
-<?php
-/**
- * Plugin Name: WPS Wishlist
- * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/
- * Description: WpShop Wishlist
- * Version: 0.1
- * Author: Eoxia
- * Author URI: http://eoxia.com/
- */
-
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * WpShop Cart bootstrap file
  * @author Jimmy LATOUR- Eoxia dev team <dev@eoxia.com>

@@ -1,16 +1,4 @@
-<?php
-/**
- * Plugin Name: WP Shop Shortcodes
- * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/
- * Description: WpShop Shortcodes
- * Version: 0.1
- * Author: Eoxia
- * Author URI: http://eoxia.com/
- */
-
-if ( !defined( 'WPSHOP_VERSION' ) ) {
-	die( __("You are not allowed to use this service.", 'wpshop') );
-}
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 
 DEFINE( 'WPS_SHORTCODES_VERSION', '1.0.1' );
 DEFINE( 'WPS_SHORTCODES_DIR', basename(dirname(__FILE__)));
@@ -28,6 +16,6 @@ new wps_shortcodes_ctr();
 /*	Instanciate the wysiwyg editor hooks	*/
 add_action('init', array('wps_shortcodes_ctr', 'wysiwyg_button'));
 add_filter('tiny_mce_version', array('wps_shortcodes_ctr', 'refresh_wysiwyg'));
-
+add_action('admin_post_wps_shortcodes_wysiwyg_dialog', array('wps_shortcodes_ctr', 'wps_shortcodes_wysiwyg_dialog'));
 
 ?>

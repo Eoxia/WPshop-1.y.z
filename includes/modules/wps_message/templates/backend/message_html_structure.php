@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div style="font: 11px/1.35em  Arial, Helvetica, sans-serif; color: #000;">
 	<table style="width: 100%;" border="0" cellspacing="0" cellpadding="0" bgcolor="#F0F0F0">
 		<tbody>

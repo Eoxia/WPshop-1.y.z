@@ -1,6 +1,6 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 class wps_highlighting_ctr {
-	
+
 	/** Define the main directory containing the template for the current plugin
 	 * @var string
 	 */
@@ -10,19 +10,19 @@ class wps_highlighting_ctr {
 	 * @var string
 	 */
 	private $plugin_dirname = WPS_HIGHLIGHTING_DIR;
-	
+
 	function __construct() {
 		$this->template_dir = WPS_HIGHLIGHTING_PATH . WPS_HIGHLIGHTING_DIR . "/templates/";
 		add_action( 'init', array($this, 'register_post_type') );
 		add_action( 'add_meta_boxes', array($this, 'add_meta_boxes') );
 		add_action( 'save_post', array($this, 'save_post_action') );
-		
+
 		/**	Red�finition de l'ordre des menus / Arrangements for displaying menu under wpshop menu	*/
 		add_action( 'menu_order', array( $this, 'admin_menu_order' ), 11 );
-		
+
 		add_shortcode( 'wps_highlighting', array( $this, 'display_highlightings' ) );
 	}
-	
+
 	/**
 	 * Register Post type
 	 */
@@ -42,7 +42,7 @@ class wps_highlighting_ctr {
 				'not_found'          => __( 'No Highlighting found.', 'wps_highlighting' ),
 				'not_found_in_trash' => __( 'No Highlightings found in Trash.', 'wps_highlighting' ),
 		);
-		
+
 		$args = array(
 				'labels'             => $labels,
 				'public'             => true,
@@ -58,10 +58,10 @@ class wps_highlighting_ctr {
 				'menu_position'      => null,
 				'supports'           => array( 'title', 'editor', 'thumbnail' )
 		);
-		
+
 		register_post_type( WPS_NEWTYPE_IDENTIFIER_HIGHLIGHTING, $args );
 	}
-	
+
 	/**
 	 * WP HOOK - Reorder the admin menu for placing POS addon just below shop menu
 	 *
@@ -72,23 +72,23 @@ class wps_highlighting_ctr {
 	function admin_menu_order( $current_menu_order ) {
 		/**	Create a new menu order	*/
 		$wps_pos_menu_ordered = array();
-		
+
 		/**	Read the current existing menu order for rearrange it	*/
 		foreach ( $current_menu_order as $menu_item ) {
 			if ( 'edit.php?post_type=' . WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS == $menu_item ) {
 				$wps_pos_menu_ordered[] = 'edit.php?post_type=' . WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS;
 				$wps_pos_menu_ordered[] = 'edit.php?post_type=wps_highlighting';
-	
+
 				unset( $current_menu_order[ array_search( 'edit.php?post_type=wps_highlighting', $current_menu_order ) ] );
 			}
 			else if ( 'edit.php?post_type=wps_highlighting' != $menu_item ) {
 				$wps_pos_menu_ordered[] = $menu_item;
 			}
 		}
-	
+
 		return $wps_pos_menu_ordered;
-	}	
-	
+	}
+
 	/**
 	 * Add Meta Box
 	 */
@@ -96,13 +96,13 @@ class wps_highlighting_ctr {
 		add_meta_box( 'wps_highlighting_meta_box', __( 'Select the hook', 'wps_highlighting'), array( $this, 'meta_box_content' ), WPS_NEWTYPE_IDENTIFIER_HIGHLIGHTING, 'side', 'default');
 		add_meta_box( 'wps_highlighting_meta_box_link', __( 'Link of Highlighting', 'wps_highlighting'), array( $this, 'meta_box_content_link' ), WPS_NEWTYPE_IDENTIFIER_HIGHLIGHTING, 'side', 'default');
 	}
-	
+
 	/**
 	 * Meta Box content
 	 */
 	function meta_box_content() {
 		global $post;
-		
+
 		$hook = get_post_meta( $post->ID, '_wps_highlighting_hook', true );
 		$output  = '<select name="wps_highlighting_hook">';
 		$output .= '<option value="sidebar" ' .( ( !empty($hook) && $hook == 'sidebar' ) ? 'selected="selected"' : '' ). '>' .__( 'Sidebar', 'wps_highlighting' ). '</option>';
@@ -112,7 +112,7 @@ class wps_highlighting_ctr {
 		$output .= '<div style="padding : 5px; background #CCC;"><u><strong>' .__( 'shortcode for display Highlightings', 'wpshop'). '</strong></u><ul><li><u>Home page content :</u> [wps_highlighting hook_name="home"]</li><li><u>Sidebar :</u> [wps_highlighting hook_name="sidebar"]</li><ul></div>';
 		echo $output;
 	}
-	
+
 	function meta_box_content_link() {
 		global $post;
 		$link = get_post_meta( $post->ID, '_wps_highlighting_link', true );
@@ -120,16 +120,20 @@ class wps_highlighting_ctr {
 		$output .= '<input type="text" id="wps_highlighting_link" name="wps_highlighting_link" value="' .$link. '" />';
 		echo $output;
 	}
-	
+
 	/**
 	 * Save action
 	 */
 	function save_post_action() {
-		if( !empty($_POST['post_type']) && !empty($_POST['post_type']) && $_POST['post_type'] == WPS_NEWTYPE_IDENTIFIER_HIGHLIGHTING ) {
-			if( !empty($_POST['wps_highlighting_hook']) ) {
-				update_post_meta( $_POST['post_ID'], '_wps_highlighting_hook', $_POST['wps_highlighting_hook'] );
+		$post_type = !empty( $_POST['post_type'] ) ? sanitize_text_field( $_POST['post_type'] ) : '';
+		if( !empty($post_type) && !empty($post_type) && $post_type == WPS_NEWTYPE_IDENTIFIER_HIGHLIGHTING ) {
+			$wps_highlighting_hook = !empty( $_POST['wps_highlighting_hook'] ) ? sanitize_text_field( $_POST['wps_highlighting_hook'] ) : '';
+			$wps_highlighting_link = !empty( $_POST['wps_highlighting_link'] ) ? sanitize_text_field( $_POST['wps_highlighting_link'] ) : '';
+			$post_ID = !empty( $_POST['post_ID'] ) ? (int) $_POST['post_ID'] : 0;
+			if( !empty($wps_highlighting_hook) ) {
+				update_post_meta( $post_ID, '_wps_highlighting_hook', $wps_highlighting_hook );
 			}
-			update_post_meta( $_POST['post_ID'], '_wps_highlighting_link', $_POST['wps_highlighting_link']); 
+			update_post_meta( $post_ID, '_wps_highlighting_link', $wps_highlighting_link );
 		}
 	}
 
@@ -148,7 +152,7 @@ class wps_highlighting_ctr {
 		}
 		return $highlightings_datas;
 	}
-	
+
 	function display_highlightings( $args ) {
 		$output = $highlightings = '';
 		if( !empty($args) && !empty($args['hook_name']) ) {
@@ -165,5 +169,5 @@ class wps_highlighting_ctr {
 		}
 		return $highlightings;
 	}
-	
+
 }

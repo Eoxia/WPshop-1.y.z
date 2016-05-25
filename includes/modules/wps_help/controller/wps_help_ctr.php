@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Main controller file for wpshop help
  *
@@ -49,6 +49,11 @@ class wps_help_ctr {
 	 * AJAX - Save into current user meta the different help that have to be closed next time the user will be logged in
 	 */
 	function wps_ajax_close_wps_help_window() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_ajax_close_wps_help_window' ) )
+			wp_die();
+
 		$status = false;
 		$result = '';
 		$pointer_id = !empty( $_POST['pointer_id']) ? wpshop_tools::varSanitizer( $_POST['pointer_id'] ) : '';

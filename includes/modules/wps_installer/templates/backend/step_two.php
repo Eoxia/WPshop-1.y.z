@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <table class="form-table" >
 	<tr>
 		<th><?php _e( 'Shop type', 'wpshop' ); ?></th>

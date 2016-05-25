@@ -1,13 +1,4 @@
-<?php
-/**
- * Plugin Name: WP-Shop-billing-module
- * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/
- * Description: Wpshop module allowing to manage invoice for the different orders
- * Version: 0.1
- * Author: Eoxia
- * Author URI: http://eoxia.com/
- */
-
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Billing module bootstrap file
  *
@@ -16,11 +7,6 @@
  * @package includes
  * @subpackage modules
  */
-
-/** Check if the plugin version is defined. If not defined script will be stopped here */
-if ( !defined( 'WPSHOP_VERSION' ) ) {
-	die( __("You are not allowed to use this service.", 'wpshop') );
-}
 
 /**	Check if billing class does not exist before creating the class	*/
 if ( !class_exists("wpshop_modules_billing") ) {
@@ -42,15 +28,16 @@ if ( !class_exists("wpshop_modules_billing") ) {
 			add_filter( 'wpshop_custom_template', array( &$this, 'custom_template_load' ) );
 
 			/**	In case wpshop is set on sale mode and not on view catalog only, Ad billign options	*/
-			if ((WPSHOP_DEFINED_SHOP_TYPE == 'sale')
-					&& !isset($_POST['wpshop_shop_type'])
-						|| (isset($_POST['wpshop_shop_type']) && ($_POST['wpshop_shop_type'] != 'presentation'))
-					&& !isset($_POST['old_wpshop_shop_type'])
-						|| (isset($_POST['old_wpshop_shop_type']) && ($_POST['old_wpshop_shop_type'] != 'presentation'))) {
+			if ( WPSHOP_DEFINED_SHOP_TYPE == 'sale' ) {
+				$wpshop_shop_type = !empty( $_POST['wpshop_shop_type'] ) ? sanitize_text_field( $_POST['wpshop_shop_type'] ) : '';
+				$old_wpshop_shop_type = !empty( $_POST['old_wpshop_shop_type'] ) ? sanitize_text_field( $_POST['old_wpshop_shop_type'] ) : '';
 
-				/**	Add module option to wpshop general options	*/
-				add_filter('wpshop_options', array(&$this, 'add_options'), 9);
-				add_action('wsphop_options', array(&$this, 'declare_options'), 8);
+				if ( ( $wpshop_shop_type == '' || $wpshop_shop_type != 'presentation' )
+					&& ( $old_wpshop_shop_type == '' && $old_wpshop_shop_type != 'presentation' ) ) {
+						/**	Add module option to wpshop general options	*/
+						add_filter('wpshop_options', array(&$this, 'add_options'), 9);
+						add_action('wsphop_options', array(&$this, 'declare_options'), 8);
+					}
 			}
 
 			// Filter
@@ -327,7 +314,8 @@ if ( !class_exists("wpshop_modules_billing") ) {
 				}
 
 				/** Check it is a shipping slip **/
-				$bon_colisage = ( !empty($_GET['bon_colisage']) ) ? true : false;
+				$bon_colisage = !empty( $_GET['bon_colisage'] ) ? sanitize_key( $_GET['bon_colisage'] ) : false;
+				if ( $bon_colisage ) $bon_colisage = true;
 
 				if ( !empty($order_postmeta) ) {
 					$tpl_component = array();
@@ -726,7 +714,7 @@ if ( !class_exists("wpshop_modules_billing") ) {
 						else {
 							$summary_tpl_component['INVOICE_ORDER_DISCOUNT'] = '';
 						}
-						
+
 						$summary_tpl_component[ 'PRICE_PILOTING' ] = 'HT' == $price_piloting ? __( 'ET', 'wpshop' ) : __( 'ATI', 'wpshop' );
 
 						$tpl_component['INVOICE_SUMMARY_PART'] = wpshop_display::display_template_element('invoice_summary_part', $summary_tpl_component, array(), 'common');
@@ -1106,7 +1094,7 @@ if ( !class_exists("wpshop_modules_billing") ) {
 		public function wpshop_quotation_payment_partial_validation($input) {
 			return $input;
 		}
-		
+
 		public function wpshop_quotation_payment_partial() {
 		$output = '';
 

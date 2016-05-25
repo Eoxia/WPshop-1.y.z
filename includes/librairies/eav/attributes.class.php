@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 
 /*	Check if file is include. No direct access possible with file url	*/
 if ( !defined( 'WPSHOP_VERSION' ) ) {
@@ -81,8 +81,9 @@ class wpshop_attributes{
 	 *	@return string $title The title of the page looking at the environnement
 	 */
 	function pageTitle(){
-		$action = isset($_REQUEST['action']) ? wpshop_tools::varSanitizer($_REQUEST['action']) : '';
-		$objectInEdition = isset($_REQUEST['id']) ? wpshop_tools::varSanitizer($_REQUEST['id']) : '';
+		$action = isset($_REQUEST['action']) ? sanitize_text_field($_REQUEST['action']) : '';
+		$objectInEdition = isset($_REQUEST['id']) ? sanitize_key($_REQUEST['id']) : '';
+		$page = !empty( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : '';
 
 		$title = __(self::pageTitle, 'wpshop' );
 		if($action != ''){
@@ -93,7 +94,7 @@ class wpshop_attributes{
 			elseif($action == 'add')
 				$title = __(self::pageAddingTitle, 'wpshop');
 		}
-		elseif((self::getEditionSlug() != self::getListingSlug()) && ($_GET['page'] == self::getEditionSlug()))
+		elseif((self::getEditionSlug() != self::getListingSlug()) && ($page == self::getEditionSlug()))
 			$title = __(self::pageAddingTitle, 'wpshop');
 
 		return $title;
@@ -111,13 +112,16 @@ class wpshop_attributes{
 		/*	Start definition of output message when action is doing on another page	*/
 		/************		CHANGE THE FIELD NAME TO TAKE TO DISPLAY				*************/
 		/****************************************************************************/
-		$action = isset($_REQUEST['action']) ? wpshop_tools::varSanitizer($_REQUEST['action']) : 'add';
-		$saveditem = isset($_REQUEST['saveditem']) ? wpshop_tools::varSanitizer($_REQUEST['saveditem']) : '';
-		$set_section = !empty($_REQUEST[self::getDbTable()]['set_section']) ? wpshop_tools::varSanitizer($_REQUEST[self::getDbTable()]['set_section']) : '';
-		if ( !empty($_REQUEST[self::getDbTable()]['set_section']) ) unset($_REQUEST[self::getDbTable()]['set_section']);
-		if(!empty($action) && ($action=='activate') && (!empty($_REQUEST['id']))){
-			$query = $wpdb->update(self::getDbTable(), array('status'=>'moderated'), array('id'=>$_REQUEST['id']));
-			wpshop_tools::wpshop_safe_redirect(admin_url('admin.php?page=' . self::getListingSlug() . "&action=edit&id=" . $_REQUEST['id']));
+		$action = isset($_REQUEST['action']) ? sanitize_text_field($_REQUEST['action']) : 'add';
+		$saveditem = isset($_REQUEST['saveditem']) ? sanitize_text_field($_REQUEST['saveditem']) : '';
+		$set_section = !empty($_REQUEST[self::getDbTable()]['set_section']) ? sanitize_text_field($_REQUEST[self::getDbTable()]['set_section']) : '';
+		//@TODO $_REQUEST
+		$id = !empty($_REQUEST['id']) ? (int) $_REQUEST['id'] : null;
+		if(!empty($action) && ($action=='activate') ){
+			if( isset($id) ) {
+				$query = $wpdb->update(self::getDbTable(), array('status'=>'moderated'), array('id'=>$id));
+				wpshop_tools::wpshop_safe_redirect(admin_url('admin.php?page=' . self::getListingSlug() . "&action=edit&id=" . $id));
+			}
 		}
 		if(($action != '') && ($action == 'saveok') && ($saveditem > 0)){
 			$editedElement = self::getElement($saveditem);
@@ -128,154 +132,158 @@ class wpshop_attributes{
 			$pageMessage = '<img src="' . WPSHOP_SUCCES_ICON . '" alt="action success" class="wpshopPageMessage_Icon" />' . sprintf(__('%s succesfully deleted', 'wpshop'), '<span class="bold" >' . $editedElement->code . '</span>');
 		}
 
-		$wpshop_attribute_combo_values_list_order_def = !empty($_REQUEST[self::getDbTable()]['wpshop_attribute_combo_values_list_order_def']) ? $_REQUEST[self::getDbTable()]['wpshop_attribute_combo_values_list_order_def'] : array();
-		unset($_REQUEST[self::getDbTable()]['wpshop_attribute_combo_values_list_order_def']);
+		$attribute_parameter = !empty( $_REQUEST[self::getDbTable()] ) ? (array)$_REQUEST[self::getDbTable()] : array();
+		 if ( !empty($set_section) ) unset($attribute_parameter['set_section']);
 
-		if(!isset($_REQUEST[self::getDbTable()]['status'])){
-			$_REQUEST[self::getDbTable()]['status'] = 'moderated';
+		$wpshop_attribute_combo_values_list_order_def = !empty($attribute_parameter['wpshop_attribute_combo_values_list_order_def']) ? $attribute_parameter['wpshop_attribute_combo_values_list_order_def'] : array();
+		// @TODO $_REQUEST
+		// unset($_REQUEST[self::getDbTable()]['wpshop_attribute_combo_values_list_order_def']);
+
+		if(!isset($attribute_parameter['status'])){
+			$attribute_parameter['status'] = 'moderated';
 		}
-		if(!isset($_REQUEST[self::getDbTable()]['is_historisable'])){
-			$_REQUEST[self::getDbTable()]['is_historisable'] = 'no';
+		if(!isset($attribute_parameter['is_historisable'])){
+			$attribute_parameter['is_historisable'] = 'no';
 		}
-		if(!isset($_REQUEST[self::getDbTable()]['is_required'])){
-			$_REQUEST[self::getDbTable()]['is_required'] = 'no';
+		if(!isset($attribute_parameter['is_required'])){
+			$attribute_parameter['is_required'] = 'no';
 		}
-		if(!isset($_REQUEST[self::getDbTable()]['is_used_in_admin_listing_column'])){
-			$_REQUEST[self::getDbTable()]['is_used_in_admin_listing_column'] = 'no';
+		if(!isset($attribute_parameter['is_used_in_admin_listing_column'])){
+			$attribute_parameter['is_used_in_admin_listing_column'] = 'no';
 		}
-		if(!isset($_REQUEST[self::getDbTable()]['is_used_in_quick_add_form'])){
-			$_REQUEST[self::getDbTable()]['is_used_in_quick_add_form'] = 'no';
+		if(!isset($attribute_parameter['is_used_in_quick_add_form'])){
+			$attribute_parameter['is_used_in_quick_add_form'] = 'no';
 		}
-		if(!isset($_REQUEST[self::getDbTable()]['is_intrinsic'])){
-			$_REQUEST[self::getDbTable()]['is_intrinsic'] = 'no';
+		if(!isset($attribute_parameter['is_intrinsic'])){
+			$attribute_parameter['is_intrinsic'] = 'no';
 		}
-		if(!isset($_REQUEST[self::getDbTable()]['is_requiring_unit'])){
-			$_REQUEST[self::getDbTable()]['is_requiring_unit'] = 'no';
+		if(!isset($attribute_parameter['is_requiring_unit'])){
+			$attribute_parameter['is_requiring_unit'] = 'no';
 		}
-		if(!isset($_REQUEST[self::getDbTable()]['is_visible_in_front'])){
-			$_REQUEST[self::getDbTable()]['is_visible_in_front'] = 'no';
+		if(!isset($attribute_parameter['is_visible_in_front'])){
+			$attribute_parameter['is_visible_in_front'] = 'no';
 		}
-		if(!isset($_REQUEST[self::getDbTable()]['is_visible_in_front_listing'])){
-			$_REQUEST[self::getDbTable()]['is_visible_in_front_listing'] = 'no';
+		if(!isset($attribute_parameter['is_visible_in_front_listing'])){
+			$attribute_parameter['is_visible_in_front_listing'] = 'no';
 		}
-		if(!isset($_REQUEST[self::getDbTable()]['is_used_for_sort_by'])){
-			$_REQUEST[self::getDbTable()]['is_used_for_sort_by'] = 'no';
+		if(!isset($attribute_parameter['is_used_for_sort_by'])){
+			$attribute_parameter['is_used_for_sort_by'] = 'no';
 		}
-		if(!isset($_REQUEST[self::getDbTable()]['is_visible_in_advanced_search'])){
-			$_REQUEST[self::getDbTable()]['is_visible_in_advanced_search'] = 'no';
+		if(!isset($attribute_parameter['is_visible_in_advanced_search'])){
+			$attribute_parameter['is_visible_in_advanced_search'] = 'no';
 		}
-		if(!isset($_REQUEST[self::getDbTable()]['is_searchable'])){
-			$_REQUEST[self::getDbTable()]['is_searchable'] = 'no';
+		if(!isset($attribute_parameter['is_searchable'])){
+			$attribute_parameter['is_searchable'] = 'no';
 		}
-		if(!isset($_REQUEST[self::getDbTable()]['is_used_for_variation'])){
-			$_REQUEST[self::getDbTable()]['is_used_for_variation'] = 'no';
+		if(!isset($attribute_parameter['is_used_for_variation'])){
+			$attribute_parameter['is_used_for_variation'] = 'no';
 		}
-		if(!isset($_REQUEST[self::getDbTable()]['is_used_in_variation'])){
-			$_REQUEST[self::getDbTable()]['is_used_in_variation'] = 'no';
+		if(!isset($attribute_parameter['is_used_in_variation'])){
+			$attribute_parameter['is_used_in_variation'] = 'no';
 		}
-		if(!isset($_REQUEST[self::getDbTable()]['is_user_defined'])){
-			$_REQUEST[self::getDbTable()]['is_user_defined'] = 'no';
+		if(!isset($attribute_parameter['is_user_defined'])){
+			$attribute_parameter['is_user_defined'] = 'no';
 		}
-		if(!isset($_REQUEST[self::getDbTable()]['_display_informations_about_value'])){
-			$_REQUEST[self::getDbTable()]['_display_informations_about_value'] = 'no';
+		if(!isset($attribute_parameter['_display_informations_about_value'])){
+			$attribute_parameter['_display_informations_about_value'] = 'no';
 		}
 
 		/*	Check frontend input and data type	*/
-		if (!empty($_REQUEST[self::getDbTable()]['frontend_input'])) {
-			switch ($_REQUEST[self::getDbTable()]['frontend_input']) {
+		if (!empty($attribute_parameter['frontend_input'])) {
+			switch ($attribute_parameter['frontend_input']) {
 				case 'short_text':
-						$_REQUEST[self::getDbTable()]['frontend_input'] = 'text';
-						if ( empty($_REQUEST[self::getDbTable()]['backend_input']) ) $_REQUEST[self::getDbTable()]['backend_input'] = 'text';
-						$_REQUEST[self::getDbTable()]['data_type'] = 'varchar';
+						$attribute_parameter['frontend_input'] = 'text';
+						if ( empty($attribute_parameter['backend_input']) ) $attribute_parameter['backend_input'] = 'text';
+						$attribute_parameter['data_type'] = 'varchar';
 					break;
 				case 'date_field':
-						$_REQUEST[self::getDbTable()]['frontend_input'] = 'text';
-						if ( empty($_REQUEST[self::getDbTable()]['backend_input']) ) $_REQUEST[self::getDbTable()]['backend_input'] = 'text';
-						$_REQUEST[self::getDbTable()]['data_type'] = 'datetime';
+						$attribute_parameter['frontend_input'] = 'text';
+						if ( empty($attribute_parameter['backend_input']) ) $attribute_parameter['backend_input'] = 'text';
+						$attribute_parameter['data_type'] = 'datetime';
 					break;
 				case 'float_field':
-						$_REQUEST[self::getDbTable()]['frontend_input'] = 'text';
-						if ( empty($_REQUEST[self::getDbTable()]['backend_input']) ) $_REQUEST[self::getDbTable()]['backend_input'] = 'text';
-						$_REQUEST[self::getDbTable()]['data_type'] = 'decimal';
+						$attribute_parameter['frontend_input'] = 'text';
+						if ( empty($attribute_parameter['backend_input']) ) $attribute_parameter['backend_input'] = 'text';
+						$attribute_parameter['data_type'] = 'decimal';
 					break;
 				case 'hidden_field':
-						$_REQUEST[self::getDbTable()]['frontend_input'] = 'hidden';
-						if ( empty($_REQUEST[self::getDbTable()]['backend_input']) ) $_REQUEST[self::getDbTable()]['backend_input'] = 'text';
-						$_REQUEST[self::getDbTable()]['data_type'] = 'varchar';
+						$attribute_parameter['frontend_input'] = 'hidden';
+						if ( empty($attribute_parameter['backend_input']) ) $attribute_parameter['backend_input'] = 'text';
+						$attribute_parameter['data_type'] = 'varchar';
 					break;
 				case 'pass_field':
-						$_REQUEST[self::getDbTable()]['frontend_input'] = 'password';
-						if ( empty($_REQUEST[self::getDbTable()]['backend_input']) ) $_REQUEST[self::getDbTable()]['backend_input'] = 'text';
-						$_REQUEST[self::getDbTable()]['data_type'] = 'varchar';
+						$attribute_parameter['frontend_input'] = 'password';
+						if ( empty($attribute_parameter['backend_input']) ) $attribute_parameter['backend_input'] = 'text';
+						$attribute_parameter['data_type'] = 'varchar';
 					break;
 
 				case 'select':
-						$_REQUEST[self::getDbTable()]['frontend_input'] = 'select';
-						if ( empty($_REQUEST[self::getDbTable()]['backend_input']) || empty($_REQUEST['id']) )
-							$_REQUEST[self::getDbTable()]['backend_input'] = 'multiple-select';
-						$_REQUEST[self::getDbTable()]['data_type'] = 'integer';
+						$attribute_parameter['frontend_input'] = 'select';
+						if ( empty($attribute_parameter['backend_input']) || empty($id) )
+							$attribute_parameter['backend_input'] = 'multiple-select';
+						$attribute_parameter['data_type'] = 'integer';
 					break;
 				case 'multiple-select':
-						$_REQUEST[self::getDbTable()]['frontend_input'] = 'multiple-select';
-						if ( empty($_REQUEST[self::getDbTable()]['backend_input']) || empty($_REQUEST['id']) )
-							$_REQUEST[self::getDbTable()]['backend_input'] = 'multiple-select';
-						$_REQUEST[self::getDbTable()]['data_type'] = 'integer';
+						$attribute_parameter['frontend_input'] = 'multiple-select';
+						if ( empty($attribute_parameter['backend_input']) || empty($id) )
+							$attribute_parameter['backend_input'] = 'multiple-select';
+						$attribute_parameter['data_type'] = 'integer';
 					break;
 				case 'radio':
-						$_REQUEST[self::getDbTable()]['frontend_input'] = 'radio';
-						if ( empty($_REQUEST[self::getDbTable()]['backend_input']) || empty($_REQUEST['id']) )
-							$_REQUEST[self::getDbTable()]['backend_input'] = 'multiple-select';
-						$_REQUEST[self::getDbTable()]['data_type'] = 'integer';
+						$attribute_parameter['frontend_input'] = 'radio';
+						if ( empty($attribute_parameter['backend_input']) || empty($id) )
+							$attribute_parameter['backend_input'] = 'multiple-select';
+						$attribute_parameter['data_type'] = 'integer';
 					break;
 				case 'checkbox':
-						$_REQUEST[self::getDbTable()]['frontend_input'] = 'checkbox';
-						if ( empty($_REQUEST[self::getDbTable()]['backend_input']) || empty($_REQUEST['id']) )
-							$_REQUEST[self::getDbTable()]['backend_input'] = 'multiple-select';
-						$_REQUEST[self::getDbTable()]['data_type'] = 'integer';
+						$attribute_parameter['frontend_input'] = 'checkbox';
+						if ( empty($attribute_parameter['backend_input']) || empty($id) )
+							$attribute_parameter['backend_input'] = 'multiple-select';
+						$attribute_parameter['data_type'] = 'integer';
 					break;
 
 				case 'textarea':
-						$_REQUEST[self::getDbTable()]['frontend_input'] = 'textarea';
-						if ( empty($_REQUEST[self::getDbTable()]['backend_input']) || empty($_REQUEST['id']) )
-							$_REQUEST[self::getDbTable()]['backend_input'] = 'textarea';
-						$_REQUEST[self::getDbTable()]['data_type'] = 'text';
+						$attribute_parameter['frontend_input'] = 'textarea';
+						if ( empty($attribute_parameter['backend_input']) || empty($id) )
+							$attribute_parameter['backend_input'] = 'textarea';
+						$attribute_parameter['data_type'] = 'text';
 					break;
 			}
 		}
 		else {
-			$_REQUEST[self::getDbTable()]['frontend_input'] = 'text';
-			if ( empty($_REQUEST[self::getDbTable()]['backend_input']) ) $_REQUEST[self::getDbTable()]['backend_input'] = 'text';
-			$_REQUEST[self::getDbTable()]['data_type'] = 'varchar';
+			$attribute_parameter['frontend_input'] = 'text';
+			if ( empty($attribute_parameter['backend_input']) ) $attribute_parameter['backend_input'] = 'text';
+			$attribute_parameter['data_type'] = 'varchar';
 		}
 
 		/*	Check if the checkbox for ajax activation is checked for data update	*/
-		// if(!isset($_REQUEST[self::getDbTable()]['use_ajax_for_filling_field']) || empty($_REQUEST[self::getDbTable()]['use_ajax_for_filling_field'])){
-			// $_REQUEST[self::getDbTable()]['use_ajax_for_filling_field']='no';
+		// if(!isset($attribute_parameter['use_ajax_for_filling_field']) || empty($attribute_parameter['use_ajax_for_filling_field'])){
+			// $attribute_parameter['use_ajax_for_filling_field']='no';
 		// }
-		$_REQUEST[self::getDbTable()]['use_ajax_for_filling_field'] = 'yes';
+		$attribute_parameter['use_ajax_for_filling_field'] = 'yes';
 
 		/*	Define the database operation type from action launched by the user	 */
-		$_REQUEST[self::getDbTable()]['default_value'] = (!empty($_REQUEST[self::getDbTable()]['default_value']) && is_array($_REQUEST[self::getDbTable()]['default_value'])) ? serialize($_REQUEST[self::getDbTable()]['default_value']) : (isset($_REQUEST[self::getDbTable()]['default_value']) ? str_replace('"', "'", $_REQUEST[self::getDbTable()]['default_value']) : '');
-		if ( $_REQUEST[self::getDbTable()]['data_type'] == 'datetime' ) {
-			$date_default_value_trasform_into_config = array('default_value' => $_REQUEST[self::getDbTable()]['default_value'], 'field_options' => (!empty($_POST[self::getDbTable() . '_options']) ? $_POST[self::getDbTable() . '_options'] : null));
-			$_REQUEST[self::getDbTable()]['default_value'] = serialize( $date_default_value_trasform_into_config );
+		$attribute_parameter['default_value'] = (!empty($attribute_parameter['default_value']) && is_array($attribute_parameter['default_value'])) ? serialize($attribute_parameter['default_value']) : (isset($attribute_parameter['default_value']) ? str_replace('"', "'", $attribute_parameter['default_value']) : '');
+		if ( $attribute_parameter['data_type'] == 'datetime' ) {
+			$date_default_value_trasform_into_config = array('default_value' => $attribute_parameter['default_value'], 'field_options' => (!empty($_POST[self::getDbTable() . '_options']) ? sanitize_text_field($_POST[self::getDbTable() . '_options']) : null));
+			$attribute_parameter['default_value'] = serialize( $date_default_value_trasform_into_config );
 		}
 		/*****************************		GENERIC				**************************/
 		/*************************************************************************/
-		$pageAction = (!empty($_REQUEST[self::getDbTable()]['frontend_label']) && isset($_REQUEST[self::getDbTable() . '_action'])) ? wpshop_tools::varSanitizer($_REQUEST[self::getDbTable() . '_action']) : ((!empty($_GET['action']) && ($_GET['action']=='delete')) ? $_GET['action'] : '');
-		$id = isset($_REQUEST[self::getDbTable()]['id']) ? wpshop_tools::varSanitizer($_REQUEST[self::getDbTable()]['id']) : ((!empty($_GET['id'])) ? $_GET['id'] : '');
+		$pageAction = (!empty($attribute_parameter['frontend_label']) && isset($_REQUEST[self::getDbTable() . '_action'])) ? sanitize_text_field($_REQUEST[self::getDbTable() . '_action']) : ((!empty($_GET['action']) && ($_GET['action']=='delete')) ? sanitize_text_field($_GET['action']) : '');
+		$id = isset($attribute_parameter['id']) ? sanitize_key($attribute_parameter['id']) : ((!empty($_GET['id'])) ? $_GET['id'] : '');
 		if(($pageAction != '') && (($pageAction == 'edit') || ($pageAction == 'editandcontinue'))){
 			if(current_user_can('wpshop_edit_attributes')){
-				$_REQUEST[self::getDbTable()]['last_update_date'] = date('Y-m-d H:i:s');
+				$attribute_parameter['last_update_date'] = date('Y-m-d H:i:s');
 				if($pageAction == 'delete'){
-					$attribute_code = $_REQUEST[self::getDbTable()]['code'];
-					if(!isset($_REQUEST[self::getDbTable()]['code']) || ($_REQUEST[self::getDbTable()]['code'] == '')){
+					$attribute_code = $attribute_parameter['code'];
+					if(!isset($attribute_parameter['code']) || ($attribute_parameter['code'] == '')){
 						$attribute = self::getElement($id, "'valid', 'moderated', 'notused'", 'id');
 						$attribute_code = $attribute->code;
 					}
 					if(!in_array($attribute_code, $attribute_undeletable)){
 						if(current_user_can('wpshop_delete_attributes')){
-							$_REQUEST[self::getDbTable()]['status'] = 'deleted';
+							$attribute_parameter['status'] = 'deleted';
 						}
 						else{
 							$actionResult = 'userNotAllowedForActionDelete';
@@ -285,7 +293,7 @@ class wpshop_attributes{
 						$actionResult = 'unDeletableAtribute';
 					}
 				}
-				$actionResult = wpshop_database::update($_REQUEST[self::getDbTable()], $id, self::getDbTable());
+				$actionResult = wpshop_database::update($attribute_parameter, $id, self::getDbTable());
 			}
 			else{
 				$actionResult = 'userNotAllowedForActionEdit';
@@ -293,15 +301,15 @@ class wpshop_attributes{
 		}
 		elseif(($pageAction != '') && (($pageAction == 'delete'))){
 			$attribute_code = '';
-			if (empty($_REQUEST[self::getDbTable()]['code'])) {
+			if (empty(	$attribute_parameter['code'])) {
 				$attribute = self::getElement($id, "'valid', 'moderated', 'notused', 'deleted'", 'id');
 				$attribute_code = $attribute->code;
 			}
 			if (!in_array($attribute_code, $attribute_undeletable)) {
 				if(current_user_can('wpshop_delete_attributes')){
-					$_REQUEST[self::getDbTable()]['last_update_date'] = current_time('mysql', 0);
-					$_REQUEST[self::getDbTable()]['status'] = 'deleted';
-					$actionResult = wpshop_database::update($_REQUEST[self::getDbTable()], $id, self::getDbTable());
+					$attribute_parameter['last_update_date'] = current_time('mysql', 0);
+					$attribute_parameter['status'] = 'deleted';
+					$actionResult = wpshop_database::update($attribute_parameter, $id, self::getDbTable());
 				}
 				else
 					$actionResult = 'userNotAllowedForActionDelete';
@@ -311,16 +319,16 @@ class wpshop_attributes{
 		}
 		elseif(($pageAction != '') && (($pageAction == 'save') || ($pageAction == 'saveandcontinue') || ($pageAction == 'add'))){
 			if(current_user_can('wpshop_add_attributes')){
-				$_REQUEST[self::getDbTable()]['creation_date'] = current_time('mysql', 0);
-				if(trim($_REQUEST[self::getDbTable()]['code']) == ''){
-					$_REQUEST[self::getDbTable()]['code'] = $_REQUEST[self::getDbTable()]['frontend_label'];
+				$attribute_parameter['creation_date'] = current_time('mysql', 0);
+				if(trim($attribute_parameter['code']) == ''){
+					$attribute_parameter['code'] = $attribute_parameter['frontend_label'];
 				}
-				$_REQUEST[self::getDbTable()]['code'] = wpshop_tools::slugify(str_replace("\'", "_", str_replace('\"', "_", $_REQUEST[self::getDbTable()]['code'])), array('noAccent', 'noSpaces', 'lowerCase', 'noPunctuation'));
-				$code_exists = self::getElement($_REQUEST[self::getDbTable()]['code'], "'valid', 'moderated', 'deleted'", 'code');
+				$attribute_parameter['code'] = wpshop_tools::slugify(str_replace("\'", "_", str_replace('\"', "_", $attribute_parameter['code'])), array('noAccent', 'noSpaces', 'lowerCase', 'noPunctuation'));
+				$code_exists = self::getElement($attribute_parameter['code'], "'valid', 'moderated', 'deleted'", 'code');
 				if((is_object($code_exists) || is_array($code_exists)) && (count($code_exists) > 0)){
-					$_REQUEST[self::getDbTable()]['code'] = $_REQUEST[self::getDbTable()]['code'] . '_' . (count($code_exists) + rand());
+					$attribute_parameter['code'] = $attribute_parameter['code'] . '_' . (count($code_exists) + rand());
 				}
-				$actionResult = wpshop_database::save($_REQUEST[self::getDbTable()], self::getDbTable());
+				$actionResult = wpshop_database::save($attribute_parameter, self::getDbTable());
 				$id = $wpdb->insert_id;
 			}
 			else{
@@ -334,7 +342,7 @@ class wpshop_attributes{
 		/****************************************************************************/
 		if($actionResult != ''){
 			$elementIdentifierForMessage = __('the attribute', 'wpshop');
-			if(!empty($_REQUEST[self::getDbTable()]['name']))$elementIdentifierForMessage = '<span class="bold" >' . $_REQUEST[self::getDbTable()]['frontend_label'] . '</span>';
+			if(!empty($attribute_parameter['name']))$elementIdentifierForMessage = '<span class="bold" >' . $attribute_parameter['frontend_label'] . '</span>';
 			if ($actionResult == 'error') {/*	CHANGE HERE FOR SPECIFIC CASE	*/
 				$pageMessage .= '<img src="' . WPSHOP_ERROR_ICON . '" alt="action error" class="wpshopPageMessage_Icon" />' . sprintf(__('An error occured while saving %s', 'wpshop'), $elementIdentifierForMessage, ' -> ' . $wpdb->last_error);
 			}
@@ -344,21 +352,25 @@ class wpshop_attributes{
 				/*****************************************************************************************************************/
 				/*	Add the different option for the attribute that are set to combo box for frontend input	*/
 				$done_options_value = array();
-				$default_value = $_REQUEST[self::getDbTable()]['default_value'];
+				$default_value = $attribute_parameter['default_value'];
 				$i = 1;
-				if ( !empty($_REQUEST['optionsUpdate']) ) {
+				$options = !empty($_REQUEST['options']) ? (array) $_REQUEST['options'] : array();
+				$optionsValue = !empty($_REQUEST['optionsValue']) ? (array) $_REQUEST['optionsValue'] : array();
+				$optionsUpdate = !empty($_REQUEST['optionsUpdate']) ? (array) $_REQUEST['optionsUpdate'] : array();
+				$optionsUpdateValue = !empty($_REQUEST['optionsUpdateValue']) ? (array) $_REQUEST['optionsUpdateValue'] : array();
+				if ( !empty($optionsUpdate) ) {
 					/**
 					 *	Check if there is an attribute code into sended request or if we have to get the code from database (Bug fix)
 					 */
-					if (empty($_REQUEST[self::getDbTable()]['code'])) {
+					if (empty($attribute_parameter['code'])) {
 						$attribute = self::getElement($id, "'valid', 'moderated', 'notused'", 'id');
 						$attribute_code = $attribute->code;
 					}
 					else {
-						$attribute_code = $_REQUEST[self::getDbTable()]['code'];
+						$attribute_code = $attribute_parameter['code'];
 					}
-					foreach ($_REQUEST['optionsUpdate'] as $option_key => $option_label) {
-						$option_value = !empty($_REQUEST['optionsUpdateValue'][$option_key]) ? str_replace(",", ".", $_REQUEST['optionsUpdateValue'][$option_key]) : '';
+					foreach ($optionsUpdate as $option_key => $option_label) {
+						$option_value = !empty($optionsUpdateValue[$option_key]) ? str_replace(",", ".", $optionsUpdateValue[$option_key]) : '';
 
 						if ( empty($option_value) || !in_array($option_value, $done_options_value) ) {
 							/*	Update an existing value only if the value does not exist into existing list	*/
@@ -386,9 +398,9 @@ class wpshop_attributes{
 						$i++;
 					}
 				}
-				if ( !empty($_REQUEST['options']) ) {
-					foreach ( $_REQUEST['options'] as $option_key => $option_label ) {
-						$option_value = !empty($_REQUEST['optionsValue'][$option_key]) ? str_replace(",", ".", $_REQUEST['optionsValue'][$option_key]) : sanitize_title($option_label);
+				if ( !empty($options) ) {
+					foreach ( $options as $option_key => $option_label ) {
+						$option_value = !empty($optionsValue[$option_key]) ? str_replace(",", ".", $optionsValue[$option_key]) : sanitize_title($option_label);
 
 						/*	Check what value to use for the new values	*/
 						$label = (!empty($option_label) ? $option_label : str_replace(",", ".", $option_value));
@@ -398,9 +410,9 @@ class wpshop_attributes{
 						}
 
 						// If the optionsUpdateValue is empty, set it a empty array to avoid error calling the in_array() function
-						$_REQUEST['optionsUpdateValue'] = !empty($_REQUEST['optionsUpdateValue']) ? $_REQUEST['optionsUpdateValue'] : array();
+						// $_REQUEST['optionsUpdateValue'] = !empty($_REQUEST['optionsUpdateValue']) ? $_REQUEST['optionsUpdateValue'] : array();
 
-						if (!in_array($option_value, $done_options_value) && !in_array($option_value, $_REQUEST['optionsUpdateValue']) ) {
+						if (!in_array($option_value, $done_options_value) && !in_array($option_value, $optionsUpdateValue) ) {
 
 							$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS, array('creation_date' => current_time('mysql', 0), 'status' => 'valid', 'attribute_id' => $id, 'position' => $i, 'label' => stripslashes($label), 'value' => stripslashes($option_value)));
 							$done_options_value[] = str_replace(",", ".", $option_value);
@@ -418,9 +430,9 @@ class wpshop_attributes{
 				}
 
 				// If the is_used_for_sort_by is mark as yes, we have to get out some attributes and save it separately
-				if( (!empty($_REQUEST[self::getDbTable()]['is_used_for_sort_by']) && ($_REQUEST[self::getDbTable()]['is_used_for_sort_by'] == 'yes')) || (!empty($_REQUEST[self::getDbTable()]['is_filterable']) && ($_REQUEST[self::getDbTable()]['is_filterable'] == 'yes')) || (!empty($_REQUEST[self::getDbTable()]['is_searchable']) && ($_REQUEST[self::getDbTable()]['is_searchable'] == 'yes')) ){
-					$attribute_code = $_REQUEST[self::getDbTable()]['code'];
-					if(!isset($_REQUEST[self::getDbTable()]['code']) || ($_REQUEST[self::getDbTable()]['code'] == '')){
+				if( (!empty($attribute_parameter['is_used_for_sort_by']) && ($attribute_parameter['is_used_for_sort_by'] == 'yes')) || (!empty($attribute_parameter['is_filterable']) && ($attribute_parameter['is_filterable'] == 'yes')) || (!empty($attribute_parameter['is_searchable']) && ($attribute_parameter['is_searchable'] == 'yes')) ){
+					$attribute_code = $attribute_parameter['code'];
+					if(!isset($attribute_parameter['code']) || ($attribute_parameter['code'] == '')){
 						$attribute = self::getElement($id, "'valid', 'moderated', 'notused'", 'id');
 						$attribute_code = $attribute->code;
 					}
@@ -431,7 +443,7 @@ class wpshop_attributes{
 						$products = $wpdb->get_results( $query );
 						if ( !empty($products) ) {
 							foreach( $products as $product ) {
-								$query = $wpdb->prepare("SELECT value FROM " . WPSHOP_DBT_ATTRIBUTE_VALUES_PREFIX . $_REQUEST[self::getDbTable()]['data_type'] . " WHERE attribute_id = %d AND entity_type_id = %d AND entity_id = %d AND value != '' ORDER BY creation_date_value DESC", $id, $_REQUEST[self::getDbTable()]['entity_id'], $product->ID);
+								$query = $wpdb->prepare("SELECT value FROM " . WPSHOP_DBT_ATTRIBUTE_VALUES_PREFIX . $attribute_parameter['data_type'] . " WHERE attribute_id = %d AND entity_type_id = %d AND entity_id = %d AND value != '' ORDER BY creation_date_value DESC", $id, $attribute_parameter['entity_id'], $product->ID);
 								$value = $wpdb->get_var($query);
 								update_post_meta($product->ID, '_' . $attribute_code, $value);
 							}
@@ -453,7 +465,7 @@ class wpshop_attributes{
 								FROM " . WPSHOP_DBT_ATTRIBUTE_DETAILS . " AS ATTRIBUTE_SET_DETAILS
 								WHERE ATTRIBUTE_SET_DETAILS.status = 'valid'
 									AND ATTRIBUTE_SET_DETAILS.attribute_id = %d
-									AND ATTRIBUTE_SET_DETAILS.entity_type_id = %d", $id, $_REQUEST[self::getDbTable()]['entity_id']);
+									AND ATTRIBUTE_SET_DETAILS.entity_type_id = %d", $id, $attribute_parameter['entity_id']);
 						$attribute_current_attribute_set = $wpdb->get_results($query);
 
 						if ( empty($attribute_current_attribute_set) ) {
@@ -472,7 +484,7 @@ class wpshop_attributes{
 										WHERE ATTRIBUTE_GROUP.default_group = 'yes'
 											AND ATTRIBUTE_GROUP.status = 'valid'
 									) AS attribute_group_id"
-								, $_REQUEST[self::getDbTable()]['entity_id'], $_REQUEST[self::getDbTable()]['entity_id'], $_REQUEST[self::getDbTable()]['entity_id'], $_REQUEST[self::getDbTable()]['entity_id']
+								, $attribute_parameter['entity_id'], $attribute_parameter['entity_id'], $attribute_parameter['entity_id'], $attribute_parameter['entity_id']
 							);
 							$wpshop_default_group = $wpdb->get_row($query);
 
@@ -491,11 +503,11 @@ class wpshop_attributes{
 								AND entity_type_id = %s ",
 								$set_id,
 								$group_id,
-								$_REQUEST[self::getDbTable()]['entity_id']
+								$attribute_parameter['entity_id']
 						);
 						$wpshopAttributePosition = $wpdb->get_var($query);
 						if($wpshopAttributePosition == 0)$wpshopAttributePosition = 1;
-						$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $_REQUEST[self::getDbTable()]['entity_id'], 'attribute_set_id' => $set_id, 'attribute_group_id' => $group_id, 'attribute_id' => $id, 'position' => $wpshopAttributePosition));
+						$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_DETAILS, array('status' => 'valid', 'creation_date' => current_time('mysql', 0), 'entity_type_id' => $attribute_parameter['entity_id'], 'attribute_set_id' => $set_id, 'attribute_group_id' => $group_id, 'attribute_id' => $id, 'position' => $wpshopAttributePosition));
 					}
 				}
 
@@ -527,7 +539,7 @@ class wpshop_attributes{
 				$pageMessage .= '<img src="' . WPSHOP_ERROR_ICON . '" alt="action error" class="wpshopPageMessage_Icon" />' . __('This attribute could not be deleted due to configuration', 'wpshop');
 			}
 
-			if(empty($_REQUEST[self::getDbTable()]['frontend_label']) && ($pageAction!='delete')){
+			if(empty($attribute_parameter['frontend_label']) && ($pageAction!='delete')){
 				$pageMessage .= __('Please enter an label for the attribut', 'wpshop');
 			}
 		}
@@ -546,22 +558,27 @@ class wpshop_attributes{
 		$wpshop_list_table = new wpshop_attributes_custom_List_table();
 		//Fetch, prepare, sort, and filter our data...
 		$status="'valid'";
-		if(!empty($_REQUEST['attribute_status'])){
-			switch($_REQUEST['attribute_status']){
+		$attribute_status = !empty($_REQUEST['attribute_status']) ? sanitize_text_field( $_REQUEST['attribute_status'] ) : null;
+		$s = !empty($_REQUEST['s']) ? sanitize_text_field( $_REQUEST['attribute_status'] ) : null;
+		$order = !empty($_REQUEST['order']) ? sanitize_text_field($_REQUEST['order']) : null;
+		$orderby = !empty($_REQUEST['orderby']) ? sanitize_text_field($_REQUEST['orderby']) : null;
+		if(!empty($attribute_status)){
+			switch($attribute_status){
 				case 'unactive':
 					$status="'moderated', 'notused'";
-					if(empty($_REQUEST['orderby']) && empty($_REQUEST['order'])){
-						$_REQUEST['orderby']='status';
-						$_REQUEST['order']='asc';
+					if(empty($order_by) && empty($order)){
+						// @TODO : REQUEST
+						// $_REQUEST['orderby']='status';
+						// $_REQUEST['order']='asc';
 					}
 					break;
 				default:
-					$status="'".$_REQUEST['attribute_status']."'";
+					$status="'".sanitize_text_field($_REQUEST['attribute_status'])."'";
 					break;
 			}
 		}
-		if ( !empty($_REQUEST['s']) ) {
-			$query = $wpdb->prepare("SELECT * FROM " . self::dbTable . ' WHERE frontend_label LIKE "%%%1$s%%" OR frontend_label LIKE "%%%2$s%%" AND backend_label LIKE "%%%1$s%%" OR backend_label LIKE "%%%2$s%%" AND code LIKE "%%%1$s%%" OR code LIKE "%%%2$s%%"', $_REQUEST['s'], __($_REQUEST['s'], 'wpshop') );
+		if ( !empty($s) ) {
+			$query = $wpdb->prepare("SELECT * FROM " . self::dbTable . ' WHERE frontend_label LIKE "%%%1$s%%" OR frontend_label LIKE "%%%2$s%%" AND backend_label LIKE "%%%1$s%%" OR backend_label LIKE "%%%2$s%%" AND code LIKE "%%%1$s%%" OR code LIKE "%%%2$s%%"', $s, __($s, 'wpshop') );
 			$attr_set_list = $wpdb->get_results( $query );
 		}
 		else {
@@ -590,12 +607,12 @@ class wpshop_attributes{
 	<!-- Forms are NOT created automatically, so you need to wrap the table in one to use features like bulk actions -->
 	<?php $wpshop_list_table->views() ?>
 	<form id="attributes_filter" method="get">
-	    <input type="hidden" name="page" value="<?php echo $_REQUEST['page']; ?>" />
-		<?php $wpshop_list_table->search_box('search', $_REQUEST['page'] . '_search_input'); ?>
+	    <input type="hidden" name="page" value="<?php echo esc_attr($_REQUEST['page']); ?>" />
+		<?php $wpshop_list_table->search_box('search', sanitize_text_field($_REQUEST['page']) . '_search_input'); ?>
 	</form>
 	<form id="attributes_filter" method="get">
 		<!-- For plugins, we also need to ensure that the form posts back to our current page -->
-		<input type="hidden" name="page" value="<?php echo $_REQUEST['page']; ?>" />
+		<input type="hidden" name="page" value="<?php echo esc_attr($_REQUEST['page']); ?>" />
 		<!-- Now we can render the completed list table -->
 		<?php $wpshop_list_table->display() ?>
 	</form>
@@ -613,6 +630,8 @@ ob_end_clean();
 	 *	@return string The html code that output the interface for adding a nem item
 	 */
 	function elementEdition($itemToEdit = '') {
+		ini_set('display_errors', true);
+		error_reporting(E_ALL);
 		global $attribute_displayed_field, $attribute_options_group;
 		$dbFieldList = wpshop_database::fields_to_input(self::getDbTable());
 		$editedItem = '';
@@ -627,8 +646,8 @@ ob_end_clean();
 				$input_def['label'] = $input_def['name'];
 				$input_def_id=$input_def['id']='wpshop_' . self::currentPageCode . '_edition_table_field_id_'.$input_def['label'];
 
-				$pageAction = isset($_REQUEST[self::getDbTable() . '_action']) ? wpshop_tools::varSanitizer($_REQUEST[self::getDbTable() . '_action']) : '';
-				$requestFormValue = isset($_REQUEST[self::currentPageCode][$input_def['label']]) ? wpshop_tools::varSanitizer($_REQUEST[self::currentPageCode][$input_def['label']]) : '';
+				$pageAction = isset($_REQUEST[self::getDbTable() . '_action']) ? sanitize_text_field($_REQUEST[self::getDbTable() . '_action']) : '';
+				$requestFormValue = isset($_REQUEST[self::currentPageCode][$input_def['label']]) ? sanitize_text_field($_REQUEST[self::currentPageCode][$input_def['label']]) : '';
 				$currentFieldValue = $input_def['value'];
 				if(is_object($editedItem))
 					$currentFieldValue = $editedItem->{$input_def['label']};
@@ -903,12 +922,12 @@ ob_end_clean();
 				}
 				if( $input_def['label'] == '_unit_group_id') {
 					$the_input .= '<div id="wpshop_loader_input_group_unit"></div>';
-					$the_input .= '<a class="button-primary" href="#wpshop_unit_group_list" id="wpshop_attribute_group_unit_manager_opener">'.__('Manage group unit', 'wpshop').'</a>';
+					$the_input .= '<a class="button-primary" href="#wpshop_unit_group_list" id="wpshop_attribute_group_unit_manager_opener" data-nonce="' . wp_create_nonce( 'load_unit_interface' ) . '">'.__('Manage group unit', 'wpshop').'</a>';
 				}
 
 				if( $input_def['label'] == '_default_unit') {
 					$the_input .= '<div id="wpshop_loader_input_unit"></div>';
-					$the_input .= '<a class="button-primary" href="#wpshop_unit_list" id="wpshop_attribute_unit_manager_opener">'.__('Manage units', 'wpshop').'</a>';
+					$the_input .= '<a class="button-primary" href="#wpshop_unit_list" id="wpshop_attribute_unit_manager_opener" data-nonce="' . wp_create_nonce( 'load_unit_interface' ) . '">'.__('Manage units', 'wpshop').'</a>';
 					$the_input .= '<input type="hidden" name="input_wpshop_load_attribute_unit_list" id="input_wpshop_load_attribute_unit_list" value="' . wp_create_nonce("wpshop_load_attribute_unit_list") . '" />';
 					$the_input .= '<div id="wpshop_attribute_unit_manager" title="' . __('Unit management', 'wpshop') . '" class="wpshopHide" ><div class="loading_picture_container" id="product_chooser_picture" ><img src="' . WPSHOP_LOADING_ICON . '" alt="loading..." /></div></div>';
 				}
@@ -916,7 +935,7 @@ ob_end_clean();
 
 				if($input_def['type'] != 'hidden'){
 					if ( ($input_def['label'] == 'entity_id') && is_object($editedItem) ) {
-						$the_input .= '<br/><span class="wpshop_duplicate_attribute" >' . __('Duplicate this attribute to another entity', 'wpshop') . '</span>';
+						$the_input .= '<br/><span class="wpshop_duplicate_attribute" >' . __('Duplicate this attribute to . another entity', 'wpshop') . '</span>';
 					}
 					$input = '
 		<tr class="wpshop_' . self::currentPageCode . '_edition_table_line wpshop_' . self::currentPageCode . '_edition_table_line_'.$input_def['name'].'" >
@@ -962,7 +981,7 @@ ob_end_clean();
 
 		/** It is attribute TVA, add a button to calcilate price in mass **/
 		if ( !empty($editedItem) && !empty($editedItem->code) && $editedItem->code == 'tx_tva' ) {
-			$the_form_general_content .= '<input type="button" id="wps_update_price_infos" value="' .__('Update all products price', 'wpshop').'" /> <img src="' .WPSHOP_LOADING_ICON. '" alt="" id="update_products_loader" /> <br/>';
+			$the_form_general_content .= '<input type="button" data-nonce="' . wp_create_nonce( 'wps_update_products_prices' ) . '" id="wps_update_price_infos" value="' .__('Update all products price', 'wpshop').'" /> <img src="' .WPSHOP_LOADING_ICON. '" alt="" id="update_products_loader" /> <br/>';
 			$the_form_general_content .= __('If you have updated your VAT rates, save it and update your products price after', 'wpshop' );
 		}
 		if (!empty($the_form_option_content_list)) {
@@ -1007,9 +1026,10 @@ ob_end_clean();
 		$bloc_list[self::currentPageCode]['options']['title']=__('Options', 'wpshop');
 		$bloc_list[self::currentPageCode]['options']['content']=$the_form_option_content;
 
+		$action = !empty( $_REQUEST['action'] ) ? sanitize_text_field( $_REQUEST['action' ] ) : '';
 		$the_form = '
 <form name="' . self::getDbTable() . '_form" id="' . self::getDbTable() . '_form" method="post" action="#" >
-	' . wpshop_form::form_input(self::getDbTable() . '_action', self::getDbTable() . '_action', (isset($_REQUEST['action']) && ($_REQUEST['action'] != '') ? wpshop_tools::varSanitizer($_REQUEST['action']) : 'save') , 'hidden') . '
+	' . wpshop_form::form_input(self::getDbTable() . '_action', self::getDbTable() . '_action', (isset($action) && ($action != '') ? sanitize_text_field($action) : 'save') , 'hidden') . '
 	' . wpshop_form::form_input(self::currentPageCode . '_form_has_modification', self::currentPageCode . '_form_has_modification', 'no' , 'hidden') . $the_form_content_hidden . wpshop_display::custom_page_output_builder($bloc_list, WPSHOP_ATTRIBUTE_EDITION_PAGE_LAYOUT) . '
 </form>
 <div title="' . __('Change data type for selected attribute', 'wpshop') . '" id="wpshop_dialog_change_select_data_type" ><div id="wpshop_dialog_change_select_data_type_container" ></div></div>';
@@ -1219,7 +1239,7 @@ ob_end_clean();
 	 *	@return string $currentPageButton The html output code with the different button to add to the interface
 	 */
 	function getPageFormButton($element_id = 0){
-		$action = isset($_REQUEST['action']) ? wpshop_tools::varSanitizer($_REQUEST['action']) : 'add';
+		$action = isset($_REQUEST['action']) ? sanitize_text_field($_REQUEST['action']) : 'add';
 		$currentPageButton = '';
 
 		 //$currentPageButton .= '<h2 class="cancelButton alignleft" ><a href="' . admin_url('edit.php?post_type='.WPSHOP_NEWTYPE_IDENTIFIER_ENTITIES.'&amp;page=' . self::getListingSlug()) . '" class="button add-new-h2" >' . __('Back', 'wpshop') . '</a></h2>';
@@ -1255,14 +1275,17 @@ ob_end_clean();
 		$moreQuery = "";
 		$moreArgs = array( 1, );
 
+		$orderby = !empty( $_REQUEST['orderby'] ) ? sanitize_text_field( $_REQUEST['orderby'] ) : '';
+		$order = !empty( $_REQUEST['order'] ) ? sanitize_text_field( $_REQUEST['order'] ) : '';
+
 		if($element_id != ''){
 			$moreQuery .= "
 					AND CURRENT_ELEMENT." . $field_to_search . " = %s ";
 			$moreArgs[] = $element_id;
 		}
-		if(!empty($_REQUEST['orderby']) && !empty($_REQUEST['order'])){
+		if(!empty($orderby) && !empty($order)){
 			$moreQuery .= "
-					ORDER BY " . $_REQUEST['orderby'] . "  " . $_REQUEST['order'];
+					ORDER BY " . $orderby . "  " . $order;
 		}
 
 		$query = $wpdb->prepare(
@@ -1386,10 +1409,11 @@ ob_end_clean();
 									endif;
 
 									/**	Enregistrement de toutes les valeurs des attributs dans une meta du produit	*/
-									if (!empty($_POST['attribute_option'][$attribute_code])) {
+									$attribute_option = (!empty($_POST['attribute_option'][$attribute_code])) ? (array) $_POST['attribute_option'][$attribute_code] : null;
+									if (isset($attribute_option)) {
 										$value = self::get_attribute_type_select_option_info($attributeTypeDetails[$attribute_code], 'value');
 										if (strtolower($value) == 'yes') :
-											update_post_meta($entityId, 'attribute_option_'.$attribute_code, $_POST['attribute_option'][$attribute_code]);
+											update_post_meta($entityId, 'attribute_option_'.$attribute_code, $attribute_option);
 										else :
 											delete_post_meta($entityId, 'attribute_option_'.$attribute_code);
 										endif;
@@ -2481,8 +2505,8 @@ GROUP BY ATT.id, chosen_val", $element_id, $attribute_code);
 				$fields = '<div class="wpshop_form_label alignleft">&nbsp;</div>
 						<div class="wpshop_form_input_element alignleft">
 						<div id="send_downloadable_file_dialog" class="wpshop_add_box" title="' .__('Send the downloadable file', 'wpshop'). '"></div>
-						<a id="send_downlodable_file" class="wps-bton-first-mini-rounded">' .__('Send a file', 'wpshop'). '</a>
-						<input type="hidden" id="product_identifer_field" value="' .( !empty($_GET['post']) ? $_GET['post'] : '') . '" /><br/><u>'.__('File url','wpshop').' :</u>
+						<a id="send_downlodable_file" ' . wp_create_nonce( "ajax_wpshop_fill_the_downloadable_dialog" ) . '  class="wps-bton-first-mini-rounded">' .__('Send a file', 'wpshop'). '</a>
+						<input type="hidden" id="product_identifer_field" value="' .( !empty($_GET['post']) ? esc_attr( $_GET['post'] ) : '') . '" /><br/><u>'.__('File url','wpshop').' :</u>
 						<div class="statut"><a href="' .$data['file_url']. '" target="_blank" download>'.basename($data['file_url']).'</a></div>
 						</div>';
 				return $fields;
@@ -2919,7 +2943,7 @@ GROUP BY ATT.id, chosen_val", $element_id, $attribute_code);
 	 *
 	 * @return string The html output
 	 */
-	function get_attribute_list($entity_id = 0, $list_for = 'product_by_attribute', $current_post_type = '') {
+	public static function get_attribute_list($entity_id = 0, $list_for = 'product_by_attribute', $current_post_type = '') {
 		global $wpdb;
 		$output = '';
 

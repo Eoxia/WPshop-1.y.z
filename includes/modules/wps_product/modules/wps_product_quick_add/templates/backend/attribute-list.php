@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 	<div id="wps-product-quick-creation-form-attributes" class="wps-bloc-loader" >
 		<?php $attribute_list = wpshop_attributes_set::getAttributeSetDetails( $chosen_set ); ?>
 		<?php if ( !empty( $attribute_list ) ) : ?>

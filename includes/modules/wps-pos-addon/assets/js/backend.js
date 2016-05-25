@@ -1,16 +1,18 @@
 jQuery( document ).ready(function(){
 	/** AutoFocus search */
 	jQuery("input[name='wps-pos-product-to-choose']").focus();
-	
+
 	/** Save state if search only barcode */
 	jQuery( "input[name=wps-pos-search-in]" ).change( function(){
 		/** Save state on db without return */
 		var checkbox = "unchecked";
 		if ( jQuery( "input[name=wps-pos-search-in]" ).is( ":checked" ) ) {
+
 			checkbox = "checked";
 		}
 		var data = {
 			action: "wpspos_save_config_barcode_only",
+			_wpnonce: jQuery( "input[name=wps-pos-search-in]" ).data( 'nonce' ),
 			value_checkbox: checkbox,
 		};
 		jQuery.post( ajaxurl, data, function(){}, 'json');
@@ -22,7 +24,9 @@ jQuery( document ).ready(function(){
 		action: "wpspos_state_is_quotation",
 		value_checkbox: 'unchecked',
 	};
+
 	jQuery.post( ajaxurl, data, function(){}, 'json');
+
 	jQuery( "input[name=wpspos-is-quotation]" ).attr('checked',false);
 	//Save state on session
 	jQuery( "input[name=wpspos-is-quotation]" ).change( function(){
@@ -57,7 +61,7 @@ jQuery( document ).ready(function(){
 		};
 		jQuery.post( ajaxurl, data, function(){}, 'json');
 	});
-	
+
 	/** Add folded class to admin menu on POS page	*/
 	setTimeout( function(){
 		jQuery( "body" ).addClass( "folded" );
@@ -84,6 +88,7 @@ jQuery( document ).ready(function(){
 			/**	Launch an ajax request for displaying	*/
 			var data = {
 				action: "wpspos_load_element_from_letter",
+				_wpnonce: jQuery( this ).data( "nonce" ),
 				element_type: jQuery( this ).attr( "data-type" ),
 				term: jQuery( this ).attr( "data-id" ),
 			};
@@ -111,7 +116,7 @@ jQuery( document ).ready(function(){
 		jQuery( ".wps-pos-customer-listing" ).addClass( "wps-bloc-loading" );
 
 		/**	Launch an ajax request for displaying	*/
-		wpspos_set_customer_for_order( jQuery( this ).attr( "data-id" ) );
+		wpspos_set_customer_for_order( jQuery( this ).attr( "data-id" ), jQuery( this ).data( 'nonce' ) );
 	});
 
 	/**	Trigger event on change customer button */
@@ -134,6 +139,7 @@ jQuery( document ).ready(function(){
 			jQuery( "#wpspos-dashboard-customer-metabox" ).children( ".wps-pos-alphabet-container" ).children( "button:first-child" ).removeClass( "wps-bton-first-rounded" ).addClass( "wps-bton-third-rounded" );
 			var data = {
 				action: "wpspos-customer-search",
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 				term: jQuery(this).val(),
 			};
 			customer_search = jQuery.post( ajaxurl, data, function( response ){
@@ -166,17 +172,18 @@ jQuery( document ).ready(function(){
 		var product_title = jQuery( this ).find('td:first').html().split( "<br>" )[0];
 		var product_id = jQuery( this ).data( "id" );
 		var product_type = jQuery( this ).data( "subtype" );
+		var _wpnonce = jQuery( this ).data( "nonce" );
 
 		/** Check if it's a product with variation */
 		if ( 'variations' == product_type ) {
 			/** Open the modal to select the variation **/
-			tb_show( product_title, ajaxurl + "?action=wps-pos-product-variation-selection&product_id=" + product_id + "&width=350px");
+			tb_show( product_title, ajaxurl + "?action=wps-pos-product-variation-selection&_wpnonce=" + _wpnonce + "&product_id=" + product_id + "&width=350px");
 			/**	First start by adding the loading class	*/
 			jQuery( ".wps-pos-product-listing" ).removeClass( "wps-bloc-loading" );
 		}
 		else {
 			/** Add product to cart **/
-			wps_pos_add_simple_product_to_cart( product_id );
+			wps_pos_add_simple_product_to_cart( product_id, _wpnonce );
 		}
 	});
 	/**	Trigger event on add product with variation to order button	*/
@@ -233,6 +240,7 @@ jQuery( document ).ready(function(){
  */
 	/**	Trigger event on quantity button	*/
 	jQuery( "#wps_cart_container" ).on( "click", ".item_qty", function(){
+		var _wpnonce = jQuery( this ).data( "nonce" );
 		var product_id = jQuery( this ).data( "id" );
 		var qty = jQuery( '#item_qty_' + product_id ).val();
 		if ( jQuery( this ).data( "action" ) == 'increase' ) {
@@ -244,23 +252,25 @@ jQuery( document ).ready(function(){
 		if ( ( 0 < qty ) || confirm( wpspos_confirm_product_deletion_from_order ) ) {
 			jQuery("#wps_cart_container").addClass( 'wps-bloc-loading' );
 			jQuery( '#item_qty_' + product_id ).val( qty );
-			updateQty( product_id, qty );
+			updateQty( product_id, qty, _wpnonce );
 		}
 	});
 	jQuery( "#wps_cart_container" ).on( "blur", ".wpspos-dashboard-order-summary_qty", function(){
+		var _wpnonce = jQuery( this ).data( "nonce" );
 		if ( !jQuery( this ).is( "[readonly]" ) ) {
 			jQuery("#wps_cart_container").addClass( 'wps-bloc-loading' );
 			var product_id = jQuery( this ).data( "id" );
 			var qty = jQuery( this ).val();
-			updateQty( product_id, qty );
+			updateQty( product_id, qty, _wpnonce );
 		}
 	});
 
 	/**	Trigger event on delete product from order	*/
 	jQuery( "#wps_cart_container" ).on( "click", ".wps-pos-delete-product-of-order", function(){
+		var _wpnonce = jQuery( this ).data( "nonce" );
 		jQuery("#wps_cart_container").addClass( 'wps-bloc-loading' );
 		var product_id = jQuery( this ).data( "id" );
-		updateQty( product_id, 0 );
+		updateQty( product_id, 0, _wpnonce );
 	});
 
 	/**	Trigger event on payment method choice	*/
@@ -292,7 +302,7 @@ jQuery( document ).ready(function(){
 	jQuery( document ).on( "keyup", ".wpspos-order-received-amount", function() {
 		display_money_cash_back();
 	});
-	
+
 	jQuery( document ).on( 'click', '.wpspos_select_address', function() {
 		jQuery( this ).closest( 'ul' ).children( 'li' ).removeClass( 'wps-activ' );
 		jQuery( this ).addClass( 'wps-activ' );
@@ -302,7 +312,7 @@ jQuery( document ).ready(function(){
 		/*var type = jQuery( this ).attr( 'name' ).replace( '_address_id', '' );
 		jQuery( '#wps_order_selected_address_' + type ).val( jQuery( this ) .val() );*/
 	});
-	
+
 	jQuery( document ).on( 'click', ".lnk_load_order", function(e){
 		e.preventDefault();
 		order_id = this.dataset.oid;
@@ -310,7 +320,7 @@ jQuery( document ).ready(function(){
 		this_element = jQuery( this );
 		jQuery.post( ajaxurl, {action:'wps-pos-display-order-content', order_id:order_id} , function( response ) {
 			jQuery("#wps_cart_container").html( response );
-			jQuery.post( ajaxurl, {action:'wpspos-finish-order', order_id:order_id, customer_id:customer_id} , function( responseJson ) {
+			jQuery.post( ajaxurl, {action:'wpspos-finish-order', _wpnonce: this_element.data( 'nonce' ), order_id:order_id, customer_id:customer_id} , function( responseJson ) {
 				responseObj = jQuery.parseJSON( responseJson );
 				if ( true == responseObj.status ) {
 					jQuery( ".wpspos-order-final-step-container" ).html( responseObj.output );
@@ -327,7 +337,7 @@ jQuery( document ).ready(function(){
 			});
 		});
 	});
-	
+
 	jQuery( document ).on( 'click', '.toggle-historic', function(e) {
 		e.preventDefault();
 		if( jQuery( this ).hasClass('dashicons-arrow-down') ) {
@@ -360,6 +370,7 @@ function search_product( event ) {
 	jQuery( "#wpspos-dashboard-product-metabox" ).children( ".wps-pos-alphabet-container" ).children( "button:first-child" ).removeClass( "wps-bton-first-rounded" ).addClass( "wps-bton-third-rounded" );
 	var data = {
 		action: "wpspos-product-search",
+		_wpnonce: jQuery( "input[name=wps-pos-product-to-choose]" ).data( 'nonce' ),
 		term: jQuery( "input[name=wps-pos-product-to-choose]" ).val(),
 		search_in: where_to_search,
 	};
@@ -368,11 +379,11 @@ function search_product( event ) {
 		if ( response[ 'status' ] ) {
 			if ( "direct_to_cart" == response[ 'action' ] ) {
 				jQuery("#wps_cart_container").addClass( 'wps-bloc-loading' );
-				wps_pos_add_simple_product_to_cart( response[ 'output' ] );
+				wps_pos_add_simple_product_to_cart( response[ 'output' ], response[ '_wpnonce'] );
 			}
 			else if ( "variation_selection" == response[ 'action' ] )  {
 				/** Open the modal to select the variation **/
-				tb_show( wps_pos_product_with_variation_box, ajaxurl + "?action=wps-pos-product-variation-selection&product_id=" + response[ 'output' ] + "&width=350px");
+				tb_show( wps_pos_product_with_variation_box, ajaxurl + "?action=wps-pos-product-variation-selection&_wpnonce=" + response[ '_wpnonce' ] + "&product_id=" + response[ 'output' ] + "&width=350px");
 			}
 			else {
 				jQuery( ".wps-pos-product-listing" ).html( response[ 'output' ] );
@@ -391,9 +402,10 @@ function search_product( event ) {
  *
  * @param product_id The product identifier to add to the cart
  */
-function wps_pos_add_simple_product_to_cart( product_id ) {
+function wps_pos_add_simple_product_to_cart( product_id, _wpnonce ) {
 	var data = {
 		action: "wpshop_add_product_to_cart",
+		_wpnonce: _wpnonce,
 		wpshop_cart_type : 'cart',
 		wpshop_pdt: product_id
 	};
@@ -425,6 +437,7 @@ function wps_pos_addon_refresh_cart() {
 	}
 	var data = {
 		action: 'wps-pos-display-order-content',
+		_wpnonce: jQuery( "#wps_cart_container" ).data( 'nonce' ),
 	};
 	jQuery.post( ajaxurl, data, function( response ){
 		jQuery("#wps_cart_container").html( response );
@@ -442,11 +455,12 @@ function wps_pos_addon_refresh_cart() {
  * @param pid integer The product identifer to change quantity for
  * @param qty integer The quantity to set
  */
-function updateQty( pid, qty ) {
+function updateQty( pid, qty, _wpnonce ) {
 	qty = qty < 0 ? 0 : qty;
 
 	var data = {
 		action: "wpshop_set_qtyfor_product_into_cart",
+		_wpnonce: _wpnonce,
 		product_id: pid,
 		product_qty: qty,
 	};
@@ -480,9 +494,10 @@ function display_money_cash_back() {
 }
 
 
-function wpspos_set_customer_for_order( customer_to_choose ) {
+function wpspos_set_customer_for_order( customer_to_choose, _wpnonce ) {
 	var data = {
 		action: "wpspos_set_customer_order",
+		_wpnonce: _wpnonce,
 		customer: customer_to_choose,
 	};
 	jQuery.post( ajaxurl, data, function( response ) {

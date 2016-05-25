@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wps-alert-info"><span class="dashicons dashicons-lightbulb"></span> <?php printf( __( 'Boost your WPShop with a Credit card payment solution, <a href="%s" target="_blank">click here to select your payment solution adapted to your Bank</a>', 'wpshop'), 'http://shop.eoxia.com/boutique/shop/modules-wpshop/modules-de-paiement/'); ?></div>
 <?php if( !empty($payment_option) && !empty($payment_option['mode']) ) : ?>
 <div class="wps-alert-error" id="wps_payment_config_save_message" style="display : none"><span class="dashicons dashicons-info"></span> <?php _e( 'Process saving, please wait...', 'wpshop'); ?></div>

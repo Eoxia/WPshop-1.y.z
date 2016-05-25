@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <input type="hidden" class="wpeo-bubble-url-key" value="<?php echo !empty($meta['urls']) ? count($meta['urls']) : 1; ?>" />
 <ul class="wpeo-bubble-urls">
   <?php if(!empty($meta['urls'])): ?>

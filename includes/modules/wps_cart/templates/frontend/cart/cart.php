@@ -1,4 +1,5 @@
-<?php if( !$account_origin ) : ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ if( !$account_origin ) : ?>
 <div id="wps_cart_error_container" class="wps-alert-error"></div>
 <?php endif; ?>
 <ul class="wps-fullcart">
@@ -95,7 +96,7 @@
 				}
 
 				if ( !empty($download_codes) && !empty($download_codes[$item_id_for_download]) && !empty($download_codes[$item_id_for_download]['download_code']) ) {
-					$download_link = '<a href="' .WPSHOP_URL. '/download_file.php?oid=' .$oid. '&amp;download=' .$download_codes[$item_id_for_download]['download_code']. '" target="_blank" class="wps-bton-fourth-mini-rounded">' .__('Download the product','wpshop'). '</a>';
+					$download_link = '<a href="' .admin_url( 'admin-post.php?action=wps_download_file&amp;oid=' . $oid . '&amp;download=' . $download_codes[$item_id_for_download]['download_code'] ) . '" target="_blank" class="wps-bton-fourth-mini-rounded">' .__('Download the product','wpshop'). '</a>';
 				}
 			}
 

@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Main controller file for product into point of sale management plugin
  *
@@ -23,7 +23,7 @@ class wps_pos_addon_product {
 
 		/**	Point d'accroche AJAX / AJAX listeners	*/
 		/**	Vérification du type de produit avant ajout au panier / Check the product type before adding it into cart	*/
-		add_action( 'wp_ajax_wps-pos-product-check-type', array( $this, 'ajax_pos_check_product_type' ) );
+		//add_action( 'wap_ajax_wps-pos-product-check-type', array( $this, 'ajax_pos_check_product_type' ) );
 		/**	Affiche le formulaire permettant de sélectionner la déclinaison du produit / Display the form allowing to choose product variation	*/
 		add_action( 'wp_ajax_wps-pos-product-variation-selection', array( $this, 'ajax_pos_product_variation_selection' ) );
 		/**	Lance la recherche de produit / Launch product search	*/
@@ -147,9 +147,14 @@ class wps_pos_addon_product {
 	 * AJAX - Vérifie si le produit sur le point d'être ajouté à la commande est un produit simple ou un produit composé / Check if the selected produt is a simple one or a combined one
 	 */
 	function ajax_pos_check_product_type() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'ajax_pos_check_product_type' ) )
+			wp_die();
+
 		$product_type = 'simple';
 
-		$product_id = ( !empty($_POST['product_id']) ) ? wpshop_tools::varSanitizer($_POST['product_id']) : null;
+		$product_id = ( !empty($_POST['product_id']) ) ? (int) $_POST['product_id'] : null;
 		if ( !empty($product_id) ) {
 			$product_post_meta = get_post_meta( $product_id, '_wpshop_variation_defining', true );
 			if ( !empty( $product_post_meta ) ) {
@@ -164,6 +169,11 @@ class wps_pos_addon_product {
 	 * AJAX - Affiche le formulaire permettant de sélectionner la déclinaison du produit / Display the form allowing to choose product variation
 	 */
 	function ajax_pos_product_variation_selection() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'ajax_pos_product_variation_selection' ) )
+			wp_die();
+
 		/**	Get the product identifier to display variation chooser	*/
 		$product_id = !empty( $_GET ) && !empty( $_GET[ 'product_id' ] ) && is_int( (int)$_GET[ 'product_id' ] ) ? (int)$_GET[ 'product_id' ] : null;
 
@@ -176,9 +186,14 @@ class wps_pos_addon_product {
 	 * AJAX - Lance la recherche de produit / Launch product search
 	 */
 	function ajax_pos_product_search() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'ajax_pos_product_search' ) )
+			wp_die();
+
 		global $wpdb;
 
-		$term = !empty( $_POST ) && !empty( $_POST[ 'term' ] ) ? $_POST[ 'term' ] : null;
+		$term = !empty( $_POST ) && !empty( $_POST[ 'term' ] ) ? sanitize_text_field( $_POST[ 'term' ] ) : null;
 		$response = array(
 			'status' => false,
 			'action' => '',
@@ -191,7 +206,9 @@ class wps_pos_addon_product {
 			$query_args[] = WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT;
 			$query_args[] = $term;
 
-			if ( empty( $_POST[ 'search_in' ] ) || ( 'only_barcode' != $_POST[ 'search_in' ] ) ) {
+			$search_in = !empty( $_POST[ 'search_in' ] ) ? sanitize_text_field( $_POST[ 'search_in' ] ) : '';
+
+			if ( empty( $search_in ) || ( 'only_barcode' != $search_in ) ) {
 				$more_query = " OR P.post_title LIKE %s";
 				$query_args[] = '%' . $term . '%';
 			}
@@ -245,6 +262,8 @@ class wps_pos_addon_product {
 				ob_end_clean();
 			}
 		}
+
+		$response['_wpnonce'] = wp_create_nonce( 'ajax_pos_product_variation_selection' );
 
 		wp_die( json_encode( $response ) );
 	}

@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Module controller class definition file
  *
@@ -33,12 +33,13 @@ class wps_installer_model {
 		switch ( $the_step_to_save ) {
 			case 1:
 				/**	Save company informations	*/
-				if ( !empty( $_POST[ 'wpshop_company_info' ] ) ) {
-					update_option( 'wpshop_company_info', $_POST[ 'wpshop_company_info' ] );
+				$wpshop_company_info = !empty( $_POST['wpshop_company_info'] ) ? sanitize_text_field( $_POST['wpshop_company_info'] ) : '';
+				if ( !empty( $wpshop_company_info ) ) {
+					update_option( 'wpshop_company_info', $wpshop_company_info );
 				}
 
 				/**	Save the company logo in case a file is sended	*/
-				$shop_logo = $_POST['wpshop_logo'];
+				$shop_logo = !empty( $_POST['wpshop_logo'] ) ? sanitize_text_field( $_POST['wpshop_logo'] ) : '';
 				if ( !empty( $shop_logo ) ) {
 					update_option( 'wpshop_logo', $shop_logo );
 				}
@@ -46,13 +47,15 @@ class wps_installer_model {
 
 			case 2:
 				/**	Save shop type	*/
-				if ( !empty( $_POST[ 'wpshop_shop_type' ] ) ) {
-					update_option( 'wpshop_shop_type', $_POST[ 'wpshop_shop_type' ] );
+				$wpshop_shop_type = !empty( $_POST['wpshop_shop_type'] ) ? sanitize_text_field( $_POST[ 'wpshop_shop_type' ] ) : '';
+				if ( !empty( $wpshop_shop_type ) ) {
+					update_option( 'wpshop_shop_type', $wpshop_shop_type );
 				}
 
 				/**	Save shop price piloting	*/
-				if ( !empty( $_POST[ 'wpshop_shop_price_piloting' ] ) ) {
-					update_option( 'wpshop_shop_price_piloting', $_POST[ 'wpshop_shop_price_piloting' ] );
+				$wpshop_shop_price_piloting = !empty( $_POST[ 'wpshop_shop_price_piloting' ] ) ? sanitize_text_field( $_POST[ 'wpshop_shop_price_piloting' ] ) : '';
+				if ( !empty( $wpshop_shop_price_piloting ) ) {
+					update_option( 'wpshop_shop_price_piloting', $wpshop_shop_price_piloting );
 				}
 
 				/**	Insert default pages	*/
@@ -60,7 +63,8 @@ class wps_installer_model {
 				//add_action( 'init', array( 'wps_message_ctr', 'create_default_message' ) );
 
 				/**	In case the user want to insert default datas	*/
-				if ( !empty( $_POST[ 'wps-installer-data-insertion' ] ) && ( 'yes' == $_POST[ 'wps-installer-data-insertion' ] ) ) {
+				$wps_installer_data_insertion = !empty( $_POST[ 'wps-installer-data-insertion' ] ) ? sanitize_text_field( $_POST[ 'wps-installer-data-insertion' ] ) : '';
+				if ( !empty( $wps_installer_data_insertion ) && ( 'yes' == $wps_installer_data_insertion ) ) {
 					/**	Insert sample datas */
 					add_action( 'init', array( 'wpshop_install', 'import_sample_datas' ) );
 				}

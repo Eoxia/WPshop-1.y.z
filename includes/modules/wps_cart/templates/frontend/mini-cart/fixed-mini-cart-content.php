@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <!-- <span class="wps-mini-cart-body-title"><strong><?php echo $total_cart_item; ?></strong><?php _e( 'item(s)', 'wpshop'); ?><span><strong><?php echo number_format( $total_cart, 2, '.', ''); ?></strong> <?php echo $currency; ?></span></span>-->
 <div>
 	<ul>
@@ -23,15 +25,15 @@
 			<div class="wps-cart-item-content">
 				<a href="#" title="">
 					<?php echo $item_title; ?>
-				</a>	
+				</a>
 			</div>
 			<div class="wps-cart-item-price">
 			   	<span class="wps-price"><?php echo wpshop_tools::formate_number( $item['item_total_ttc'] ); ?><span> <?php echo $currency; ?></span></span>
 			   	<span class="wps-tva"><?php _e( 'ATI', 'wpshop'); ?></span><br>
 			</div>
 			<div class="wps-cart-item-close">
-				<button type="button" class="wps-bton-icon wps_cart_delete_product"><i class="wps-icon-trash"></i></button>
-			</div>	
+				<button type="button" class="wps-bton-icon wps_cart_delete_product" data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_set_qty_for_product_into_cart' ); ?>"><i class="wps-icon-trash"></i></button>
+			</div>
 		</li>
 		<?php endforeach; ?>
 	</ul>

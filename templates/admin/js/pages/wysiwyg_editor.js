@@ -25,7 +25,7 @@
 						wpshop_product_shortode = m.addMenu({title : WPSHOP_WYSIWYG_MENU_TITLE_PRODUCT_LISTING});
 						wpshop_product_shortode.add({title : WPSHOP_WYSIWYG_PRODUCT_LISTING_BY_PID_TITLE, onclick : function() {
 							tinyMCE.activeEditor.windowManager.open({
-								file : WPSHOP_TEMPLATES_URL + 'admin/wpshop_shortcodes_wysiwyg_dialog.php?type=product&post_type=' + jQuery("#post_type").val(),
+								file : WPSHOP_ADMIN_URL + 'admin-post.php?action=wps_shortcodes_wysiwyg_dialog&type=product&post_type=' + jQuery("#post_type").val(),
 								width : 800,
 								height : 600,
 								inline : 1
@@ -33,7 +33,7 @@
 						}});
 						wpshop_product_shortode.add({title : WPSHOP_WYSIWYG_PRODUCT_LISTING_BY_ATTRIBUTE_TITLE, onclick : function() {
 							tinyMCE.activeEditor.windowManager.open({
-								file : WPSHOP_TEMPLATES_URL + 'admin/wpshop_shortcodes_wysiwyg_dialog.php?type=product_by_attribute&post_type=' + jQuery("#post_type").val(),
+								file : WPSHOP_ADMIN_URL + 'admin-post.php?action=wps_shortcodes_wysiwyg_dialog&type=product_by_attribute&post_type=' + jQuery("#post_type").val(),
 								width : 800,
 								height : 600,
 								inline : 1
@@ -43,7 +43,7 @@
 						/*	Define wpshop categories shortcode menu	*/
 						m.add({title : WPSHOP_WYSIWYG_MENU_TITLE_CATEGORIES, onclick : function() {
 	                        tinyMCE.activeEditor.windowManager.open({
-	        					file : WPSHOP_TEMPLATES_URL + 'admin/wpshop_shortcodes_wysiwyg_dialog.php?type=categories&post_type=' + jQuery("#post_type").val(),
+	        					file : WPSHOP_ADMIN_URL + 'admin-post.php?action=wps_shortcodes_wysiwyg_dialog&type=categories&post_type=' + jQuery("#post_type").val(),
 	        					width : 800,
 	        					height : 600,
 	        					inline : 1
@@ -53,7 +53,7 @@
 						/*	Define wpshop attributes shortcode menu	*/
 						m.add({title : WPSHOP_WYSIWYG_MENU_TITLE_ATTRIBUTE_VALUE, onclick : function() {
 							tinyMCE.activeEditor.windowManager.open({
-								file : WPSHOP_TEMPLATES_URL + 'admin/wpshop_shortcodes_wysiwyg_dialog.php?type=attribute_value&post_type=' + jQuery("#post_type").val(),
+								file : WPSHOP_ADMIN_URL + 'admin-post.php?action=wps_shortcodes_wysiwyg_dialog&type=attribute_value&post_type=' + jQuery("#post_type").val(),
 								width : 800,
 								height : 600,
 								inline : 1
@@ -156,5 +156,183 @@
 	});
 
 	// Register plugin
-	tinymce.PluginManager.add('wpshop_wysiwyg_shortcodes', tinymce.plugins.wpshop_wysiwyg_shortcodes);
+	tinymce.PluginManager.add('wpshop_wysiwyg_shortcodes', function(editor, url) {
+		if (( jQuery("#post_type").val() === 'page' ) || ( jQuery("#post_type").val() === 'post' ) || ( jQuery("#post_type").val() === WPSHOP_NEWTYPE_IDENTIFIER_MESSAGE ) || ( jQuery("#post_type").val() === WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT )) {
+			editor.addButton( 'wpshop_wysiwyg_shortcodes', {
+				title: WPSHOP_BUTTON_DESCRIPTION,
+				type: 'menubutton',
+				icon: 'wp_code',
+				menu: [
+					{
+						title : WPSHOP_WYSIWYG_MENU_TITLE_PRODUCT_LISTING,
+						menu: [
+							{
+								title: WPSHOP_WYSIWYG_PRODUCT_LISTING_BY_PID_TITLE,
+								onclick: function() {
+									editor.windowManager.open({
+										file: WPSHOP_ADMIN_URL + 'admin-post.php?action=wps_shortcodes_wysiwyg_dialog&type=product&post_type=' + jQuery("#post_type").val(),
+										width: 800,
+										height: 600,
+										inline: 1
+									});
+								}
+							},
+							{
+								title: WPSHOP_WYSIWYG_PRODUCT_LISTING_BY_ATTRIBUTE_TITLE,
+								onclick: function() {
+									editor.windowManager.open({
+										file: WPSHOP_ADMIN_URL + 'admin-post.php?action=wps_shortcodes_wysiwyg_dialog&type=product_by_attribute&post_type=' + jQuery("#post_type").val(),
+										width: 800,
+										height: 600,
+										inline: 1
+									});
+								}
+							},
+						]
+					},
+					{
+						title: WPSHOP_WYSIWYG_MENU_TITLE_CATEGORIES,
+						onclick: function() {
+							editor.windowManager.open({
+								file: WPSHOP_ADMIN_URL + 'admin-post.php?action=wps_shortcodes_wysiwyg_dialog&type=categories&post_type=' + jQuery("#post_type").val(),
+								width: 800,
+								height: 600,
+								inline: 1
+							});
+						}
+					},
+					{
+						title: WPSHOP_WYSIWYG_MENU_TITLE_ATTRIBUTE_VALUE,
+						onclick: function() {
+							tinyMCE.activeEditor.windowManager.open({
+								file: WPSHOP_ADMIN_URL + 'admin-post.php?action=wps_shortcodes_wysiwyg_dialog&type=attribute_value&post_type=' + jQuery("#post_type").val(),
+								width: 800,
+								height: 600,
+								inline: 1
+							});
+						}
+					},
+					{
+						title : WPSHOP_CUSTOM_TAGS_TITLE,
+						menu: [
+							{
+								title: WPSHOP_CUSTOM_TAGS_CART,
+								onclick: function() {
+									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[wpshop_cart]');
+								}
+							},
+							{
+								title: WPSHOP_CUSTOM_TAGS_CART_MINI,
+								onclick: function() {
+									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[wpshop_mini_cart]');
+								}
+							},
+							{
+								title: WPSHOP_CUSTOM_TAGS_CHECKOUT,
+								onclick: function() {
+									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[wpshop_checkout]');
+								}
+							},
+							{
+								title: WPSHOP_CUSTOM_TAGS_ACCOUNT,
+								onclick: function() {
+									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[wpshop_myaccount]');
+								}
+							},
+							{
+								title: WPSHOP_CUSTOM_TAGS_SHOP,
+								onclick: function() {
+									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[wpshop_products]');
+								}
+							},
+						]
+					},
+					{
+						title: WPSHOP_CUSTOM_MESSAGE_CONTENT_TITLE,
+						menu: [
+							{
+								title : WPSHOP_CUSTOM_MESSAGE_CONTENT_CUSTOMER_FIRST_NAME,
+								onclick : function() {
+									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[customer_first_name]');
+								}
+							},
+							{
+								title : WPSHOP_CUSTOM_MESSAGE_CONTENT_CUSTOMER_LAST_NAME,
+								onclick : function() {
+									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[customer_last_name]');
+								}
+							},
+							{
+								title : WPSHOP_CUSTOM_MESSAGE_CONTENT_CUSTOMER_EMAIL,
+								onclick : function() {
+									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[customer_email]');
+								}
+							},
+							{
+								title : WPSHOP_CUSTOM_MESSAGE_CONTENT_ORDER_ID,
+								onclick : function() {
+									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[order_key]');
+								}
+							},
+							{
+								title : WPSHOP_CUSTOM_MESSAGE_CONTENT_PAYPAL_TRANSACTION_ID,
+								onclick : function() {
+									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[paypal_order_key]');
+								}
+							},
+							{
+								title : WPSHOP_CUSTOM_MESSAGE_CONTENT_ORDER_PAYMENT_METHOD,
+								onclick : function() {
+									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[order_payment_method]');
+								}
+							},
+							{
+								title : WPSHOP_CUSTOM_MESSAGE_CONTENT_ORDER_CUSTOMER_PERSONNAL_INFORMATIONS,
+								onclick : function() {
+									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[order_personnal_informations]');
+								}
+							},
+							{
+								title : WPSHOP_CUSTOM_MESSAGE_CONTENT_ORDER_CONTENT,
+								onclick : function() {
+									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[order_content]');
+								}
+							},
+							{
+								title : WPSHOP_CUSTOM_MESSAGE_CONTENT_ORDER_ADDRESSES,
+								onclick : function() {
+									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[order_addresses]');
+								}
+							},
+							{
+								title : WPSHOP_CUSTOM_MESSAGE_CONTENT_BILLING_ORDER_ADDRESS,
+								onclick : function() {
+									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[order_billing_address]');
+								}
+							},
+							{
+								title : WPSHOP_CUSTOM_MESSAGE_CONTENT_SHIPPING_ORDER_ADDRESS,
+								onclick : function() {
+									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[order_shipping_address]');
+								}
+							},
+							{
+								title : WPSHOP_CUSTOM_MESSAGE_CONTENT_SHIPPING_METHOD,
+								onclick : function() {
+									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[order_shipping_method]');
+								}
+							},
+							{
+								title : WPSHOP_CUSTOM_MESSAGE_CONTENT_CUSTOMER_COMMENT,
+								onclick : function() {
+									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[order_customer_comments]');
+								}
+							}
+						]
+					}
+				]
+			});
+		}
+	});
+	//tinymce.PluginManager.add('wpshop_wysiwyg_shortcodes', tinymce.plugins.wpshop_wysiwyg_shortcodes);
 })();

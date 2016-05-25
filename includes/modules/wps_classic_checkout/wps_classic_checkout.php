@@ -1,13 +1,4 @@
-<?php
-/**
- * Plugin Name: WP Shop Classic Checkout
- * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/
- * Description: WP Shop Classic Checkout
- * Version: 0.1
- * Author: Eoxia
- * Author URI: http://eoxia.com/
- */
-
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * WP Shop Classic Checkout bootstrap file
  * @author Jérôme ALLEGRE - Eoxia dev team <dev@eoxia.com>
@@ -17,9 +8,6 @@
  *
  */
 
-if ( !defined( 'WPSHOP_VERSION' ) ) {
-	die( __("You are not allowed to use this service.", 'wpshop') );
-}
 if ( !class_exists("wps_classic_checkout") ) {
 
 	/** Template Global vars **/
@@ -73,8 +61,13 @@ if ( !class_exists("wps_classic_checkout") ) {
 		 * Display Classic Checkout
 		 */
 		function show_classic_checkout() {
-			if( !empty($_GET['action']) && $_GET['action'] == 'direct_payment_link') {
-				wpshop_checkout::direct_payment_link( $_GET['token'], $_GET['order_id'], $_GET['login']);
+			$action = !empty( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
+			$token = !empty( $_GET['token'] ) ? sanitize_text_field( $_GET['token'] ) : '';
+			$login = !empty( $_GET['login'] ) ? sanitize_text_field( $_GET['login'] ) : '';
+			$order_id = !empty( $_GET['order_id'] ) ? (int) $_GET['order_id'] : '';;
+
+			if( !empty($action) && $action == 'direct_payment_link') {
+				wpshop_checkout::direct_payment_link( $token, $order_id, $login);
 			}
 
 			$wpshop_cart_option = get_option( 'wpshop_cart_option' );
@@ -268,7 +261,7 @@ if ( !class_exists("wps_classic_checkout") ) {
 			else {
 				$no_shipping = true;
 			}
-			
+
 			$no_payment = false;
 			$partial_payment_for_quotation = get_option('wpshop_payment_partial', array('for_quotation' => array()));
 			if( !empty($_SESSION) && !empty( $_SESSION['cart'] ) && ( ( !empty($_SESSION['cart']['order_amount_to_pay_now']) && number_format( $_SESSION['cart']['order_amount_to_pay_now'], 2, '.', '' ) == '0.00' ) || ( !empty($_SESSION['cart']['cart_type']) && $_SESSION['cart']['cart_type'] == 'quotation' && isset( $partial_payment_for_quotation['for_quotation']['activate'] ) ) ) ) {
@@ -277,7 +270,7 @@ if ( !class_exists("wps_classic_checkout") ) {
 			else {
 				$steps[] = __('Payment', 'wpshop');
 			}
-			
+
 			$steps[] = __('Confirmation', 'wpshop');
 
 			$steps = apply_filters('wps_extra_action_checkout_indicator', $steps);
@@ -289,6 +282,11 @@ if ( !class_exists("wps_classic_checkout") ) {
 		 * AJAX - Valid Checkout Step three
 		 */
 		function wps_checkout_valid_step_three() {
+			$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+			if ( !wp_verify_nonce( $_wpnonce, 'wps_checkout_valid_step_three' ) )
+				wp_die();
+
 			$response = ''; $status = true;
 
 			$shipping_address = ( !empty($_POST['shipping_address_id']) ) ? wpshop_tools::varSanitizer( $_POST['shipping_address_id'] ): null;
@@ -406,15 +404,18 @@ if ( !class_exists("wps_classic_checkout") ) {
 			//Stock checking verification
 			$this->checking_stock();
 
-
-			echo json_encode( array( 'status' => $status, 'response' => $response ) );
-			die();
+			wp_die( json_encode( array( 'status' => $status, 'response' => $response ) ) );
 		}
 
 		/**
 		 * AJAX - Valid Checkout step four
 		 */
 		function wps_checkout_valid_step_four() {
+			$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+			if ( !wp_verify_nonce( $_wpnonce, 'wps_checkout_valid_step_four' ) )
+				wp_die();
+
 			$shipping_method = ( !empty($_POST['shipping_mode']) ) ? wpshop_tools::varSanitizer($_POST['shipping_mode']) : null;
 			$status = false;
 			$response = '';
@@ -462,14 +463,20 @@ if ( !class_exists("wps_classic_checkout") ) {
 		 * AJAX - Valid Checkout step four
 		 */
 		function wps_checkout_valid_step_five() {
-			$status = false; $response = '';
+			$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+			if ( !wp_verify_nonce( $_wpnonce, 'wps_checkout_valid_step_five' ) )
+				wp_die();
+
+			$status = false;
+			$response = '';
 			$payment_method = ( !empty($_POST['wps-payment-method']) ) ? wpshop_tools::varSanitizer( $_POST['wps-payment-method'] ): null;
 			$order_id = ( !empty($_SESSION['cart']['order_id']) ) ? wpshop_tools::varSanitizer($_SESSION['cart']['order_id']) : 0;
 			$customer_comment = ( !empty($_POST['wps-customer-comment']) ) ? wpshop_tools::varSanitizer( $_POST['wps-customer-comment'] ) : null;
 
-			$terms_of_sale_checking = ( ( isset($_POST['terms_of_sale_indicator']) && !empty($_POST['terms_of_sale']) ) || ( !empty($_POST['terms_of_sale']) ) || ( !isset($_POST['terms_of_sale_indicator']) && empty($_POST['terms_of_sale']) ) ) ? true : false;
+			$terms_of_sale_required = isset( $_POST['terms_of_sale_indicator'] ) && !empty( $_POST['terms_of_sale_indicator'] ) ? (bool)$_POST['terms_of_sale_indicator'] : (bool)false;
+			$terms_of_sale_checked = isset( $_POST['terms_of_sale'] ) && !empty( $_POST['terms_of_sale'] ) ? (bool)$_POST['terms_of_sale_indicator'] : (bool)false;
 
-			if ($terms_of_sale_checking) {
+			if ( ( $terms_of_sale_required && $terms_of_sale_checked ) || !$terms_of_sale_required ) {
 				if ( !empty($payment_method) ) {
 					/** Check if the payment method exist for the shop **/
 					$payment_option = get_option( 'wps_payment_mode' );
@@ -500,7 +507,8 @@ if ( !class_exists("wps_classic_checkout") ) {
 						}
 						$status = true;
 						//Add an action to extra actions on order save
-						$args = array( 'order_id' => $order_id, 'posted_data' => $_REQUEST);
+						// @TODO : REQUEST
+						// $args = array( 'order_id' => $order_id, 'posted_data' => $_REQUEST);
 						wpshop_tools::create_custom_hook( 'wps_order_extra_save_action', $args );
 					}
 					else {

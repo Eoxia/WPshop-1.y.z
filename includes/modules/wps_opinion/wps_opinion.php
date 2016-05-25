@@ -1,17 +1,11 @@
-<?php
-/**
- Plugin Name: WPS Opinion
- Description: Manage Opinions on products
- Version: 1.0
- Author: Eoxia
- Author URI: http://eoxia.com/
- */
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+
 /**
  * Bootstrap file
  * @author Development team <dev@eoxia.com>
  * @version 1.0
  */
- 
+
 DEFINE('WPS_OPINION_DIR', basename(dirname(__FILE__)));
 DEFINE('WPS_OPINION_PATH', str_replace( "\\", "/", str_replace( WPS_OPINION_DIR, "", dirname( __FILE__ ) ) ) );
 DEFINE('WPS_OPINION_URL', str_replace( str_replace( "\\", "/", ABSPATH), site_url() . '/', WPS_OPINION_PATH ) );

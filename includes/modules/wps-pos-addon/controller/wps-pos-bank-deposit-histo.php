@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 class wps_pos_addon_bank_deposit_histo {
 	public $name_option = 'bank_deposit_historic';
 	public function __construct() {
@@ -30,11 +30,17 @@ class wps_pos_addon_bank_deposit_histo {
 	}
 	public function vars_js() {
 		wp_localize_script( 'wpspos-backend-bank-deposit-js', 'historics', $this->get_historic() );
-		wp_localize_script( 'wpspos-backend-bank-deposit-js', 'templates_url', WPSHOP_TEMPLATES_URL );
+		wp_localize_script( 'wpspos-backend-bank-deposit-js', 'templates_url', admin_url( 'admin-post.php' ) );
 	}
-	
 	public function save_historic_ajax() {
-		$this->add_historic( $this->row_model( 0, $_POST['date'], $_POST['amount'], $_POST['payments'] ) );
+		$list_payments = !empty( $_POST['payments'] ) ? (array) $_POST['payments'] : array();
+		$payments = array();
+		foreach( $list_payments as $payment ) {
+			if( is_float( $payment ) ) {
+				$payments[] = (float) $payment;
+			}
+		}
+		$this->add_historic( $this->row_model( 0, sanitize_text_field( $_POST['date'] ), sanitize_text_field( $_POST['amount'] ), $payments ) );
 		echo json_encode( $this->get_historic() );
 		wp_die();
 	}

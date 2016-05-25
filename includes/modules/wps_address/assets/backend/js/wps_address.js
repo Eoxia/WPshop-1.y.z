@@ -64,6 +64,7 @@ jq_wpeogeoloc( document ).ready(function() {
 		var data = {
 			action: "wps-address-add-new",
 			element_id: 0,
+			_wpnonce: jQuery( this ).data( 'nonce' ),
 			post_id: element_id,
 		};
 		jQuery( this ).closest( "div.inside" ).children( ".wps-address-list-container" ).append( '<div id="wps-overlay" class="wps-overlay-background" ></div><div id="wps-overlay-load" style="top: 45%;" ><img src="' + thickboxL10n.loadingAnimation + '" /></div>' ).css( "height", "100px" );
@@ -94,6 +95,7 @@ jq_wpeogeoloc( document ).ready(function() {
 			var id = jQuery( this ).attr( 'id' ).replace( 'wps-address-delete-address-', '' );
 			var data = {
 					action: "delete_address_in_order_panel",
+					_wpnonce: jQuery( this ).data( 'nonce' ),
 					address_id : id,
 				};
 			jQuery.post(ajaxurl, data, function( response ){
@@ -117,6 +119,7 @@ function reload_administration_dashboard_address( address_type_id, customer_id )
 	jQuery( '#wps_customer_addresses' ).animate( {'opacity' : 0.15}, 350);
 		var data = {
 				action: "reload_order_addresses_for_customer",
+				_wpnonce: jQuery( '#wps_customer_addresses' ).data( 'nonce' ),
 				customer_id : jQuery( '#wps_orders_selected_customer').val(),
 				order_id : jQuery( '#post_ID').val()
 			};
@@ -152,6 +155,7 @@ function reload_administration_dashboard_address( address_type_id, customer_id )
 function wps_address_load_addresses_list( post_id ) {
 	var data = {
 		action: "wps-address-display-list",
+		_wpnonce: jQuery( "div.wps-address-list-container" ).data( 'nonce' ),
 		post_id: post_id,
 	};
 	jQuery("div.wps-address-list-container" ).load( ajaxurl, data );

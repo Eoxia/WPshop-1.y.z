@@ -20,6 +20,7 @@ jQuery( document ).ready( function(){
       jQuery.post( ajaxurl, {
         "pointer": name,
         "action": 'dismiss-my-pointer',
+        "_wpnonce": jQuery( this ).data( 'nonce' ),
       }, function() {});
     }
   });
@@ -27,6 +28,7 @@ jQuery( document ).ready( function(){
   jQuery(".wpeo-reset-bubble-all-user").click(function() {
     var data = {
       "action": "reset-bubble-all-user",
+      "_wpnonce": jQuery( this ).data( 'nonce' ),
       "post_ID": jQuery(this).data('id'),
     };
 

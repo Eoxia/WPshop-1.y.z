@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 require_once 'ZipInterface.php';
 class PhpZipProxyException extends Exception
 { }

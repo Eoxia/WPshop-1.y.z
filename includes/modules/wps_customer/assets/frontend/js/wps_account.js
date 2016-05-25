@@ -3,6 +3,7 @@ jQuery( document ).ready( function() {
 		jQuery( '#wps_modal_account_informations_opener' ).addClass( 'wps-bton-loading');
 		var data = {
 				action: "wps_fill_account_informations_modal",
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 			};
 			jQuery.post(ajaxurl, data, function(response) {
 				if( response['status'] ) {
@@ -42,6 +43,7 @@ jQuery( document ).ready( function() {
 	function reload_account_informations() {
 		var data = {
 				action: "wps_account_reload_informations",
+				_wpnonce: jQuery( '#wps_account_informations_container' ).data( 'nonce' ),
 			};
 			jQuery.post(ajaxurl, data, function(response) {
 				if ( response['status'] ){

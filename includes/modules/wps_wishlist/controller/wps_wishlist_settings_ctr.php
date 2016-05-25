@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 
 class wps_wishlist_settings {
 	public static function get_option() {

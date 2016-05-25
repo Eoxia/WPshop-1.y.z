@@ -19,6 +19,7 @@ jQuery( document ).ready( function() {
 	function display_pictures() {
 		var data = {
 				action: "display_pictures_in_backend",
+				_wpnonce: jQuery( "#selected_media_container" ).data( 'nonce' ),
 				media_id : jQuery( '#product_media_indicator' ).val()
 				};
 		jQuery.post(ajaxurl, data, function(response){

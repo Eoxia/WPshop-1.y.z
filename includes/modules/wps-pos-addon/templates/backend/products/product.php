@@ -1,4 +1,6 @@
-	<tr class="wps-pos-addon-product wps-pos-addon-product-line" data-id="<?php echo $product['ID']; ?>" data-subtype="<?php echo ( !empty( $product_variation_definition ) ? 'variations' : 'simple' ); ?>" >
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
+	<tr data-nonce="<?php echo wp_create_nonce( 'ajax_pos_product_variation_selection' ); ?>" class="wps-pos-addon-product wps-pos-addon-product-line" data-id="<?php echo $product['ID']; ?>" data-subtype="<?php echo ( !empty( $product_variation_definition ) ? 'variations' : 'simple' ); ?>" >
 		<td>#<?php echo $product['ID']; ?> - <?php echo $product['product_name']; ?><br/><?php _e('Barcode', 'wps-pos-i18n'); ?> : <?php echo $product['product_barcode'];?></td>
 		<td class="wpshop_pos_addon_price"><?php echo wpshop_prices::get_product_price( $product_data, 'price_display', 'complete_sheet'); ?></td>
 		<td>

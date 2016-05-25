@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 if( !empty($order_metadata) ) : 
 ?>
 <div class="wps-gridwrapper3-padded">

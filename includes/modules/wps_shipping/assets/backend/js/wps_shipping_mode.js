@@ -66,6 +66,7 @@ jQuery(document).ready(function() {
 	jQuery( document ).on("click", ".wps_hide_notice_message", function() {
 		var data = {
 				action: "wps_hide_notice_messages",
+        _wpnonce: jQuery( this ).data( 'nonce' ),
 				indicator : jQuery("#hide_messages_indicator").val()
 			};
 			jQuery.post(ajaxurl, data, function(response){
@@ -120,21 +121,22 @@ jQuery(document).ready(function() {
 		jQuery( this ).attr( 'disabled', true );
 		jQuery("#wps_shipping_mode_list_container").addClass( 'wps-bloc-loading' );
 		var data = {
-				action: "wps_add_new_shipping_mode",
-			};
-			jQuery.post(ajaxurl, data, function(response){
-				if ( response["status"] )  {
-					jQuery("#wps_shipping_mode_list_container").append( response['response'] );
-					jQuery( '.wps_create_new_shipping_mode' ).addClass( 'wps-bton-loading' );
-					jQuery( '.wps_create_new_shipping_mode' ).attr( 'disabled', false );
-					jQuery("#wps_shipping_mode_list_container").removeClass( 'wps-bloc-loading' );
-				}
-				else {
-					alert( wps_an_error_occured );
-					jQuery( '.wps_create_new_shipping_mode' ).addClass( 'wps-bton-loading' );
-					jQuery( '.wps_create_new_shipping_mode' ).attr( 'disabled', false );
-					jQuery("#wps_shipping_mode_list_container").removeClass( 'wps-bloc-loading' );
-				}
+			action: "wps_add_new_shipping_mode",
+	        _wpnonce: jQuery( this ).data( 'nonce' ),
+		};
+		jQuery.post(ajaxurl, data, function(response){
+			if ( response["status"] )  {
+				jQuery("#wps_shipping_mode_list_container").append( response['response'] );
+				jQuery( '.wps_create_new_shipping_mode' ).addClass( 'wps-bton-loading' );
+				jQuery( '.wps_create_new_shipping_mode' ).attr( 'disabled', false );
+				jQuery("#wps_shipping_mode_list_container").removeClass( 'wps-bloc-loading' );
+			}
+			else {
+				alert( wps_an_error_occured );
+				jQuery( '.wps_create_new_shipping_mode' ).addClass( 'wps-bton-loading' );
+				jQuery( '.wps_create_new_shipping_mode' ).attr( 'disabled', false );
+				jQuery("#wps_shipping_mode_list_container").removeClass( 'wps-bloc-loading' );
+			}
 		}, "json");
 	});
 
@@ -144,6 +146,7 @@ jQuery(document).ready(function() {
 		var id_shipping_method = jQuery(this).attr('id');
 		id_shipping_method = id_shipping_method.replace( '_save_rule', '');
 		jQuery( this ).addClass( 'wps-bton-loading' );
+		var _wpnonce = jQuery( this ).data( 'nonce' );
 
 		var selected_country = '';
 		if ( jQuery("#" + id_shipping_method + "_main_rule").is(':checked') && jQuery("#" + id_shipping_method + "_custom_shipping_active_cp").is(':checked')) {
@@ -174,28 +177,29 @@ jQuery(document).ready(function() {
 
 		if ((jQuery("#" + id_shipping_method + "_weight_rule").val() != '') && (jQuery("#" + id_shipping_method + "_shipping_price").val() != '')) {
 			var data = {
-					action: "save_shipping_rule",
-					weight_rule : jQuery("#" + id_shipping_method + "_weight_rule").val(),
-					shipping_price : jQuery("#" + id_shipping_method + "_shipping_price").val(),
-					selected_country : selected_country,
-					fees_data : jQuery("#" + id_shipping_method + "_wpshop_custom_shipping").val()
-				};
-				jQuery.post(ajaxurl, data, function(response) {
-					if ( response['status'] ) {
-						jQuery("#" + id_shipping_method + "_wpshop_custom_shipping").val( response['reponse'] );
-						refresh_shipping_rules_display( id_shipping_method );
-						jQuery("#" + id_shipping_method + "_country_list").val(0);
-						jQuery("#" + id_shipping_method + "_shipping_price").val('');
-						jQuery("#" + id_shipping_method + "_weight_rule").val('');
-						jQuery("#" + id_shipping_method + "_main_rule").removeAttr("checked");
+				action: "save_shipping_rule",
+				_wpnonce: _wpnonce,
+				weight_rule : jQuery("#" + id_shipping_method + "_weight_rule").val(),
+				shipping_price : jQuery("#" + id_shipping_method + "_shipping_price").val(),
+				selected_country : selected_country,
+				fees_data : jQuery("#" + id_shipping_method + "_wpshop_custom_shipping").val()
+			};
+			jQuery.post(ajaxurl, data, function(response) {
+				if ( response['status'] ) {
+					jQuery("#" + id_shipping_method + "_wpshop_custom_shipping").val( response['reponse'] );
+					refresh_shipping_rules_display( id_shipping_method );
+					jQuery("#" + id_shipping_method + "_country_list").val(0);
+					jQuery("#" + id_shipping_method + "_shipping_price").val('');
+					jQuery("#" + id_shipping_method + "_weight_rule").val('');
+					jQuery("#" + id_shipping_method + "_main_rule").removeAttr("checked");
 
-						jQuery( '.save_rules_button' ).removeClass( 'wps-bton-loading' );
-					}
-					else {
-						jQuery( '.save_rules_button' ).removeClass( 'wps-bton-loading' );
-					}
+					jQuery( '.save_rules_button' ).removeClass( 'wps-bton-loading' );
+				}
+				else {
+					jQuery( '.save_rules_button' ).removeClass( 'wps-bton-loading' );
+				}
 
-				}, 'json');
+			}, 'json');
 		}
 		else {
 			alert( wps_options_shipping_weight_for_custom_fees );
@@ -212,6 +216,7 @@ jQuery(document).ready(function() {
 		jQuery("#" + id + "_shipping_rules_container").addClass( 'wps-bloc-loading' );
 		var data = {
 				action: "delete_shipping_rule",
+        _wpnonce: jQuery( this ).data( 'nonce' ),
 				country_and_weight: jQuery(this).attr('id'),
 				fees_data : jQuery("#" + id + "_wpshop_custom_shipping").val()
 			};
@@ -235,6 +240,7 @@ jQuery(document).ready(function() {
 		jQuery("#" + id + "_shipping_rules_container").addClass( 'wps-bloc-loading' );
 		var data = {
 			action: "display_shipping_rules",
+      _wpnonce: jQuery( '#' + id + '_shipping_rules_container' ).data( 'nonce' ),
 			fees_data : jQuery("#" + id + "_wpshop_custom_shipping").val(),
 			shipping_mode_id : id
 		};

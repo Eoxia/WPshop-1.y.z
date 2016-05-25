@@ -1,4 +1,5 @@
-<?php ob_start();?><!DOCTYPE html>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ ob_start();?><!DOCTYPE html>
 <!--[if IE 8]>
 <html xmlns="http://www.w3.org/1999/xhtml" class="ie8 wp-toolbar"  dir="ltr" lang="en-US">
 <![endif]-->

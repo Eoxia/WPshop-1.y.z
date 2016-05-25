@@ -1,5 +1,5 @@
 jQuery( document ).ready( function() {
-	
+
 	if( (jQuery('#wps-shipping_to_billing').length > 0) && jQuery('#wps-shipping_to_billing').is(':checked') ) {
 		jQuery('.wps-billing-address').hide();
 	}
@@ -85,6 +85,7 @@ jQuery( document ).ready( function() {
 		address_infos = address_infos.split( '-' );
 		var data = {
 				action: "wps_load_address_form",
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 				address_type_id : address_infos[0]
 			};
 			jQuery.post(ajaxurl, data, function(response) {
@@ -99,13 +100,15 @@ jQuery( document ).ready( function() {
 		var address_id = jQuery( this ).attr( 'id' ).replace( 'wps-address-edit-address-', '' );
 		jQuery( this ).closest( 'li' ).addClass( 'wps-bloc-loading' );
 		var data = {
-				action: "wps_load_address_form",
-				address_id :  address_id
-			};
-			jQuery.post(ajaxurl, data, function(response) {
-				fill_the_modal( response[1], response[0], '' );
-				jQuery( '.wps-address-edit-address' ).closest( 'li' ).removeClass( 'wps-bloc-loading' );
-			}, 'json');
+			action: "wps_load_address_form",
+			_wpnonce: jQuery( this ).data( 'nonce' ),
+			address_id :  address_id,
+			address_type_id: jQuery( this ).data( "address_type" )
+		};
+		jQuery.post( ajaxurl, data, function(response) {
+			fill_the_modal( response[1], response[0], '' );
+			jQuery( '.wps-address-edit-address' ).closest( 'li' ).removeClass( 'wps-bloc-loading' );
+		}, 'json' );
 	});
 
 	/** Delete an address */
@@ -116,6 +119,7 @@ jQuery( document ).ready( function() {
 		address_infos = address_infos.split( '-' );
 		var data = {
 				action: "wps_delete_an_address",
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 				address_id :  address_infos[0]
 			};
 			jQuery.post(ajaxurl, data, function(response) {
@@ -138,6 +142,7 @@ jQuery( document ).ready( function() {
 
 		var data = {
 				action: "wps_reload_address_interface",
+				_wpnonce: jQuery( '#wps-address-container-' + address_type ).data( 'nonce' ),
 				address_id :  address_id,
 				address_type : address_type
 			};

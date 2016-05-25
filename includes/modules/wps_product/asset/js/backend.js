@@ -11,9 +11,9 @@ var wps_product = {
 	},
 
 	event: function() {
-		
+
 	},
-	
+
 	product_check_data: function() {
 		jQuery( '.wps-product-check-data-form' ).submit(function() {
 			jQuery(this).ajaxSubmit({

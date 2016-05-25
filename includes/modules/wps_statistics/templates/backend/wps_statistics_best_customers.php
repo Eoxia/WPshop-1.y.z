@@ -1,4 +1,5 @@
-<?php if ( !empty($customer_recap) ) : ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ if ( !empty($customer_recap) ) : ?>
 <?php arsort( $customer_recap ); ?>
 <canvas id="wps_best_customers" width="" height=""></canvas>
 <script type="text/javascript">

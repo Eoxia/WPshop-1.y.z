@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="updated wpshop_admin_notice wpshop_install_notice" id="wpshop_install_notice" >
 	<h3><?php
 		if ( 1 != $this->current_installation_step ) {

@@ -1,4 +1,5 @@
-
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <tr class="<?php echo $class; ?>" id="trPid_<?php echo $product['post_datas']->ID; ?>">
 	<td class="wps-mass-interface-line-selector"><div class="wps-form-group"><div class="wps-form"><center><input type="checkbox" class="wps-save-product-checkbox" name="wps_product_quick_save[]" value="<?php echo $product['post_datas']->ID; ?>" /></center></div></div></td>
 	

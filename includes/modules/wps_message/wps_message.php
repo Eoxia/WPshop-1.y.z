@@ -1,13 +1,4 @@
-<?php
-/**
- * Plugin Name: WPSHOP Message
- * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/
- * Description : WPSHOP Message, manage all transitionnals message system with historic sended messages
- * Version: 0.1
- * Author: Eoxia
- * Author URI: http://eoxia.com/
- */
-
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * @author ALLEGRE Jérôme - Eoxia dev team <dev@eoxia.com>
  * @version 0.1

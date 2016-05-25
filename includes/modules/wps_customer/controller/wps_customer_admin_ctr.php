@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Manage Customer administration functions
  * @author ALLEGRE Jérôme - EOXIA
@@ -27,7 +27,7 @@ class wps_customer_admin {
 		if( is_dir( $module_folder ) ) {
 			$parent_folder_content = scandir( $module_folder );
 			foreach ( $parent_folder_content as $folder ) {
-				if ( $folder && substr( $folder, 0, 1) != '.' ) {
+				if ( $folder && substr( $folder, 0, 1) != '.' && is_dir( $folder ) ) {
 					$child_folder_content = scandir( $module_folder . $folder );
 					if ( file_exists( $module_folder . $folder . '/' . $folder . '.php') ) {
 						$f =  $module_folder . $folder . '/' . $folder . '.php';
@@ -110,6 +110,11 @@ class wps_customer_admin {
 	 * AJAX - Customer creation form
 	 */
 	function wps_load_customer_creation_form_in_admin() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_load_customer_creation_form_in_admin' ) )
+			wp_die();
+
 		echo do_shortcode( '[wps_signup display="admin"]' );
 		wp_die();
 	}
@@ -118,6 +123,11 @@ class wps_customer_admin {
 	 * AJAX - Refresh customer informations
 	 */
 	function wps_order_refresh_customer_informations() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_order_refresh_customer_informations' ) )
+			wp_die();
+
 		$status = false; $account = $addresses = '';
 		$customer_id = ( !empty($_POST['customer_id']) ) ? intval($_POST['customer_id']) : null;
 		$order_id = ( !empty($_POST['order_id']) ) ? intval($_POST['order_id']) : null;
@@ -144,6 +154,11 @@ class wps_customer_admin {
 	 * AJAX - Reload Customer list
 	 */
 	function wps_order_refresh_customer_list() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_order_refresh_customer_list' ) )
+			wp_die();
+
 		$status = false; $response = '';
 		$customer_id = ( !empty($_POST['customer_id']) ) ? intval( $_POST['customer_id'] ) : null;
 		if( !empty($customer_id) ) {

@@ -1,8 +1,10 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wps-<?php echo $address_type; ?>-address" <?php if ( !empty( $first_address_checking ) && !$is_from_admin && ( $address_type == 'billing' ) ) { echo 'style="display: none;"'; } ?>>
 	<div class="wps-gridwrapper">
 		<div class="wps-grid4x6"><span class="wps-h3"><?php echo $address_title; ?></span></div>
 	</div>
-	<ul class="wps-itemList wps-address-container" id="wps-address-container-<?php echo $address_type_id; ?>">
+	<ul class="wps-itemList wps-address-container" data-nonce="<?php echo wp_create_nonce( 'wps_reload_address_interface' ); ?>" id="wps-address-container-<?php echo $address_type_id; ?>">
 <?php if( !empty($box_content) ): ?>
 		<?php echo $box_content; ?>
 <?php endif; ?>
@@ -15,6 +17,7 @@
 		<div id="wps_address_error_container" ></div>
 		<form id="wps_address_form_save_first_address" action="<?php echo admin_url( 'admin-ajax.php' ); ?>" method="post">
 			<input type="hidden" name="action" value="wps_save_address" />
+			<?php wp_nonce_field( 'wps_save_address' ); ?>
 			<input type="hidden" name="wps-address-save-the-first" value="<?php echo $address_type; ?>" />
 			<?php echo self::display_form_fields( $address_type_id, '', 'first', '', array(), array(), array(), get_current_user_id() ); ?>
 
@@ -56,6 +59,6 @@
 <?php endif; ?>
 
 	<?php if( !$is_from_admin ) : ?>
-		<button id="wps-add-an-address-<?php echo $address_type_id; ?>" class="wps-bton-third wps-add-an-address<?php echo ( empty( $box_content ) && !$hide_add_btn ? ' hidden' : '' ); ?>" ><i class="wps-icon-plus"></i><?php printf( __('Add a %s', 'wpshop' ), strtolower($address_title) ); ?></button>
+		<button data-nonce="<?php echo wp_create_nonce( 'wps_load_address_form_' . $address_type_id ); ?>" id="wps-add-an-address-<?php echo $address_type_id; ?>" class="wps-bton-third wps-add-an-address<?php echo ( empty( $box_content ) && !$hide_add_btn ? ' hidden' : '' ); ?>" ><i class="wps-icon-plus"></i><?php printf( __('Add a %s', 'wpshop' ), strtolower($address_title) ); ?></button>
 	<?php endif; ?>
 </div>

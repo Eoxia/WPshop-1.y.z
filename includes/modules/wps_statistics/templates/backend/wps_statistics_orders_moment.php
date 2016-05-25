@@ -1,4 +1,5 @@
-<?php if( !empty($datadate) ) : 
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+if( !empty($datadate) ) :
 krsort($datadate);
 $tmp_array = array();
 foreach( $datadate as $day_name => $day_data ) {
@@ -27,12 +28,12 @@ else
 <script type="text/javascript">
 	jQuery( document ).ready( function() {
 		var data = {labels: [
-							<?php 
-							for( $i = 0; $i <= 23; $i++ ) { 
+							<?php
+							for( $i = 0; $i <= 23; $i++ ) {
 								echo '"'.( ($i < 10 ) ? '0' : '' ).$i.'",';
 							} ?>
 							],
-					datasets: 
+					datasets:
 						[{label : "<?php _e( 'Datas', 'wpshop' ); ?>",
 						  fillColor: "#9AE5F4",
 						  strokeColor: "#0074A2",
@@ -41,13 +42,13 @@ else
 						  pointHighlightFill: "#0074A2",
 						  pointHighlightStroke: "#0074A2",
 						  data : [
-							<?php 
-							for( $i = 0; $i <= 23; $i++ ) { 
+							<?php
+							for( $i = 0; $i <= 23; $i++ ) {
 								echo ( !empty($tmp_array[$i]) ) ? $tmp_array[$i].',' : '0,';
 							}
 								?>
-								]		
-						}],	
+								]
+						}],
 					};
 
 		var LineOrders = new Chart(document.getElementById("wps_hourly_orders_canvas").getContext("2d")).Line(data, {scaleOverride : true, scaleSteps : <?php echo $tmp_value; ?>,  scaleStepWidth : <?php echo $scaleStepWidth; ?>, scaleStartValue : 0 });
@@ -61,7 +62,7 @@ else
 <div class="wps-form-group">
 <label><?php _e( 'Choose the day', 'wpshop'); ?></label>
 <div class="wps-form">
-<select id="wps-statistics-orders-moment-selectbox">
+<select id="wps-statistics-orders-moment-selectbox" data-nonce="<?php echo wp_create_nonce( 'wps_hourly_order_day' ); ?>">
 	<option value=""><?php _e( 'All days', 'wpshop' ); ?></option>
 	<?php foreach( $days as $day ) : ?>
 	<option value="<?php echo $day; ?>"<?php echo ( !empty($args['choosen_day']) && $args['choosen_day'] == $day ) ? ' selected' : ''; ?>><?php _e( $day, 'wpshop'); ?></option>

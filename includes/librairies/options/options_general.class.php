@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 
 /*	Check if file is include. No direct access possible with file url	*/
 if ( !defined( 'WPSHOP_VERSION' ) ) {
@@ -26,7 +26,9 @@ class wpshop_general_options {
 	*
 	*/
 	public static function declare_options(){
-		if ( isset($_GET['page']) && ( substr($_GET['page'], 0, 13 ) == 'wpshop_option' || $_GET['page'] == 'wps-installer' ) ) {
+		$page = !empty( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : '';
+
+		if ( isset($page) && ( substr($page, 0, 13 ) == 'wpshop_option' || $page == 'wps-installer' ) ) {
 			wp_enqueue_media();
 		}
 		add_settings_section('wpshop_general_config','<span class="dashicons dashicons-info"></span>'. __('Shop main configuration', 'wpshop'), array('wpshop_general_options', 'plugin_section_text'), 'wpshop_general_config');

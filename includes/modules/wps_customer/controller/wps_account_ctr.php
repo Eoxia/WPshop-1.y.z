@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 class wps_account_ctr {
 	/** Define the main directory containing the template for the current plugin
 	* @var string
@@ -34,8 +34,8 @@ class wps_account_ctr {
 		add_shortcode( 'wps_account_informations_form', array($this, 'account_informations_form') );
 
 		/** Ajax Actions **/
-		add_action('wp_ajax_wps_display_connexion_form', array(&$this, 'wps_ajax_get_login_form_interface') );
-		add_action('wp_ajax_nopriv_wps_display_connexion_form', array(&$this, 'wps_ajax_get_login_form_interface') );
+		// add_action('wap_ajax_wps_display_connexion_form', array(&$this, 'wps_ajax_get_login_form_interface') );
+		// add_action('wap_ajax_nopriv_wps_display_connexion_form', array(&$this, 'wps_ajax_get_login_form_interface') );
 
 		add_action('wp_ajax_wps_login_request', array(&$this, 'control_login_form_request') );
 		add_action('wp_ajax_nopriv_wps_login_request', array(&$this, 'control_login_form_request') );
@@ -83,7 +83,10 @@ class wps_account_ctr {
 			return __( 'You are already logged', 'wpshop');
 		}
 		else {
-			if ( !empty($_GET['action']) && $_GET['action'] == 'retrieve_password' && !empty($_GET['key']) && !empty($_GET['login']) && !$force_login ) {
+			$action = !empty( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
+			$key = !empty( $_GET['key'] ) ? sanitize_text_field( $_GET['key'] ) : '';
+			$login = !empty( $_GET['login'] ) ? sanitize_text_field( $_GET['login'] ) : 0;
+			if ( !empty($action) && $action == 'retrieve_password' && !empty($key) && !empty($login) && !$force_login ) {
 				$output = self::get_renew_password_form();
 			}
 			else {
@@ -101,25 +104,33 @@ class wps_account_ctr {
 
 	/** LOG IN - AJAX - Action to connect **/
 	function control_login_form_request() {
+
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'control_login_form_request' ) )
+			wp_die();
+
 		$result = '';
 		$status = false;
-		$origin = $_POST['wps-checking-origin'];
+		$origin = sanitize_text_field( $_POST['wps-checking-origin'] );
+		$wps_login_user_login = !empty( $_POST['wps_login_user_login'] ) ? sanitize_text_field( $_POST['wps_login_user_login' ] ) : '';
+		$wps_login_password = !empty( $_POST['wps_login_password'] ) ? sanitize_text_field( $_POST['wps_login_password' ] ) : '';
 		$page_account_id = wpshop_tools::get_page_id( get_option( 'wpshop_myaccount_page_id') );
-		if ( !empty($_POST['wps_login_user_login']) && !empty($_POST['wps_login_password']) ) {
+		if ( !empty($wps_login_user_login) && !empty($wps_login_password) ) {
 			$creds = array();
 			// Test if an user exist with this login
-			$user_checking = get_user_by( 'login', $_POST['wps_login_user_login']);
+			$user_checking = get_user_by( 'login', $wps_login_user_login );
 			if( !empty($user_checking) ) {
-				$creds['user_login'] = sanitize_user($_POST['wps_login_user_login']);
+				$creds['user_login'] = $wps_login_user_login;
 			}
 			else {
-				if ( is_email($_POST['wps_login_user_login']) ) {
-					$user_checking = get_user_by( 'email', $_POST['wps_login_user_login']);
+				if ( is_email($wps_login_user_login) ) {
+					$user_checking = get_user_by( 'email', $wps_login_user_login );
 					$creds['user_login'] = $user_checking->user_login;
 				}
 			}
 			$creds['user_password'] = wpshop_tools::varSanitizer( $_POST['wps_login_password'] );
-			$creds['remember'] =  ( !empty($_POST['wps_login_remember_me']) ) ? true : false;
+			$creds['remember'] =  !empty( $_POST['wps_login_remember_me'] ) ? (int) $_POST['wps_login_remember_me'] : false;
 			$user = wp_signon( $creds, false );
 			if ( is_wp_error($user) ) {
 				$result = '<div class="wps-alert-error">' .__('Connexion error', 'wpshop'). '</div>';
@@ -148,6 +159,11 @@ class wps_account_ctr {
 	 * LOG IN - AJAX - Display log in Form in Ajax
 	 */
 	function wps_ajax_get_login_form_interface() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_ajax_get_login_form_interface' ) )
+			wp_die();
+
 		$response = array( 'status' => true, 'response' => self::get_login_form() );
 		echo json_encode( $response );
 		die();
@@ -167,6 +183,11 @@ class wps_account_ctr {
 	 * LOG IN - First Step log in request
 	 */
 	function wps_login_first_request() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_login_first_request' ) )
+			wp_die();
+
 		$status = false; $login_action = false; $response = '';
 		$user_email = ( !empty($_POST['email_address']) ) ? wpshop_tools::varSanitizer( $_POST['email_address'] ) : null;
 		if ( !empty($user_email) ) {
@@ -216,6 +237,11 @@ class wps_account_ctr {
 	 * FORGOT PASSWORD - AJAX - Fill the forgot password modal
 	 */
 	function wps_fill_forgot_password_modal() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_fill_forgot_password_modal' ) )
+			wp_die();
+
 		$status = false; $title = $content = '';
 		$title = __( 'Forgot password', 'wpshop' );
 		$content = do_shortcode('[wps_forgot_password]');
@@ -228,6 +254,11 @@ class wps_account_ctr {
 	 * FORGOT PASSWORD- AJAX - Forgot Password Request
 	 */
 	function wps_forgot_password_request() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_forgot_password_request' ) )
+			wp_die();
+
 		global $wpdb;
 		$status = false; $result = '';
 		$user_login = ( !empty( $_POST['wps_user_login']) ) ? wpshop_tools::varSanitizer($_POST['wps_user_login']) : null;
@@ -289,6 +320,11 @@ class wps_account_ctr {
 
 	/** FORGOT PASSWORD - AJAX - Make renew password action **/
 	function wps_forgot_password_renew() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_forgot_password_renew' ) )
+			wp_die();
+
 		global $wpdb;
 		$status = false; $result = $form = '';
 		$password = ( !empty( $_POST['pass1']) ) ? wpshop_tools::varSanitizer( $_POST['pass1'] ) : null;
@@ -390,11 +426,17 @@ class wps_account_ctr {
 	 * SIGN UP - Save sign up form
 	 */
 	function wps_save_signup_form() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_save_signup_form' ) )
+			wp_die();
+
 		global $wpdb, $wpshop;
-		$user_id = ( !empty($_POST['wps_sign_up_request_from_admin']) ) ? 0 : get_current_user_id();
+		$user_id = ( !empty( $_POST['wps_sign_up_request_from_admin'] ) ) ? (int) $_POST['wps_sign_up_request_from_admin'] : get_current_user_id();
 		$wps_message = new wps_message_ctr();
 		$status = $account_creation = false; $result = '';
 		$exclude_user_meta = array( 'user_email', 'user_pass' );
+		$attribute = !empty( $_POST['attribute'] ) ? (array) $_POST['attribute'] : array();
 		$element_id = wpshop_entities::get_entity_identifier_from_code( WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS );
 		if ( !empty( $element_id) ){
 			$query = $wpdb->prepare('SELECT id FROM ' .WPSHOP_DBT_ATTRIBUTE_SET. ' WHERE entity_id = %d', $element_id );
@@ -403,29 +445,31 @@ class wps_account_ctr {
 				$group  = wps_address::get_addresss_form_fields_by_type( $attribute_set_id );
 				foreach ( $group as $attribute_sets ) {
 					foreach ( $attribute_sets as $attribute_set_field ) {
-						if( !empty($_POST['wps_sign_up_request_from_admin']) ) {
+						if( !empty($user_id) ) {
 							foreach( $attribute_set_field['content'] as $attribute_code => $att_def ) {
 								if( $attribute_code != 'account_user_email' ) {
 									 $attribute_set_field['content'][$attribute_code]['required'] = 'no';
 								}
 							}
 						}
-						$validate = $wpshop->validateForm($attribute_set_field['content'], $_POST['attribute'] );
+						$validate = $wpshop->validateForm($attribute_set_field['content'], $attribute );
 					}
 					if ( empty($wpshop->errors) ) {
-						$user_name = !empty($_POST['attribute']['varchar']['user_login']) ? $_POST['attribute']['varchar']['user_login'] : $_POST['attribute']['varchar']['user_email'];
-						$user_pass = ( !empty($_POST['attribute']['varchar']['user_pass']) && !empty($_POST['wps_signup_account_creation']) ) ? $_POST['attribute']['varchar']['user_pass'] : wp_generate_password( 12, false );
+						$user_name = !empty($attribute['varchar']['user_login']) ? sanitize_text_field( $attribute['varchar']['user_login'] ) : sanitize_email( $attribute['varchar']['user_email'] );
+						$user_pass = ( !empty($attribute['varchar']['user_pass']) && !empty($_POST['wps_signup_account_creation']) ) ? sanitize_text_field( $attribute['varchar']['user_pass'] ) : wp_generate_password( 12, false );
 
 						if ( $user_id == 0  ) {
-							$user_id = wp_create_user($user_name, $user_pass, $_POST['attribute']['varchar']['user_email']);
+							$user_id = wp_create_user($user_name, $user_pass, sanitize_email( $attribute['varchar']['user_email'] ) );
 							if ( !is_object( $user_id) ) {
 								$account_creation = true;
 								/** Update newsletter user preferences **/
 								$newsletter_preferences = array();
-								if( !empty($_POST['newsletters_site']) ) {
+								$newsletters_site = !empty( $_POST['newsletters_site'] ) ? (int) $_POST['newsletters_site'] : 0;
+								if( !empty($newsletters_site) ) {
 									$newsletter_preferences['newsletters_site'] = 1;
 								}
-								if( !empty($_POST['newsletters_site_partners']) ) {
+								$newsletters_site_partners = !empty( $_POST['newsletters_site_partners'] ) ? (int) $_POST['newsletters_site_partners'] : 0;
+								if( !empty($newsletters_site_partners) ) {
 									$newsletter_preferences['newsletters_site_partners'] = 1;
 								}
 
@@ -436,11 +480,11 @@ class wps_account_ctr {
 						$customer_entity_request = $wpdb->prepare( 'SELECT ID FROM ' .$wpdb->posts. ' WHERE post_type = %s AND post_author = %d', WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, $user_id);
 						$customer_post_ID = $wpdb->get_var( $customer_entity_request );
 
-						if( !empty( $_POST['attribute'] ) ) {
+						if( !empty( $attribute ) ) {
 							$user_info = array();
-							foreach( $_POST['attribute'] as $type => $attributes ) {
+							foreach( $attribute as $type => $attributes ) {
 								foreach( $attributes as $meta => $attribute ) {
-									$user_info[$meta] = $attribute;
+									$user_info[$meta] = sanitize_text_field( $attribute );
 								}
 							}
 							wps_customer_ctr::save_customer_synchronize( $customer_post_ID, $user_id, $user_info );
@@ -457,11 +501,11 @@ class wps_account_ctr {
 						}
 						$status = true;
 
-						if ( $account_creation && empty($_POST['wps_sign_up_request_from_admin']) ) {
+						if ( $account_creation && empty($user_id) ) {
 							$secure_cookie = is_ssl() ? true : false;
 							wp_set_auth_cookie($user_id, true, $secure_cookie);
 						}
-						$wps_message->wpshop_prepared_email($_POST['attribute']['varchar']['user_email'], 'WPSHOP_SIGNUP_MESSAGE', array('customer_first_name' => ( !empty($_POST['attribute']['varchar']['first_name']) ) ? $_POST['attribute']['varchar']['first_name'] : '', 'customer_last_name' => ( !empty($_POST['attribute']['varchar']['last_name']) ) ? $_POST['attribute']['varchar']['last_name'] : '', 'customer_user_email' => ( !empty($_POST['attribute']['varchar']['user_email']) ) ? $_POST['attribute']['varchar']['user_email'] : '') );
+						$wps_message->wpshop_prepared_email( sanitize_email($attribute['varchar']['user_email']), 'WPSHOP_SIGNUP_MESSAGE', array('customer_first_name' => ( !empty($attribute['varchar']['first_name']) ) ? sanitize_text_field( $attribute['varchar']['first_name'] ) : '', 'customer_last_name' => ( !empty($attribute['varchar']['last_name']) ) ? sanitize_text_field( $attribute['varchar']['last_name'] ) : '', 'customer_user_email' => ( !empty($attribute['varchar']['user_email']) ) ? sanitize_email( $attribute['varchar']['user_email'] ) : '') );
 
 					}
 					else {
@@ -703,6 +747,11 @@ class wps_account_ctr {
 	 * ACCOUNT - Save account informations
 	 */
 	function wps_save_account_informations () {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_save_account_informations' ) )
+			wp_die();
+
 		global $wpdb;
 		$status = false; $response = '';
 
@@ -713,7 +762,8 @@ class wps_account_ctr {
 			$cid = $wpdb->get_var( $query );
 		}
 
-		$errors = $this->save_account_informations( $cid, $_POST );
+		// @TODO
+		$errors = $this->save_account_informations( $cid, array() );
 
 		if( !empty( $errors ) ) {
 			$response = '<div class="wps-alert-error">' .__('Some errors have been detected', 'wpshop') . ' : <ul>';
@@ -732,6 +782,11 @@ class wps_account_ctr {
 	 * ACCOUNT - AJAX - Reload account informations data
 	 */
 	function wps_account_reload_informations() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_account_reload_informations' ) )
+			wp_die();
+
 		$status = false;
 		$response = do_shortcode('[wps_account_informations]');
 		if( !empty($response) ) {
@@ -745,6 +800,11 @@ class wps_account_ctr {
 	 * ACCOUNT - AJAX - Fill account informations modal
 	 */
 	function wps_fill_account_informations_modal() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_fill_account_informations_modal' ) )
+			wp_die();
+
 		$title = $content = '';
 		$title = __('Edit your account informations', 'wpshop');
 		$content = do_shortcode( '[wps_account_informations_form]' );

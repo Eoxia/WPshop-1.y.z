@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 
 class wps_shortcodes_ctr
 {
@@ -61,6 +61,7 @@ class wps_shortcodes_ctr
 	function pageTitle(){
 		$action = isset($_REQUEST['action']) ? wpshop_tools::varSanitizer($_REQUEST['action']) : '';
 		$objectInEdition = isset($_REQUEST['id']) ? wpshop_tools::varSanitizer($_REQUEST['id']) : '';
+		$page = !empty( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : '';
 
 		$title = __(self::pageTitle, 'wpshop' );
 		if($action != ''){
@@ -72,7 +73,7 @@ class wps_shortcodes_ctr
 				$title = __(self::pageAddingTitle, 'wpshop');
 			}
 		}
-		elseif((self::getEditionSlug() != self::getListingSlug()) && ($_GET['page'] == self::getEditionSlug())){
+		elseif((self::getEditionSlug() != self::getListingSlug()) && ($page == self::getEditionSlug())){
 			$title = __(self::pageAddingTitle, 'wpshop');
 		}
 		return $title;
@@ -93,17 +94,17 @@ class wps_shortcodes_ctr
 		$shortcodes['simple_product']['attrs_def']['type'] = 'list|grid';
 		$shortcodes['simple_product']['attrs_exemple']['pid'] = '12';
 		$shortcodes['simple_product']['attrs_exemple']['type'] = 'list';
-		
+
 		$shortcodes['wpshop_product_title']['main_title'] = __( 'Product title', 'wpshop' );
 		$shortcodes['wpshop_product_title']['main_code'] = 'wpshop_product_title';
 		$shortcodes['wpshop_product_title']['attrs_def']['pid'] = 'ID_DU_PRODUIT';
 		$shortcodes['wpshop_product_title']['attrs_exemple']['pid'] = '12';
-		
+
 		$shortcodes['wpshop_product_content']['main_title'] = __( 'Product content', 'wpshop' );
 		$shortcodes['wpshop_product_content']['main_code'] = 'wpshop_product_content';
 		$shortcodes['wpshop_product_content']['attrs_def']['pid'] = 'ID_DU_PRODUIT';
 		$shortcodes['wpshop_product_content']['attrs_exemple']['pid'] = '12';
-		
+
 		$shortcodes['wpshop_product_thumbnail']['main_title'] = __( 'Product thumbnail', 'wpshop' );
 		$shortcodes['wpshop_product_thumbnail']['main_code'] = 'wpshop_product_thumbnail';
 		$shortcodes['wpshop_product_thumbnail']['attrs_def']['pid'] = 'ID_DU_PRODUIT';
@@ -178,7 +179,7 @@ class wps_shortcodes_ctr
 
 		$shortcodes['widget_cart_mini']['main_title'] = __('Display the cart widget', 'wpshop');
 		$shortcodes['widget_cart_mini']['main_code'] = 'wpshop_mini_cart';
-		
+
 		$shortcodes['wpshop_button_add_to_cart']['main_title'] = __('Display the button add to cart', 'wpshop');
 		$shortcodes['wpshop_button_add_to_cart']['main_code'] = 'wpshop_button_add_to_cart';
 		$shortcodes['wpshop_button_add_to_cart']['attrs_def']['pid'] = 'ID_DU_PRODUIT';
@@ -232,10 +233,10 @@ class wps_shortcodes_ctr
 
 	public static function wysiwyg_button() {
 		if ( ! current_user_can('edit_posts') && ! current_user_can('edit_pages') ) return;
-		if ( get_user_option('rich_editing') == 'true') :
+		//if ( get_user_option('rich_editing') == 'true') :
 		add_filter('mce_external_plugins', array('wps_shortcodes_ctr', 'add_button_to_wysiwyg'));
 		add_filter('mce_buttons', array('wps_shortcodes_ctr', 'register_wysiwyg_button'));
-		endif;
+		//endif;
 	}
 	function refresh_wysiwyg() {
 		$ver += 3;
@@ -246,14 +247,14 @@ class wps_shortcodes_ctr
 		return $plugin_array;
 	}
 	public static function register_wysiwyg_button($existing_button){
-		array_push($existing_button, "|", "wpshop_wysiwyg_button");
+		array_push($existing_button, "|", "wpshop_wysiwyg_shortcodes");
 		return $existing_button;
 	}
 
 
-	/** 
-	 * Récupères le contenu de tous les shortcodes 
-	 * 
+	/**
+	 * Récupères le contenu de tous les shortcodes
+	 *
 	 * @return string
 	 */
 	function elementList(){
@@ -305,5 +306,11 @@ class wps_shortcodes_ctr
 		ob_end_clean();
 		global $wps_help_tabs;
 		$wps_help_tabs->set_help_tab( 'shortcodes', __( 'Shortcodes', 'wpshop' ), $content, array('edit-post', 'post', 'edit-page', 'page', 'edit-comments', 'comments', 'edit-wpshop_product', 'wpshop_product', 'edit-wpshop_product_category') );
+	}
+
+	public static function wps_shortcodes_wysiwyg_dialog(){
+		global $wpdb;
+		require( wpshop_tools::get_template_part( WPS_SHORTCODES_DIR, WPS_SHORTCODES_TEMPLATES_MAIN_DIR, "backend", 'wysiwyg_dialog', 'shortcode' ) );
+		die();
 	}
 }

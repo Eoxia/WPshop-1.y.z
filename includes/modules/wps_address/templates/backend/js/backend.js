@@ -1,7 +1,7 @@
 var jq_wpeogeoloc = jQuery.noConflict();
 
-jq_wpeogeoloc( document ).ready(function() {	
-	
+jq_wpeogeoloc( document ).ready(function() {
+
 	/**	Listen actions on address title in order to open close choosen	*/
 	jQuery( document ).on( "click", ".wps-address-item-header > a", function( e ){
 		e.preventDefault();
@@ -13,7 +13,7 @@ jq_wpeogeoloc( document ).ready(function() {
 		}
 		jQuery( this ).toggleClass( "wps-address-arrow-right wps-address-arrow-down" );
 	});
-	
+
 	/**	Listen actions on address actions button	*/
 	jQuery( document ).on( "click", ".wps-address-actions-container a", function( e ){
 		e.preventDefault();
@@ -34,13 +34,14 @@ jq_wpeogeoloc( document ).ready(function() {
 			} );
 		}
 	});
-	
+
 	/**	Listen actions on address add button	*/
 	jQuery( "#wps_attached_addresses a.wps-address-icon-add" ).click( function( e ){
 		e.preventDefault();
 		var element_id = jQuery( this ).attr( "id" ).replace( "wps-address-add-for-", "" );
 		var data = {
 			action: "wps-address-add-new",
+			_wpnonce: jQuery( this ).data( 'nonce' ),
 			element_id: 0,
 			post_id: element_id,
 		};
@@ -50,17 +51,18 @@ jq_wpeogeoloc( document ).ready(function() {
 		} );
 		jQuery( this ).hide();
 	});
-	
+
 });
 
 /**
  * Load addresses for a given element
- * 
+ *
  * @param post_id The post id to display
  */
 function wps_address_load_addresses_list( post_id ) {
 	var data = {
 		action: "wps-address-display-list",
+		_wpnonce: jQuery("div.wps-address-list-container").data( 'nonce' ),
 		post_id: post_id,
 	};
 	jQuery("div.wps-address-list-container" ).load( ajaxurl, data );

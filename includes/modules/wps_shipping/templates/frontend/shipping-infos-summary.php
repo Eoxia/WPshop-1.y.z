@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wps-resume-address">
 <?php if( !empty($shipping_content) ) : ?>
 	<div class="wps-item-resume-address">

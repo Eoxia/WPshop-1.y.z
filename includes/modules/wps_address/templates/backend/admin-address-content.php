@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wps-boxed summary_shipping_boxed">
 	<?php $first = true; ?>
 	<div class="wps-h5"><?php echo $title; ?></div>

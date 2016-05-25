@@ -7,6 +7,7 @@ jQuery( document ).ready( function(){
 
 		var data = {
 			action: "check_code_for_activation",
+			_wpnonce: jQuery( this ).data( 'nonce' ),
 			code: code_to_check,
 		};
 		jQuery.post( ajaxurl, data, function( response ){

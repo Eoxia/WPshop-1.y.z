@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <table style="width:600px; border : 1px solid #000000; border-collapse : collapse; margin-top:20px; margin-bottom:20px;">
 	<tr bgcolor="#1D7DC1" height="80" valign="middle" align="center" style="color : #FFFFFF;">
 		<td width="90"><?php _e('Reference', 'wpshop'); ?> / <?php _e( 'Barcode', 'wpshop' ); ?></td>
@@ -25,7 +27,7 @@
 				$item_name = $item['item_name'];
 				$item_barcode = get_post_meta( $item['item_id'], '_barcode', true );
 			}
-			
+
 			if ( !empty($item['item_id']) ) {
 				$product_attribute_order_detail = wpshop_attributes_set::getAttributeSetDetails( get_post_meta($item['item_id'], WPSHOP_PRODUCT_ATTRIBUTE_SET_ID_META_KEY, true)  ) ;
 				$output_order = array();

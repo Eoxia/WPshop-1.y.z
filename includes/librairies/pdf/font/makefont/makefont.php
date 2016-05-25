@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /*******************************************************************************
 * Utilitaire de génération de fichier de définition de police                  *
 *                                                                              *

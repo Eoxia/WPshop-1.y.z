@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 class wps_coupon_ctr {
 	/** Define the main directory containing the template for the current plugin
 	 * @var string
@@ -9,11 +9,11 @@ class wps_coupon_ctr {
 	 * @var string
 	 */
 	private $plugin_dirname = WPS_COUPON_DIR;
-	
+
 	function __construct() {
 		$this->template_dir = WPS_COUPON_PATH . WPS_COUPON_DIR . "/templates/";
 		add_shortcode( 'wps_coupon', array($this, 'display_coupons') );
-		
+
 		$wpshop_shop_type = get_option('wpshop_shop_type', WPSHOP_DEFAULT_SHOP_TYPE);
 		if ( $wpshop_shop_type == 'sale' ) {
 			add_action( 'init', array( $this, 'create_coupon_custom_type' ) );
@@ -23,7 +23,7 @@ class wps_coupon_ctr {
 			add_action('save_post', array($this, 'save_coupon_custom_informations'));
 		}
 	}
-	
+
 	/**
 	 * Create Coupon custom post type
 	 */
@@ -60,14 +60,14 @@ class wps_coupon_ctr {
 				'has_archive' 					=> false
 		));
 	}
-	
+
 	/**
 	 * Add Meta box to Coupon cutom post type
 	 */
 	function add_meta_boxes() {
 		add_meta_box('wpshop_coupon_main_info', __('Informations', 'wpshop'), array( $this, 'wps_coupon_info_box'), WPSHOP_NEWTYPE_IDENTIFIER_COUPON, 'normal', 'high');
 	}
-	
+
 	/**
 	 * Coupon custom type Meta box content
 	 */
@@ -79,26 +79,26 @@ class wps_coupon_ctr {
 		$coupon_code = !empty($metadata['wpshop_coupon_code'][0]) ? $metadata['wpshop_coupon_code'][0] : null;
 		$coupon_discount_amount = !empty($metadata['wpshop_coupon_discount_value'][0]) ? $metadata['wpshop_coupon_discount_value'][0] : null;
 		$wpshop_coupon_discount_type = !empty($metadata['wpshop_coupon_discount_type'][0]) ? $metadata['wpshop_coupon_discount_type'][0] : null;
-		
+
 		$coupon_receiver = !empty($metadata['wpshop_coupon_individual_use'][0]) ? unserialize($metadata['wpshop_coupon_individual_use'][0]) : array();
 		$coupon_limit_usage = !empty($metadata['wpshop_coupon_usage_limit'][0]) ? $metadata['wpshop_coupon_usage_limit'][0] : '';
-		
+
 		$wpshop_coupon_minimum_amount = ( !empty($metadata['wpshop_coupon_minimum_amount'][0]) ) ? $metadata['wpshop_coupon_minimum_amount'][0] : '';
 		$wpshop_coupon_minimum_amount = unserialize( $wpshop_coupon_minimum_amount );
 		ob_start();
 		require( wpshop_tools::get_template_part( WPS_COUPON_DIR, $this->template_dir, "backend", "coupon-metabox") );
 		$output = ob_get_contents();
 		ob_end_clean();
-		
+
 		echo $output;
 	}
-	
+
 	/**
 	 * Add custom columns to coupons list in administration
 	 */
 	function wps_coupons_custom_columns( $column ) {
 		global $post;
-		
+
 		$metadata = get_post_custom();
 		$wpshop_coupon_discount_type = !empty($metadata['wpshop_coupon_discount_type'][0]) ? $metadata['wpshop_coupon_discount_type'][0] : null;
 		switch( $column ){
@@ -111,8 +111,8 @@ class wps_coupon_ctr {
 				break;
 		}
 	}
-	
-	/** 
+
+	/**
 	 * Set the custom colums
 	 * @return array
 	 */
@@ -125,17 +125,31 @@ class wps_coupon_ctr {
 		);
 		return $columns;
 	}
-	
-	/** 
+
+	/**
 	 * Save custom informations on Save post action
 	 */
-	function save_coupon_custom_informations() {
-		if( !empty($_REQUEST['post_ID']) && (get_post_type($_REQUEST['post_ID']) == WPSHOP_NEWTYPE_IDENTIFIER_COUPON) ) {
+	function save_coupon_custom_informations( $post_id ) {
+		if ( wp_is_post_revision( $post_id ) )
+			return;
+
+		if( !empty($post_id) && (get_post_type($post_id) == WPSHOP_NEWTYPE_IDENTIFIER_COUPON) ) {
 			$wps_coupon_mdl = new wps_coupon_model();
-			$wps_coupon_mdl->save_coupons_informations( $_REQUEST );
+
+			$data = array(
+				'wpshop_coupon_mini_amount' => !empty( $_REQUEST['wpshop_coupon_mini_amount'] ) ? sanitize_text_field( $_REQUEST['wpshop_coupon_mini_amount'] ) : '',
+				'wpshop_coupon_min_mount_shipping_rule' => !empty( $_REQUEST['wpshop_coupon_min_mount_shipping_rule'] ) ? sanitize_text_field( $_REQUEST['wpshop_coupon_min_mount_shipping_rule'] ) : '',
+				'coupon_code' => !empty( $_REQUEST['coupon_code'] ) ? sanitize_text_field( $_REQUEST['coupon_code'] ) : '',
+				'coupon_discount_amount' => !empty( $_REQUEST['coupon_discount_amount'] ) ? sanitize_text_field( $_REQUEST['coupon_discount_amount'] ) : '',
+				'wpshop_coupon_discount_type' => !empty( $_REQUEST['wpshop_coupon_discount_type'] ) ? sanitize_text_field( $_REQUEST['wpshop_coupon_discount_type'] ) : '',
+				'coupon_receiver' => !empty( $_REQUEST['coupon_receiver'] ) ? sanitize_text_field( $_REQUEST['coupon_receiver'] ) : '',
+				'coupon_usage_limit' => !empty( $_REQUEST['coupon_usage_limit'] ) ? sanitize_text_field( $_REQUEST['coupon_usage_limit'] ) : '',
+				'post_ID' => $post_id,
+			);
+			$wps_coupon_mdl->save_coupons_informations( $data );
 		}
 	}
-	
+
 	/**
 	 * APPLY COUPON
 	 * @param string $code
@@ -143,12 +157,12 @@ class wps_coupon_ctr {
 	 */
 	function applyCoupon( $code ) {
 		global $wpdb, $wpshop_cart;
-	
+
 		/** Default currency **/
 		$default_currency = wpshop_tools::wpshop_get_currency( false );
-	
+
 		$coupon_infos = array();
-	
+
 		/** Coupon infos **/
 		$query = $wpdb->prepare('
 			SELECT META.post_id
@@ -161,29 +175,29 @@ class wps_coupon_ctr {
 				POSTS.post_status = %s
 		', WPSHOP_NEWTYPE_IDENTIFIER_COUPON, $code, 'publish');
 		$result = $wpdb->get_row($query);
-	
+
 		if ( !empty($result) ) {
 			$coupon_amount = get_post_meta( $result->post_id, 'wpshop_coupon_discount_value', true );
-				
+
 			if ( !empty($coupon_amount) && $coupon_amount > 0) {
 				$coupon_usage = get_post_meta( $result->post_id, '_wpshop_coupon_usage', true );
 				$coupon_usage_limit  = get_post_meta( $result->post_id, 'wpshop_coupon_usage_limit', true );
 				$coupon_individual_usage  = get_post_meta( $result->post_id, 'wpshop_coupon_individual_use', true );
-	
+
 				$coupon_order_amount_mini = get_post_meta( $result->post_id, 'wpshop_coupon_minimum_amount', true);
-	
+
 				$current_user_id = get_current_user_id();
 				$individual_usage = $usage_limit = false;
-	
-				
+
+
 				/** Checking coupon params & logged user **/
 				if ( (!empty($coupon_individual_usage) || !empty($coupon_usage_limit) ) && $current_user_id == 0) {
 					return array('status' => false, 'message' => __('You must be logged to use this coupon','wpshop'));
 				}
-	
+
 				/** Individual use checking **/
 				if ( !empty($coupon_individual_usage) ) {
-						
+
 					if ( in_array($current_user_id, $coupon_individual_usage) ) {
 						$individual_usage = true;
 					}
@@ -191,12 +205,12 @@ class wps_coupon_ctr {
 				else {
 					$individual_usage = true;
 				}
-	
-	
+
+
 				/** Checking Usage limitation **/
 				if ($individual_usage) {
 					if ( !empty($coupon_usage_limit) ) {
-	
+
 						if( ( !empty($coupon_usage) && array_key_exists($current_user_id, $coupon_usage) ) || empty($coupon_usage ) || empty($coupon_usage[$current_user_id]) ) {
 							$usage_limit = ( ( !empty($coupon_usage_limit) && $coupon_usage[$current_user_id] < $coupon_usage_limit) || empty($coupon_usage) || empty($coupon_usage[$current_user_id])  ) ? true : false;
 						}
@@ -211,25 +225,25 @@ class wps_coupon_ctr {
 				else {
 					return array('status' => false, 'message' => __('You are not allowed to use this coupon','wpshop'));
 				}
-	
-	
+
+
 				/** Apply Coupon **/
 				if ( $usage_limit ) {
 					/** Check orderamount Limit **/
 					$order_amount_limit = true;
-						
+
 					if ( !empty($coupon_order_amount_mini) && !empty($coupon_order_amount_mini['amount']) ) {
-	
+
 						if ( !empty($coupon_order_amount_mini) && !empty($coupon_order_amount_mini['shipping_rule']) && $coupon_order_amount_mini['shipping_rule'] == 'shipping_cost' && $_SESSION['cart']['order_grand_total_before_discount'] < $coupon_order_amount_mini['amount'] ) {
 							$coupon_infos = array('status' => false, 'message' => __('This coupon is available for an order from ','wpshop').' '.$coupon_order_amount_mini['amount'].' '.$default_currency );
 							$order_amount_limit = false;
 						}
-	
+
 						elseif(  !empty($coupon_order_amount_mini) && !empty($coupon_order_amount_mini['shipping_rule']) && $coupon_order_amount_mini['shipping_rule'] == 'no_shipping_cost' && $_SESSION['cart']['order_total_ttc'] < $coupon_order_amount_mini['amount'] ) {
 							$coupon_infos = array('status' => false, 'message' => __('This coupon is available for an order from ','wpshop').' '.$coupon_order_amount_mini['amount'].' '.$default_currency.' '.__('without shipping cost', 'wpshop') );
 							$order_amount_limit = false;
 						}
-	
+
 					}
 					if ( $order_amount_limit ) {
 						$_SESSION['cart']['coupon_id'] = $result->post_id;
@@ -239,20 +253,20 @@ class wps_coupon_ctr {
 				else {
 					$coupon_infos = array('status' => false, 'message' => __('You are not allowed to use this coupon','wpshop') );
 				}
-					
+
 			}
 			else {
 				$coupon_infos = array('status' => false, 'message' => __('This coupon is not valid','wpshop'));
 			}
-				
+
 		}
 		else {
 			$coupon_infos = array('status' => false, 'message' => __('This coupon doesn`t exist','wpshop'));
 		}
 		return $coupon_infos;
 	}
-	
-	/** 
+
+	/**
 	 * Display coupons list
 	 * @param integer $customer_id
 	 * @return string
@@ -263,7 +277,7 @@ class wps_coupon_ctr {
 		$coupons_mdl = new wps_coupon_model();
 		$coupons = $coupons_mdl->get_coupons();
 		$output = $coupons_rows = '';
-				
+
 		if( !empty($coupons) ) {
 			foreach( $coupons as $coupon ) {
 				$coupon_individual_usage = get_post_meta( $coupon->ID, 'wpshop_coupon_individual_use', true );
@@ -284,13 +298,13 @@ class wps_coupon_ctr {
 			require(  wpshop_tools::get_template_part( WPS_COUPON_DIR, $this->template_dir, "frontend", "coupons") );
 			$output .= ob_get_contents();
 			ob_end_clean();
-			
+
 		}
 		else {
 			$output = '<div class="wps-alert-info">' .__( 'Sorry ! No available coupon', 'wpshop' ) .'</div>';
 		}
 		return $output;
-	}		
+	}
 
 	function getCoupons() {
 		$wps_coupon_mdl = new wps_coupon_model();

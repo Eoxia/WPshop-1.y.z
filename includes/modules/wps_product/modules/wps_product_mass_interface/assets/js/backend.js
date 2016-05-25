@@ -6,25 +6,25 @@ jQuery( document ).ready( function() {
 	else {
 		jQuery( 'body' ).removeClass( 'folded' );
 	}*/
-	
-	
+
+
 	/**	Trigger event on mass update pagination	*/
 	jQuery( document ).on( "click", ".wps-mass-product-pagination li a", function( event ){
 		event.preventDefault();
 		var page_id = jQuery( this ).html();
 		reload_list( jQuery( '#wps_mass_edit_products_default_attributes_set').val(), page_id );
 		jQuery( '#wps_mass_edit_interface_current_page_id' ).val( page_id );
-		
+
 		jQuery( '.wps-alert-error, .wps-alert-success' ).hide();
 	} );
 
-	
+
 	/** Trigger on change action on attributes set **/
 	jQuery( document ).on( 'change', '#wps_mass_edit_products_default_attributes_set', function() {
 		reload_list( jQuery( '#wps_mass_edit_products_default_attributes_set').val(), 1 );
 		jQuery( '.wps-alert-error, .wps-alert-success' ).hide();
 	});
-	
+
 
 	/**	Trigger event on text and textarea focus	*/
 	jQuery( document ).on( 'focus', '.wps-product-mass-interface-table input[type="text"], .wps-product-mass-interface-table textarea', function() {
@@ -42,11 +42,11 @@ jQuery( document ).ready( function() {
 			jQuery( this ).closest( "tr" ).children( "td.wps-mass-interface-line-selector" ).children( '.wps-form-group' ).children( '.wps-form').children( 'center' ).children( "input[type=checkbox]" ).prop( "checked", true );
 		}
 	});
-	
+
 	jQuery( document ).on( 'click', '.wps_add_picture_to_product_in_mass_interface', function() {
 		jQuery( this ).closest( "tr" ).children( "td.wps-mass-interface-line-selector" ).children( '.wps-form-group' ).children( '.wps-form').children( 'center' ).children( "input[type=checkbox]" ).prop( "checked", true );
 	});
-	
+
 	jQuery( document ).on( 'click', '.wps_del_picture_to_product_in_mass_interface', function() {
 		jQuery( this ).closest( "tr" ).children( "td.wps-mass-interface-line-selector" ).children( '.wps-form-group' ).children( '.wps-form').children( 'center' ).children( "input[type=checkbox]" ).prop( "checked", true );
 	});
@@ -54,7 +54,7 @@ jQuery( document ).ready( function() {
 	jQuery( document ).on( 'click', '.wps_add_files_to_product_in_mass_interface', function() {
 		jQuery( this ).closest( "tr" ).children( "td.wps-mass-interface-line-selector" ).children( '.wps-form-group' ).children( '.wps-form').children( 'center' ).children( "input[type=checkbox]" ).prop( "checked", true );
 	});
-	
+
 
 	/**	Trigger event on new product button click	*/
 	jQuery( document ).on( "click", "#wps-mass-interface-button-new-product", function( event ){
@@ -65,9 +65,10 @@ jQuery( document ).ready( function() {
 			jQuery( '#wps_mass_products_edit_tab_container' ).animate( { 'opacity' : 0.15 }, 400, function() {
 				var data = {
 						action: "wps_mass_interface_new_product_creation",
+						_wpnonce: jQuery( '#wps-mass-interface-button-new-product' ).data( 'nonce' ),
 						attributes_set : jQuery( '#wps_mass_edit_products_default_attributes_set').val()
 					};
-	
+
 					jQuery.post( ajaxurl, data, function( response ){
 						if( response['status'] ) {
 							reload_list( jQuery( '#wps_mass_edit_products_default_attributes_set').val(), 1 );
@@ -86,14 +87,14 @@ jQuery( document ).ready( function() {
 			});
 		}
 	});
-	
-	
-	
+
+
+
 	/**	Trigger event on save button for sending product to update	*/
 	jQuery( document ).on( 'click', '.wps-mass-interface-button-save', function() {
 		save_mass_interface();
 	});
-	
+
 	/**
 	 * Upload picture
 	 */
@@ -115,10 +116,10 @@ jQuery( document ).ready( function() {
 					jQuery( '#wps_add_picture_to_product_in_mass_interface_' + id ).hide();
 					jQuery( '#wps_del_picture_to_product_in_mass_interface_' + id ).show();
 				}).open();
-		
+
 		jQuery( '.wps_add_picture_to_product_in_mass_interface' ).removeClass( 'wps-bton-loading' );
 	});
-	
+
 	jQuery( document ).on( 'click', '.wps_del_picture_to_product_in_mass_interface', function(e) {
 		e.preventDefault();
 		var id = jQuery( this ).attr( 'id' );
@@ -128,7 +129,7 @@ jQuery( document ).ready( function() {
 		jQuery( '#wps_del_picture_to_product_in_mass_interface_' + id ).hide();
 		jQuery( '#wps_add_picture_to_product_in_mass_interface_' + id ).show();
 	});
-	
+
 	/**
 	 * Upload Files
 	 */
@@ -146,24 +147,25 @@ jQuery( document ).ready( function() {
 					selected_picture.map( function( attachment ) {
 						attachment = attachment.toJSON();
 						attachments.push( attachment );
-					});	
+					});
 					var output = jQuery( 'input[name="wps_mass_interface[' + id + '][files]"]' ).val();
 					jQuery( attachments ).each( function(k, v) {
-						output += v.id + ',';	
+						output += v.id + ',';
 					});
 					jQuery( 'input[name="wps_mass_interface[' + id + '][files]"]' ).val( output );
 					reload_files_list( id );
 				}).open();
-		
+
 		jQuery( '.wps_add_picture_to_product_in_mass_interface' ).removeClass( 'wps-bton-loading' );
 	});
-	
+
 	/** Delete file **/
 	jQuery( document ).on( 'click', '.wps-mass-delete-file', function() {
 		var id = jQuery( this ).attr( 'id' );
 		id = id.replace( 'wps-mass-delete-file-', '' );
 		var data = {
 					action: "wps_mass_delete_file",
+					_wpnonce: jQuery( this ).data( 'nonce' ),
 					file_id : id
 				};
 				jQuery.post(ajaxurl, data, function(response) {
@@ -176,10 +178,10 @@ jQuery( document ).ready( function() {
 						jQuery('.wps-alert-error').slideDown( 'slow' );
 						jQuery( '#wps_mass_products_edit_tab_container' ).animate( { 'opacity' : 1 }, 400 );
 					}
-					
+
 				}, 'json');
 	});
-	
+
 	/** Select All **/
 	jQuery( document ).on( 'click', 'input[name=wps_product_quick_save_checkbox_column]', function() {
 		if ( jQuery( this ).is( ":checked" ) ) {
@@ -190,7 +192,7 @@ jQuery( document ).ready( function() {
 			jQuery( 'input[name=wps_product_quick_save_checkbox_column]' ).prop( "checked", false );
 		}
 	});
-	
+
 	/** Gestionnaire de produits en mass */
 	jQuery( document ).on( 'click', '#wps_mass_products_edit_tab_container .submitdelete', function(e) {
 		e.preventDefault();
@@ -201,7 +203,7 @@ jQuery( document ).ready( function() {
 		jQuery( this ).closest( "tr" ).children( ".wps_mass_interface_line" ).hide();
 		jQuery( this ).closest( "tr" ).children( ".wps_mass_interface_line_deleted" ).show();
 	});
-	
+
 	jQuery( document ).on( 'click', '.wps_mass_interface_post_deleted_cancel', function(e) {
 		e.preventDefault();
 		var id = jQuery( this ).attr( 'id' );
@@ -210,7 +212,7 @@ jQuery( document ).ready( function() {
 		jQuery( this ).closest( "tr" ).children( ".wps_mass_interface_line" ).show();
 		jQuery( this ).closest( "tr" ).children( ".wps_mass_interface_line_deleted" ).hide();
 	});
-	
+
 	/**
 	 * Reload Product list
 	 */
@@ -218,6 +220,7 @@ jQuery( document ).ready( function() {
 		jQuery( '#wps_mass_products_edit_tab_container' ).animate( { 'opacity' : 0.15 }, 400, function() {
 			var data = {
 					action: "wps_mass_edit_change_page",
+					_wpnonce: jQuery( '#wps_mass_products_edit_tab_container' ).data( 'nonce' ),
 					page_id : page_id,
 					att_set_id : attribute_set
 				};
@@ -235,17 +238,18 @@ jQuery( document ).ready( function() {
 						jQuery('.wps-alert-error').slideDown( 'slow' );
 						jQuery( '#wps_mass_products_edit_tab_container' ).animate( { 'opacity' : 1 }, 400 );
 					}
-					
+
 				}, 'json');
 		});
 	}
-	
+
 	/**
-	* Update files list 
+	* Update files list
 	**/
 	function reload_files_list( product_id ) {
 			var data = {
 					action: "wps_mass_edit_update_files_list",
+					_wpnonce: jQuery( '#wps_mass_update_product_file_list_' + product_id ).data( 'nonce' ),
 					product_id : product_id,
 					files : jQuery( 'input[name="wps_mass_interface[' + product_id + '][files]"]' ).val()
 				};
@@ -260,10 +264,10 @@ jQuery( document ).ready( function() {
 						jQuery('.wps-alert-error').slideDown( 'slow' );
 						jQuery( '.wps_add_files_to_product_in_mass_interface' ).removeClass( 'wps-bton-loading' );
 					}
-					
+
 				}, 'json');
 	}
-	
+
 	function save_mass_interface() {
 		// Check if products are selected for sending form
 		var nb_of_product_to_save = 0;
@@ -272,7 +276,7 @@ jQuery( document ).ready( function() {
 				nb_of_product_to_save += 1;
 			}
 		});
-		
+
 		if( nb_of_product_to_save == 0 ) {
 			// Error display
 			jQuery( '.wps-alert-error, .wps-alert-success' ).hide();
@@ -314,4 +318,3 @@ jQuery( document ).ready( function() {
 		}
 	}
 });
-

@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 
 class WP_Widget_Wpshop_Products extends WP_Widget {
 

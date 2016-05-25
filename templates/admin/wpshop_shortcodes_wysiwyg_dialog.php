@@ -1,11 +1,8 @@
-<?php
-/*	Wordpress - Main bootstrap file that load wordpress basic files	*/
-require_once('../../../../../wp-load.php');
-header('Content-Type: text/html; charset=' . get_bloginfo('charset'));
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 
 $content = $content_explanation = '';
-$type = isset($_GET['type']) ? wpshop_tools::varSanitizer($_GET['type']) : null;
-$post_type = isset($_GET['post_type']) ? wpshop_tools::varSanitizer($_GET['post_type']) : null;
+$type = isset($_GET['type']) ? sanitize_text_field($_GET['type']) : null;
+$post_type = isset($_GET['post_type']) ? sanitize_text_field($_GET['post_type']) : null;
 
 $display_option_display_type = true;
 $display_option_grouped = true;
@@ -67,13 +64,13 @@ if ( !empty($type) ) {
 	<script type="text/javascript" src="<?php echo WPSHOP_JS_URL; ?>pages/wpshop_wysiwyg.js?v=<?php echo WPSHOP_VERSION;?>" ></script>
 	<script type="text/javascript" src="<?php echo WPSHOP_JS_URL; ?>jquery-libs/chosen.jquery.min.js?v=<?php echo WPSHOP_VERSION;?>" ></script>
 	<script type="text/javascript">
-		var WPSHOP_AJAX_FILE_URL = "<?php echo admin_url('admin-ajax.php'); ?>";
+//		var WPSHOP_AJAX_FILE_URL = "<?php echo admin_url('admin-ajax.php'); ?>";
 		var wpshop_wysiwyg_shortcode_insertion_search = "<?php echo wp_create_nonce('wpshop_element_search'); ?>";
 		var WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT = "<?php echo WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT; ?>";
 	</script>
 
 	<?php wp_admin_css( 'wp-admin', true ); ?>
-	<link rel='stylesheet' href="<?php echo WPSHOP_CSS_URL; ?>pages/wpshop_wysiwyg_dialog.css?v=<?php echo WPSHOP_VERSION;?>" type="text/css" media="all" />
+	<link rel='stylesheet' href="<?php echo  ; ?>pages/wpshop_wysiwyg_dialog.css?v=<?php echo WPSHOP_VERSION;?>" type="text/css" media="all" />
 	<link rel='stylesheet' href="<?php echo WPSHOP_CSS_URL; ?>jquery-libs/chosen.css?v=<?php echo WPSHOP_VERSION;?>" type="text/css" media="all" />
 </head>
 <body>

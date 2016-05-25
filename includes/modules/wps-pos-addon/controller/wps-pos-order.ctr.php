@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Main controller file for product into point of sale management plugin
  *
@@ -60,18 +60,21 @@ class wps_pos_addon_order {
 
 		$result = $selected_variation_list = '';
 		$price_piloting_option = get_option('wpshop_shop_price_piloting');
-		if ( !empty( $_SESSION['cart'] ) || ( !empty( $_POST ) && !empty( $_POST['order_id'] ) ) ) {
+
+		$order_id = ( !empty( $_POST['order_id'] ) ) ? (int) $_POST['order_id'] : null;
+
+		if ( !empty( $_SESSION['cart'] ) || isset( $order_id ) ) {
 			/* if ( empty( $_SESSION[ 'cart' ][ 'customer_id' ]) ) {
 				$result = __( 'No customer selected for the order, please choose a customer from left hand side list for continue this order', 'wps-pos-i18n' );
 			}
 			else  */
-			if( !empty( $_POST['order_id'] ) ) {
-				$order = get_post_meta( $_POST['order_id'], '_order_postmeta', true );
-				
+			if( isset( $order_id ) ) {
+				$order = get_post_meta( $order_id, '_order_postmeta', true );
+
 				/**	Get current order content	*/
 				$cart_content = $order;
 				$order_items = $order['order_items'];
-				
+
 				/**	In case there are item into order, include the order content display	*/
 				require( wpshop_tools::get_template_part( WPSPOS_DIR, WPSPOS_TEMPLATES_MAIN_DIR, 'backend/order', 'order', 'content' ) );
 			} elseif ( !empty( $_SESSION['cart']['order_items'] ) ) {
@@ -94,6 +97,11 @@ class wps_pos_addon_order {
 	 * AJAX - Affiche le contenu de la commande actuelle / Display current order content
 	 */
 	function wps_pos_order_content() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_pos_order_content' ) )
+			wp_die();
+
 		wp_die( $this->display_wps_pos_order_content() );
 	}
 
@@ -101,6 +109,11 @@ class wps_pos_addon_order {
 	 * AJAX - Affiche l'interface de finalisation de commande
 	 */
 	function wps_pos_finalize_order() {
+		$_wpnonce = !empty( $_GET['_wpnonce'] ) ? sanitize_text_field( $_GET['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_pos_finalize_order' ) )
+			wp_die();
+
 		/**	Get current order content	*/
 		$current_order_id = ( !empty( $_GET ) && !empty( $_GET[ 'order_id' ] ) && is_int( (int)$_GET[ 'order_id' ] ) ) ? (int)$_GET[ 'order_id' ] : null;
 		if ( !empty( $current_order_id) ) {
@@ -111,7 +124,7 @@ class wps_pos_addon_order {
 		}
 		if( !empty( $cart_content['order_items'] ) ) {
 			$order_items = $cart_content['order_items'];
-			
+
 			/* if( !empty($_SESSION['wpspos_is_receipt']) || !empty($_SESSION['wpspos_is_quotation']) ) {
 				if( !empty($_SESSION['wpspos_is_quotation']) ) {
 					$payment_method = 'quotation';
@@ -123,7 +136,7 @@ class wps_pos_addon_order {
 				/**	In case there are item into order, include the order content display	*/
 				require( wpshop_tools::get_template_part( WPSPOS_DIR, WPSPOS_TEMPLATES_MAIN_DIR, 'backend/order', 'finalization' ) );
 			// }
-			
+
 		}
 		else {
 			$result = __( 'The order is currently empty', 'wps-pos-i18n' );
@@ -135,13 +148,18 @@ class wps_pos_addon_order {
 	 * AJAX - Traite la commande / Process checkout
 	 */
 	function wps_pos_process_checkout() {
+		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_pos_process_checkout' ) )
+			wp_die();
+
 		$status = false;
 		$output = $message = '';
 
-		$order_id = ( !empty( $_POST['order_id'] ) ) ? wpshop_tools::varSanitizer( $_POST['order_id'] ) : null;
-		$new_order = empty( $_POST['order_id'] );
-		$payment_method = ( !empty( $_POST['wpspos-payment-method']) ) ? wpshop_tools::varSanitizer( $_POST['wpspos-payment-method'] ) : null;
-		$customer_id = ( !empty( $_POST['customer_id'] ) ) ? wpshop_tools::varSanitizer( $_POST['customer_id'] ) : ( !empty( $_SESSION[ 'cart' ][ 'customer_id' ] ) ) ? wpshop_tools::varSanitizer( $_SESSION[ 'cart' ][ 'customer_id' ] ) : null;
+		$order_id = ( !empty( $_POST['order_id'] ) ) ? (int) $_POST['order_id'] : null;
+		$new_order = empty( $order_id );
+		$payment_method = ( !empty( $_POST['wpspos-payment-method']) ) ? sanitize_text_field( $_POST['wpspos-payment-method'] ) : null;
+		$customer_id = ( !empty( $_POST['customer_id'] ) ) ? (int) $_POST['customer_id'] : ( !empty( $_SESSION[ 'cart' ][ 'customer_id' ] ) ) ? (int) $_SESSION[ 'cart' ][ 'customer_id' ] : null;
 		$payment_amount = ( !empty( $_POST['wps-pos-total-order-amount'] ) ) ? wpshop_tools::varSanitizer( $_POST['wps-pos-total-order-amount'] ) : null;
 		$received_payment_amount = ( !empty( $_POST['wpspos-order-received-amount'] ) ) ? wpshop_tools::varSanitizer( $_POST['wpspos-order-received-amount'] ) : $payment_amount;
 

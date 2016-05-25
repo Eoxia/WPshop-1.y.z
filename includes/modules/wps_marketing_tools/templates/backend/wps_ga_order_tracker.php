@@ -1,4 +1,5 @@
-<?php $company_infos = get_option( 'wpshop_company_info' ); ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ $company_infos = get_option( 'wpshop_company_info' ); ?>
 <script type="text/javascript">
 	var _gaq = _gaq || [];
 	_gaq.push( ['_setAccount', '<?php echo $ga_account_id; ?>'] );

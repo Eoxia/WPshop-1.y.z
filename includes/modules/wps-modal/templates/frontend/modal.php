@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wps-modal-overlay"></div>
 <div class="wps-modal-wrapper">	
 	<div class="wps-modal-container">

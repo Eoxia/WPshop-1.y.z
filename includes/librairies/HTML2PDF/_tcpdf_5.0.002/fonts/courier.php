@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
  // core font definition file for TCPDF (www.tcpdf.org)
 $type='core';
 $dw=600;

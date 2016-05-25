@@ -1,5 +1,4 @@
 <?php
-
 // include wp emulation
 include('wp-emulator.script.php');
 
@@ -19,17 +18,17 @@ foreach($unitList as $test)
 
 echo "[+] Unit Tests Finished" . PHP_EOL;
 
-/* Recursively search files 
-	folder = string => where to search 
+/* Recursively search files
+	folder = string => where to search
 	patter = string => regexp for what to search
 */
-function searchFiles($folder, $pattern) 
+function searchFiles($folder, $pattern)
 {
 	$dir = new RecursiveDirectoryIterator($folder);
 	$ite = new RecursiveIteratorIterator($dir);
 	$files = new RegexIterator($ite, $pattern, RegexIterator::GET_MATCH);
 	$fileList = array();
-	foreach($files as $file) 
+	foreach($files as $file)
 	{
 		$fileList[] = $file[0];
 	}

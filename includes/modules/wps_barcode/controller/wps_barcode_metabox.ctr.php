@@ -1,8 +1,8 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 
 class wps_barcode_metabox {
 	public function __construct() {
-		add_action( 'add_meta_boxes', array($this, 'add_meta_box') );
+		add_action( 'add_meta_boxes', array($this, 'add_meta_box'), 10, 10 );
 	}
 
 	/**
@@ -46,23 +46,28 @@ class wps_barcode_metabox {
 	 * Metabox for product page
 	 */
 	public function meta_box_product() {
-		global $meta, $barcode, $post_ID, $wpdb, $table_prefix;
+		global $meta, $barcode, $post_ID, $wpdb, $table_prefix, $ajax;
 
 		require_once('wps_barcodegen.ctr.php');
 
 		$barcode = new wps_barcodegen;
 
+		$ajaxurl = admin_url('admin-ajax.php');
+		$ajaxid = $post_ID;
+
 		$country = '000';
+
 		/*Select value of barcode*/
 		$result = $wpdb->get_results(
-				'SELECT value FROM '.$table_prefix.'wpshop__attribute_value_varchar '.
-				'WHERE attribute_id="12" AND entity_id="'.$post_ID.'"', ARRAY_A);
+				'SELECT value FROM '.WPSHOP_DBT_ATTRIBUTE_VALUES_VARCHAR.
+				' WHERE attribute_id=(SELECT id FROM '.WPSHOP_DBT_ATTRIBUTE.
+				' WHERE code = "barcode") AND entity_id="'.$post_ID.'"', ARRAY_A);
 		$meta = !empty($result) ? $result[0]['value'] : '';
 
 		/*Get price of product*/
-		$result = $wpdb->get_results('SELECT value FROM '.$table_prefix.
-				'wpshop__attribute_value_decimal '.
-				'WHERE attribute_id=6 AND entity_id='.get_the_ID(), ARRAY_A);
+		$result = $wpdb->get_results('SELECT value FROM '.WPSHOP_DBT_ATTRIBUTE_VALUES_DECIMAL.
+				' WHERE attribute_id=(SELECT id FROM '.WPSHOP_DBT_ATTRIBUTE.
+				' WHERE code="'.WPSHOP_PRODUCT_PRICE_TTC.'") AND entity_id='.$post_ID, ARRAY_A);
 
 		if ( !empty($result) && $result[0]['value'] >= 0) {
 			$price = $result[0]['value'];
@@ -74,11 +79,27 @@ class wps_barcode_metabox {
 			chdir('..');
 			chdir( plugin_dir_path(__FILE__) );
 			chdir('..');
-			$this->generate_image($barcode, $meta, __('product', 'wps_barcode'), $price, $ref);
+
+			$conf = get_option('wps_barcode');
+
+			if ( isset($conf['generate_barcode']) && $conf['generate_barcode'] === 'on' ) {
+				echo $ajax->generate_image($barcode, $meta, __('product', 'wps_barcode'),
+						$price, $ref);
+			}
+			else {
+				echo '<p style="text-align: center"><button class="button '.
+					'button-primary button-large" type="button"'.
+					'id="display_barcode" data-nonce=' . wp_create_nonce( 'imgProduct' ) . '>'.
+					__('Display', 'wps_barcode').'</button></p>';
+			}
 		}
 		else {
-			echo '<p>'.sprintf( __('None bardcode generated as you did create %s.',
+			$conf = get_option('wps_barcode');
+
+			if ( $conf['generate_barcode'] === 'true' ) {
+				echo '<p>'.sprintf( __('None bardcode generated as you did create %s.',
 					'wps_barcode'), __('product', 'wps_barcode')).'</p>';
+			}
 		}
 	}
 
@@ -136,7 +157,12 @@ class wps_barcode_metabox {
 					$order_meta = unserialize($result['_order_postmeta'][0]);
 					$title = ( !empty($order_meta['order_invoice_ref']) ) ? $order_meta['order_invoice_ref'] : $order_meta['order_key'];
 					$price = $order_meta['order_grand_total'];
-					$this->generate_image($barcode, $meta[0], __('order client', 'wps_barcode'), $price, $title );
+
+
+					if ( isset($conf['generate_barcode']) && $conf['generate_barcode'] === 'on' ) {
+						$this->generate_image($barcode, $meta[0], __('order client', 'wps_barcode'),
+							$price, $title );
+					}
 				}
 				else {
 					echo '<p>'.__('None bardcode generated as customer can not get his bill.',
@@ -199,8 +225,20 @@ class wps_barcode_metabox {
 				$meta = $result['wpshop_coupon_barcode'][0];
 			}
 
+			$query = $wpdb->get_results('SELECT post_title FROM '.
+					$table_prefix.'posts WHERE ID='.$post_ID, ARRAY_A);
+
 			$post = get_post($post_ID, ARRAY_A);
-			$this->generate_image($barcode, $meta, __('coupon', 'wps_barcode'), $result['wpshop_coupon_discount_value'][0], $post['post_title'], $post_ID);
+			if ( isset($conf['generate_barcode']) && $conf['generate_barcode'] === 'on' ) {
+				$ajax->generate_image($barcode, $meta, __('coupon', 'wps_barcode'),
+					$result['wpshop_coupon_discount_value'][0], $query[0]['post_title'], $post_ID);
+			}
+			else {
+				echo '<p style="text-align: center"><button class="button '.
+					'button-primary button-large" type="button"'.
+					'id="display_barcode">'.
+					__('Display', 'wps_barcode').'</button></p>';
+			}
 		}
 		else {
 			echo '<p>'.__('None bardcode generated as coupon has not created.',
@@ -353,10 +391,10 @@ class wps_barcode_metabox {
 			ob_start();
 			imagepng($im);
 			$img = ob_get_clean();
-			
+
 			echo '<p><img src="data:image/png;base64,'.base64_encode($img).
 				'" id="barcode" width="160" height="90" /></p>';
-			
+
 			echo '<p style="text-align: right"><button class="button '.
 					'button-primary button-large" type="button"'.
 					'id="print_barcode">'.
@@ -383,9 +421,9 @@ class wps_barcode_metabox {
 					'wps_barcode'), $type).'</p>';
 		}
 	}
-	
+
 	private function generateODT($img) {
-		
+
 	}
 
 	/**

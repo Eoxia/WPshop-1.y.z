@@ -1,1 +1,2 @@
-<?php echo do_shortcode('[wpshop_login]'); ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ echo do_shortcode('[wpshop_login]'); ?>

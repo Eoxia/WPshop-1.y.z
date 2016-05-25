@@ -153,7 +153,7 @@ wpshop(document).ready(function(){
 		jQuery('.form-field #description').replaceWith( editor_wysiwyg_to_put );
 		jQuery('#wpshop_transform_taxonomy_description_field_into_wysiwyg_for_js_duplicate').remove();
 	}
-	
+
 
 
 	var profileTable = jQuery('.user-edit-php .form-table, .profile-php .form-table').not('.rich-text-tags').has('textarea#description');
@@ -293,20 +293,18 @@ wpshop(document).ready(function(){
 	});
 	wpshop("#wpshop_attribute_unit_manager_opener").click(function(){
 		wpshop("#wpshop_attribute_unit_manager").html("<div class='wpshopCenterContainer' >" + wpshop("#wpshopLoadingPicture").html() + "</div>");
-		wpshop("#wpshop_attribute_unit_manager").load(WPSHOP_AJAX_FILE_URL,{
-			"post": "true",
-			"elementCode": "attribute_unit_management",
-			"action": "load_unit_interface"
+		wpshop("#wpshop_attribute_unit_manager").load(ajaxurl,{
+			"action": "wps_attribute_unit_interface",
+			"_wpnonce" : jQuery("#wpshop_attribute_unit_manager_opener").data('nonce')
 		});
 		wpshop("#wpshop_attribute_unit_manager").dialog("open");
 	});
 
 	wpshop("#wpshop_attribute_group_unit_manager_opener").click(function(){
 		wpshop("#wpshop_attribute_unit_manager").html("<div class='wpshopCenterContainer' >" + wpshop("#wpshopLoadingPicture").html() + "</div>");
-		wpshop("#wpshop_attribute_unit_manager").load(WPSHOP_AJAX_FILE_URL,{
-			"post": "true",
-			"elementCode": "attribute_unit_management",
-			"action": "load_unit_interface"
+		wpshop("#wpshop_attribute_unit_manager").load(ajaxurl,{
+			"action": "wps_attribute_unit_interface",
+			"_wpnonce" : jQuery("#wpshop_attribute_unit_manager_opener").data('nonce')
 		});
 		wpshop("#wpshop_attribute_unit_manager").dialog("open");
 	});
@@ -343,6 +341,7 @@ wpshop(document).ready(function(){
 		jQuery( '#update_products_loader' ).show();
 		var data = {
 				action: "update_products_prices",
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 			};
 			jQuery.post(ajaxurl, data, function(response) {
 				if ( response['status'] ) {
@@ -380,6 +379,7 @@ wpshop(document).ready(function(){
 
 		var data = {
 				action: "send_message_by_type",
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 				customer_user_id : jQuery('#selected_recipient option:selected').val(),
 				message_type_id : jQuery('#wpshop_postid').val(),
 				message_model_name : jQuery('#wpshop_message_model').val()
@@ -406,7 +406,7 @@ wpshop(document).ready(function(){
 		//alert(title+message+recipient);
 
 		if (messageid!='undefined') {
-			jQuery.getJSON(WPSHOP_AJAX_FILE_URL, { post: "true", elementCode: "ajax_resendMessage", messageid: messageid },
+			jQuery.getJSON(ajaxurl, { action: "wps_ajax_resend_message", messageid: messageid, _wpnonce: jQuery( this ).data( 'nonce' ) },
 				function(data){
 					if (!data.result) {
 						alert(data.message);
@@ -423,9 +423,7 @@ wpshop(document).ready(function(){
 
 	/*	Add support for option excluded domain addition	*/
 	jQuery("#wpshop_attribute_add_new_option_value").live("click",function(){
-		jQuery("#ajax-response").load(WPSHOP_AJAX_FILE_URL,{
-			"post": "true",
-			"elementCode": "attribute",
+		jQuery("#ajax-response").load(ajaxurl,{
 			"action": "load_new_option_field"
 		});
 	});
@@ -732,10 +730,11 @@ wpshop(document).ready(function(){
 	}
 
 	jQuery("#create_new_customer").click( function(){
-
+		var _wpnonce = jQuery( this ).data( 'nonce' );
 		jQuery("#create_new_customer_dialog").dialog("open");
 		var data = {
-				action: "load_create_new_customer_interface"
+				action: "load_create_new_customer_interface",
+				_wpnonce: _wpnonce,
 			};
 			jQuery.post(ajaxurl, data, function(response) {
 				if ( response[0] ) {
@@ -839,6 +838,7 @@ wpshop(document).ready(function(){
 		jQuery( '#send_downlodable_file' ).addClass( 'wps-bton-loading' );
 		var data = {
 				action: "fill_the_downloadable_dialog",
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 				product_identifer : jQuery('#product_identifer_field').val()
 			};
 			jQuery.post(ajaxurl, data, function(response) {
@@ -906,6 +906,7 @@ wpshop(document).ready(function(){
 		jQuery( btn ).addClass( 'wps-bton-loading' );
 		var data = {
 				action: "wps_quotation_is_payable_by_customer",
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 				order_id : order_id
 			};
 			jQuery.post(ajaxurl, data, function(response) {
@@ -927,6 +928,7 @@ wpshop(document).ready(function(){
 		var order_id = jQuery( '#post_ID' ).val();
 		var data = {
 				action: "wps_send_direct_payment_link",
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 				order_id : order_id
 			};
 			jQuery.post(ajaxurl, data, function(response) {
@@ -951,6 +953,7 @@ wpshop(document).ready(function(){
 		var order_id = jQuery( '#post_ID' ).val();
 		var data = {
 				action: "wps_delete_picture_category",
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 				cat_id : cat_id
 			};
 			jQuery.post(ajaxurl, data, function(response) {

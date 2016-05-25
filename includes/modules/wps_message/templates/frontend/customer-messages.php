@@ -1,4 +1,5 @@
-<?php if( !empty($messages_histo) && is_array($messages_histo) ) :?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ if( !empty($messages_histo) && is_array($messages_histo) ) :?>
 	<div class="wps-table wps-my-message">
 		<div class="wps-table-header wps-table-row">
 			<div class="wps-table-cell"><?php _e( 'Message title', 'wpshop' ); ?></div>

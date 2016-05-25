@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wps-boxed" id="wps_login_form_first_step">
 	<span class="wps-h5"><?php _e ('Log in', 'wpshop'); ?> / <?php _e( 'Sign up', 'wpshop'); ?></span>
 	<div id="wps_login_first_error_container" class="wps-login-first-error"></div>
@@ -11,7 +13,7 @@
 		</div>
 	</div>
 	<div class="wps-form-group">
-		<button class="wps-bton-first-alignRight-rounded" id="wps_first_login_button">
+		<button class="wps-bton-first-alignRight-rounded" data-nonce="<?php echo wp_create_nonce( 'wps_login_first_request' ); ?>" id="wps_first_login_button">
 			<?php _e('Continue', 'wpshop'); ?>
 		</button>
 	</div>

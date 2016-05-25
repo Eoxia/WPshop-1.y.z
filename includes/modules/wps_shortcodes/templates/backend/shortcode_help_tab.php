@@ -1,4 +1,4 @@
-<?php 
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 $shortcode = ( empty($shortcode) ) ? array() : $shortcode;
 foreach( $shortcodes as $categorie => $cat_content ) {
 	

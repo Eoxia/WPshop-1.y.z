@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Tools file definition for WP-Shop pos addon plugin / Fichier des outils de l'extension de caisse pour WP-Shop
  *

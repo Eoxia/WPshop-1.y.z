@@ -1,12 +1,4 @@
-<?php
-/**
- * Plugin Name: WpShop - Entity Filter
- * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/
- * Description: List products by filter
- * Version: 0.1
- * Author: Eoxia
- * Author URI: http://eoxia.com/
- */
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 
 /** Check if the plugin version is defined. If not defined script will be stopped here */
 if ( !defined( 'WPSHOP_VERSION' ) ) {
@@ -21,8 +13,10 @@ if ( !class_exists("wpshop_entity_filter") ) {
 		}
 
 		function wpshop_entity_filter() {
-			if (isset($_GET['post_type'])) {
-				$post_type = $_GET['post_type'];
+			$post_type = !empty( $_GET['post_type'] ) ? sanitize_text_field( $_GET['post_type'] ) : '';
+			$entity_filter = !empty( $_GET['entity_filter'] ) ? sanitize_text_field( $_GET['entity_filter'] ) : '';
+
+			if (isset($post_type)) {
 				if (post_type_exists($post_type) && ($post_type == WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT)) {
 					$filter_possibilities = array();
 					$filter_possibilities[''] = __('-- Select Filter --', 'wpshop');
@@ -31,7 +25,7 @@ if ( !class_exists("wpshop_entity_filter") ) {
 					$filter_possibilities['no_description'] = __('List products without description', 'wpshop');
 					$filter_possibilities['no_barcode_products'] = __('List products without barcode / with barcode not well formated', 'wpshop');
 					$filter_possibilities['no_barcode_variations'] = __('List products with options without barcode / with barcode not well formated', 'wpshop');
-					echo wpshop_form::form_input_select('entity_filter', 'entity_filter', $filter_possibilities, (!empty($_GET['entity_filter']) ? $_GET['entity_filter'] : ''), '', 'index');
+					echo wpshop_form::form_input_select('entity_filter', 'entity_filter', $filter_possibilities, (!empty($entity_filter) ? $entity_filter : ''), '', 'index');
 				}
 			}
 		}
@@ -39,10 +33,13 @@ if ( !class_exists("wpshop_entity_filter") ) {
 		function wpshop_entity_filter_parse_query($query) {
 			global $pagenow, $wpdb;
 
-			if ( is_admin() && ($pagenow == 'edit.php') && !empty( $_GET['post_type'] ) && ( $_GET['post_type'] == WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT ) && !empty( $_GET['entity_filter'] ) ) {
+			$post_type = !empty( $_GET['post_type'] ) ? sanitize_text_field( $_GET['post_type'] ) : '';
+			$entity_filter = !empty( $_GET['entity_filter'] ) ? sanitize_text_field( $_GET['entity_filter'] ) : '';
+
+			if ( is_admin() && ($pagenow == 'edit.php') && !empty( $post_type ) && ( $post_type == WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT ) && !empty( $entity_filter ) ) {
 
 				$check = null;
-				switch ( $_GET['entity_filter'] ) {
+				switch ( $entity_filter ) {
 					case 'no_picture':
 						$sql_query = $wpdb->prepare("SELECT post_id FROM {$wpdb->postmeta} pm WHERE meta_key = %s ", '_thumbnail_id');
 						$check = 'post__not_in';

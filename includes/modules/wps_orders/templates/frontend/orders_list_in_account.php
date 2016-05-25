@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 if ( !empty($orders) ) :
 	$permalink_option = get_option( 'permalink_structure' );
 	$account_page_id = get_option('wpshop_myaccount_page_id');

@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Fichier du controleur principal pour la gestion des modules internes dans les extensions wordpress / Main controller file for internal modules management into wordpress plugins
  *

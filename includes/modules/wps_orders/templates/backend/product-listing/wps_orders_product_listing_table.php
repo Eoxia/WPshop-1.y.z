@@ -1,4 +1,5 @@
-<?php $order_post_meta = !empty($post) ? get_post_meta( $post->ID, '_wpshop_order_status', true ) : ""; ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ $order_post_meta = !empty($post) ? get_post_meta( $post->ID, '_wpshop_order_status', true ) : ""; ?>
 <div class="wps-table">
 	<div class="wps-table-header wps-table-row">
 		<div class="wps-table-cell"><?php _e( 'Picture', 'wpshop'); ?></div>
@@ -28,12 +29,12 @@
 		</div>
 		<?php if ( 'completed' != $order_post_meta ) : ?>
 			<div class="wps-table-cell">
-				<a class="wps-bton-icon-minus-small wps-cart-reduce-product-qty" href=""></a>
+				<a class="wps-bton-icon-minus-small wps-cart-reduce-product-qty" data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_set_qty_for_product_into_cart' ); ?>" href=""></a>
 				<input id="wps-cart-product-qty-<?php echo $pid; ?>" class="wps-cart-product-qty" type="text" value="1" name="french-hens" size="3" style="text-align : center">
-				<a class="wps-bton-icon-plus-small wps-cart-add-product-qty" href=""></a>
+				<a class="wps-bton-icon-plus-small wps-cart-add-product-qty" data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_set_qty_for_product_into_cart' ); ?>" href=""></a>
 			</div>
 			<div class="wps-table-cell">
-				<a href="#" class="wps-bton-first-mini-rounded wps-order-add-product" id="wps-order-add-product-<?php echo $pid; ?>"><i class="wps-icon-basket"></i> <?php _e( 'Add to order', 'wpshop'); ?></a>
+				<a href="#" data-nonce="<?php echo wp_create_nonce( 'wps_add_product_to_order_admin' ); ?>" class="wps-bton-first-mini-rounded wps-order-add-product" id="wps-order-add-product-<?php echo $pid; ?>"><i class="wps-icon-basket"></i> <?php _e( 'Add to order', 'wpshop'); ?></a>
 			</div>
 		<?php endif; ?>
 	</div>

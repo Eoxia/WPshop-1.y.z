@@ -1,4 +1,5 @@
-<?php if ( !empty($order_postmeta['order_payment']) ) :
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+ if ( !empty($order_postmeta['order_payment']) ) :
 $total_amount = ( !empty($order_postmeta['order_grand_total']) ) ? $order_postmeta['order_grand_total'] : '';
 $waited_amount_sum = $received_amount_sum = $i = 0;
 ?>
@@ -49,14 +50,14 @@ $waited_amount_sum = $received_amount_sum = $i = 0;
 				</div>
 				<?php if( !empty( $received_payment ) && !empty($received_payment['invoice_ref']) ) { ?>
 					<div>
-					<div class="wps-product-section"><a href="<?php echo WPSHOP_TEMPLATES_URL; ?>invoice.php?order_id=<?php echo $order->ID; ?>&invoice_ref=<?php echo $received_payment['invoice_ref']; ?>&mode=pdf" target="_blank" class="wps-bton-second-mini-rounded" role="button"><i class="dashicons dashicons-download"></i><?php _e( 'Download invoice', 'wpshop' ); ?></a></div>
-					<div class="wps-product-section"><a href="<?php echo WPSHOP_TEMPLATES_URL; ?>invoice.php?order_id=<?php echo $order->ID; ?>&invoice_ref=<?php echo $received_payment['invoice_ref']; ?>" target="_blank" class="wps-bton-fourth-mini-third" role="button"><i class="dashicons dashicons-welcome-view-site"></i><?php _e( 'Watch invoice', 'wpshop' ); ?></a></div>
+					<div class="wps-product-section"><a href="<?php echo admin_url( 'admin-post.php?action=wps_invoice&order_id='.$order->ID.'&invoice_ref='.$received_payment['invoice_ref'].'&mode=pdf' ); ?>" target="_blank" class="wps-bton-second-mini-rounded" role="button"><i class="dashicons dashicons-download"></i><?php _e( 'Download invoice', 'wpshop' ); ?></a></div>
+					<div class="wps-product-section"><a href="<?php echo admin_url( 'admin-post.php?action=wps_invoice&order_id='.$order->ID.'&invoice_ref='.$received_payment['invoice_ref'] ); ?>" target="_blank" class="wps-bton-fourth-mini-third" role="button"><i class="dashicons dashicons-welcome-view-site"></i><?php _e( 'Watch invoice', 'wpshop' ); ?></a></div>
 					</div>
 				<?php } elseif( !empty( $received_payment ) && empty( $received_payment['invoice_ref'] ) && $received_payment['status'] == 'payment_received' ) { ?>
 					<div>
 					<input type="hidden" name="order_id" class="wps-regerate-invoice-payment-input<?php $idregen = uniqid(); echo $idregen; ?>" value="<?php echo $order->ID; ?>">
 					<input type="hidden" name="index_payment" class="wps-regerate-invoice-payment-input<?php echo $idregen; ?>" value="<?php echo $index_payment; ?>">
-					<div class="wps-product-section"><button id="wps-regerate-invoice-payment-btn" class="wps-bton-fourth-mini-third" data-class="<?php echo $idregen; ?>"><i class="dashicons dashicons-controls-repeat"></i><?php _e( 'Regerate invoice payment', 'wpshop' ); ?></button></div>
+					<div class="wps-product-section"><button data-nonce="<?php echo wp_create_nonce( 'wps_reverify_payment_invoice_ref' ); ?>" id="wps-regerate-invoice-payment-btn" class="wps-bton-fourth-mini-third" data-class="<?php echo $idregen; ?>"><i class="dashicons dashicons-controls-repeat"></i><?php _e( 'Regerate invoice payment', 'wpshop' ); ?></button></div>
 					</div>
 				<?php } ?>
 				<br/>

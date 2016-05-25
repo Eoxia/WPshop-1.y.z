@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <script type="text/javascript">
 	jQuery( document ).ready( function() {
 		jQuery( 'canvas' ).attr( 'width', parseInt( jQuery( '.meta-box-sortables' ).width() ) );

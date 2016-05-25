@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 if($orders) : 
 	$payment_status = unserialize( WPSHOP_ORDER_STATUS );
 ?>
@@ -35,12 +35,12 @@ if($orders) :
 						}
 					}
 					if ( ( $order_meta['order_status'] == 'partially_paid' || $order_meta['order_status'] == 'completed' || $order_meta['order_status'] == 'shipped' ) && !empty($invoice_ref) ) : ?>
-						<a href="<?php echo WPSHOP_TEMPLATES_URL; ?>invoice.php?order_id=<?php echo $order->ID; ?>&amp;mode=pdf" role="button" class="wps-bton-second-mini-rounded"><?php _e( 'Download', 'wpshop' ); ?></a>
+						<a href="<?php echo admin_url( 'admin-post.php?action=wps_invoice&order_id='.$order->ID.'&mode=pdf' ); ?>" role="button" class="wps-bton-second-mini-rounded"><?php _e( 'Download', 'wpshop' ); ?></a>
 					<?php endif; ?>
 				</div>
 				<div class="wps-table-cell">
 				<?php if ( $order_meta['order_status'] == 'shipped' ) : ?>
-					<a href="<?php echo WPSHOP_TEMPLATES_URL; ?>invoice.php?order_id=<?php echo $order->ID; ?>&amp;bon_colisage=ok&amp;mode=pdf" role="button" class="wps-bton-third-mini-rounded"><?php _e( 'Download', 'wpshop' ); ?></a>
+					<a href="<?php echo admin_url( 'admin-post.php?action=wps_invoice&order_id='.$order->ID.'&bon_colisage=ok&mode=pdf'); ?>" role="button" class="wps-bton-third-mini-rounded"><?php _e( 'Download', 'wpshop' ); ?></a>
 				<?php endif; ?>
 				</div>
 				

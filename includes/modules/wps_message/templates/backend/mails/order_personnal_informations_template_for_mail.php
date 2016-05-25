@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <table style="width:600px; border : 1px solid #A4A4A4; clear : both;">
 	<tr>
 		<td width="600" valign="middle" align="left" bgcolor="#1D7DC1" height="40" style="color : #FFFFFF">

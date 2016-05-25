@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 require 'SegmentIterator.php';
 class SegmentException extends Exception
 {}

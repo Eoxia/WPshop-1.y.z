@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 	<ul class="wps-fullcart">
 		<li class="wps-clearfix cart_header">
 			<div class="wps-cart-item-content"><?php _e( 'Product name', 'wpshop'); ?></div>
@@ -36,10 +38,10 @@
 					</ul>
 				<?php endif; ?>
 			</div>
-			<div><button class="wps-bton-second-mini-rounded item_qty" data-action="decrease" data-id="<?php echo $order_item_id; ?>" type="button" >-</button><input type="text" class="wpspos-dashboard-order-summary_qty" data-id="<?php echo $order_item_id; ?>" id="item_qty_<?php echo $order_item_id; ?>" value="<?php echo $order_item['item_qty']; ?>" /><button class="wps-bton-second-mini-rounded item_qty" data-action="increase" data-id="<?php echo $order_item_id; ?>" type="button" >+</button></td></div>
+			<div><button class="wps-bton-second-mini-rounded item_qty" data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_set_qty_for_product_into_cart' ); ?>" data-action="decrease" data-id="<?php echo $order_item_id; ?>" type="button" >-</button><input type="text" class="wpspos-dashboard-order-summary_qty" data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_set_qty_for_product_into_cart' ); ?>" data-id="<?php echo $order_item_id; ?>" id="item_qty_<?php echo $order_item_id; ?>" value="<?php echo $order_item['item_qty']; ?>" /><button class="wps-bton-second-mini-rounded item_qty" data-action="increase" data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_set_qty_for_product_into_cart' ); ?>" data-id="<?php echo $order_item_id; ?>" type="button" >+</button></td></div>
 			<div><input type="text"  class="wpspos-dashboard-order-summary_unit_price" id="price_<?php echo $order_item_id; ?>" value="<?php echo number_format($order_item['item_pu_ttc'], 2, '.', ''); ?>" /><?php echo wpshop_tools::wpshop_get_currency(); ?></td></div>
 			<div><?php echo number_format($order_item['item_total_ttc'], 2, '.', ''); ?> <?php echo wpshop_tools::wpshop_get_currency(); ?></div>
-			<div><button data-id="<?php echo $order_item_id; ?>" class="wps-bton-icon-close wps-pos-delete-product-of-order" type="button"></button></div>
+			<div><button data-id="<?php echo $order_item_id; ?>" data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_set_qty_for_product_into_cart' ); ?>" class="wps-bton-icon-close wps-pos-delete-product-of-order" type="button"></button></div>
 		</li>
 		<?php endforeach; ?>
 	<?php endif; ?>
@@ -68,8 +70,7 @@
 				<p class="wps-hightlight"><?php _e( 'Total ET', 'wpshop'); ?><span class="alignright"><strong><?php echo number_format($cart_content['order_total_ht'], 2, '.', ''); ?></strong> <?php echo wpshop_tools::wpshop_get_currency(); ?></span></p>
 				<p class="wps-hightlight"><?php _e( 'Total ATI', 'wpshop'); ?><span class="alignright"><strong><?php echo wpshop_tools::formate_number( ( !empty( $cart_content['order_amount_to_pay_now'] ) && !empty($oid) && $cart_content['order_amount_to_pay_now'] > 0 ) ? $cart_content['order_amount_to_pay_now'] : ( (!empty($cart_content['order_grand_total']) ) ? $cart_content['order_grand_total'] : 0 ) ); ?></strong> <?php echo wpshop_tools::wpshop_get_currency(); ?></span></p>
 			</div>
-
-			<a title="<?php _e( 'Finalize order', 'wps-pos-i18n' ); ?>" href="<?php echo admin_url( 'admin-ajax.php?action=wpspos-finalize-order&width=560&height=420' ); ?>" class="thickbox wps-bton-first-rounded alignright" id="wpspos-finalize-order" ><?php _e( 'Finalize order', 'wps-pos-i18n' ); ?></a>
+			<a title="<?php _e( 'Finalize order', 'wps-pos-i18n' ); ?>" href="<?php print wp_nonce_url( admin_url( 'admin-ajax.php?action=wpspos-finalize-order&width=560&height=420' ), 'wps_pos_finalize_order', '_wpnonce' ); ?>" class="thickbox wps-bton-first-rounded alignright" id="wpspos-finalize-order" ><?php _e( 'Finalize order', 'wps-pos-i18n' ); ?></a>
 			<a href="<?php echo admin_url( 'admin.php?page=wps-pos&new_order=yes' ); ?>" class="wps-bton-second-rounded alignright" id="wpspos-neworder" ><?php _e( 'Empty order', 'wps-pos-i18n' ); ?></a>
 		</div>
 	</div>

@@ -1,3 +1,5 @@
+<?php if ( !defined( 'ABSPATH' ) ) exit;
+?>
 <div class="wps-table-content wps-table-row">
 		<div class="wps-table-cell"><?php echo mysql2date( get_option('date_format'), $posted_opinion->opinion_date, true ); ?></div>
 		<div class="wps-table-cell">

@@ -1,13 +1,4 @@
-<?php
-/**
- * Plugin Name: WPShop Customer
- * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/
- * Description: WpShop Customer Account
- * Version: 0.1
- * Author: Eoxia
- * Author URI: http://eoxia.com/
- */
-
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * WpShop Customer Account bootstrap file
  * @author Jérôme ALLEGRE - Eoxia dev team <dev@eoxia.com>

@@ -1,4 +1,4 @@
-<?php
+<?php if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Main controller file for product mass modification module
  *
@@ -28,11 +28,11 @@ class wps_product_mass_interface_ctr {
 
 		// Trigger ajax action
 		add_action( 'wp_ajax_wps_mass_edit_change_page', array( $this, 'wps_mass_edit_change_page') );
-		add_action ( 'wp_ajax_wps_mass_edit_product_save_action', array( $this, 'wps_save_product_quick_interface') );
+		add_action( 'wp_ajax_wps_mass_edit_product_save_action', array( $this, 'wps_save_product_quick_interface') );
 		add_action( 'wp_ajax_wps_mass_interface_new_product_creation', array( $this, 'wps_mass_interface_new_product_creation' ) );
 		add_action( 'wp_ajax_wps_mass_delete_file', array( $this, 'wps_mass_delete_file' ) );
 		add_action( 'wp_ajax_wps_mass_edit_update_files_list', array( $this, 'wps_mass_edit_update_files_list' ) );
-		add_action( 'wp_ajax_wps_mass_delete_post',  array( $this, 'wps_mass_delete_post' ) );
+		// add_action( 'wap_ajax_wps_mass_delete_post', array( $this, 'wps_mass_delete_post' ) );
 	}
 
 	function register_mass_products_edit_submenu() {
@@ -72,7 +72,7 @@ class wps_product_mass_interface_ctr {
 	 * @return array
 	 */
 	function check_attribute_to_display_for_quick_add( $attribute_list, $quick_add_form_attributes = array() ) {
-		
+
 		if ( !empty( $attribute_list ) ) {
 			foreach( $attribute_list as $attributes_group ) {
 				foreach( $attributes_group as $attributes_sections ) {
@@ -220,6 +220,11 @@ class wps_product_mass_interface_ctr {
 	 * AJAX - Change page action on mass edit product interface
 	 */
 	function wps_mass_edit_change_page() {
+		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_mass_edit_change_page' ) )
+			wp_die();
+
 		$status = false; $response = '';
 		$page = ( !empty($_POST['page_id']) ) ? intval( $_POST['page_id'] ) - 1 : 0;
 		$attribute_set_id = ( !empty($_POST['att_set_id']) ) ? intval( $_POST['att_set_id'] ) : 1;
@@ -239,6 +244,11 @@ class wps_product_mass_interface_ctr {
 	 * AJAX - Create a draft product and display the line allowing to edit informations for this product
 	 */
 	function wps_mass_interface_new_product_creation() {
+		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_mass_interface_new_product_creation' ) )
+			wp_die();
+
 		global $wpdb;
 		$output = $pagination = '';
 		$status = false;
@@ -265,38 +275,46 @@ class wps_product_mass_interface_ctr {
 	 * AJAX - Save datas
 	 */
 	function wps_save_product_quick_interface() {
+		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_save_product_quick_interface' ) )
+			wp_die();
+
 		global $wpdb;
 		$response = ''; $status = false;
 		$count_products_to_update = 0; $total_updated_products = 0;
 
+		$wps_product_quick_save = !empty( $_REQUEST['wps_product_quick_save'] ) ? (array) $_REQUEST['wps_product_quick_save'] : array();
+		$wps_mass_interface = !empty( $_REQUEST['wps_mass_interface'] ) ? (array) $_REQUEST['wps_mass_interface'] : array();
+		$wpshop_product_attribute = !empty( $_REQUEST['wpshop_product_attribute'] ) ? (array) $_REQUEST['wpshop_product_attribute'] : array();
 
-		if( !empty($_REQUEST['wps_product_quick_save']) ) {
-			$count_products_to_update = count( $_REQUEST['wps_product_quick_save'] );
-			foreach( $_REQUEST['wps_product_quick_save'] as $product_to_save ) {
+		if( !empty($wps_product_quick_save) ) {
+			$count_products_to_update = count( $wps_product_quick_save );
+			foreach( $wps_product_quick_save as $product_to_save ) {
 				$data_to_save = array();
 				// Update post
 				$updated_post = wp_update_post( array( 'ID' => $product_to_save,
-						'post_title' => $_REQUEST['wps_mass_interface'][$product_to_save]['post_title'],
-						'post_content' => $_REQUEST['wps_mass_interface'][$product_to_save]['post_content'],
+						'post_title' => sanitize_text_field( $wps_mass_interface[$product_to_save]['post_title'] ),
+						'post_content' => sanitize_text_field( $wps_mass_interface[$product_to_save]['post_content'] ),
 						)
 				);
 				// Update attributes
 				if( !empty($updated_post) ) {
 					// Update Featured picture
-					if( !empty($_REQUEST['wps_mass_interface'][$product_to_save]['picture']) ) {
+					if( !empty($wps_mass_interface[$product_to_save]['picture']) ) {
 						$thumbnail_exist = get_post_meta( $updated_post, '_thumbnail_id', true );
-						if($_REQUEST['wps_mass_interface'][$product_to_save]['picture'] != 'deleted') {
-							wp_update_post( array('ID' => $_REQUEST['wps_mass_interface'][$product_to_save]['picture'], 'post_parent' => $updated_post) );
-							update_post_meta( $updated_post, '_thumbnail_id', $_REQUEST['wps_mass_interface'][$product_to_save]['picture'] );
+						if($wps_mass_interface[$product_to_save]['picture'] != 'deleted') {
+							wp_update_post( array('ID' => (int)$wps_mass_interface[$product_to_save]['picture'], 'post_parent' => $updated_post) );
+							update_post_meta( $updated_post, '_thumbnail_id', (int)$wps_mass_interface[$product_to_save]['picture'] );
 						}
-						elseif($_REQUEST['wps_mass_interface'][$product_to_save]['picture'] == 'deleted' && !empty($thumbnail_exist)) {
+						elseif($wps_mass_interface[$product_to_save]['picture'] == 'deleted' && !empty($thumbnail_exist)) {
 							delete_post_meta( $updated_post, '_thumbnail_id' );
 						}
 					}
 
 					// Update files datas
-					if( !empty($_REQUEST['wps_mass_interface'][$product_to_save]['files']) ) {
-						$files_data = explode( ',', $_REQUEST['wps_mass_interface'][$product_to_save]['files'] );
+					if( !empty($wps_mass_interface[$product_to_save]['files']) ) {
+						$files_data = explode( ',', sanitize_text_field( $_REQUEST['wps_mass_interface'][$product_to_save]['files'] ) );
 						if( !empty($files_data) && is_array($files_data) ) {
 							foreach( $files_data as $file_id ) {
 								if( !empty($file_id) ) {
@@ -307,8 +325,8 @@ class wps_product_mass_interface_ctr {
 					}
 
 					$data_to_save['post_ID'] = $data_to_save['product_id'] = intval( $product_to_save );
-					$data_to_save['wpshop_product_attribute'] = ( !empty($_REQUEST['wpshop_product_attribute'][ $product_to_save ]) ) ? $_REQUEST['wpshop_product_attribute'][ $product_to_save ] : array();
-					
+					$data_to_save['wpshop_product_attribute'] = ( !empty($wpshop_product_attribute[ $product_to_save ]) ) ? $wpshop_product_attribute[ $product_to_save ] : array();
+
 					if(empty($data_to_save['wpshop_product_attribute']['varchar']['barcode'])) {
 						// Get current barcode
 						$wps_product_mdl = new wps_product_mdl();
@@ -316,11 +334,11 @@ class wps_product_mass_interface_ctr {
 						$barcode_value = wpshop_attributes::wpshop_att_val_func(array('pid' => $data_to_save['post_ID'], 'attid' => $attid));
 						$data_to_save['wpshop_product_attribute']['varchar']['barcode'] = $barcode_value;
 					}
-					
+
 					$data_to_save['user_ID'] = get_current_user_id();
 					$data_to_save['action'] = 'editpost';
 
-					if( !empty($_REQUEST['wps_mass_interface'][$product_to_save]['post_delete']) && $_REQUEST['wps_mass_interface'][$product_to_save]['post_delete'] == "true" ) {
+					if( !empty($wps_mass_interface[$product_to_save]['post_delete']) && $wps_mass_interface[$product_to_save]['post_delete'] == "true" ) {
 						wp_trash_post( $product_to_save );
 					}
 
@@ -355,6 +373,11 @@ class wps_product_mass_interface_ctr {
 	* Delete product list
 	**/
 	function wps_mass_delete_file() {
+		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_mass_delete_file' ) )
+			wp_die();
+
 		$status = false;
 		$file_id = (!empty($_POST['file_id']) ) ? intval($_POST['file_id']) : null;
 		if( !empty($file_id) ) {
@@ -369,6 +392,11 @@ class wps_product_mass_interface_ctr {
 	* Update product files list
 	*/
 	function wps_mass_edit_update_files_list() {
+		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		if ( !wp_verify_nonce( $_wpnonce, 'wps_mass_edit_update_files_list' ) )
+			wp_die();
+
 		$status = false; $response = '';
 		$product_id = ( !empty($_POST['product_id']) ) ? intval($_POST['product_id']) : null;
 		$files = ( !empty($_POST['files']) ) ? intval($_POST['files']) : null;
