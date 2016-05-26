@@ -70,7 +70,7 @@ if ( !empty($type) ) {
 	</script>
 
 	<?php wp_admin_css( 'wp-admin', true ); ?>
-	<link rel='stylesheet' href="<?php echo  ; ?>pages/wpshop_wysiwyg_dialog.css?v=<?php echo WPSHOP_VERSION;?>" type="text/css" media="all" />
+	<link rel='stylesheet' href="<?php echo WPSHOP_CSS_URL; ?>pages/wpshop_wysiwyg_dialog.css?v=<?php echo WPSHOP_VERSION;?>" type="text/css" media="all" />
 	<link rel='stylesheet' href="<?php echo WPSHOP_CSS_URL; ?>jquery-libs/chosen.css?v=<?php echo WPSHOP_VERSION;?>" type="text/css" media="all" />
 </head>
 <body>

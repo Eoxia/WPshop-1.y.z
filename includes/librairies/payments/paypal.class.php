@@ -226,7 +226,7 @@ class wpshop_paypal {
 			}
 		}
 
-		echo $output;
+		echo !empty($output) ? $output : '';
 	}
 
 
