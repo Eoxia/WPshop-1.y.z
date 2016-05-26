@@ -41,9 +41,9 @@ class wpshop_categories
 		}
 
 		// Si le formatage est demand�
+		$cats_string='';
 		if($formated) {
 			if(!empty($cats)):
-				$cats_string='';
 				foreach($cats as $key=>$value) {
 					$cats_string.= '
 					<li><input type="checkbox" class="wpshop_shortcode_element wpshop_shortcode_element_categories" value="'.$key.'" id="'.WPSHOP_NEWTYPE_IDENTIFIER_CATEGORIES.'-'.$key.'" name="cats[]" /><label for="'.WPSHOP_NEWTYPE_IDENTIFIER_CATEGORIES.'-'.$key.'" > '.$value.'</label></li>';
