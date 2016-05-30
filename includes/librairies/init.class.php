@@ -43,7 +43,7 @@ class wpshop_init{
 		$page = !empty( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : '';
 		$post_type = !empty( $_GET['post_type'] ) ? sanitize_text_field( $_GET['post_type'] ) : '';
 		$action = !empty( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
-		$post = !empty( $_GET['post'] ) ? sanitize_text_field( $_GET['post'] ) : '';
+		$post = !empty( $_GET['post'] ) ? (array) $_GET['post'] : '';
 		$taxonomy = !empty( $_GET['taxonomy'] ) ? sanitize_text_field( $_GET['taxonomy'] ) : '';
 		if((isset($page) && substr($page, 0, 7) == 'wpshop_') || (isset($page) && $page == 'wps-installer' ) || (isset($post_type) && substr($post_type, 0, 7) == 'wpshop_') || !empty($post) || (isset($page) && $page==WPSHOP_NEWTYPE_IDENTIFIER_GROUP) || (isset($taxonomy) && ($taxonomy == WPSHOP_NEWTYPE_IDENTIFIER_CATEGORIES))){
 			/*	Include the different javascript	*/

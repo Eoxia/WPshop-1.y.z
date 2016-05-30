@@ -447,20 +447,20 @@ class wpshop_CIC {
 		return $output;
 	}
 
-
-	function display_admin_part( $k ) {
+	public static function display_admin_part( $k ) {
 		$cmcic_params = get_option('wpshop_cmcic_params', array());
 		$output = '';
 		$output .= '<h2>' .__('CIC configurations', 'wpshop'). '</h2>';
 		$output .= '<div class="wps_shipping_mode_configuration_part">';
-		$output .= '<label class="simple_right">'.__('Key', 'wpshop').'</label><br/><input name="wpshop_cmcic_params[cle]" type="text" value="'.$cmcic_params['cle'].'" /><br />';
-		$output .= '<label class="simple_right">'.__('TPE', 'wpshop').'</label><br/><input name="wpshop_cmcic_params[tpe]" type="text" value="'.$cmcic_params['tpe'].'" /><br />';
-		$output .= '<label class="simple_right">'.__('Version', 'wpshop').'</label><br/><input name="wpshop_cmcic_params[version]" type="text" value="'.$cmcic_params['version'].'" /> => 3.0<br />';
-		$output .= '<label class="simple_right">'.__('Serveur', 'wpshop').'</label><br/><input name="wpshop_cmcic_params[serveur]" type="text" value="'.$cmcic_params['serveur'].'" /><br />';
-		$output .= '<label class="simple_right">'.__('Company code', 'wpshop').'</label><br/><input name="wpshop_cmcic_params[codesociete]" type="text" value="'.$cmcic_params['codesociete'].'" /><br />';
+		$output .= '<label class="simple_right">'.__('Key', 'wpshop').'</label><br/><input name="wpshop_cmcic_params[cle]" type="text" value="'. ( !empty( $cmcic_params ) && !empty( $cmcic_params[ 'cle' ] ) ? $cmcic_params['cle'] : '' ).'" /><br />';
+		$output .= '<label class="simple_right">'.__('TPE', 'wpshop').'</label><br/><input name="wpshop_cmcic_params[tpe]" type="text" value="'. ( !empty( $cmcic_params ) && !empty( $cmcic_params[ 'tpe' ] ) ? $cmcic_params['tpe']: '' ).'" /><br />';
+		$output .= '<label class="simple_right">'.__('Version', 'wpshop').'</label><br/><input name="wpshop_cmcic_params[version]" type="text" value="'. ( !empty( $cmcic_params ) && !empty( $cmcic_params[ 'version' ] ) ? $cmcic_params['version']: '' ).'" /> => 3.0<br />';
+		$output .= '<label class="simple_right">'.__('Serveur', 'wpshop').'</label><br/><input name="wpshop_cmcic_params[serveur]" type="text" value="'. ( !empty( $cmcic_params ) && !empty( $cmcic_params[ 'serveur' ] ) ? $cmcic_params['serveur']: '' ).'" /><br />';
+		$output .= '<label class="simple_right">'.__('Company code', 'wpshop').'</label><br/><input name="wpshop_cmcic_params[codesociete]" type="text" value="'. ( !empty( $cmcic_params ) && !empty( $cmcic_params[ 'codesociete' ] ) ? $cmcic_params['codesociete']: '' ).'" /><br />';
 		$output .= '</div>';
 
 		return $output;
 	}
+
 }
 ?>

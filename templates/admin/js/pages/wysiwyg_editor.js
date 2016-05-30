@@ -156,9 +156,10 @@
 	});
 
 	// Register plugin
+	//tinymce.PluginManager.add('wpshop_wysiwyg_shortcodes', tinymce.plugins.wpshop_wysiwyg_shortcodes);
 	tinymce.PluginManager.add('wpshop_wysiwyg_shortcodes', function(editor, url) {
 		if (( jQuery("#post_type").val() === 'page' ) || ( jQuery("#post_type").val() === 'post' ) || ( jQuery("#post_type").val() === WPSHOP_NEWTYPE_IDENTIFIER_MESSAGE ) || ( jQuery("#post_type").val() === WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT )) {
-			editor.addButton( 'wpshop_wysiwyg_shortcodes', {
+			var wpshop_btn = {
 				title: WPSHOP_BUTTON_DESCRIPTION,
 				type: 'menubutton',
 				icon: 'wp_code',
@@ -204,7 +205,7 @@
 					{
 						title: WPSHOP_WYSIWYG_MENU_TITLE_ATTRIBUTE_VALUE,
 						onclick: function() {
-							tinyMCE.activeEditor.windowManager.open({
+							editor.windowManager.open({
 								file: WPSHOP_ADMIN_URL + 'admin-post.php?action=wps_shortcodes_wysiwyg_dialog&type=attribute_value&post_type=' + jQuery("#post_type").val(),
 								width: 800,
 								height: 600,
@@ -212,127 +213,134 @@
 							});
 						}
 					},
-					{
-						title : WPSHOP_CUSTOM_TAGS_TITLE,
-						menu: [
-							{
-								title: WPSHOP_CUSTOM_TAGS_CART,
-								onclick: function() {
-									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[wpshop_cart]');
-								}
-							},
-							{
-								title: WPSHOP_CUSTOM_TAGS_CART_MINI,
-								onclick: function() {
-									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[wpshop_mini_cart]');
-								}
-							},
-							{
-								title: WPSHOP_CUSTOM_TAGS_CHECKOUT,
-								onclick: function() {
-									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[wpshop_checkout]');
-								}
-							},
-							{
-								title: WPSHOP_CUSTOM_TAGS_ACCOUNT,
-								onclick: function() {
-									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[wpshop_myaccount]');
-								}
-							},
-							{
-								title: WPSHOP_CUSTOM_TAGS_SHOP,
-								onclick: function() {
-									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[wpshop_products]');
-								}
-							},
-						]
-					},
-					{
-						title: WPSHOP_CUSTOM_MESSAGE_CONTENT_TITLE,
-						menu: [
-							{
-								title : WPSHOP_CUSTOM_MESSAGE_CONTENT_CUSTOMER_FIRST_NAME,
-								onclick : function() {
-									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[customer_first_name]');
-								}
-							},
-							{
-								title : WPSHOP_CUSTOM_MESSAGE_CONTENT_CUSTOMER_LAST_NAME,
-								onclick : function() {
-									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[customer_last_name]');
-								}
-							},
-							{
-								title : WPSHOP_CUSTOM_MESSAGE_CONTENT_CUSTOMER_EMAIL,
-								onclick : function() {
-									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[customer_email]');
-								}
-							},
-							{
-								title : WPSHOP_CUSTOM_MESSAGE_CONTENT_ORDER_ID,
-								onclick : function() {
-									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[order_key]');
-								}
-							},
-							{
-								title : WPSHOP_CUSTOM_MESSAGE_CONTENT_PAYPAL_TRANSACTION_ID,
-								onclick : function() {
-									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[paypal_order_key]');
-								}
-							},
-							{
-								title : WPSHOP_CUSTOM_MESSAGE_CONTENT_ORDER_PAYMENT_METHOD,
-								onclick : function() {
-									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[order_payment_method]');
-								}
-							},
-							{
-								title : WPSHOP_CUSTOM_MESSAGE_CONTENT_ORDER_CUSTOMER_PERSONNAL_INFORMATIONS,
-								onclick : function() {
-									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[order_personnal_informations]');
-								}
-							},
-							{
-								title : WPSHOP_CUSTOM_MESSAGE_CONTENT_ORDER_CONTENT,
-								onclick : function() {
-									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[order_content]');
-								}
-							},
-							{
-								title : WPSHOP_CUSTOM_MESSAGE_CONTENT_ORDER_ADDRESSES,
-								onclick : function() {
-									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[order_addresses]');
-								}
-							},
-							{
-								title : WPSHOP_CUSTOM_MESSAGE_CONTENT_BILLING_ORDER_ADDRESS,
-								onclick : function() {
-									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[order_billing_address]');
-								}
-							},
-							{
-								title : WPSHOP_CUSTOM_MESSAGE_CONTENT_SHIPPING_ORDER_ADDRESS,
-								onclick : function() {
-									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[order_shipping_address]');
-								}
-							},
-							{
-								title : WPSHOP_CUSTOM_MESSAGE_CONTENT_SHIPPING_METHOD,
-								onclick : function() {
-									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[order_shipping_method]');
-								}
-							},
-							{
-								title : WPSHOP_CUSTOM_MESSAGE_CONTENT_CUSTOMER_COMMENT,
-								onclick : function() {
-									tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[order_customer_comments]');
-								}
-							}
-						]
-					}
 				]
-			});
+			}
+
+			if ( jQuery("#post_type").val() === 'page') {
+				wpshop_btn.menu.push({
+					title : WPSHOP_CUSTOM_TAGS_TITLE,
+					menu: [
+						{
+							title: WPSHOP_CUSTOM_TAGS_CART,
+							onclick: function() {
+								editor.execCommand('mceInsertContent', false, '[wpshop_cart]');
+							}
+						},
+						{
+							title: WPSHOP_CUSTOM_TAGS_CART_MINI,
+							onclick: function() {
+								editor.execCommand('mceInsertContent', false, '[wpshop_mini_cart]');
+							}
+						},
+						{
+							title: WPSHOP_CUSTOM_TAGS_CHECKOUT,
+							onclick: function() {
+								editor.execCommand('mceInsertContent', false, '[wpshop_checkout]');
+							}
+						},
+						{
+							title: WPSHOP_CUSTOM_TAGS_ACCOUNT,
+							onclick: function() {
+								editor.execCommand('mceInsertContent', false, '[wpshop_myaccount]');
+							}
+						},
+						{
+							title: WPSHOP_CUSTOM_TAGS_SHOP,
+							onclick: function() {
+								editor.execCommand('mceInsertContent', false, '[wpshop_products]');
+							}
+						},
+					]
+				});
+			}
+
+			if ( jQuery("#post_type").val() === WPSHOP_NEWTYPE_IDENTIFIER_MESSAGE) {
+				wpshop_btn.menu.push({
+					title: WPSHOP_CUSTOM_MESSAGE_CONTENT_TITLE,
+					menu: [
+						{
+							title : WPSHOP_CUSTOM_MESSAGE_CONTENT_CUSTOMER_FIRST_NAME,
+							onclick : function() {
+								editor.execCommand('mceInsertContent', false, '[customer_first_name]');
+							}
+						},
+						{
+							title : WPSHOP_CUSTOM_MESSAGE_CONTENT_CUSTOMER_LAST_NAME,
+							onclick : function() {
+								editor.execCommand('mceInsertContent', false, '[customer_last_name]');
+							}
+						},
+						{
+							title : WPSHOP_CUSTOM_MESSAGE_CONTENT_CUSTOMER_EMAIL,
+							onclick : function() {
+								editor.execCommand('mceInsertContent', false, '[customer_email]');
+							}
+						},
+						{
+							title : WPSHOP_CUSTOM_MESSAGE_CONTENT_ORDER_ID,
+							onclick : function() {
+								editor.execCommand('mceInsertContent', false, '[order_key]');
+							}
+						},
+						{
+							title : WPSHOP_CUSTOM_MESSAGE_CONTENT_PAYPAL_TRANSACTION_ID,
+							onclick : function() {
+								editor.execCommand('mceInsertContent', false, '[paypal_order_key]');
+							}
+						},
+						{
+							title : WPSHOP_CUSTOM_MESSAGE_CONTENT_ORDER_PAYMENT_METHOD,
+							onclick : function() {
+								editor.execCommand('mceInsertContent', false, '[order_payment_method]');
+							}
+						},
+						{
+							title : WPSHOP_CUSTOM_MESSAGE_CONTENT_ORDER_CUSTOMER_PERSONNAL_INFORMATIONS,
+							onclick : function() {
+								editor.execCommand('mceInsertContent', false, '[order_personnal_informations]');
+							}
+						},
+						{
+							title : WPSHOP_CUSTOM_MESSAGE_CONTENT_ORDER_CONTENT,
+							onclick : function() {
+								editor.execCommand('mceInsertContent', false, '[order_content]');
+							}
+						},
+						{
+							title : WPSHOP_CUSTOM_MESSAGE_CONTENT_ORDER_ADDRESSES,
+							onclick : function() {
+								editor.execCommand('mceInsertContent', false, '[order_addresses]');
+							}
+						},
+						{
+							title : WPSHOP_CUSTOM_MESSAGE_CONTENT_BILLING_ORDER_ADDRESS,
+							onclick : function() {
+								editor.execCommand('mceInsertContent', false, '[order_billing_address]');
+							}
+						},
+						{
+							title : WPSHOP_CUSTOM_MESSAGE_CONTENT_SHIPPING_ORDER_ADDRESS,
+							onclick : function() {
+								editor.execCommand('mceInsertContent', false, '[order_shipping_address]');
+							}
+						},
+						{
+							title : WPSHOP_CUSTOM_MESSAGE_CONTENT_SHIPPING_METHOD,
+							onclick : function() {
+								editor.execCommand('mceInsertContent', false, '[order_shipping_method]');
+							}
+						},
+						{
+							title : WPSHOP_CUSTOM_MESSAGE_CONTENT_CUSTOMER_COMMENT,
+							onclick : function() {
+								editor.execCommand('mceInsertContent', false, '[order_customer_comments]');
+							}
+						},
+					]
+				});
+			}
+
+			editor.addButton('wpshop_wysiwyg_shortcodes', wpshop_btn);
 		}
 	});
-	//tinymce.PluginManager.add('wpshop_wysiwyg_shortcodes', tinymce.plugins.wpshop_wysiwyg_shortcodes);
 })();
