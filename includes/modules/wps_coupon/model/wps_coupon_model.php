@@ -1,9 +1,9 @@
 <?php if ( !defined( 'ABSPATH' ) ) exit;
 class wps_coupon_model {
 	function __construct() {
-		
+
 	}
-	
+
 	/**
 	 * Get coupons
 	 * @return array
@@ -12,7 +12,7 @@ class wps_coupon_model {
 		$coupons = get_posts( array( 'post_per_page' => -1, 'post_type' => WPSHOP_NEWTYPE_IDENTIFIER_COUPON, 'post_status' => 'publish' ) );
 		return $coupons;
 	}
-	
+
 	/**
 	 * Save coupon custom datas on asave post action
 	 * @param array $data
@@ -22,7 +22,7 @@ class wps_coupon_model {
 			$amount_min_limit = array( 'amount' => ( ( !empty($data['wpshop_coupon_mini_amount']) ) ? $data['wpshop_coupon_mini_amount'] : null ), 'shipping_rule' => ( ( !empty($data['wpshop_coupon_min_mount_shipping_rule']) ) ? $data['wpshop_coupon_min_mount_shipping_rule'] : null ) );
 			update_post_meta($data['post_ID'], 'wpshop_coupon_code', $data['coupon_code']);
 			update_post_meta($data['post_ID'], 'wpshop_coupon_discount_value', floatval( str_replace(',', '.',$data['coupon_discount_amount']) ) );
-			update_post_meta($data['post_ID'], 'wpshop_coupon_discount_type', $data['coupon_type']);
+			update_post_meta($data['post_ID'], 'wpshop_coupon_discount_type', $data['wpshop_coupon_discount_type']);
 			update_post_meta($data['post_ID'], 'wpshop_coupon_individual_use', $data['coupon_receiver'] );
 			update_post_meta($data['post_ID'], 'wpshop_coupon_product_ids', '');
 			update_post_meta($data['post_ID'], 'wpshop_coupon_exclude_product_ids', '');
@@ -57,12 +57,12 @@ class wps_coupon_model {
 		}
 		return array();
 	}
-	
+
 	/** Save an historic of coupon usage */
 	function save_coupon_use( $coupon_id ) {
 		$coupon_use = get_post_meta( $coupon_id, '_wpshop_coupon_usage', true);
 		$user_id = get_current_user_id();
-	
+
 		if ( !empty($coupon_use[$user_id]) ) {
 			$coupon_use[$user_id] = $coupon_use[$user_id] + 1;
 		}

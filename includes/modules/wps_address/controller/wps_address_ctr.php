@@ -663,10 +663,10 @@ class wps_address {
 	/** Treat the differents fields of form and classified them by form
 	 * @return boolean
 	 */
-	public static function save_address_infos( $attribute_set_id, $address_id_to_copy = 0 ) {
+	public static function save_address_infos( $attribute_set_id, $address_id_to_copy = 0, $address_info_to_copy = array() ) {
 		global $wpdb;
 		$adress_save_the_first = !empty( $_POST['wps-address-save-the-first'] ) ? sanitize_text_field( $_POST['wps-address-save-the-first'] ) : '';
-		$attribute = !empty( $_POST['attribute'] ) ? (array)$_POST['attribute'] : '';
+		$attribute = !empty( $address_info_to_copy ) && !empty( $address_info_to_copy[ 'attribute' ] ) ? $address_info_to_copy[ 'attribute' ] : ( !empty( $_POST['attribute'] ) ? (array)$_POST['attribute'] : '' );
 		if ( !empty( $attribute[$attribute_set_id] ) ) {
 			$attribute[$attribute_set_id]['varchar']['address_title'] = sanitize_text_field( $attribute[$attribute_set_id]['varchar']['address_title'] );
 			$attribute[$attribute_set_id]['varchar']['address_last_name'] = sanitize_text_field( $attribute[$attribute_set_id]['varchar']['address_last_name'] );
@@ -1094,9 +1094,9 @@ class wps_address {
 					}
 				}
 			}
-			// @TODO Enlevez ce $_POST
-			//$_POST = $tmp_array;
 		}
+
+		return $tmp_array;
 	}
 
 
@@ -1114,7 +1114,6 @@ class wps_address {
 		$user_id = ( !empty($customer_id) ) ? $customer_id : get_current_user_id();
 
 		if ( $user_id != 0 ) {
-
 			$shipping_option = get_option( 'wpshop_shipping_address_choice' );
 			$billing_option = get_option( 'wpshop_billing_address' );
 
@@ -1383,9 +1382,7 @@ class wps_address {
 	function wps_save_address() {
 		global $wpshop, $wpdb;
 
-		$_wpnonce = ( !empty( $_REQUEST['_wpnonce'] ) ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
-		if ( !wp_verify_nonce( $_wpnonce, 'wps_save_address' ) )
-			wp_die();
+		check_ajax_referer( 'wps_save_address' );
 
 		$adress_save_the_first = !empty( $_POST['wps-address-save-the-first'] ) ? sanitize_text_field( $_POST['wps-address-save-the-first'] ) : '';
 		$attribute = !empty( $_POST['attribute'] ) ? (array)$_POST['attribute'] : '';
@@ -1424,6 +1421,7 @@ class wps_address {
 				foreach ( $attribute_sets as $attribute_set_field ) {
 					$validate = $wpshop->validateForm($attribute_set_field['content'], $attribute[$id_group], 'address_edition');
 				}
+
 				if ( $validate ) {
 					$shipping_save = self::save_address_infos( $id_group );
 
@@ -1431,8 +1429,9 @@ class wps_address {
 					if( !empty( $wps_shipping_to_billing ) ) {
 						$billing_option = get_option( 'wpshop_billing_address' );
 						$shipping_option = get_option( 'wpshop_shipping_address_choice' );
-						self::shipping_to_billing( $shipping_option['choice'], $billing_option['choice'] );
-						self::save_address_infos( $billing_option['choice'], $shipping_save['current_id'] );
+
+						$address_info_to_copy = self::shipping_to_billing( $shipping_option['choice'], $billing_option['choice'] );
+						self::save_address_infos( $billing_option['choice'], $shipping_save['current_id'], $address_info_to_copy );
 						$same_address_type = $billing_option['choice'];
 					}
 
@@ -1459,5 +1458,3 @@ class wps_address {
 	}
 
 }
-
-?>

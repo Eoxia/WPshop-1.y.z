@@ -1,4 +1,13 @@
-<?php if ( !defined( 'ABSPATH' ) ) exit;
+<?php
+/**
+ * Plugin Name: WPShop Breadcrumb
+ * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/
+ * Description: WpShop Breadcrumb
+ * Version: 0.1
+ * Author: Eoxia
+ * Author URI: http://eoxia.com/
+ */
+
 /**
  * WpShop Breadcrumb bootstrap file
  * @author Jérôme ALLEGRE - Eoxia dev team <dev@eoxia.com>
@@ -52,6 +61,7 @@ if ( !class_exists("wpshop_breadcrumb") ) {
 				$object = $wp_query;
 				$taxonomy =  !empty($object->queried_object->taxonomy) ? $object->queried_object->taxonomy : '';
 				$on_product_page = false;
+
 				/** Check if we are on a product_page OR Taxonomy Page**/
 				if ( !empty($object->queried_object->post_type) && $object->queried_object->post_type == WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT ) {
 					$taxonomy = WPSHOP_NEWTYPE_IDENTIFIER_CATEGORIES;
@@ -87,7 +97,6 @@ if ( !class_exists("wpshop_breadcrumb") ) {
 					$breadcrumb_definition = array();
 				}
 
-
 				/** Construct the breadcrumb **/
 				if ( !empty($breadcrumb_definition) ) {
 					$count_breadcrumb_definition = count($breadcrumb_definition);
@@ -111,6 +120,22 @@ if ( !class_exists("wpshop_breadcrumb") ) {
 							}
 
 						}
+
+						/**	Affichage du lien vers la boutique si on est sur une page produit ou catégories / Display a link to the shop if we are on a product or a category page	*/
+						if ( ( 0 == $i ) && !empty( $object->queried_object ) && (
+								( isset( $object->queried_object->post_type ) && !empty( $object->queried_object->post_type ) && ( WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT == $object->queried_object->post_type ) )
+									|| ( isset( $object->queried_object->taxonomy ) && !empty( $object->queried_object->taxonomy ) && ( WPSHOP_NEWTYPE_IDENTIFIER_CATEGORIES == $object->queried_object->taxonomy ) )
+							)
+						) {
+							$product_page_id = wpshop_tools::get_page_id( get_option( 'wpshop_product_page_id' ) );
+							$url = get_permalink( $product_page_id );
+							$shop_page = get_post( $product_page_id );
+							$tpl_component['CATEGORY_LINK'] = $url;
+							$tpl_component['OTHERS_CATEGORIES_LIST'] = '';
+							$tpl_component['CATEGORY_NAME'] = $shop_page->post_title;
+							$output .= wpshop_display::display_template_element('wpshop_breadcrumb_element', $tpl_component, array(), 'wpshop');
+						}
+
 						if ( $i == 0 && !$on_product_page ) {
 							$output .= wpshop_display::display_template_element('wpshop_breadcrumb_first_element', array('CATEGORY_NAME' => $category_name ), array(), 'wpshop');
 						}
@@ -148,6 +173,7 @@ if ( !class_exists("wpshop_breadcrumb") ) {
 					$output .= '<li itemscope itemtype="http://data-vocabulary.org/Breadcrumb"><a href="#">' .$post->post_title. '</a></li>';
 				}
 				$breadcrumb = wpshop_display::display_template_element('wpshop_breadcrumb', array('BREADCRUMB_CONTENT' => $output), array(), 'wpshop');
+
 				return $breadcrumb;
 			}
 		}

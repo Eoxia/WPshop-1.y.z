@@ -4,7 +4,7 @@ Tags: boutique, catalog, catalogue, commerce, e-commerce, ecommerce, m-commerce,
 Donate link: http://www.wpshop.fr/documentations/presentation-wpshop/
 Requires at least: 3.4.0
 Tested up to: 4.5.2
-Stable tag: 1.4.1.9
+Stable tag: 1.4.2.0
 License: GPLv2 or later
 
 Simple and powerfull eCommerce plugin, with French Payment and Shipping systems : Paybox, Paypal, Atos, Cybermut, SystemPay, Paysite-cash, Colissimo
@@ -96,6 +96,17 @@ Il faut vérifier que le réglage des permaliens pour votre site est bien régl�
 
 
 == Changelog ==
+
+= Version 1.4.2.0 =
+
+Corrections / Fix
+
+* 4266 - Création automatique de l'adresse de facturation si la case "utiliser la même adresse" est cochée / Create billing address automatically if "same address as shipping" checkbox is checked
+* 4263 - Erreur de connexion lors de l'inscription dans le tunnel de vente / Login error during registration in the sales tunnel
+* 4262 - Utilisation d'un coupon dont le montant est supérieur au montant de la commande / Using a coupon whose amount exceeds the amount of the order
+* 4261 - Ajout d'un paiement manuel dans les commandes - Add a manual payment into an order
+* 4260 - Fil d'arianne - Breadcrumb
+* 3423 - Suppression de la zone description des coupons non utilisées / Delete description area in vouncher because it was not used
 
 = Version 1.4.1.9 =
 

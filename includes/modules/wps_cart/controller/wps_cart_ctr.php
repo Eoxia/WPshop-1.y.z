@@ -743,7 +743,7 @@ class wps_cart {
 					$wps_coupon = new wps_coupon_ctr();
 					$coupon_checking = $wps_coupon->applyCoupon( $coupon['wpshop_coupon_code'] );
 					// If Coupon conditions are Ok
-					if( !empty($coupon_checking) && !empty($coupon_checking['status']) && $coupon_checking['status'] ) {
+					if( !empty($coupon_checking) && !empty( $coupon_checking['status'] ) && ( true == $coupon_checking['status'] ) ) {
 						$cart_infos['order_discount_type'] = $coupon['wpshop_coupon_discount_type'];
 						$cart_infos['order_discount_value'] = $coupon['wpshop_coupon_discount_value'];
 					}
@@ -752,7 +752,7 @@ class wps_cart {
 		}
 
 		// Checking Discounts
-		if( !empty($cart_infos['order_discount_type']) && $cart_infos['order_discount_value'] ) {
+		if( !empty($cart_infos['order_discount_type']) && !empty( $cart_infos['order_discount_value'] ) ) {
 			// Calcul discount on Order
 			switch ($cart_infos['order_discount_type']) {
 				case 'amount':
@@ -762,7 +762,12 @@ class wps_cart {
 					$cart_infos['order_discount_amount_total_cart'] = number_format( $cart_infos['order_grand_total'], 2, '.', '') * ( number_format( str_replace( ',', '.', $cart_infos['order_discount_value']), 2, '.', '') / 100);
 				break;
 			}
-			$cart_infos['order_grand_total'] -= number_format( $cart_infos['order_discount_amount_total_cart'], 2, '.', '');
+			if ( number_format( $cart_infos['order_discount_amount_total_cart'], 2, '.', '') > number_format( $cart_infos['order_grand_total'], 2, '.', '') ) {
+				$cart_infos['order_grand_total'] = 0;
+			}
+			else {
+				$cart_infos['order_grand_total'] -= number_format( $cart_infos['order_discount_amount_total_cart'], 2, '.', '');
+			}
 			$cart_infos['order_amount_to_pay_now'] = number_format( $cart_infos['order_grand_total'], 2, '.', '');
 		}
 
@@ -785,7 +790,7 @@ class wps_cart {
 		}
 
 		// Cart Type
-		if (isset($_SESSION['cart']['cart_type'])) {
+		if ( isset( $_SESSION['cart']['cart_type'] ) ) {
 			$cart_infos['cart_type'] = $_SESSION['cart']['cart_type'];
 		}
 

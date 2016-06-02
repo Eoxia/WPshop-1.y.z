@@ -1,6 +1,7 @@
 <div class="wps-<?php echo $address_type; ?>-address" <?php if ( !empty( $first_address_checking ) && !$is_from_admin && $type == 'billing' ) { echo 'style="display: none;"'; } ?> data-nonce="<?php echo wp_create_nonce( 'wps_reload_address_interface' ); ?>" id="wps-address-container-<?php echo $address_type_id; ?>">
 	<div id="wps_address_error_container" ></div>
 	<form id="wps_address_form_save_first_address" action="<?php echo admin_url( 'admin-ajax.php' ); ?>" method="post">
+		<?php wp_nonce_field( 'wps_save_address' ); ?>
 <?php
 		echo self::display_form_fields( $address_type_id, '', '', '', array(), array(), array(), get_current_user_id() );
 

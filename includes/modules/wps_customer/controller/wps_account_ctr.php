@@ -501,9 +501,9 @@ class wps_account_ctr {
 						}
 						$status = true;
 
-						if ( $account_creation && empty($user_id) ) {
+						if ( $account_creation && !empty( $user_id ) ) {
 							$secure_cookie = is_ssl() ? true : false;
-							wp_set_auth_cookie($user_id, true, $secure_cookie);
+							wp_set_auth_cookie( $user_id, true, $secure_cookie );
 						}
 						$wps_message->wpshop_prepared_email( sanitize_email($attribute['varchar']['user_email']), 'WPSHOP_SIGNUP_MESSAGE', array('customer_first_name' => ( !empty($attribute['varchar']['first_name']) ) ? sanitize_text_field( $attribute['varchar']['first_name'] ) : '', 'customer_last_name' => ( !empty($attribute['varchar']['last_name']) ) ? sanitize_text_field( $attribute['varchar']['last_name'] ) : '', 'customer_user_email' => ( !empty($attribute['varchar']['user_email']) ) ? sanitize_email( $attribute['varchar']['user_email'] ) : '') );
 
@@ -519,8 +519,8 @@ class wps_account_ctr {
 
 			}
 		}
-		echo json_encode( array( $status, $result, $user_id) );
-		die();
+
+		wp_die( json_encode( array( $status, $result, $user_id ) ) );
 	}
 
 	/** SIGN UP - Display the commercial & newsletter form

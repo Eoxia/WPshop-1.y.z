@@ -443,7 +443,6 @@ class wpshop_init{
 		wp_enqueue_script('wps_owl_caroussel', wpshop_display::get_template_file('owl.carousel.min.js', WPSHOP_TEMPLATES_URL, 'wpshop/js', 'output'), '', WPSHOP_VERSION, true);
 ?>
 <script type="text/javascript">
-//	var WPSHOP_AJAX_URL = "<?php echo WPSHOP_AJAX_FILE_URL; ?>";
 	var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
 	var CURRENT_PAGE_URL = "<?php !empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '' ?>";
 	var WPSHOP_REQUIRED_FIELD_ERROR_MESSAGE = "<?php _e('Every fields marked as required must be filled', 'wpshop'); ?>";

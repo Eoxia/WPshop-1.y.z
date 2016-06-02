@@ -26,18 +26,21 @@
 				);
 				$customers = get_posts( $args );
 				if ( !empty($customers) ) :
-				 	foreach( $customers as $customer ) : 
+				 	foreach( $customers as $customer ) :
 				 		$name = strtoupper( get_user_meta( $customer->post_author, 'last_name', true ) ).' '.get_user_meta( $customer->post_author, 'first_name', true );
-						?>
-						<option value="<?php echo $customer->post_author; ?>" <?php echo ( (!empty( $coupon_receiver) && is_array($coupon_receiver) && in_array($customer->post_author, $coupon_receiver)) ? 'selected="selected"' : '' ); ?>><?php echo $name; ?> ( <?php $user = get_userdata($customer->post_author); echo $user->user_email; ?> )</option>
-					<?php 
-					endforeach; 
+						$user = get_userdata($customer->post_author);
+						if ( !empty( $user ) ) :
+?>
+						<option value="<?php echo $customer->post_author; ?>" <?php echo ( (!empty( $coupon_receiver) && is_array($coupon_receiver) && in_array($customer->post_author, $coupon_receiver)) ? 'selected="selected"' : '' ); ?>><?php echo $name; ?> ( <?php echo $user->user_email; ?> )</option>
+<?php
+						endif;
+					endforeach;
 				endif;
 				?>
 			</select>
 		</td>
 	</tr>
-	
+
 	<tr>
 		<td>
 			<label for="wpshop_coupon_usage_limit"><?php _e('Number of usage by user', 'wpshop'); ?></label> :
@@ -47,13 +50,13 @@
 			<br/><?php _e('Leave empty if you want a illimited usage', 'wpshop'); ?>
 		</td>
 	</tr>
-	
+
 	<tr>
 		<td>
-			<label for="wpshop_coupon_mini_amount"><?php _e('Minimum order amount to use this coupon', 'wpshop'); ?></label> : 
+			<label for="wpshop_coupon_mini_amount"><?php _e('Minimum order amount to use this coupon', 'wpshop'); ?></label> :
 		</td>
 		<td>
-			<input type="text" name="wpshop_coupon_mini_amount" value="<?php echo ( (!empty($wpshop_coupon_minimum_amount) && !empty($wpshop_coupon_minimum_amount['amount']) ) ? $wpshop_coupon_minimum_amount['amount'] : ''); ?>" id="wpshop_coupon_mini_amount" /> <?php echo $default_currency; ?> 
+			<input type="text" name="wpshop_coupon_mini_amount" value="<?php echo ( (!empty($wpshop_coupon_minimum_amount) && !empty($wpshop_coupon_minimum_amount['amount']) ) ? $wpshop_coupon_minimum_amount['amount'] : ''); ?>" id="wpshop_coupon_mini_amount" /> <?php echo $default_currency; ?>
 			<select name="wpshop_coupon_min_mount_shipping_rule">
 			<option value="no_shipping_cost" <?php echo ( (!empty($wpshop_coupon_minimum_amount) && !empty($wpshop_coupon_minimum_amount['shipping_rule']) && $wpshop_coupon_minimum_amount['shipping_rule'] == 'no_shipping_cost') ? 'selected="selected"' : ''); ?>><?php _e('Without shipping cost', 'wpshop'); ?></option>
 			<option value="shipping_cost" <?php echo ( (!empty($wpshop_coupon_minimum_amount) && !empty($wpshop_coupon_minimum_amount['shipping_rule']) && $wpshop_coupon_minimum_amount['shipping_rule'] == 'shipping_cost') ? 'selected="selected"' : ''); ?>><?php _e('With shipping cost', 'wpshop'); ?></option>

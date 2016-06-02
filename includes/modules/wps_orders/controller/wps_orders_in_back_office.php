@@ -208,13 +208,13 @@ class wps_orders_in_back_office {
 			$wpshop_admin_order_payment_received['payment_reference'] = !empty( $wpshop_admin_order_payment_received['payment_reference'] ) ? sanitize_text_field( $wpshop_admin_order_payment_received['payment_reference'] ) : '';
 			$wpshop_admin_order_payment_received['date'] = !empty( $wpshop_admin_order_payment_received['date'] ) ? sanitize_text_field( $wpshop_admin_order_payment_received['date'] ) : '';
 			$wpshop_admin_order_payment_received['received_amount'] = !empty( $wpshop_admin_order_payment_received['received_amount'] ) ? sanitize_text_field( $wpshop_admin_order_payment_received['received_amount'] ) : '';
-			$action_triggered_from = !empty( $_REQUEST['action_triggered_from'] ) ? sanitize_text_field( $action_triggered_from ) : '';
-			$whsop_admin_order_payment_reference = !empty( $_REQUEST['wpshop_admin_order_payment_reference'] ) ? sanitize_text_field( $_REQUEST['wpshop_admin_order_payment_reference'] ) : '';
+			$action_triggered_from = !empty( $_REQUEST['action_triggered_from'] ) ? sanitize_text_field( $_REQUEST['action_triggered_from'] ) : '';
+			$wshop_admin_order_payment_reference = !empty( $_REQUEST['wpshop_admin_order_payment_reference'] ) ? sanitize_text_field( $_REQUEST['wpshop_admin_order_payment_reference'] ) : '';
 
 			// Add a Payment to Order MetaData
-			if ( !empty($wpshop_admin_order_payment_received['wpshop_admin_order_payment_received']) && !empty($wpshop_admin_order_payment_received['wpshop_admin_order_payment_received']['method'])
-					&& !empty($wpshop_admin_order_payment_received['wpshop_admin_order_payment_received']['date']) && !empty($wpshop_admin_order_payment_received['wpshop_admin_order_payment_received']['received_amount']) &&
-					( $action_triggered_from == 'add_payment' || !empty($whsop_admin_order_payment_reference) ) ) {
+			if ( !empty($wpshop_admin_order_payment_received) && !empty($wpshop_admin_order_payment_received['method'])
+					&& !empty($wpshop_admin_order_payment_received['date']) && !empty($wpshop_admin_order_payment_received['received_amount']) &&
+					( $action_triggered_from == 'add_payment' || !empty($wshop_admin_order_payment_reference) ) ) {
 
 				$received_payment_amount = $wpshop_admin_order_payment_received['received_amount'];
 				// Payment Params

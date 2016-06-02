@@ -56,7 +56,7 @@ class wps_coupon_ctr {
 				'show_in_nav_menus' 			=> false,
 				'rewrite' 						=> false,
 				'query_var' 					=> true,
-				'supports' 						=> array('title','editor'),
+				'supports' 						=> array( 'title', ),
 				'has_archive' 					=> false
 		));
 	}
@@ -137,15 +137,16 @@ class wps_coupon_ctr {
 			$wps_coupon_mdl = new wps_coupon_model();
 
 			$data = array(
-				'wpshop_coupon_mini_amount' => !empty( $_REQUEST['wpshop_coupon_mini_amount'] ) ? sanitize_text_field( $_REQUEST['wpshop_coupon_mini_amount'] ) : '',
-				'wpshop_coupon_min_mount_shipping_rule' => !empty( $_REQUEST['wpshop_coupon_min_mount_shipping_rule'] ) ? sanitize_text_field( $_REQUEST['wpshop_coupon_min_mount_shipping_rule'] ) : '',
-				'coupon_code' => !empty( $_REQUEST['coupon_code'] ) ? sanitize_text_field( $_REQUEST['coupon_code'] ) : '',
-				'coupon_discount_amount' => !empty( $_REQUEST['coupon_discount_amount'] ) ? sanitize_text_field( $_REQUEST['coupon_discount_amount'] ) : '',
-				'wpshop_coupon_discount_type' => !empty( $_REQUEST['wpshop_coupon_discount_type'] ) ? sanitize_text_field( $_REQUEST['wpshop_coupon_discount_type'] ) : '',
-				'coupon_receiver' => !empty( $_REQUEST['coupon_receiver'] ) ? sanitize_text_field( $_REQUEST['coupon_receiver'] ) : '',
-				'coupon_usage_limit' => !empty( $_REQUEST['coupon_usage_limit'] ) ? sanitize_text_field( $_REQUEST['coupon_usage_limit'] ) : '',
+				'wpshop_coupon_mini_amount' => !empty( $_POST['wpshop_coupon_mini_amount'] ) ? sanitize_text_field( $_POST['wpshop_coupon_mini_amount'] ) : '',
+				'wpshop_coupon_min_mount_shipping_rule' => !empty( $_POST['wpshop_coupon_min_mount_shipping_rule'] ) ? sanitize_text_field( $_POST['wpshop_coupon_min_mount_shipping_rule'] ) : '',
+				'coupon_code' => !empty( $_POST['coupon_code'] ) ? sanitize_text_field( $_POST['coupon_code'] ) : '',
+				'coupon_discount_amount' => !empty( $_POST['coupon_discount_amount'] ) ? sanitize_text_field( $_POST['coupon_discount_amount'] ) : '',
+				'wpshop_coupon_discount_type' => !empty( $_POST['coupon_type'] ) ? sanitize_text_field( $_POST['coupon_type'] ) : '',
+				'coupon_receiver' => !empty( $_POST['coupon_receiver'] ) ? sanitize_text_field( $_POST['coupon_receiver'] ) : '',
+				'coupon_usage_limit' => !empty( $_POST['coupon_usage_limit'] ) ? sanitize_text_field( $_POST['coupon_usage_limit'] ) : '',
 				'post_ID' => $post_id,
 			);
+
 			$wps_coupon_mdl->save_coupons_informations( $data );
 		}
 	}
