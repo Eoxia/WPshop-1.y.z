@@ -255,6 +255,9 @@ class wps_barcode_metabox {
 	 * @param string $title Title of product
 	 */
 	public function generate_image(&$barcode, $meta, $type, $price, $title, $post_ID = 0) {
+		if ( !extension_loaded('gd') ) {
+			return '<p>'.__('Library GD is requiered.', 'wps_barcode').'</p>';
+		}
 		if ( !empty($meta) ) {
 			$barcode->setGenerateCode($meta);
 			$binCode = $barcode->getBinCode();
