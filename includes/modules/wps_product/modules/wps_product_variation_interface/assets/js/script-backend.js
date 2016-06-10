@@ -1,6 +1,16 @@
 jQuery(document).ready( function() {
 	var wps_variations_options = [];
 
+	jQuery('.wps_variations_tabs').hide();
+
+	jQuery('#wps_variations_tabs li').click( function(e) {
+		e.preventDefault();
+		if( jQuery( this ).data( 'tab' ) ) {
+			jQuery( this ).toggleClass( 'active' );
+			jQuery( '#' + jQuery( this ).data( 'tab' ) ).toggle();
+		}
+	});
+
 	jQuery.each( wps_product_variation_interface.variation, function( index, element ) {
 		wps_variations_options.push( {
 			code: element.attribute_complete_def.code,
@@ -27,11 +37,20 @@ jQuery(document).ready( function() {
 		} );
 	} );
 
-	new WPSVariationOptionsInterface( 'wps_variations_options_raw', wps_variations_options );
+	var wps_variations_options_raw = new WPSVariationOptionsInterface( 'wps_variations_options_raw', wps_variations_options );
+	console.log( wps_variations_options_raw.dataModel );
+	//new WPSVariationOptionsInterface( 'wps_variations_options_summary', wps_variations_options_raw );
 	jQuery.each( wps_variations_options, function( index, element ) {
 		new WPSVariationOptionsInterface( 'wps_variations_possibilities_' + element.code, element.possibilities );
 		new WPSVariationOptionsInterface( 'wps_variations_default_' + element.code, element.default );
+		jQuery('.chosen_select_' + element.code ).chosen();
 	} );
+
+	jQuery( '#wps_variations_apply_btn' ).click( function() {
+		console.log( wps_variations_options );
+	} );
+
+	new WPSVariationOptionsInterface( 'wps_variations_price_option_raw', wps_variations_price_option );
 });
 
 function WPSVariationOptionsInterface( identifier, model ) {
@@ -41,11 +60,34 @@ function WPSVariationOptionsInterface( identifier, model ) {
 	if( jQuery.isArray( model ) ) {
 		jQuery("[data-view-model='" + WPSVariationOptionsInterface.identifier + "']").each( function( index, element ) {
 			WPSVariationOptionsInterface.viewModels[index] = element;
-			var markerDOM = document.createElement( "span" );
-			jQuery( markerDOM ).attr( "id", "marker_" + WPSVariationOptionsInterface.identifier + "_" + index );
-			jQuery( markerDOM ).hide();
-			jQuery( element ).after( markerDOM );
-			jQuery( element ).remove();
+			var parent = { DOM: jQuery( element ).parent().clone() };
+			parent.DOM.find("> *").each(function(parentIndex, parentElement) {
+				parent.DOM.find( parentElement ).remove();
+			});
+			if( parent.DOM.text().trim() === '' ) {
+				if( jQuery( element ).parent().find("> *").length > 1 && jQuery( element ).prev().length == 1 ) {
+					var element_prev = jQuery( element ).prev();
+					WPSVariationOptionsInterface.viewModels[index].markerFunc = function( parameter ) {
+						element_prev.after( parameter );
+					}
+					jQuery( element ).remove();
+				} else {
+					var element_parent = jQuery( element ).parent();
+					WPSVariationOptionsInterface.viewModels[index].markerFunc = function( parameter ) {
+						element_parent.prepend( parameter );
+					}
+					jQuery( element ).remove();
+				}
+			} else {
+				var markerDOM = document.createElement( "span" );
+				jQuery( markerDOM ).attr( "id", "marker_" + WPSVariationOptionsInterface.identifier + "_" + index );
+				jQuery( markerDOM ).hide();
+				jQuery( element ).after( markerDOM );
+				jQuery( element ).remove();
+				WPSVariationOptionsInterface.viewModels[index].markerFunc = function( parameter ) {
+					jQuery( markerDOM ).after( parameter );
+				}
+			}
 		} );
 		WPSVariationOptionsInterface.push = function( parameter ) {
 			WPSVariationOptionsInterface.dataModel.push( parameter );
@@ -57,7 +99,7 @@ function WPSVariationOptionsInterface( identifier, model ) {
 					var regex = new RegExp( '%' + property + '%', "g" );
 					clone = jQuery( clone ).get( 0 ).outerHTML.replace( regex, parameter[property] );
 				}
-				jQuery( "#marker_" + WPSVariationOptionsInterface.identifier + "_" + index ).after( clone );
+				element.markerFunc( clone );
 			} );
 			return id;
 		}

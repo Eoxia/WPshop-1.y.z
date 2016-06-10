@@ -164,7 +164,7 @@
 #wps_variations_tabs {
 	color: #444;
 	width: 100%;
-	background: #E8E8E8;
+	background: #DDD;
 	padding: 0;
 	margin: 0;
 	font-size: 11px;
@@ -175,11 +175,13 @@
 	margin: 0;
 }
 #wps_variations_tabs li {
-	padding: 6px 12px 6px 12px;
+	padding: 5px 12px 5px 12px;
 	margin: 0;
 	float: left;
 	height: 20px;
-	border: 1px solid #DDD;
+	border-top: 1px solid #DDD;
+	border-left: 1px solid #DDD;
+	border-right: 1px solid #DDD;
 	background: #EEE;
 }
 #wps_variations_tabs li:hover {
@@ -187,12 +189,14 @@
 	cursor: pointer;
 }
 #wps_variations_tabs li.active {
+	margin-bottom: -1px;
+	padding-bottom: 7px;
 	background: #FFF;
 	border-bottom: 0;
 }
 #wps_variations_tabs li#wps_variations_apply_btn {
 	color: #FFF;
-	padding: 7px 12px 7px 12px;
+	padding: 6px 12px 6px 12px;
 	border: 0;
 	float: right;
 	background: #0085ba;
@@ -207,4 +211,32 @@
 	border: 0;
 	float: right;
 	background: #DDD;
+}
+
+.wps_variations_tabs {
+	border: 1px solid #DDD;
+	margin: 0;
+	padding: 10px;
+}
+
+#wps_variations_price_option_tab {
+	display: table;
+	width: 100%;
+}
+#wps_variations_price_option_tab ul {
+	display: table-row;
+	height: 32px;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
+#wps_variations_price_option_tab li {
+	display: table-cell;
+	height: 32px;
+	margin: 0;
+	padding: 0;
+}
+#wps_variations_price_option_tab #wps_variations_price_option_tab_title {
+	font-size: 14px;
+	font-weight: bold;
 }
