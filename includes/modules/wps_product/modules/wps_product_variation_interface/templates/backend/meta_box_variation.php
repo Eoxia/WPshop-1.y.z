@@ -37,11 +37,11 @@
 	</ul>
 	<ul data-view-model="wps_variations_price_option_raw">
 		<li>%ID%</li>
-		<li><span data-view-model="">%option_name%<span>%option_value%</span></span></li>
-		<li><span class="wps_variations_price_option_price_config" data-change-price-config="%ID%">%price_config%</span>%price_value%</li>
-		<li><b>%price_option%%currency%</b>%piloting%</li>
+		<li><span data-view-model="wps_variations_price_option_name">%option_name%<span>%option_value%</span></span></li>
+		<li><span class="wps_variations_price_option_price_config" data-change-price-config="%ID%">%price_config%</span><input type="number" value="%price_value%"></li>
+		<li><b>%price_option%%currency%</b> %piloting%</li>
 		<li>%vat%%currency%</li>
-		<li data-view-model="wps_variations_price_option_attributes%"></li>
+		<li data-view-model="wps_variations_price_option_attributes_%ID%"></li>
 		<li><input name="wps_variations_price_option_activate" type="checkbox"%price_option_activate%></li>
 	</ul>
 </div>

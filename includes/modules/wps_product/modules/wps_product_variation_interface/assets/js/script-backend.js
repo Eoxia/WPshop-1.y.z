@@ -20,7 +20,7 @@ var wps_variations_options_raw = {
 					})()
 				},
 				default: {
-						model: {
+					model: {
 						value_default_code: 'code',
 						value_default_selected: '',
 						value_default_label: 'no_label'
@@ -109,8 +109,83 @@ jQuery(document).ready( function() {
 	} );
 
 	jQuery( '#wps_variations_apply_btn' ).click( function() {
-		console.log( wps_variations_options );
+		var wps_variations_price_option_raw = {
+			model: (function() {
+				var result = [];
+				if( false ) {
+					jQuery.each( wps_variations_options_raw.model, function( index, element ) {
+						if( element.generate != '' ) {
+							jQuery.each( element.possibilities.model, function( possibility_index, possibility_element ) {
+								result.push( {
+									ID: 0,
+									name: {
+										model: {
+											option_name: element.label,
+											option_value: possibility_element.value_possibility_label
+										}
+									},
+									price_config: '+',
+									price_value: 0,
+									price_option: 0,
+									currency: '€',
+									piloting: 'ati',
+									vat: 0,
+									price_option_activate: ''
+								} );
+							} );
+						}
+					} );
+				} else {
+					var raw;
+					jQuery.each( wps_variations_options_raw.model, function( deep_index, deep_element ) {
+						if( deep_element.generate != '' ) {
+							if( typeof raw === 'undefined' ) { raw = [1]; }
+							jQuery.each( raw, function( index_raw, element_raw ) {
+								if( element_raw == 1 ) { raw.splice( index_raw, 1 ); }
+								jQuery.each( deep_element.possibilities.model, function( deep_possibility_index, deep_possibility_element ) {
+									if( (h.length==undefined||h[0]==undefined) && (h.length!==0||h[0]!==undefined) ) { raw[deep_possibility_index] = []; };
+									raw[deep_possibility_index].push( {
+										option_name: deep_element.label,
+										option_value: deep_possibility_element.value_possibility_label
+									} );
+								} );
+							} );
+						}
+					} );
+					/*result.push( {
+						ID: 0,
+						name: {
+							model: []
+						},
+						price_config: '+',
+						price_value: 0,
+						price_option: 0,
+						currency: '€',
+						piloting: 'ati',
+						vat: 0,
+						price_option_activate: ''
+					} );*/
+					console.log(raw);
+					/*var test = [1];
+					jQuery.each( wps_variations_options_raw.model, function( deep_index, deep_element ) {
+						if( deep_element.generate != '' ) {
+							var testy = [];
+							jQuery.each( test, function() {
+								jQuery.each( deep_element.possibilities.model, function( deep_possibility_index, deep_possibility_element ) {
+									testy.push(deep_possibility_element);
+								} );
+							} );
+							test = testy;
+						}
+					} );
+					console.log(test);*/
+				}
+				return result;
+			})()
+		};
+		new WPSVariationOptionsInterface( 'wps_variations_price_option_raw', wps_variations_price_option_raw.model );
 	} );
+
 });
 
 /* function myFunction() {
