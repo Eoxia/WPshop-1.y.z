@@ -240,3 +240,17 @@
 	font-size: 14px;
 	font-weight: bold;
 }
+
+.wps_variations_price_option_price_config {
+	height: 16px;
+	width: 16px;
+	font-size: 12px;
+	padding: 4px;
+	margin: 0;
+	color: #FFF;
+	background: #0085ba;
+}
+.wps_variations_price_option_price_config:hover {
+	background: #005B80;
+	cursor: pointer;
+}
