@@ -161,6 +161,33 @@
 }
 
 
+#wps_variations_questions {
+	display: table;
+	width: 100%;
+	padding: 12px;
+	width: calc(100% - 24px);
+	background: #E8E8E8;
+	border-top: 1px solid #DDD;
+}
+#wps_variations_questions ul {
+	display: table-row;
+	height: 25px;
+}
+#wps_variations_questions ul li {
+	display: table-cell;
+	vertical-align: middle;
+}
+#wps_variations_questions .wps_variations_questions_question_col {
+	text-align: left;
+}
+#wps_variations_questions .wps_variations_questions_answers_col {
+	text-align: right;
+}
+#wps_variations_questions .wps_variations_questions_answers_col input[type=radio] {
+	margin: 0 5px 0 15px;
+}
+
+
 #wps_variations_tabs {
 	color: #444;
 	width: 100%;
@@ -193,6 +220,13 @@
 	padding-bottom: 7px;
 	background: #FFF;
 	border-bottom: 0;
+}
+#wps_variations_tabs li.disabled {
+	color: #DDD;
+}
+#wps_variations_tabs li.disabled:hover {
+	background: #EEE;
+	cursor: initial;
 }
 #wps_variations_tabs li#wps_variations_apply_btn {
 	color: #FFF;
@@ -240,17 +274,34 @@
 	font-size: 14px;
 	font-weight: bold;
 }
-
-.wps_variations_price_option_price_config {
-	height: 16px;
-	width: 16px;
-	font-size: 12px;
-	padding: 4px;
-	margin: 0;
+#wps_variations_price_option_tab .wps_variations_price_config_col input[name=wps_variations_price_option_price_value] {
+	width: 60px;
+	text-align: right;
+}
+#wps_variations_price_option_tab .wps_variations_price_name_col .option_value {
+	padding: 5px 10px 5px 10px;
+	margin-left: 8px;
+	margin-right: 12px;
+	font-size: 11px;
+	background: #E8E8E8;
+}
+#wps_variations_price_option_tab .wps_variations_price_option_price_config {
+	height: 22px;
+	width: 22px;
+	font-size: 16px;
+	font-weight: bold;
+	padding: 1px 6px 1px 6px;
+    margin: 2px 5px 2px 0;
 	color: #FFF;
 	background: #0085ba;
+	display: block;
+	float: left;
 }
-.wps_variations_price_option_price_config:hover {
+#wps_variations_price_option_tab .wps_variations_price_option_price_config:hover {
 	background: #005B80;
 	cursor: pointer;
+}
+
+.wps_variations_tabs input[type=number] {
+	height: 25px;
 }
