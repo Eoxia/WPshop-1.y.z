@@ -189,6 +189,7 @@ if ( !class_exists("wps_classic_checkout") ) {
 						 	$wps_marketing_tools_ctr = new wps_marketing_tools_ctr();
 						 	$checkout_content .=  $wps_marketing_tools_ctr->display_ecommerce_ga_tracker( $_SESSION['order_id'] );
 						 	$checkout_content .= $this->wps_classic_confirmation_message();
+						 	$checkout_content .= $this->wps_summary_order();
 						}
 						else {
 							$checkout_page_id = wpshop_tools::get_page_id( get_option( 'wpshop_checkout_page_id' ) );
@@ -224,6 +225,14 @@ if ( !class_exists("wps_classic_checkout") ) {
 			$payment_method = ( !empty($_SESSION['payment_method']) && in_array($_SESSION['payment_method'], $available_templates) ) ? $_SESSION['payment_method'] : 'others';
 			ob_start();
 			require( wpshop_tools::get_template_part( WPS_CLASSIC_CHECKOUT_DIR, $this->template_dir,"frontend", "confirmation/confirmation", $payment_method) );
+			$output .= ob_get_contents();
+			ob_end_clean();
+			return $output;
+		}
+
+		function wps_summary_order() {
+			ob_start();
+			require( wpshop_tools::get_template_part( WPS_CLASSIC_CHECKOUT_DIR, $this->template_dir,"frontend", "confirmation/confirmation-summary") );
 			$output .= ob_get_contents();
 			ob_end_clean();
 			return $output;

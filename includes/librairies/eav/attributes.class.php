@@ -559,7 +559,7 @@ class wpshop_attributes{
 		//Fetch, prepare, sort, and filter our data...
 		$status="'valid'";
 		$attribute_status = !empty($_REQUEST['attribute_status']) ? sanitize_text_field( $_REQUEST['attribute_status'] ) : null;
-		$s = !empty($_REQUEST['s']) ? sanitize_text_field( $_REQUEST['attribute_status'] ) : null;
+		$s = !empty($_REQUEST['s']) ? sanitize_text_field( $_REQUEST['s'] ) : null;
 		$order = !empty($_REQUEST['order']) ? sanitize_text_field($_REQUEST['order']) : null;
 		$orderby = !empty($_REQUEST['orderby']) ? sanitize_text_field($_REQUEST['orderby']) : null;
 		if(!empty($attribute_status)){

@@ -10,12 +10,14 @@ class wps_customer_mdl {
 	 * @return array
 	 */
 	function getUserList( $limit = null ) {
-		global $wpdb;
-
-		$query = "SELECT USERS.ID, USERS.user_login, USERS.user_email FROM " . $wpdb->users . " AS USERS" . ( !empty( $limit ) ? $limit : "" );
-		$userList = $wpdb->get_results($query);
-
-		return $userList;
+		$args = array(
+			'orderby'      => 'user_email',
+			'order'        => 'ASC',
+			'number'       => !empty( $limit ) ? $limit : "",
+			'count_total'  => false,
+			'fields'       => 'all'
+		);
+		return get_users( $args );
 	}
 
 	/**

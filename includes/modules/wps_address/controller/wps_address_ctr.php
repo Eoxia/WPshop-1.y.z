@@ -969,6 +969,7 @@ class wps_address {
 					$input_tpl_component = array();
 
 					//$input_tpl_component['CUSTOMER_FORM_INPUT_MAIN_CONTAINER_CLASS'] = ' wsphop_customer_account_form_container wsphop_customer_account_form_container_' . $field['name'] . $element_simple_class;
+					$input_tpl_component['CUSTOMER_FORM_INPUT_NAME'] = ( !empty($field['name']) ) ? $field['name'] : '';
 					$input_tpl_component['CUSTOMER_FORM_INPUT_LABEL'] = ( $field['type'] != 'hidden' ) ? stripslashes( __( $field['label'], 'wpshop' ) ) . ( ( $field['required'] == 'yes' ) ? ' <em>*</em>' : '') : '';
 					$input_tpl_component['CUSTOMER_FORM_INPUT_LABEL_OPTIONS'] = ' for="' . $field['id'] . '"';
 					$input_tpl_component['CUSTOMER_FORM_INPUT_FIELD'] = wpshop_form::check_input_type($field, $attributeInputDomain);
@@ -985,6 +986,7 @@ class wps_address {
 						$field['id'] = $field['id'] . '2';
 						$element_simple_class = str_replace('"', '', str_replace('class="', '', str_replace('wpshop_input_datetime', '', $field['option'])));
 						$input_tpl_component = array();
+						$input_tpl_component['CUSTOMER_FORM_INPUT_NAME'] = $field['name'];
 						$input_tpl_component['CUSTOMER_FORM_INPUT_LABEL'] = __( $field['label'], 'wpshop' ) . ( ( ($field['required'] == 'yes' && !is_admin()) || ($field['name'] == 'address_user_email' && is_admin()) ) ? ' <span class="required">*</span>' : '');
 						$input_tpl_component['CUSTOMER_FORM_INPUT_LABEL_OPTIONS'] = ' for="' . $field['id'] . '"';
 						$input_tpl_component['CUSTOMER_FORM_INPUT_MAIN_CONTAINER_CLASS'] = ' wsphop_customer_account_form_container wsphop_customer_account_form_container_' . $field['name'] . $element_simple_class;
