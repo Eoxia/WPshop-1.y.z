@@ -161,7 +161,7 @@ class eo_module_management {
 						$is_activated = true;
 					}
 					else if ( empty( $module_option ) || ( !empty( $module_option ) && !array_key_exists( $folder, $module_option ) ) ) {
-						$modules_option[ $folder ] = array(
+						$module_option[ $folder ] = array(
 							'activated' => 'on',
 							'date_on' => gmdate( "Y-m-d H:i:s", time() ),
 							'author_on' => 'auto',
@@ -179,7 +179,7 @@ class eo_module_management {
 			}
 			/**	Update option only if it is necessary	*/
 			if ( $update_option ) {
-				update_option( 'wpshop_modules', $modules_option );
+				update_option( 'wpshop_modules', $module_option );
 			}
 		}
 	}
