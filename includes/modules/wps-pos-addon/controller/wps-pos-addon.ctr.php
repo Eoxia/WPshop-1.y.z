@@ -23,14 +23,23 @@ class wps_pos_addon {
 		add_action( 'init', array( $this, 'wps_pos_addon_session' ) );
 		add_action( 'init', array( $this, 'wps_pos_option_db' ) );
 
+		$page = ( !empty( $_GET['page'] ) ) ? sanitize_text_field( $_GET['page'] ) : '';
 		$tab = ( !empty( $_GET['tab'] ) ) ? sanitize_text_field( $_GET['tab'] ) : '';
 
-		if( empty( $tab ) || $tab == 'dashboard' ) {
+		if( !empty( $page ) && ( 'wps-pos' == $page ) && ( empty( $tab ) || $tab == 'dashboard' ) ) {
+			/** Inclusion des différents composants / Include plugin components */
+			require_once( WPSPOS_PATH . 'controller/wps-pos-customer.ctr.php' );
+			require_once( WPSPOS_PATH . 'controller/wps-pos-product.ctr.php' );
+			require_once( WPSPOS_PATH . 'controller/wps-pos-order.ctr.php' );
+
 			/**	Instanciation des différents composants du logiciel de caisse / Instanciate the different component for POS addon	*/
 			$this->wps_pos_customer = new wps_pos_addon_customer();
 			$this->wps_pos_product = new wps_pos_addon_product();
 			$this->wps_pos_order = new wps_pos_addon_order();
 		} elseif( $tab == 'bank_deposit' ) {
+			/** Inclusion des différents composants / Include plugin components */
+			require_once( WPSPOS_PATH . 'controller/wps-pos-bank-deposit.php' );
+			require_once( WPSPOS_PATH . 'controller/wps-pos-bank-deposit-histo.php' );
 			$this->wps_pos_addon_bank_deposit = new wps_pos_addon_bank_deposit();
 			$this->wps_pos_addon_bank_deposit_histo = new wps_pos_addon_bank_deposit_histo();
 
@@ -144,7 +153,16 @@ class wps_pos_addon {
 	 * Declare session for pos administration
 	 */
 	function wps_pos_addon_session() {
-		@session_start();
+		$session_status = false;
+		if ( function_exists( 'session_status' ) ) {
+			$session_status = ( session_status() !== PHP_SESSION_NONE ? true : false );
+		}
+		else if ( session_id() == '' ) {
+			$session_status = true;
+		}
+		if ( false === $session_status ) {
+			@session_start();
+		}
 
 		$new_order = ( !empty( $_GET['new_order'] ) ) ? sanitize_text_field( $_GET['new_order'] ) : '';
 		$page = ( !empty( $_GET['page'] ) ) ? sanitize_text_field( $_GET['page'] ) : '';
