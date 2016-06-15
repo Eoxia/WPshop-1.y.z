@@ -301,6 +301,9 @@
 	background: #005B80;
 	cursor: pointer;
 }
+#wps_variations_price_option_tab .wps_variations_price_active_col {
+	text-align: right;
+}
 
 .wps_variations_tabs input[type=number] {
 	height: 25px;

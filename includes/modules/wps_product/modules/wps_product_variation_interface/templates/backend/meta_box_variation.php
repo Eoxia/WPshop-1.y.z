@@ -51,6 +51,6 @@
 		<li class="wps_variations_price_final_col"><b>%price_option%%currency%</b> %piloting%</li>
 		<li class="wps_variations_price_vat_col">%vat%%currency%</li>
 		<li class="wps_variations_price_attributes_col" data-view-model="wps_variations_price_option_attributes_%ID%"></li>
-		<li class="wps_variations_price_active_col"><input name="wps_variations_price_option_activate" type="checkbox"%price_option_activate%></li>
+		<li class="wps_variations_price_active_col"><input name="wps_variations_price_option_activate" type="checkbox" %price_option_activate%></li>
 	</ul>
 </div>

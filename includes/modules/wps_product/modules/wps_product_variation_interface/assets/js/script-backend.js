@@ -20,7 +20,13 @@ var wps_variations_options_raw = {
 							result.push( {
 								value_possibility_is_default: is_default,
 								value_possibility_code: element_values,
-								value_possibility_label: 'no_label'
+								value_possibility_label: ( function() {
+									for( var i = 0; wps_product_variation_interface.variation_value.length > i; i++ ) {
+										if( element_values == wps_product_variation_interface.variation_value[i].id ) {
+											return wps_product_variation_interface.variation_value[i].label;
+										}
+									}
+								} )()
 							} );
 						} );
 						return result;
@@ -160,10 +166,12 @@ jQuery(document).ready( function() {
 							price_config: '+',
 							price_value: 0,
 							price_option: 0,
+							price_product: wps_product_variation_interface.product_price,
 							currency: '€',
 							piloting: 'ati',
-							vat: 0,
-							price_option_activate: ''
+							tx_tva: wps_product_variation_interface.tx_tva,
+							vat: wps_product_variation_interface.tx_tva,
+							price_option_activate: 'checked'
 						} );
 					} );
 				}
@@ -192,11 +200,12 @@ jQuery(document).ready( function() {
 								price_config: '+',
 								price_value: 0,
 								price_option: 0,
-								price_product: 1,
+								price_product: wps_product_variation_interface.product_price,
 								currency: '€',
 								piloting: 'ati',
-								vat: 0,
-								price_option_activate: ''
+								tx_tva: wps_product_variation_interface.tx_tva,
+								vat: ,
+								price_option_activate: 'checked'
 							} );
 							id++;
 						} );
