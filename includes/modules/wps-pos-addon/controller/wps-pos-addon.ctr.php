@@ -26,7 +26,7 @@ class wps_pos_addon {
 		$page = ( !empty( $_GET['page'] ) ) ? sanitize_text_field( $_GET['page'] ) : '';
 		$tab = ( !empty( $_GET['tab'] ) ) ? sanitize_text_field( $_GET['tab'] ) : '';
 
-		if( !empty( $page ) && ( 'wps-pos' == $page ) && ( empty( $tab ) || $tab == 'dashboard' ) ) {
+		if( /* !empty( $page ) && ( 'wps-pos' == $page ) && */ ( empty( $tab ) || $tab == 'dashboard' ) ) {
 			/** Inclusion des différents composants / Include plugin components */
 			require_once( WPSPOS_PATH . 'controller/wps-pos-customer.ctr.php' );
 			require_once( WPSPOS_PATH . 'controller/wps-pos-product.ctr.php' );
@@ -40,6 +40,7 @@ class wps_pos_addon {
 			/** Inclusion des différents composants / Include plugin components */
 			require_once( WPSPOS_PATH . 'controller/wps-pos-bank-deposit.php' );
 			require_once( WPSPOS_PATH . 'controller/wps-pos-bank-deposit-histo.php' );
+
 			$this->wps_pos_addon_bank_deposit = new wps_pos_addon_bank_deposit();
 			$this->wps_pos_addon_bank_deposit_histo = new wps_pos_addon_bank_deposit_histo();
 

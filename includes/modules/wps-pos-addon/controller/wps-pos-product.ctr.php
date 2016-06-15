@@ -169,16 +169,12 @@ class wps_pos_addon_product {
 	 * AJAX - Affiche le formulaire permettant de sélectionner la déclinaison du produit / Display the form allowing to choose product variation
 	 */
 	function ajax_pos_product_variation_selection() {
-		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
-
-		if ( !wp_verify_nonce( $_wpnonce, 'ajax_pos_product_variation_selection' ) )
-			wp_die();
+		check_ajax_referer( 'ajax_pos_product_variation_selection' );
 
 		/**	Get the product identifier to display variation chooser	*/
 		$product_id = !empty( $_GET ) && !empty( $_GET[ 'product_id' ] ) && is_int( (int)$_GET[ 'product_id' ] ) ? (int)$_GET[ 'product_id' ] : null;
 
 		require_once( wpshop_tools::get_template_part( WPSPOS_DIR, WPSPOS_TEMPLATES_MAIN_DIR, 'backend/products', 'modal', 'variation' ) );
-
 		wp_die();
 	}
 
