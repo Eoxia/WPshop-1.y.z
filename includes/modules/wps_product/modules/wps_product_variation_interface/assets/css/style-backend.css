@@ -1,3 +1,7 @@
+#wps_variations_price_option_file_form {
+	display: none;
+}
+
 #wpshop_wpshop_variations .inside {
 	margin: 0;
 	padding: 0;
@@ -306,7 +310,10 @@
 #wps_variations_price_option_tab .wps_variations_price_active_col {
 	text-align: right;
 }
-
-.wps_variations_tabs input[type=number] {
+#wps_variations_price_option_tab .wps_variations_price_file_col .wps_variations_price_option_price_file {
+	text-decoration: underline;
+	cursor: pointer;
+}
+#wps_variations_price_option_tab input[type=number] {
 	height: 25px;
 }

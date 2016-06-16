@@ -2505,7 +2505,7 @@ GROUP BY ATT.id, chosen_val", $element_id, $attribute_code);
 				$fields = '<div class="wpshop_form_label alignleft">&nbsp;</div>
 						<div class="wpshop_form_input_element alignleft">
 						<div id="send_downloadable_file_dialog" class="wpshop_add_box" title="' .__('Send the downloadable file', 'wpshop'). '"></div>
-						<a id="send_downlodable_file" ' . wp_create_nonce( "ajax_wpshop_fill_the_downloadable_dialog" ) . '  class="wps-bton-first-mini-rounded">' .__('Send a file', 'wpshop'). '</a>
+						<a id="send_downlodable_file" data-nonce="' . wp_create_nonce( "ajax_wpshop_fill_the_downloadable_dialog" ) . '"  class="wps-bton-first-mini-rounded">' .__('Send a file', 'wpshop'). '</a>
 						<input type="hidden" id="product_identifer_field" value="' .( !empty($_GET['post']) ? esc_attr( $_GET['post'] ) : '') . '" /><br/><u>'.__('File url','wpshop').' :</u>
 						<div class="statut"><a href="' .$data['file_url']. '" target="_blank" download>'.basename($data['file_url']).'</a></div>
 						</div>';

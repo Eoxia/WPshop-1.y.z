@@ -31,17 +31,13 @@ class wps_product_variation_interface {
 		$query = $wpdb->prepare("SELECT * FROM " . WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS . " WHERE id IN ('" . implode( "', '", $ids ) . "') AND status = %s", 'valid');
 		$product = wpshop_products::get_product_data( $post->ID, false, '"publish"' );
 		$attribute_list = wpshop_attributes::getElement('yes', "'valid'", "is_used_in_variation", true);
-		$attribute_in_variation = array();
-		foreach ($attribute_list as $attribute_def) {
-			$attribute_in_variation_sub = array();
-			$attribute_in_variation_sub['attribute_def'] = $attribute_def;
-			$attribute_in_variation_sub['field_definition'] = wpshop_attributes::get_attribute_field_definition( $attribute_def, (!empty($variations_attribute_parameters['variation_dif_values'][$attribute_def->code]) ? $variations_attribute_parameters['variation_dif_values'][$attribute_def->code] : ''), $variations_attribute_parameters );
-			$attribute_in_variation[] = $attribute_in_variation_sub;
-		}
+		$variations_saved = wpshop_products::get_variation( $post->ID );
+		$price_piloting = get_option( 'wpshop_shop_price_piloting' );
+		$productCurrency = wpshop_tools::wpshop_get_currency();
 		wp_enqueue_style( 'wps-product-variation-interface-style', WPSPDTVARIATION_INTERFACE_ASSETS_MAIN_DIR . '/css/style-backend.css' );
 		wp_enqueue_script( 'wps-product-variation-interface-script', WPSPDTVARIATION_INTERFACE_ASSETS_MAIN_DIR . '/js/script-backend.js' );
 		wp_enqueue_script( 'wps-product-variation-interface-script-utils', WPSPDTVARIATION_INTERFACE_ASSETS_MAIN_DIR . '/js/script-backend-utils.js' );
-		wp_localize_script( 'wps-product-variation-interface-script', 'wps_product_variation_interface', array( 'variation' => $this->variations, 'variation_value' => $wpdb->get_results($query), 'product_price' => $product['product_price'], 'tx_tva' => $product['tx_tva'], 'attribute_in_variation' => $attribute_in_variation ) );
+		wp_localize_script( 'wps-product-variation-interface-script', 'wps_product_variation_interface', array( 'variation' => $this->variations, 'variation_value' => $wpdb->get_results($query), 'product_price' => $product['product_price'], 'tx_tva' => $product['tx_tva'], 'attribute_in_variation' => $attribute_list, 'variations_saved' => $variations_saved, 'price_piloting' => $price_piloting, 'currency' => $productCurrency ) );
 		require_once( wpshop_tools::get_template_part( WPSPDTVARIATION_INTERFACE_DIR, WPSPDTVARIATION_INTERFACE_TEMPLATES_MAIN_DIR, "backend", "meta_box_variation" ) );
 	}
 }
