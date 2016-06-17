@@ -14,16 +14,10 @@
  */
 class wps_pos_addon_customer {
 
-	/**	Déclaration de la variable privée contenant la liste de l'ensemble des utilisateurs / Define a var with all existing users	*/
-	private $users;
-
 	/**
 	 * Instanciation principale du module Client du logiciel de caisse / Call the different element to instanciate the customer module
 	 */
 	function __construct() {
-		/**	Get all existing users	*/
-		$this->users = get_users();
-
 		/**	Call dashboard metaboxes	*/
 		add_action( 'admin_init', array( $this, 'dashboard_metaboxes' ) );
 
@@ -98,8 +92,9 @@ class wps_pos_addon_customer {
 			}
 		}
 
+		$users = get_users();
 		if ( !empty($letter) ) {
-			foreach ( $this->users as $user ) {
+			foreach ( $users as $user ) {
 				if ( !empty( $user ) && !empty( $user->roles ) && !empty( $user->roles[0] ) && ( $user->roles[0] != 'Administrator' ) ) {
 					$user_infos = array();
 
@@ -357,102 +352,8 @@ class wps_pos_addon_customer {
 			}
 		}
 
-		if ( false ) {
-			/**	Build the customer search	*/
-			$args = array(
-				'search'			=> "*" . $term . "*",
-				'search_columns'	=> array( 'user_login', 'user_email', 'user_nicename', ),
-
-				'meta_query'		=> array(
-					'relation'	=> 'OR',
-					array(
-						'key'		=> 'first_name',
-						'value'		=> $term,
-						'compare'	=> 'LIKE',
-					),
-					array(
-						'key'		=> 'last_name',
-						'value'		=> $term,
-						'compare'	=> 'LIKE',
-					),
-				),
-			);
-			$customer_search = new WP_User_Query( $args );
-			if ( !empty($customer_search->results) ) {
-				foreach ( $customer_search->results as $customer ) {
-					/** Check the username, if last name and first name are empty we select email **/
-					$last_name_meta = get_user_meta( $customer->ID, 'last_name', true);
-					$first_name_meta = get_user_meta( $customer->ID, 'first_name', true);
-					$user_data = $customer->data;
-					$email_data = $user_data->user_email;
-
-					if ( !empty($last_name_meta) ) {
-						$user_name = $last_name_meta;
-					}
-					elseif( !empty( $first_name_meta)) {
-						$user_name = $first_name_meta;
-					}
-					else {
-						$user_name = $email_data;
-					}
-
-					$customer_list[] = array(
-						'ID' => $customer->ID,
-						'last_name' => $last_name_meta,
-						'first_name' => $first_name_meta,
-						'email' => $email_data,
-					);
-				}
-			}
-		}
-		else {
-			/**	Build the customer search	*/
-			$query = $wpdb->prepare( "
-				SELECT *
-				FROM {$wpdb->users} AS U
-					LEFT JOIN {$wpdb->usermeta} AS UM ON ( UM.user_id = U.ID )
-				WHERE
-					U.user_login LIKE '%%%s%%'
-					OR U.user_email LIKE '%%%s%%'
-					OR U.user_nicename LIKE '%%%s%%'
-					OR (
-						UM.meta_key = 'last_name'
-						AND UM.meta_value LIKE '%%%s%%'
-					)
-					OR (
-						UM.meta_key = 'first_name'
-						AND UM.meta_value LIKE '%%%s%%'
-					)
-				GROUP BY U.ID
-			", array( $term, $term, $term, $term, $term, ) );
-			$customer_search = $wpdb->get_results( $query );
-			if ( !empty( $customer_search ) ) {
-				foreach ( $customer_search as $customer ) {
-					/** Check the username, if last name and first name are empty we select email **/
-					$last_name_meta = get_user_meta( $customer->ID, 'last_name', true);
-					$first_name_meta = get_user_meta( $customer->ID, 'first_name', true);
-					$user_data = get_userdata( $customer->ID );
-					$email_data = $user_data->user_email;
-
-					if ( !empty($last_name_meta) ) {
-						$user_name = $last_name_meta;
-					}
-					elseif( !empty( $first_name_meta)) {
-						$user_name = $first_name_meta;
-					}
-					else {
-						$user_name = $email_data;
-					}
-
-					$customer_list[] = array(
-						'ID' => $customer->ID,
-						'last_name' => $last_name_meta,
-						'first_name' => $first_name_meta,
-						'email' => $email_data,
-					);
-				}
-			}
-		}
+		$wps_customer_ctr = new wps_customer_ctr();
+		$customer_list = array_merge( $customer_list, $wps_customer_ctr->search_customer( $term ) );
 
 		/**	Display the customer list into metabox	*/
 		ob_start();
