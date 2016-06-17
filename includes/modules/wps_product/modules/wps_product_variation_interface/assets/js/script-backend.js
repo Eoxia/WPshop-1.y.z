@@ -236,34 +236,31 @@ jQuery(document).ready( function() {
 		parameter.name.control.refresh();
 		parameter.file.control.refresh();
 	};
+	var display_price_tab = false;
 	jQuery.each( wps_variations_price_option_raw.model, function( index, element ) {
 		element.name.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_name_' + element.ID, element.name.model );
 		element.file.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_file_' + element.ID, element.file.model );
 		element.file.control.file = function( element ) {
-			//jQuery( element ).next().click();
+			jQuery( element ).next().click();
 		}
 		element.file.control.link = function( event, input ) {
 			var path = jQuery( input ).val();
 			var file = event.target.files[0];
 			var link = file.name;
-			var reader = new FileReader();
-			reader.onload = function(event) {
-				jQuery.ajax({
-					type: 'POST',
-					url: 'upload.php',
-           			enctype: 'multipart/form-data',
-					data: {
-						action: 'upload_downloadable_file_action',
-						element_identifer: element.ID,
-						wpshop_file: event.target.result,
-						_wpnonce: jQuery( input ).parent().find( '[name=_wpnonce]' ).val(),
-						_wp_http_referer: jQuery( input ).parent().find( '[name=_wp_http_referer]' ).val(),
-					}
-				}).done(function( response ) {
-					console.log( response );
-				});
-			}
-			reader.readAsDataURL(file);
+			var form = new FormData();
+			form.append( 'wpshop_file', input.files[0] );
+			form.append( 'action', 'upload_downloadable_file_action' );
+			form.append( 'element_identifier', element.ID );
+			form.append( '_wpnonce', jQuery( input ).parent().find( '[name=_wpnonce]' ).val() );
+			form.append( '_wp_http_referer', jQuery( input ).parent().find( '[name=_wp_http_referer]' ).val() );
+			jQuery.ajax({
+				type: 'POST',
+				url: ajaxurl,
+				enctype: 'multipart/form-data',
+				data: form
+			}).done(function( response ) {
+				console.log( response );
+			});
 			this.change( { link: link, path: path } );
 		}
 		display_price_tab = true;
@@ -277,9 +274,14 @@ jQuery(document).ready( function() {
 
 	jQuery( '#wps_variations_apply_btn' ).click( function() {
 		if( typeof jQuery( 'input[name=question_combine_options]:checked' ).val() === 'undefined' ) { return; }
+		var variation_to_delete = [];
 		for ( var i = wps_variations_price_option_raw.model.length; wps_variations_price_option_raw.model.length != 0; i-- ) {
+			if( typeof wps_variations_price_option_raw.model[i] !== 'undefined' ) {
+				variation_to_delete.push( wps_variations_price_option_raw.model[i].ID );
+			}
 			wps_variations_price_option_raw.control.remove( i );
 		}
+		wpshop_variation_delete ( variation_to_delete );
 		var result = [];
 		if( jQuery( 'input[name=question_combine_options]:checked' ).val() == 'single' ) {
 			var id = 0;
@@ -336,11 +338,11 @@ jQuery(document).ready( function() {
 								ID: id,
 								name: {
 									model: element_raw.name.model.concat( [ {
-										option_code: element.code,
-										option_type: element.type,
+										option_code: deep_element.code,
+										option_type: deep_element.type,
 										option_name: deep_element.label,
-										option_value: possibility_element.value_possibility_code,
-										option_label: possibility_element.value_possibility_label
+										option_value: deep_possibility_element.value_possibility_code,
+										option_label: deep_possibility_element.value_possibility_label
 									} ] )
 								},
 								price_config: '+',
@@ -372,14 +374,49 @@ jQuery(document).ready( function() {
 				wps_variations_price_option_raw.control.push( element );
 			} );
 			jQuery.each( wps_variations_price_option_raw.model, function( index, element ) {
+				var data =  {
+					action: 'add_empty_variation',
+					post_id: jQuery( '#post_ID' ).val(),
+					variation_attr: {},
+					_wpnonce: jQuery( '#wps_variations_apply_btn' ).data( 'nonce' )
+				};
+				jQuery.each( element.name.model,function( index_new_variation, element_new_variation ) {
+					data.variation_attr[element_new_variation.option_code] = element_new_variation.option_value;
+				} );
+				jQuery.post(ajaxurl, data, function( response ) {
+					var parameter = jQuery.extend({}, element);
+					parameter.ID = response.ID;
+					wps_variations_price_option_raw.control.change( index, parameter );
+					wps_variations_price_option_raw.model[index].name.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_name_' + response.ID, parameter.name.model );
+					wps_variations_price_option_raw.model[index].file.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_file_' + response.ID, parameter.file.model );
+				}, 'JSON');
 				element.name.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_name_' + element.ID, element.name.model );
 				element.file.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_file_' + element.ID, element.file.model );
 				element.file.control.file = function( element ) {
 					jQuery( element ).next().click();
 				}
-				element.file.control.link = function( event, element ) {
-					var path = jQuery( element ).val();
-					var link = event.target.files[0].name;
+				element.file.control.link = function( event, input ) {
+					var path = jQuery( input ).val();
+					var file = event.target.files[0];
+					var link = file.name;
+					var data = new FormData();
+					data.append( 'wpshop_file', file, file.name );
+					data.append( 'action', 'upload_downloadable_file_action' );
+					data.append( 'element_identifier', element.ID );
+					data.append( '_wpnonce', jQuery( input ).parent().find( '[name=wpshop_file_nonce]' ).val() );
+					data.append( '_wp_http_referer', jQuery( input ).parent().find( '[name=_wp_http_referer]' ).val() );
+					console.log( data );
+					jQuery.ajax({
+						type: 'POST',
+						url: ajaxurl,
+						contentType: false,
+						cache: false,
+						processData:false,
+						enctype: 'multipart/form-data',
+						data: data
+					}).done(function( response ) {
+						console.log( response );
+					});
 					this.change( { link: link, path: path } );
 				}
 			} );

@@ -31,7 +31,7 @@
 <div id="wps_variations_tabs">
 	<ul>
 		<li data-tab="wps_variations_price_option_tab" class="disabled">Options prices</li>
-		<li id="wps_variations_apply_btn" class="">Apply modifications</li>
+		<li id="wps_variations_apply_btn" data-nonce="<?php echo wp_create_nonce( 'wps_add_empty_variation_variation_interface' ); ?>">Apply modifications</li>
 	</ul>
 </div>
 <div id="wps_variations_price_option_tab" class="wps_variations_tabs">
@@ -54,7 +54,7 @@
 		<li class="wps_variations_price_vat_col">%vat%%currency%</li>
 		<li class="wps_variations_price_stock_col"><input type="text" pattern="[0-9]*" onchange="wps_variations_price_option_raw.control.stock(this)" name="wps_pdt_variations[%ID%][attribute][decimal][product_stock]" align="right" value="%stock%"></li>
 		<li class="wps_variations_price_weight_col"><input type="text" pattern="[0-9]+(\.[0-9][0-9]?)?" onchange="wps_variations_price_option_raw.control.weight(this)" name="wps_pdt_variations[%ID%][attribute][decimal][product_weight]" align="right" value="%weight%"></li>
-		<li class="wps_variations_price_file_col" data-view-model="wps_variations_price_option_file_%ID%"><span class="wps_variations_price_option_price_file" onclick="wps_variations_price_option_raw.model[%ID%].file.control.file(this)">%link%</span><input style="display: none;" type="file" name="wpshop_file" id="wpshop_file" onchange="wps_variations_price_option_raw.model[%ID%].file.control.link(event, this)"><?php wp_nonce_field( 'ajax_wpshop_upload_downloadable_file_action' ); ?></li>
+		<li class="wps_variations_price_file_col" data-view-model="wps_variations_price_option_file_%ID%"><span class="wps_variations_price_option_price_file" onclick="wps_variations_price_option_raw.model[%ID%].file.control.file(this)">%link%</span><input style="display: none;" type="file" name="wpshop_file" id="wpshop_file" onchange="wps_variations_price_option_raw.model[%ID%].file.control.link(event, this)"><?php wp_nonce_field( 'ajax_wpshop_upload_downloadable_file_action', 'wpshop_file_nonce' ); ?></li>
 		<li class="wps_variations_price_active_col"><input name="wps_variations_price_option_activate" type="checkbox" %price_option_activate%></li>
 	</ul>
 </div>

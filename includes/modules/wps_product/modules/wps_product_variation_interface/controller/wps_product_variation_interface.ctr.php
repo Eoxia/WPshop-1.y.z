@@ -3,6 +3,7 @@ class wps_product_variation_interface {
 	private $variations = array();
 	public function __construct() {
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 11);
+		add_action( 'wp_ajax_add_empty_variation', array( $this, 'add_empty_variation' ) );
 	}
 	public function add_meta_boxes() {
 		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
@@ -39,5 +40,13 @@ class wps_product_variation_interface {
 		wp_enqueue_script( 'wps-product-variation-interface-script-utils', WPSPDTVARIATION_INTERFACE_ASSETS_MAIN_DIR . '/js/script-backend-utils.js' );
 		wp_localize_script( 'wps-product-variation-interface-script', 'wps_product_variation_interface', array( 'variation' => $this->variations, 'variation_value' => $wpdb->get_results($query), 'product_price' => $product['product_price'], 'tx_tva' => $product['tx_tva'], 'attribute_in_variation' => $attribute_list, 'variations_saved' => $variations_saved, 'price_piloting' => $price_piloting, 'currency' => $productCurrency ) );
 		require_once( wpshop_tools::get_template_part( WPSPDTVARIATION_INTERFACE_DIR, WPSPDTVARIATION_INTERFACE_TEMPLATES_MAIN_DIR, "backend", "meta_box_variation" ) );
+	}
+	// AJAX
+	public function add_empty_variation() {
+		check_ajax_referer( 'wps_add_empty_variation_variation_interface' );
+		$attributes_for_variation = isset($_POST['variation_attr']) ? (array) $_POST['variation_attr'] : null;
+		$current_post_id = isset($_POST['post_id']) ? sanitize_key($_POST['post_id']) : null;
+		echo json_encode( array( 'ID' => wpshop_products::creation_variation_callback( array( 0 => $attributes_for_variation ), $current_post_id ) ) );
+		wp_die();
 	}
 }
