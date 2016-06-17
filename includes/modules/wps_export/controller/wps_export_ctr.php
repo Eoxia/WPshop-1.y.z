@@ -145,7 +145,7 @@ deny from all" );
 
 		fclose($fp);
 		header("Content-type: application/force-download");
-		header("Content-Disposition: attachment; filename=".$filename);
+		header("Content-Disposition: attachment; filename=" . basename( $filename ) );
 		readfile($filename);
 
 		unlink( $filename );
