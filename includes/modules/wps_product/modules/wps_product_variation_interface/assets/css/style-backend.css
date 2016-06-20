@@ -232,7 +232,7 @@
 }
 #wps_variations_tabs li.disabled:hover {
 	background: #EEE;
-	cursor: initial;
+	cursor: initial !important;
 }
 #wps_variations_tabs li#wps_variations_apply_btn {
 	color: #FFF;
@@ -247,7 +247,7 @@
 }
 #wps_variations_tabs li#wps_variations_apply_btn.disabled {
 	color: #888;
-	padding: 7px 12px 7px 12px;
+	padding: 6px 12px 6px 12px;
 	border: 0;
 	float: right;
 	background: #DDD;

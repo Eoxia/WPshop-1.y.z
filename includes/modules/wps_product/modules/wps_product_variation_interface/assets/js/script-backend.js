@@ -13,17 +13,17 @@ var wps_variations_price_option_raw = {
 				name: {
 					model: (function() {
 						var result_name = [];
-						for( option_name in saved_element.variation_dif ) {
+						for( option_name in saved_element.variation_def ) {
 							if( typeof wps_product_variation_interface.variation[option_name] !== 'undefined' ) {
 								attributes_generated[option_name] = true;
 								result_name.push( {
 									option_code: wps_product_variation_interface.variation[option_name].attribute_complete_def.code,
 									option_type: wps_product_variation_interface.variation[option_name].attribute_complete_def.data_type,
 									option_name: wps_product_variation_interface.variation[option_name].label,
-									option_value: saved_element.variation_dif[option_name],
+									option_value: saved_element.variation_def[option_name],
 									option_label: ( function() {
 										for( var i = 0; wps_product_variation_interface.variation_value.length > i; i++ ) {
-											if( saved_element.variation_dif[option_name] == wps_product_variation_interface.variation_value[i].id ) {
+											if( saved_element.variation_def[option_name] == wps_product_variation_interface.variation_value[i].id ) {
 												return wps_product_variation_interface.variation_value[i].label;
 											}
 										}
@@ -38,13 +38,13 @@ var wps_variations_price_option_raw = {
 					})()
 				},
 				price_config: '+',
-				price_value: fix_number( saved_element.variation_dif.product_price ),
+				price_value: fix_number( ( typeof saved_element.variation_def !== 'undefined' && typeof saved_element.variation_def.product_price !== 'undefined' ) ? saved_element.variation_def.product_price : '0.00' ),
 				price_option: fix_number( wps_product_variation_interface.product_price ),
 				price_product: parseFloat( wps_product_variation_interface.product_price ),
 				currency: wps_product_variation_interface.currency,
 				piloting: wps_product_variation_interface.price_piloting,
 				tx_tva: parseFloat( wps_product_variation_interface.tx_tva ),
-				vat: fix_number( saved_element.variation_dif.tva ),
+				vat: fix_number( ( typeof saved_element.variation_def !== 'undefined' && typeof saved_element.variation_def.tva !== 'undefined' ) ? saved_element.variation_def.tva : wps_product_variation_interface.product_price - ( wps_product_variation_interface.product_price / ( 1 + ( wps_product_variation_interface.tx_tva / 100 ) ) ) ),
 				stock: '0',
 				weight: '0',
 				file: {
@@ -246,6 +246,7 @@ jQuery(document).ready( function() {
 		parameter.file.control.refresh();
 	};
 	wps_variations_price_option_raw.control.file = function( element ) {
+		console.log(wps_variations_price_option_raw.model[jQuery( element ).closest( "ul[data-view-model='wps_variations_price_option_raw']" ).data('identifier')]);
 		wps_variations_price_option_raw.model[jQuery( element ).closest( "ul[data-view-model='wps_variations_price_option_raw']" ).data('identifier')].file.control.file( element );
 	}
 	wps_variations_price_option_raw.control.link = function( event, input ) {
@@ -290,7 +291,8 @@ jQuery(document).ready( function() {
 		}
 	}
 
-	jQuery( '#wps_variations_apply_btn' ).click( function() {
+	jQuery( '#wps_variations_apply_btn:not(.disabled)' ).click( function() {
+		jQuery( this ).addClass( 'disabled' );
 		if( typeof jQuery( 'input[name=question_combine_options]:checked' ).val() === 'undefined' ) { return; }
 		var variation_to_delete = [];
 		for ( var i = wps_variations_price_option_raw.model.length; wps_variations_price_option_raw.model.length != 0; i-- ) {
@@ -309,13 +311,13 @@ jQuery(document).ready( function() {
 						result.push( {
 							ID: id,
 							name: {
-								model: {
+								model: [ {
 									option_code: element.code,
 									option_type: element.type,
 									option_name: element.label,
 									option_value: possibility_element.value_possibility_code,
 									option_label: possibility_element.value_possibility_label
-								}
+								} ]
 							},
 							price_config: '+',
 							price_value: '0.00',
@@ -407,6 +409,10 @@ jQuery(document).ready( function() {
 					wps_variations_price_option_raw.control.change( index, parameter );
 					wps_variations_price_option_raw.model[index].name.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_name_' + response.ID, parameter.name.model );
 					wps_variations_price_option_raw.model[index].file.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_file_' + response.ID, parameter.file.model );
+					if( index >= wps_variations_price_option_raw.model.length ) {
+						jQuery( '#wps_variations_apply_btn' ).removeClass( 'disabled' );
+					}
+					console.log( index, wps_variations_price_option_raw.model.length );
 				}, 'JSON');
 				element.name.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_name_' + element.ID, element.name.model );
 				element.file.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_file_' + element.ID, element.file.model );

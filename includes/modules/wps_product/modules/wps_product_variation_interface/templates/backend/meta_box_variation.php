@@ -31,7 +31,7 @@
 <div id="wps_variations_tabs">
 	<ul>
 		<li data-tab="wps_variations_price_option_tab" class="disabled">Options prices</li>
-		<li id="wps_variations_apply_btn" data-nonce="<?php echo wp_create_nonce( 'wps_add_empty_variation_variation_interface' ); ?>">Apply modifications</li>
+		<li id="wps_variations_apply_btn" data-nonce="<?php echo wp_create_nonce( 'wps_add_empty_variation_variation_interface' ); ?>"><input type="hidden" id="wpshop_variation_management" value="<?php echo wp_create_nonce( 'wpshop_variation_management' ); ?>">Apply modifications</li>
 	</ul>
 </div>
 <div id="wps_variations_price_option_tab" class="wps_variations_tabs">
