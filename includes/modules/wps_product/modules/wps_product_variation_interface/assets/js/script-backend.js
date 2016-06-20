@@ -13,21 +13,23 @@ var wps_variations_price_option_raw = {
 				name: {
 					model: (function() {
 						var result_name = [];
-						for( option_name in saved_element.variation_def ) {
-							attributes_generated[option_name] = true;
-							result_name.push( {
-								option_code: wps_product_variation_interface.variation[option_name].attribute_complete_def.code,
-								option_type: wps_product_variation_interface.variation[option_name].attribute_complete_def.data_type,
-								option_name: wps_product_variation_interface.variation[option_name].label,
-								option_value: saved_element.variation_def[option_name],
-								option_label: ( function() {
-									for( var i = 0; wps_product_variation_interface.variation_value.length > i; i++ ) {
-										if( saved_element.variation_def[option_name] == wps_product_variation_interface.variation_value[i].id ) {
-											return wps_product_variation_interface.variation_value[i].label;
+						for( option_name in saved_element.variation_dif ) {
+							if( typeof wps_product_variation_interface.variation[option_name] !== 'undefined' ) {
+								attributes_generated[option_name] = true;
+								result_name.push( {
+									option_code: wps_product_variation_interface.variation[option_name].attribute_complete_def.code,
+									option_type: wps_product_variation_interface.variation[option_name].attribute_complete_def.data_type,
+									option_name: wps_product_variation_interface.variation[option_name].label,
+									option_value: saved_element.variation_dif[option_name],
+									option_label: ( function() {
+										for( var i = 0; wps_product_variation_interface.variation_value.length > i; i++ ) {
+											if( saved_element.variation_dif[option_name] == wps_product_variation_interface.variation_value[i].id ) {
+												return wps_product_variation_interface.variation_value[i].label;
+											}
 										}
-									}
-								} )()
-							} );
+									} )()
+								} );
+							}
 						}
 						if( result_name.length > 1 ) {
 							jQuery( 'input[name=question_combine_options][value=combine]' ).prop( "checked", true );
@@ -72,7 +74,14 @@ var wps_variations_options_raw = {
 				})(),
 				label: element.label,
 				type: element.attribute_complete_def.data_type,
-				requiered: (function() { if( ['YES', 'OUI'].indexOf( element.attribute_complete_def.is_required.toUpperCase() ) +1 ) { requiered = 'checked'; } else { requiered = ''; } return requiered; } )(),
+				requiered: (function() {
+					if( typeof wps_product_variation_interface.variation_defining.options.required_attributes[element.attribute_complete_def.code] !== 'undefined' ) {
+						requiered = 'checked';
+					} else {
+						requiered = '';
+					}
+					return requiered;
+				} )(),
 				possibilities: {
 					model: (function() {
 						var result = [];
@@ -236,6 +245,12 @@ jQuery(document).ready( function() {
 		parameter.name.control.refresh();
 		parameter.file.control.refresh();
 	};
+	wps_variations_price_option_raw.control.file = function( element ) {
+		wps_variations_price_option_raw.model[jQuery( element ).closest( "ul[data-view-model='wps_variations_price_option_raw']" ).data('identifier')].file.control.file( element );
+	}
+	wps_variations_price_option_raw.control.link = function( event, input ) {
+		wps_variations_price_option_raw.model[jQuery( input ).closest( "ul[data-view-model='wps_variations_price_option_raw']" ).data('identifier')].file.control.link( event, input );
+	}
 	var display_price_tab = false;
 	jQuery.each( wps_variations_price_option_raw.model, function( index, element ) {
 		element.name.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_name_' + element.ID, element.name.model );
@@ -247,17 +262,20 @@ jQuery(document).ready( function() {
 			var path = jQuery( input ).val();
 			var file = event.target.files[0];
 			var link = file.name;
-			var form = new FormData();
-			form.append( 'wpshop_file', input.files[0] );
-			form.append( 'action', 'upload_downloadable_file_action' );
-			form.append( 'element_identifier', element.ID );
-			form.append( '_wpnonce', jQuery( input ).parent().find( '[name=_wpnonce]' ).val() );
-			form.append( '_wp_http_referer', jQuery( input ).parent().find( '[name=_wp_http_referer]' ).val() );
+			var data = new FormData();
+			data.append( 'wpshop_file', file, file.name );
+			data.append( 'action', 'upload_downloadable_file_action' );
+			data.append( 'element_identifier', element.ID );
+			data.append( '_wpnonce', jQuery( input ).parent().find( '[name=wpshop_file_nonce]' ).val() );
+			data.append( '_wp_http_referer', jQuery( input ).parent().find( '[name=_wp_http_referer]' ).val() );
 			jQuery.ajax({
 				type: 'POST',
 				url: ajaxurl,
+				contentType: false,
+				cache: false,
+				processData:false,
 				enctype: 'multipart/form-data',
-				data: form
+				data: data
 			}).done(function( response ) {
 				console.log( response );
 			});
@@ -405,7 +423,6 @@ jQuery(document).ready( function() {
 					data.append( 'element_identifier', element.ID );
 					data.append( '_wpnonce', jQuery( input ).parent().find( '[name=wpshop_file_nonce]' ).val() );
 					data.append( '_wp_http_referer', jQuery( input ).parent().find( '[name=_wp_http_referer]' ).val() );
-					console.log( data );
 					jQuery.ajax({
 						type: 'POST',
 						url: ajaxurl,

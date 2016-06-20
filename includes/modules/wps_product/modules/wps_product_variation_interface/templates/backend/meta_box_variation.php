@@ -12,7 +12,7 @@
 	<ul data-view-model="wps_variations_options_raw" class="wps_variations_options_raw">
 		<li class="wps_variations_generate_col"><input name="wps_variations_generate_option" onchange="wps_variations_options_raw.control.generate(this)" type="checkbox"%generate%></li>
 		<li class="wps_variations_label_col">%label%</li>
-		<li class="wps_variations_requiered_col"><input name="wps_variations_requiered_option" onchange="wps_variations_options_raw.control.requiered(this)" type="checkbox"%requiered%></li>
+		<li class="wps_variations_requiered_col"><input name="wpshop_variation_defining[options][required_attributes][%code%]" value="%code%" onchange="wps_variations_options_raw.control.requiered(this)" type="checkbox"%requiered%></li>
 		<li class="wps_variations_possibilities_col"><select class="chosen_select_%code%" name="wps_variations_possibilities" multiple data-placeholder="Select some options"><option data-view-model="wps_variations_possibilities_%code%" value="%value_possibility_code%">%value_possibility_label%</option></select></li>
 		<li class="wps_variations_default_col"><select name="wps_variations_default"><option></option><option data-view-model="wps_variations_possibilities_%code%" value="%value_possibility_code%"%value_possibility_is_default%>%value_possibility_label%</option></select></li>
 	</ul>
@@ -54,7 +54,7 @@
 		<li class="wps_variations_price_vat_col">%vat%%currency%</li>
 		<li class="wps_variations_price_stock_col"><input type="text" pattern="[0-9]*" onchange="wps_variations_price_option_raw.control.stock(this)" name="wps_pdt_variations[%ID%][attribute][decimal][product_stock]" align="right" value="%stock%"></li>
 		<li class="wps_variations_price_weight_col"><input type="text" pattern="[0-9]+(\.[0-9][0-9]?)?" onchange="wps_variations_price_option_raw.control.weight(this)" name="wps_pdt_variations[%ID%][attribute][decimal][product_weight]" align="right" value="%weight%"></li>
-		<li class="wps_variations_price_file_col" data-view-model="wps_variations_price_option_file_%ID%"><span class="wps_variations_price_option_price_file" onclick="wps_variations_price_option_raw.model[%ID%].file.control.file(this)">%link%</span><input style="display: none;" type="file" name="wpshop_file" id="wpshop_file" onchange="wps_variations_price_option_raw.model[%ID%].file.control.link(event, this)"><?php wp_nonce_field( 'ajax_wpshop_upload_downloadable_file_action', 'wpshop_file_nonce' ); ?></li>
+		<li class="wps_variations_price_file_col" data-view-model="wps_variations_price_option_file_%ID%"><span class="wps_variations_price_option_price_file" onclick="wps_variations_price_option_raw.control.file(this)">%link%</span><input style="display: none;" type="file" name="wpshop_file" id="wpshop_file" onchange="wps_variations_price_option_raw.control.link(event, this)"><?php wp_nonce_field( 'ajax_wpshop_upload_downloadable_file_action', 'wpshop_file_nonce' ); ?></li>
 		<li class="wps_variations_price_active_col"><input name="wps_variations_price_option_activate" type="checkbox" %price_option_activate%></li>
 	</ul>
 </div>
