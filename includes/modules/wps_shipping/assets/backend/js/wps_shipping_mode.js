@@ -240,7 +240,7 @@ jQuery(document).ready(function() {
 		jQuery("#" + id + "_shipping_rules_container").addClass( 'wps-bloc-loading' );
 		var data = {
 			action: "display_shipping_rules",
-      _wpnonce: jQuery( '#' + id + '_shipping_rules_container' ).data( 'nonce' ),
+			_wpnonce: jQuery( '#' + id + '_shipping_rules_container' ).data( 'nonce' ),
 			fees_data : jQuery("#" + id + "_wpshop_custom_shipping").val(),
 			shipping_mode_id : id
 		};
