@@ -165,6 +165,12 @@
 #wps_variations_options .wps_variations_options_raw .wps_variations_default_col {
 	width: 20%;
 }
+#wps_variations_options .wps_variations_options_raw .wps_variations_default_col .placeholder-select {
+	color: gray;
+}
+#wps_variations_options .wps_variations_options_raw .wps_variations_default_col .placeholder-select option {
+	color: initial;
+}
 
 
 #wps_variations_questions {

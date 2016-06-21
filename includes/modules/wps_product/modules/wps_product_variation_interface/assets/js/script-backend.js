@@ -13,17 +13,18 @@ var wps_variations_price_option_raw = {
 				name: {
 					model: (function() {
 						var result_name = [];
-						for( option_name in saved_element.variation_def ) {
+						var options_names = (typeof saved_element.variation_def !== 'undefiend' ) ? saved_element.variation_def : saved_element.variation_dif;
+						for( option_name in options_names ) {
 							if( typeof wps_product_variation_interface.variation[option_name] !== 'undefined' ) {
 								attributes_generated[option_name] = true;
 								result_name.push( {
 									option_code: wps_product_variation_interface.variation[option_name].attribute_complete_def.code,
 									option_type: wps_product_variation_interface.variation[option_name].attribute_complete_def.data_type,
 									option_name: wps_product_variation_interface.variation[option_name].label,
-									option_value: saved_element.variation_def[option_name],
+									option_value: options_names[option_name],
 									option_label: ( function() {
 										for( var i = 0; wps_product_variation_interface.variation_value.length > i; i++ ) {
-											if( saved_element.variation_def[option_name] == wps_product_variation_interface.variation_value[i].id ) {
+											if( options_names[option_name] == wps_product_variation_interface.variation_value[i].id ) {
 												return wps_product_variation_interface.variation_value[i].label;
 											}
 										}
@@ -75,7 +76,7 @@ var wps_variations_options_raw = {
 				label: element.label,
 				type: element.attribute_complete_def.data_type,
 				requiered: (function() {
-					if( typeof wps_product_variation_interface.variation_defining.options.required_attributes[element.attribute_complete_def.code] !== 'undefined' ) {
+					if( typeof wps_product_variation_interface.variation_defining.options.required_attributes !== 'undefined' && typeof wps_product_variation_interface.variation_defining.options.required_attributes[element.attribute_complete_def.code] !== 'undefined' ) {
 						requiered = 'checked';
 					} else {
 						requiered = '';
@@ -127,6 +128,26 @@ function fix_number( parameter ) {
 	}
 	return parameter_fixed;
 }
+
+//////////////////////////////////// PLACEHOLDER SELECT ////////////////////////////////////
+function placeholder_select( code ) {
+	var select_element = jQuery( 'select[name="wps_variations_default[' + code + ']"]' );
+	var optionPlaceholder = document.createElement( 'option' );
+	optionPlaceholder.appendChild( document.createTextNode( select_element.data( 'placeholder-select' ) ) );
+	jQuery( optionPlaceholder ).attr( 'disabled', 'disabled' );
+	jQuery( optionPlaceholder ).attr( 'hidden', 'hidden' );
+	var have_selected_value = false;
+	select_element.find( 'option' ).each( function( index_select, element_select ) { if( element_select.getAttribute( 'selected' ) != null ) { have_selected_value = true; return false; } } );
+	if( !have_selected_value ) {
+		jQuery( optionPlaceholder ).attr( 'selected', 'selected' );
+		select_element.addClass( 'placeholder-select' );
+		jQuery( select_element ).change( function() {
+			select_element.removeClass( 'placeholder-select' );
+		} );
+	}
+	select_element.prepend( optionPlaceholder );
+}
+////////////////////////////////////////////////////////////////////////////////////////////
 
 jQuery(document).ready( function() {
 	/////////////////////////////////////////// TABS ///////////////////////////////////////////
@@ -181,6 +202,7 @@ jQuery(document).ready( function() {
 		this.change( id, parameter );
 		parameter.possibilities.control.refresh();
 		jQuery('.chosen_select_' + parameter.code ).chosen();
+		placeholder_select( parameter.code );
 	};
 	wps_variations_options_raw.control.generate = function( element ) {
 		var id = jQuery( element ).closest( "ul[data-view-model='wps_variations_options_raw']" ).data('identifier');
@@ -194,10 +216,12 @@ jQuery(document).ready( function() {
 		parameter.possibilities.control.refresh();
 		wps_variations_options_summary.control.summary();
 		jQuery('.chosen_select_' + parameter.code ).chosen();
+		placeholder_select( parameter.code );
 	};
 	jQuery.each( wps_variations_options_raw.model, function( index, element ) {
 		element.possibilities.control = new WPSVariationOptionsInterface( 'wps_variations_possibilities_' + element.code, element.possibilities.model );
 		jQuery('.chosen_select_' + element.code ).chosen();
+		placeholder_select( element.code );
 	} );
 	wps_variations_price_option_raw.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_raw', wps_variations_price_option_raw.model );
 	wps_variations_price_option_raw.control.price = function( element ) {
@@ -393,6 +417,9 @@ jQuery(document).ready( function() {
 			jQuery.each( result, function( index, element ) {
 				wps_variations_price_option_raw.control.push( element );
 			} );
+			var size = {};
+			size.current = 0;
+			size.total = wps_variations_price_option_raw.model.length - 1;
 			jQuery.each( wps_variations_price_option_raw.model, function( index, element ) {
 				var data =  {
 					action: 'add_empty_variation',
@@ -409,10 +436,10 @@ jQuery(document).ready( function() {
 					wps_variations_price_option_raw.control.change( index, parameter );
 					wps_variations_price_option_raw.model[index].name.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_name_' + response.ID, parameter.name.model );
 					wps_variations_price_option_raw.model[index].file.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_file_' + response.ID, parameter.file.model );
-					if( index >= wps_variations_price_option_raw.model.length ) {
+					if( size.current >= size.total ) {
 						jQuery( '#wps_variations_apply_btn' ).removeClass( 'disabled' );
 					}
-					console.log( index, wps_variations_price_option_raw.model.length );
+					size.current++;
 				}, 'JSON');
 				element.name.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_name_' + element.ID, element.name.model );
 				element.file.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_file_' + element.ID, element.file.model );

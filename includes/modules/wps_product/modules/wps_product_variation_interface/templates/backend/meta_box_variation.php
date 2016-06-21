@@ -14,7 +14,7 @@
 		<li class="wps_variations_label_col">%label%</li>
 		<li class="wps_variations_requiered_col"><input name="wpshop_variation_defining[options][required_attributes][%code%]" value="%code%" onchange="wps_variations_options_raw.control.requiered(this)" type="checkbox"%requiered%></li>
 		<li class="wps_variations_possibilities_col"><select class="chosen_select_%code%" name="wps_variations_possibilities" multiple data-placeholder="Select some options"><option data-view-model="wps_variations_possibilities_%code%" value="%value_possibility_code%">%value_possibility_label%</option></select></li>
-		<li class="wps_variations_default_col"><select name="wps_variations_default"><option></option><option data-view-model="wps_variations_possibilities_%code%" value="%value_possibility_code%"%value_possibility_is_default%>%value_possibility_label%</option></select></li>
+		<li class="wps_variations_default_col"><select name="wps_variations_default[%code%]" data-placeholder-select="Choose default"><option data-view-model="wps_variations_possibilities_%code%" value="%value_possibility_code%"%value_possibility_is_default%>%value_possibility_label%</option></select></li>
 	</ul>
 </div>
 <div id="wps_variations_questions">
