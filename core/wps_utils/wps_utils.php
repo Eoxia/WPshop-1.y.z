@@ -256,8 +256,7 @@ class wpshop_tools {
 	 * @return  boolean
 	 */
 	public static function is_phone( $phone ) {
-		if ( strlen( trim( preg_replace( '/[\s\#0-9_\-\+\(\)]/', '', $phone ) ) ) <= 0 ) return false;
-		else return true;
+		return preg_match( '/(?=.*[0-9])([ 0-9\-\+\(\)]+)/', $phone );
 	}
 
 	/**
@@ -265,9 +264,8 @@ class wpshop_tools {
 	 * @param   string	postcode
 	 * @return  boolean
 	 */
-	public static function is_postcode($postcode) {
-		if ( strlen( trim( preg_replace( '/[\s\-A-Za-z0-9]/', '', $postcode ) ) ) <= 0 ) return false;
-		else return true;
+	public static function is_postcode( $postcode ) {
+		return preg_match( '/(?=.*[0-9A-Za-z])([ \-A-Za-z0-9]+)/', $postcode );
 	}
 
 	/**
