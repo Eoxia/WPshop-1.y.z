@@ -47,7 +47,9 @@ class wps_product_variation_interface {
 		if ( wp_is_post_revision( $post_id ) && WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT != $post->post_type ) {
 			return;
 		}
-		$_wpshop_variation_defining = array_merge( ( $_POST['wpshop_variation_defining'] ) ? $_POST['wpshop_variation_defining'] : array(), get_post_meta( $post_id, '_wpshop_variation_defining', true) );
+		$variation_defining = get_post_meta( $post_id, '_wpshop_variation_defining', true );
+		$variation_defining = is_array( $variation_defining ) ? $variation_defining : array();
+		$_wpshop_variation_defining = array_merge( isset( $_POST['wpshop_variation_defining'] ) ? $_POST['wpshop_variation_defining'] : array(), $variation_defining );
 		update_post_meta( $post_id, '_wpshop_variation_defining', $_wpshop_variation_defining );
 	}
 	// AJAX

@@ -13,7 +13,7 @@ var wps_variations_price_option_raw = {
 				name: {
 					model: (function() {
 						var result_name = [];
-						var options_names = (typeof saved_element.variation_def !== 'undefiend' ) ? saved_element.variation_def : saved_element.variation_dif;
+						var options_names = (typeof saved_element.variation_def !== 'undefined' ) ? saved_element.variation_def : saved_element.variation_dif;
 						for( option_name in options_names ) {
 							if( typeof wps_product_variation_interface.variation[option_name] !== 'undefined' ) {
 								attributes_generated[option_name] = true;

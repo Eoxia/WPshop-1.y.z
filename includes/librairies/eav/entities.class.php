@@ -583,7 +583,7 @@ class wpshop_entities {
 
 			$current_post_meta = get_post_meta($post_id);
 			foreach ( $current_post_meta as $post_meta_key => $post_meta_value ) {
-				$meta_is_array = !empty( $post_meta_value[0] ) ? @unserialize($post_meta_value[0]) : '';
+				$meta_is_array = ( !empty( $post_meta_value[0] ) && wpshop_tools::is_serialized( $post_meta_value[0] ) ) ? unserialize( $post_meta_value[0] ) : '';
 				$meta_real_value = (is_array($meta_is_array) ? $meta_is_array : $post_meta_value[0]);
 				$meta_creation = update_post_meta($last_post, $post_meta_key, $meta_real_value);
 			}

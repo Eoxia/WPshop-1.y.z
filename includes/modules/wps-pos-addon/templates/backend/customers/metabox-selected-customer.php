@@ -17,9 +17,10 @@
 				if( !empty($addresses_customer[$billing_option['choice']]) ) {
 					$billing = reset($addresses_customer[$billing_option['choice']]);
 					//echo '<strong>' . $billing['address_title']['value'] . '</strong>' . '' . '<br>';
-					echo @( __( wpshop_attributes::get_attribute_type_select_option_info($billing['civility']['value'], 'label', 'custom') ) . ' <strong>' . $billing['address_first_name']['value'] . ' ' . $billing['address_last_name']['value'] . '</strong><br>' );
-					echo @( $billing['address']['value'] . '<br>' );
-					echo @( $billing['city']['value'] . ' ' . $billing['postcode']['value'] . ' ' . $billing['country']['value'] ) . '<br>';
+					echo isset($billing['civility']) ? __( wpshop_attributes::get_attribute_type_select_option_info($billing['civility']['value'], 'label', 'custom') ): '';
+					echo ' <strong>' . (isset($billing['address_first_name']) ? $billing['address_first_name']['value'] : '') . ' ' . (isset($billing['address_last_name']) ? $billing['address_last_name']['value'] : '') . '</strong><br>';
+					echo (isset($billing['address']) ? $billing['address']['value'] : '') . '<br>';
+					echo (isset($billing['city']) ? $billing['city']['value'] . ' ' : '') . (isset($billing['postcode']) ? $billing['postcode']['value'] . ' ' : '') . (isset($billing['country']) ? $billing['country']['value'] : '') . '<br>';
 				}
 			?>
 		</div>

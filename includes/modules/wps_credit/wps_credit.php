@@ -244,7 +244,7 @@ if ( !class_exists('wps_credit') ) {
 
 		/** Display Configuration interface to make credit **/
 		function wps_credit_make_credit_interface() {
-			$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+			$_wpnonce = !empty( $_GET['_wpnonce'] ) ? sanitize_text_field( $_GET['_wpnonce'] ) : '';
 
 			if ( !wp_verify_nonce( $_wpnonce, 'wps_credit_make_credit_interface' ) )
 				wp_die();

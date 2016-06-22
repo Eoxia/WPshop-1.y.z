@@ -2552,7 +2552,7 @@ class wpshop_products {
 							$attribute_db_definition = wpshop_attributes::getElement($attribute_code, "'valid'", 'code');
 							$default_value_is_serial = false;
 							$attribute_list_first_element = $attribute_db_definition->default_value;
-							if ( !empty($attribute_db_definition->default_value) && ($attribute_db_definition->default_value == serialize(false) || @unserialize($attribute_db_definition->default_value) !== false) ) {
+							if ( !empty($attribute_db_definition->default_value) && ($attribute_db_definition->default_value == serialize(false) || wpshop_tools::is_serialized( $attribute_db_definition->default_value ) ) ) {
 								$default_value_is_serial = true;
 								$tmp_default_value = unserialize($attribute_db_definition->default_value);
 								$attribute_list_first_element = !empty($tmp_default_value['field_options']['label_for_first_item']) ? $tmp_default_value['field_options']['label_for_first_item'] : null;

@@ -54,7 +54,7 @@ class wps_quotation_backend_ctr {
 	 * Template for display form (AjaxForm) - Call from : Line 3 'templates\backend\add_free_product_form_page_tpl.php'
 	 */
 	public function wps_free_product_form_page_tpl() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_free_product_form_page_tpl' ) )
 			wp_die();
@@ -70,7 +70,7 @@ class wps_quotation_backend_ctr {
 	 * @return integer $pid Product ID
 	 */
 	public function wps_create_new_free_product() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_create_new_free_product' ) )
 			wp_die();
@@ -143,7 +143,7 @@ class wps_quotation_backend_ctr {
 	}
 
 	function check_code_for_activation() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'check_code_for_activation' ) )
 			wp_die();

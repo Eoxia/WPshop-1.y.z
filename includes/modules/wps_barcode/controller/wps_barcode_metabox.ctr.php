@@ -119,7 +119,7 @@ class wps_barcode_metabox {
 		$result = get_post_meta($post_ID);
 
 		if ( !empty($result) ) {
-			$order_postmeta = unserialize($result['_order_postmeta'][0]);
+			$order_postmeta = isset( $result['_order_postmeta'] ) ? unserialize($result['_order_postmeta'][0]) : array();
 
 			if ( !empty($order_postmeta['order_invoice_date']) ) {
 				$conf = get_option('wps_barcode');

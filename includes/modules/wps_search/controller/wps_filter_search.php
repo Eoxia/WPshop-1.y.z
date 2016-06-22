@@ -550,7 +550,7 @@ class wps_filter_search {
 	 * AJAX - Action to search with selected attributes values
 	 */
 	function wpshop_ajax_filter_search_action () {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wpshop_ajax_filter_search_action' ) )
 			wp_die();

@@ -145,7 +145,7 @@ class wps_shipping_mode_ajax_actions {
 	 * AJAX - Reload shippig mode interface
 	 */
 	function wps_reload_shipping_mode() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_reload_shipping_mode' ) )
 			wp_die();
@@ -184,7 +184,7 @@ class wps_shipping_mode_ajax_actions {
 	 * AJAX - Calculate Shipping cost
 	 */
 	function wps_calculate_shipping_cost() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_calculate_shipping_cost' ) )
 			wp_die();
@@ -211,7 +211,7 @@ class wps_shipping_mode_ajax_actions {
 	 * AJAX - (New checkout Tunnel ) Load available shipping modes
 	 */
 	function wps_load_shipping_methods() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_load_shipping_methods' ) )
 			wp_die();
