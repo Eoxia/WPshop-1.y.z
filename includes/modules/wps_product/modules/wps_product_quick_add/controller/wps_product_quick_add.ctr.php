@@ -49,7 +49,7 @@ class wps_product_quick_add {
 	 * AJAX - Recharge la liste des attributs du groupe sélectionné par l'administratuer pour la création du nouveau produit / Reload attribute list for the selected attribute set, choosen by administrator for new product creation
 	 */
 	function attribute_list_reload() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'attribute_list_reload' ) )
 			wp_die();
@@ -63,7 +63,7 @@ class wps_product_quick_add {
 	 * AJAX - Création d'un nouveau produit / Create a new product
 	 */
 	function create_product() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'create_product' ) )
 			wp_die();

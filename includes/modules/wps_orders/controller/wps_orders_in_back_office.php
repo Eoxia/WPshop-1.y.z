@@ -313,7 +313,7 @@ class wps_orders_in_back_office {
 	 * AJAX - Add a private comment to order
 	 */
 	function wpshop_add_private_comment_to_order() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wpshop_add_private_comment_to_order' ) )
 			wp_die();
@@ -380,7 +380,7 @@ class wps_orders_in_back_office {
 	 * AJAX - Add product to order in back-office panel
 	 */
 	function wps_add_product_to_order_admin() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_add_product_to_order_admin' ) )
 			wp_die();
@@ -422,7 +422,7 @@ class wps_orders_in_back_office {
 	 * AJAX - Refresh cart in administration
 	 */
 	function refresh_cart_order() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_pos_order_content' ) )
 			wp_die();
@@ -441,7 +441,7 @@ class wps_orders_in_back_office {
 	 * AJAX - Refresh cart in administration
 	 */
 	function refresh_payments_order() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_pos_order_content' ) )
 			wp_die();
@@ -463,7 +463,7 @@ class wps_orders_in_back_office {
 	 * AJAX - Update product Quantity in Back-office Panel
 	 */
 	function wps_update_product_qty_in_admin() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_pos_order_content' ) )
 			wp_die();
@@ -492,7 +492,7 @@ class wps_orders_in_back_office {
 	 * AJAX - Load Product Variations in ThickBox on Add product to order action
 	 */
 	function wps_order_load_product_variations() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_order_load_product_variations' ) )
 			wp_die();
@@ -508,7 +508,7 @@ class wps_orders_in_back_office {
 	 * AJAX - Update cart informations
 	 */
 	function wps_orders_update_cart_informations() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_orders_update_cart_informations' ) )
 			wp_die();
@@ -540,7 +540,7 @@ class wps_orders_in_back_office {
 	}
 
 	function wps_reverify_payment_invoice_ref() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_reverify_payment_invoice_ref' ) )
 			wp_die();

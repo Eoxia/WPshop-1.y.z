@@ -559,7 +559,7 @@ class wpshop_attributes{
 		//Fetch, prepare, sort, and filter our data...
 		$status="'valid'";
 		$attribute_status = !empty($_REQUEST['attribute_status']) ? sanitize_text_field( $_REQUEST['attribute_status'] ) : null;
-		$s = !empty($_REQUEST['s']) ? sanitize_text_field( $_REQUEST['attribute_status'] ) : null;
+		$s = !empty($_REQUEST['s']) ? sanitize_text_field( $_REQUEST['s'] ) : null;
 		$order = !empty($_REQUEST['order']) ? sanitize_text_field($_REQUEST['order']) : null;
 		$orderby = !empty($_REQUEST['orderby']) ? sanitize_text_field($_REQUEST['orderby']) : null;
 		if(!empty($attribute_status)){
@@ -2372,7 +2372,7 @@ ob_end_clean();
 		$ouput['more_input'] = '';
 
 		$attribute_default_value = $attribute->default_value;
-		if ( !empty($attribute->default_value) && ($attribute->default_value == serialize(false) || @unserialize($attribute->default_value) !== false) ) {
+		if ( !empty($attribute->default_value) && ($attribute->default_value == serialize(false) || wpshop_tools::is_serialized( $attribute->default_value ) ) ) {
 			$tmp_default_value = unserialize($attribute->default_value);
 			$attribute_default_value = !empty($tmp_default_value["default_value"]) ? $tmp_default_value["default_value"] : null;
 		}
@@ -2422,7 +2422,7 @@ ob_end_clean();
 			/*	Add a default value to the combobox list	*/
 			$default_value_is_serial = false;
 			$attribute_list_first_element = $attribute->default_value;
-			if ( !empty($attribute->default_value) && ($attribute->default_value == serialize(false) || @unserialize($attribute->default_value) !== false) ) {
+			if ( !empty($attribute->default_value) && ($attribute->default_value == serialize(false) || wpshop_tools::is_serialized( $attribute->default_value ) ) ) {
 				$default_value_is_serial = true;
 				$tmp_default_value = unserialize($attribute->default_value);
 				$attribute_list_first_element = $tmp_default_value["field_options"]["label_for_first_item"];
@@ -2505,7 +2505,7 @@ GROUP BY ATT.id, chosen_val", $element_id, $attribute_code);
 				$fields = '<div class="wpshop_form_label alignleft">&nbsp;</div>
 						<div class="wpshop_form_input_element alignleft">
 						<div id="send_downloadable_file_dialog" class="wpshop_add_box" title="' .__('Send the downloadable file', 'wpshop'). '"></div>
-						<a id="send_downlodable_file" ' . wp_create_nonce( "ajax_wpshop_fill_the_downloadable_dialog" ) . '  class="wps-bton-first-mini-rounded">' .__('Send a file', 'wpshop'). '</a>
+						<a id="send_downlodable_file" data-nonce="' . wp_create_nonce( "ajax_wpshop_fill_the_downloadable_dialog" ) . '"  class="wps-bton-first-mini-rounded">' .__('Send a file', 'wpshop'). '</a>
 						<input type="hidden" id="product_identifer_field" value="' .( !empty($_GET['post']) ? esc_attr( $_GET['post'] ) : '') . '" /><br/><u>'.__('File url','wpshop').' :</u>
 						<div class="statut"><a href="' .$data['file_url']. '" target="_blank" download>'.basename($data['file_url']).'</a></div>
 						</div>';
@@ -2780,7 +2780,7 @@ GROUP BY ATT.id, chosen_val", $element_id, $attribute_code);
 		if(!empty($attribute_id) || !empty($data_type)){
 			$defaut_value = ( !empty($attribute_select_options[0]) && !empty($attribute_select_options[0]->default_value) ) ? $attribute_select_options[0]->default_value : null;
 			$default_is_serial = false;
-			if ( !empty($attribute_select_options[0]->default_value) && ($attribute_select_options[0]->default_value == serialize(false) || @unserialize($attribute_select_options[0]->default_value) !== false) ) {
+			if ( !empty($attribute_select_options[0]->default_value) && ($attribute_select_options[0]->default_value == serialize(false) || wpshop_tools::is_serialized( $attribute_select_options[0]->default_value ) ) ) {
 				$defaut_value = unserialize($attribute_select_options[0]->default_value);
 				$default_is_serial = true;
 			}

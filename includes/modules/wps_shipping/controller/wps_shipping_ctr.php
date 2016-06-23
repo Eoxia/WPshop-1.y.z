@@ -134,7 +134,7 @@ class wps_shipping {
 		if ( ( !empty($_SESSION['shipping_method']) && $_SESSION['shipping_method'] == 'shipping-partners' ) || !empty( $_SESSION['wps-pos-addon']) ) {
 			return 0;
 		}
-		
+
 		/** Take the selected shipping mode **/
 		if( $chosen_shipping_mode == 'default_choice' ) {
 			if( !empty( $shipping_mode_option['modes'][$shipping_mode_option['default_choice']]) ) {
@@ -164,7 +164,7 @@ class wps_shipping {
 		}
 		else {
 			/** Check Custom Shipping Cost **/
-			
+
 			if ( !empty($selected_shipping_mode_config['custom_shipping_rules']) && !empty($selected_shipping_mode_config['custom_shipping_rules']['active']) ) {
 				$address_infos = '';
 				if( !empty( $_SESSION['shipping_address'] ) ) {

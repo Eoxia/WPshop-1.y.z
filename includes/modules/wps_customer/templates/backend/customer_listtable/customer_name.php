@@ -22,7 +22,7 @@
 <div class="row-actions" >
 	<a href="<?php echo admin_url( 'post.php?post=' . $post_id . '&amp;action=edit' ); ?>" ><?php _e( 'View' ); ?></a> |
 	<?php if ( current_user_can( 'edit_users' ) ) : ?>
-	<a target="_wps_wpuser_edition_page" href="<?php echo admin_url( 'user-edit.php?user_id=' . $current_user_id_in_list  ); ?>" ><?php printf( __( 'View associated user (%d)', 'wpshop' ), $current_user_id_in_list ); ?></a>
+	<a target="_wps_wpuser_edition_page" href="<?php echo admin_url( 'user-edit.php?user_id=' . $current_user_id_in_list  ); ?>" ><?php printf( __( 'View associated user (id: %d)', 'wpshop' ), $current_user_id_in_list ); ?></a>
 	<?php else: ?>
 	<?php printf( __( 'WP-User %d', 'wpshop' ), $current_user_id_in_list); ?>
 	<?php endif; ?>

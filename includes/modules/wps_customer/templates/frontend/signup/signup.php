@@ -23,7 +23,7 @@
 			$value = ( !empty($signup_field->frontend_input) && $signup_field->frontend_input != 'password' && !empty($_POST) && !empty($_POST['attribute']) && !empty($_POST['attribute'][$signup_field->data_type]) && !empty( $_POST['attribute'][$signup_field->data_type][$signup_field->code]) ) ? sanitize_text_field( $_POST['attribute'][$signup_field->data_type][$signup_field->code] ) : '';
 			$attribute_output_def = wpshop_attributes::get_attribute_field_definition( $signup_field, $value, array( 'from' => 'frontend', ) );
 		?>
-			<div class="wps-form-group">
+			<div class="wps-form-group field-<?php echo $signup_field->code; ?>">
 				<label for="<?php echo $signup_field->code; ?>"><?php  _e( stripslashes($signup_field->frontend_label), 'wpshop'); ?> <?php echo ( ( !empty($attribute_output_def['required']) && $attribute_output_def['required'] == 'yes' ) ? '<em>*</em>' : '' ); ?></label>
 				<div id="<?php echo $signup_field->code; ?>" class="wps-form"><?php echo $attribute_output_def['output']; echo $attribute_output_def['options']; ?></div>
 			</div>
@@ -34,7 +34,7 @@
 				$signup_field->code = $signup_field->code.'2';
 				$attribute_output_def = wpshop_attributes::get_attribute_field_definition( $signup_field, '', array() );
 			?>
-				<div class="wps-form-group">
+				<div class="wps-form-group field-<?php echo $signup_field->code; ?>">
 					<label for="<?php echo $signup_field->code; ?>"><?php printf( __('Confirm %s', 'wpshop'), stripslashes( strtolower(__( $signup_field->frontend_label, 'wpshop')) ) ); ?> <?php echo ( ( !empty($attribute_output_def['required']) && $attribute_output_def['required'] == 'yes' ) ? '<em>*</em>' : '' ); ?></label>
 					<div id="<?php echo $signup_field->code; ?>" class="wps-form"><?php echo $attribute_output_def['output']; echo $attribute_output_def['options']; ?></div>
 				</div>

@@ -37,7 +37,7 @@ class wpspos_product_quick_add {
 	 * AJAX - Charge le fomulaire d'ajout rapide d'un produit / Load the form for new product quick add
 	 */
 	function product_creation() {
-		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_GET['_wpnonce'] ) ? sanitize_text_field( $_GET['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps-product-quick-nonce' ) )
 			wp_die();

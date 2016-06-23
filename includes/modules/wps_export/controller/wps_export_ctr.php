@@ -123,7 +123,15 @@ class wps_export_ctr {
 	 * @param array $array
 	 */
 	function download_csv( $filetitle, $array ) {
-		$filename = $filetitle . '.csv';
+		$wp_upload_dir = wp_upload_dir();
+		$final_export_dir = $wp_upload_dir[ 'basedir' ] . '/wpshop/export/';
+		wp_mkdir_p( $final_export_dir );
+		$htaccess_file = $final_export_dir . '.htaccess';
+		if ( !is_file( $htaccess_file ) ) {
+			file_put_contents( $htaccess_file, "order deny,allow
+deny from all" );
+		}
+		$filename = $final_export_dir . $filetitle . '.csv';
 		$fp = fopen( $filename, 'w' );
 
 		if ( !empty( $array ) ) {
@@ -137,7 +145,7 @@ class wps_export_ctr {
 
 		fclose($fp);
 		header("Content-type: application/force-download");
-		header("Content-Disposition: attachment; filename=".$filename);
+		header("Content-Disposition: attachment; filename=" . basename( $filename ) );
 		readfile($filename);
 
 		unlink( $filename );

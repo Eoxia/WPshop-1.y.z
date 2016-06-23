@@ -595,7 +595,7 @@ class wps_message_ctr {
 	 * Récupères le contenu du message
 	 */
 	public function get_content_message() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'get_content_message' ) )
 			wp_die();

@@ -22,7 +22,7 @@ class wps_shipping_mode_ajax_actions {
 		$wps_shipping = new wps_shipping();
 		$status = false;
 		$reponse = array();
-		$fees_data = ( !empty($_POST['fees_data']) ) ?  sanitize_text_field( $_POST['fees_data'] ) : null;
+		$fees_data = ( !empty($_POST['fees_data']) ) ?  ( $_POST['fees_data'] ) : null;
 		$weight_rule = ( !empty($_POST['weight_rule']) ) ? wpshop_tools::varSanitizer( $_POST['weight_rule'] ) : null;
 		$shipping_price = ( !empty($_POST['shipping_price']) ) ? wpshop_tools::varSanitizer( $_POST['shipping_price'] ) : 0;
 		$selected_country = ( !empty($_POST['selected_country']) ) ? wpshop_tools::varSanitizer( $_POST['selected_country'] ) : null;
@@ -64,15 +64,12 @@ class wps_shipping_mode_ajax_actions {
 	 * AJAX - Delete Custom shipping Rule
 	 */
 	function wpshop_ajax_delete_shipping_rule() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
-
-		if ( !wp_verify_nonce( $_wpnonce, 'wpshop_ajax_delete_shipping_rule' ) )
-			wp_die();
+		check_ajax_referer( 'wpshop_ajax_delete_shipping_rule' );
 
 		global $wpdb;
 		$wps_shipping = new wps_shipping();
-		$fees_data = ( !empty($_POST['fees_data']) ) ? sanitize_text_field( $_POST['fees_data'] ) : null;
-		$country_and_weight =  ( !empty($_POST['country_and_weight']) ) ? (int) $_POST['country_and_weight'] : null;
+		$fees_data = ( !empty($_POST['fees_data']) ) ? ( $_POST['fees_data'] ) : null;
+		$country_and_weight =  ( !empty($_POST['country_and_weight']) ) ? sanitize_text_field( $_POST['country_and_weight'] ) : null;
 		$datas = explode("|", $country_and_weight);
 		$country = $datas[0];
 		$weight = $datas[1];
@@ -108,15 +105,14 @@ class wps_shipping_mode_ajax_actions {
 
 		$status = true;
 
-		if ( !empty($shipping_rules) ) {
+		if ( !empty( $shipping_rules ) ) {
 			$rules = $wps_shipping->shipping_fees_array_2_string( $shipping_rules );
 		}
 		else {
 			$rules = '';
 		}
-		$reponse = array('status' => $status, 'reponse' => $rules );
-		echo json_encode($reponse);
-		die();
+
+		wp_die( json_encode( array( 'status' => $status, 'reponse' => $rules, ) ) );
 	}
 
 	/**
@@ -126,7 +122,7 @@ class wps_shipping_mode_ajax_actions {
 		check_ajax_referer( 'wpshop_ajax_display_shipping_rules' );
 
 		$status = false;
-		$fees_data = ( !empty($_POST['fees_data']) ) ? sanitize_text_field( $_POST['fees_data'] ) : null;
+		$fees_data = ( !empty($_POST['fees_data']) ) ? ( $_POST['fees_data'] ) : null;
 		$shipping_mode_id = ( !empty($_POST['shipping_mode_id']) ) ? (int) $_POST['shipping_mode_id'] : null;
 		$result = '';
 		if( !empty($fees_data) ) {
@@ -149,7 +145,7 @@ class wps_shipping_mode_ajax_actions {
 	 * AJAX - Reload shippig mode interface
 	 */
 	function wps_reload_shipping_mode() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_reload_shipping_mode' ) )
 			wp_die();
@@ -188,7 +184,7 @@ class wps_shipping_mode_ajax_actions {
 	 * AJAX - Calculate Shipping cost
 	 */
 	function wps_calculate_shipping_cost() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_calculate_shipping_cost' ) )
 			wp_die();
@@ -215,7 +211,7 @@ class wps_shipping_mode_ajax_actions {
 	 * AJAX - (New checkout Tunnel ) Load available shipping modes
 	 */
 	function wps_load_shipping_methods() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_load_shipping_methods' ) )
 			wp_die();

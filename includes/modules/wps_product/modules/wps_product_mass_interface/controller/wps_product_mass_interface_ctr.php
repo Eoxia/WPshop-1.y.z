@@ -220,7 +220,7 @@ class wps_product_mass_interface_ctr {
 	 * AJAX - Change page action on mass edit product interface
 	 */
 	function wps_mass_edit_change_page() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_mass_edit_change_page' ) )
 			wp_die();
@@ -244,7 +244,7 @@ class wps_product_mass_interface_ctr {
 	 * AJAX - Create a draft product and display the line allowing to edit informations for this product
 	 */
 	function wps_mass_interface_new_product_creation() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_mass_interface_new_product_creation' ) )
 			wp_die();
@@ -275,7 +275,7 @@ class wps_product_mass_interface_ctr {
 	 * AJAX - Save datas
 	 */
 	function wps_save_product_quick_interface() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_save_product_quick_interface' ) )
 			wp_die();
@@ -373,7 +373,7 @@ class wps_product_mass_interface_ctr {
 	* Delete product list
 	**/
 	function wps_mass_delete_file() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_mass_delete_file' ) )
 			wp_die();
@@ -392,7 +392,7 @@ class wps_product_mass_interface_ctr {
 	* Update product files list
 	*/
 	function wps_mass_edit_update_files_list() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_mass_edit_update_files_list' ) )
 			wp_die();

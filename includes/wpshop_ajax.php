@@ -368,9 +368,10 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		$output = '';
 
 		$attributes_for_variation = isset($_POST['variation_attr']) ? (array) $_POST['variation_attr'] : null;
-		$wpshop_admin_use_attribute_for_single_variation_checkbox = isset($_POST['wpshop_admin_use_attribute_for_single_variation_checkbox']) ? sanitize_text_field($_POST['wpshop_admin_use_attribute_for_single_variation_checkbox']) : null;
+		$wpshop_admin_use_attribute_for_single_variation_checkbox = isset($_POST['wpshop_admin_use_attribute_for_single_variation_checkbox']) ? (array) $_POST['wpshop_admin_use_attribute_for_single_variation_checkbox'] : null;
 		$variation_specific_definition = isset($_POST['wps_pdt_variations']['new']['attribute']) ? (array) $_POST['wps_pdt_variations']['new']['attribute'] : null;
 		$current_post_id = isset($_POST['wpshop_head_product_id']) ? sanitize_key($_POST['wpshop_head_product_id']) : null;
+		$display = isset( $_POST['data'] ) ? (bool) $_POST['data'] : false;
 
 		$attribute_to_use_for_creation = array();
 		foreach ( $attributes_for_variation as $attribute_code => $attribute_value) {
@@ -394,7 +395,11 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		wpshop_attributes::saveAttributeForEntity($variation_specific_definition, wpshop_entities::get_entity_identifier_from_code(wpshop_products::currentPageCode), $new_variation_identifier, WPSHOP_CURRENT_LOCALE);
 		wpshop_products::calculate_price( $new_variation_identifier );
 
-		$output = wpshop_products::display_variation_admin( $current_post_id );
+		if( $display ) {
+			$output = json_encode( array( 'ID' => $new_variation_identifier ) );
+		} else {
+			$output = wpshop_products::display_variation_admin( $current_post_id );
+		}
 
 		echo $output;
 		die();

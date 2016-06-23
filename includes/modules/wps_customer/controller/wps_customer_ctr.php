@@ -650,4 +650,62 @@ class wps_customer_ctr {
 
 		return $return;
 	}
+
+	/**
+	 * Search function for customer / Fonction de recherche des clients
+	 *
+	 * @param string $term The term we have to search into database for getting existing users / Le terme qu'il faut rechercher pour retrouver les utilisateurs dans la base de données
+	 */
+	public function search_customer( $term ) {
+		global $wpdb;
+
+		/**	Build the customer search	*/
+		$args = array(
+			'search'			=> "*" . $term . "*",
+			'search_columns'	=> array( 'user_login', 'user_email', 'user_nicename', ),
+			'meta_query'		=> array(
+				'relation'	=> 'OR',
+				array(
+					'key'		=> 'first_name',
+					'value'		=> $term,
+					'compare'	=> 'LIKE',
+				),
+				array(
+					'key'		=> 'last_name',
+					'value'		=> $term,
+					'compare'	=> 'LIKE',
+				),
+			),
+		);
+		$customer_search = new WP_User_Query( $args );
+		if ( !empty($customer_search->results) ) {
+			foreach ( $customer_search->results as $customer ) {
+				/** Check the username, if last name and first name are empty we select email **/
+				$last_name_meta = get_user_meta( $customer->ID, 'last_name', true);
+				$first_name_meta = get_user_meta( $customer->ID, 'first_name', true);
+				$user_data = $customer->data;
+				$email_data = $user_data->user_email;
+
+				if ( !empty($last_name_meta) ) {
+					$user_name = $last_name_meta;
+				}
+				elseif( !empty( $first_name_meta)) {
+					$user_name = $first_name_meta;
+				}
+				else {
+					$user_name = $email_data;
+				}
+
+				$customer_list[] = array(
+					'ID' => $customer->ID,
+					'last_name' => $last_name_meta,
+					'first_name' => $first_name_meta,
+					'email' => $email_data,
+				);
+			}
+		}
+
+		return $customer_list;
+	}
+
 }

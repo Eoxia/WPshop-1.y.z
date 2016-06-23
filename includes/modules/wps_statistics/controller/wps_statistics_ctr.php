@@ -220,7 +220,7 @@ class wps_statistics_ctr {
 	 * AJAX - Display Orders moments according the choosen day
 	 */
 	function wps_hourly_order_day() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_hourly_order_day' ) )
 			wp_die();

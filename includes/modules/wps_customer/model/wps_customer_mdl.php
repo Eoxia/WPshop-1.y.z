@@ -10,12 +10,14 @@ class wps_customer_mdl {
 	 * @return array
 	 */
 	function getUserList( $limit = null ) {
-		global $wpdb;
-
-		$query = "SELECT USERS.ID, USERS.user_login, USERS.user_email FROM " . $wpdb->users . " AS USERS" . ( !empty( $limit ) ? $limit : "" );
-		$userList = $wpdb->get_results($query);
-
-		return $userList;
+		$args = array(
+			'orderby'      => 'user_email',
+			'order'        => 'ASC',
+			'number'       => !empty( $limit ) ? $limit : "",
+			'count_total'  => false,
+			'fields'       => 'all'
+		);
+		return get_users( $args );
 	}
 
 	/**
@@ -28,7 +30,7 @@ class wps_customer_mdl {
 	 *
 	 * @return WP_Query The complete query for customer list retrieving
 	 */
-	function get_customer_list( $nb_per_page = 10, $offset = 0 ) {
+	function get_customer_list( $nb_per_page = 10, $offset = 0, $extra_args = array() ) {
 
 		/**	Add a filter to wordpress query for search extension	*/
 		//add_filter( 'posts_where', array( &$this, 'wps_customer_search_extend' ), 10, 2 );
@@ -42,7 +44,7 @@ class wps_customer_mdl {
 		);
 
 		/**	Get customer list with builtin wordpress function	*/
-		$customer_list_query = new WP_Query( $customer_list_args );
+		$customer_list_query = new WP_Query( wp_parse_args( $extra_args, $customer_list_args ) );
 
 		/**	Remove previously added filter for search extension	*/
 		//remove_filter( 'posts_where', array( &$this, 'wps_customer_search_extend' ), 10, 2 );

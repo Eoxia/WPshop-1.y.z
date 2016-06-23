@@ -238,7 +238,7 @@ class wps_opinion_ctr {
 	}
 
 	function wps_update_opinion_star_rate() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_update_opinion_star_rate' ) )
 			wp_die();
@@ -259,7 +259,7 @@ class wps_opinion_ctr {
 	 * AJAX - Save opinions
 	 */
 	function wps_opinion_save_form() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_opinion_save_form' ) )
 			wp_die();
@@ -305,7 +305,7 @@ class wps_opinion_ctr {
 	 * AJAX - Refresh Opinion list
 	 */
 	function wps_refresh_add_opinion_list() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_refresh_add_opinion_list' ) )
 			wp_die();
@@ -320,7 +320,7 @@ class wps_opinion_ctr {
 	 * AJAX - Fill the opinion modal
 	 */
 	function wps_fill_opinion_modal() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_fill_opinion_modal' ) )
 			wp_die();

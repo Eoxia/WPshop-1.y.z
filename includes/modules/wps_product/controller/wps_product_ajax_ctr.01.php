@@ -12,7 +12,7 @@ class wps_product_ajax_ctr_01 {
 	 * list. Then display the template product_check_data
 	 */
 	public function ajax_render_inconsistent_product_price() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'ajax_render_inconsistent_product_price' ) )
 			wp_die();
@@ -39,7 +39,7 @@ class wps_product_ajax_ctr_01 {
 	 * @return JSON Response
 	 */
 	public function ajax_save_product_price() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'ajax_save_product_price' ) )
 			wp_die();

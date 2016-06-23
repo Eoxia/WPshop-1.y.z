@@ -61,7 +61,7 @@ class wps_media_manager_backend_ctr {
 	 * AJAX - Display pictures in backend panel
 	 */
 	function wp_ajax_display_pictures_in_backend() {
-		$_wponce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wp_ajax_display_pictures_in_backend' ) )
 			wp_die();

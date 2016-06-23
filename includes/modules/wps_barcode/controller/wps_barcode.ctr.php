@@ -5,7 +5,7 @@ class wps_barcode {
 
 		add_action( 'admin_init', array($this, 'add_scripts') );
 		$this->install();
-		add_action( 'save_post', array($this, 'insert_barcode' ) );
+		add_action( 'save_post', array($this, 'insert_barcode' ), 10, 3 );
 	}
 
 	/**
@@ -186,7 +186,10 @@ class wps_barcode {
 	 * Verifty post identifier and run a barcode generator
 	 * @param string $post_ID Ident of post
 	 */
-	public function insert_barcode( $post_ID ) {
+	public function insert_barcode( $post_ID, $post, $update ) {
+		if ( wp_is_post_revision( $post_ID ) )
+			return;
+
 		global $wpdb;
 
 		$types_with_barcode = array(
@@ -196,8 +199,6 @@ class wps_barcode {
 			WPSHOP_NEWTYPE_IDENTIFIER_COUPON,
 			WPSHOP_NEWTYPE_IDENTIFIER_ORDER,
 		);
-
-		$post = get_post( $post_ID );
 
 		/** Si c'est un type qui est dans le tableau $types_with_barcode */
 		if ( !empty( $post->post_type ) && in_array( $post->post_type,
@@ -246,10 +247,18 @@ class wps_barcode {
 				);
 			}
 
-			$barcode = $this->wps_generate_barcode($array);
+			//$barcode = $this->wps_generate_barcode($array);
 			/** For add a product */
-			$barcode = !empty( $_REQUEST['wpshop_product_attribute']['varchar']['barcode'] ) ? sanitize_text_field( $_REQUEST['wpshop_product_attribute']['varchar']['barcode'] ) : '';
-			if (  isset($barcode) ) {
+			$_REQUEST['wpshop_product_attribute']['varchar']['barcode'] = !empty( $_REQUEST['wpshop_product_attribute']['varchar']['barcode'] ) ? sanitize_text_field( $_REQUEST['wpshop_product_attribute']['varchar']['barcode'] ) : null;
+			if( !isset($_REQUEST['wpshop_product_attribute']['varchar']['barcode']) ) {
+				wpeologs_ctr::log_datas_in_files( 'wps_barcode',
+				array(
+					'object_id' => $post_ID,
+					'message' => sprintf( __('Adding barcode: %s for %s object ID', 'wps_barcode'), '<b>'.$_REQUEST['wpshop_product_attribute']['varchar']['barcode'].'</b>', '<b>'.$post_ID.'</b>') ),
+				0);
+				$_REQUEST['wpshop_product_attribute']['varchar']['barcode'] = $this->wps_generate_barcode($array);
+			}
+			/*if (  isset($barcode) ) {
 				if ($barcode !== '') {
 					wpeologs_ctr::log_datas_in_files( 'wps_barcode',
 					array(
@@ -269,10 +278,10 @@ class wps_barcode {
 				}
 			}
 			else {
-				/** On met à jour l'attribut barcode */
+				/** On met à jour l'attribut barcode *//*
 				$products = new wps_product_ctr();
 				$products->update_the_attribute_for_product($post_ID, 'varchar', 'barcode', $barcode);
-			}
+			}*/
 		}
 	}
 

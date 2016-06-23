@@ -100,6 +100,8 @@ if ( !class_exists("wpshop_breadcrumb") ) {
 				/** Construct the breadcrumb **/
 				if ( !empty($breadcrumb_definition) ) {
 					$count_breadcrumb_definition = count($breadcrumb_definition);
+					//echo '<pre>';print_r($breadcrumb_definition);echo '</pre>';
+					$j = 0;
 					for ( $i = ($count_breadcrumb_definition - 1); $i >= 0; $i-- ) {
 
 						if ( $breadcrumb_definition[$i]['category_parent_id'] == 0 ) {
@@ -119,21 +121,6 @@ if ( !class_exists("wpshop_breadcrumb") ) {
 								$category_link = get_permalink( $breadcrumb_definition[$i]['category_parent_id'] );
 							}
 
-						}
-
-						/**	Affichage du lien vers la boutique si on est sur une page produit ou catégories / Display a link to the shop if we are on a product or a category page	*/
-						if ( ( 0 == $i ) && !empty( $object->queried_object ) && (
-								( isset( $object->queried_object->post_type ) && !empty( $object->queried_object->post_type ) && ( WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT == $object->queried_object->post_type ) )
-									|| ( isset( $object->queried_object->taxonomy ) && !empty( $object->queried_object->taxonomy ) && ( WPSHOP_NEWTYPE_IDENTIFIER_CATEGORIES == $object->queried_object->taxonomy ) )
-							)
-						) {
-							$product_page_id = wpshop_tools::get_page_id( get_option( 'wpshop_product_page_id' ) );
-							$url = get_permalink( $product_page_id );
-							$shop_page = get_post( $product_page_id );
-							$tpl_component['CATEGORY_LINK'] = $url;
-							$tpl_component['OTHERS_CATEGORIES_LIST'] = '';
-							$tpl_component['CATEGORY_NAME'] = $shop_page->post_title;
-							$output .= wpshop_display::display_template_element('wpshop_breadcrumb_element', $tpl_component, array(), 'wpshop');
 						}
 
 						if ( $i == 0 && !$on_product_page ) {
@@ -160,6 +147,23 @@ if ( !class_exists("wpshop_breadcrumb") ) {
 								unset( $tpl_component );
 							}
 
+						}
+
+
+						/**	Affichage du lien vers la boutique si on est sur une page produit ou catégories / Display a link to the shop if we are on a product or a category page	*/
+						if ( ( 0 == $j ) && !empty( $object->queried_object ) && (
+								( isset( $object->queried_object->post_type ) && !empty( $object->queried_object->post_type ) && ( WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT == $object->queried_object->post_type ) )
+								|| ( isset( $object->queried_object->taxonomy ) && !empty( $object->queried_object->taxonomy ) && ( WPSHOP_NEWTYPE_IDENTIFIER_CATEGORIES == $object->queried_object->taxonomy ) )
+						)
+						) {
+							$product_page_id = wpshop_tools::get_page_id( get_option( 'wpshop_product_page_id' ) );
+							$url = get_permalink( $product_page_id );
+							$shop_page = get_post( $product_page_id );
+							$tpl_component['CATEGORY_LINK'] = $url;
+							$tpl_component['OTHERS_CATEGORIES_LIST'] = '';
+							$tpl_component['CATEGORY_NAME'] = $shop_page->post_title;
+							$output .= wpshop_display::display_template_element('wpshop_breadcrumb_element', $tpl_component, array(), 'wpshop');
+							$j++;
 						}
 					}
 				}
@@ -217,7 +221,7 @@ if ( !class_exists("wpshop_breadcrumb") ) {
 			return $categories_id;
 		}
 
-		function get_categories_for_parent ( $parent_id ) {
+		function get_categories_for_parent( $parent_id ) {
 			global $wpdb;
 			$children_list = array();
 			if ( !empty($parent_id) ) {

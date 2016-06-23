@@ -32,7 +32,7 @@ class wps_provider_ctr {
 		}*/
 	}
 	function admin_enqueue_scripts( $hook ) {
-		if( 'post.php' != $hook ) {
+		/*if( 'post.php' != $hook ) {
 			return;
 		}
 
@@ -44,7 +44,7 @@ class wps_provider_ctr {
 			if( isset( $is_provider ) ) {
 				wp_enqueue_script( 'wps_provider_products', WPS_ACCOUNT_URL . WPS_ACCOUNT_DIR . '/assets/backend/js/wps_provider_products.js' );
 			}
-		}
+		}*/
 	}
 	public function save_post( $post_id, $post, $update ) {
 		if( wp_is_post_revision( $post_id ) || $post->post_type != WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS )
