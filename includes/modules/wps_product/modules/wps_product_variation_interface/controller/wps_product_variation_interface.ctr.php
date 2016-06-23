@@ -12,7 +12,7 @@ class wps_product_variation_interface {
 		if ( wp_verify_nonce( $_wpnonce, 'wps_remove_variation_interface' ) && $wps_variation_interface !== null ) {
 			update_option( 'wps_variation_interface_display', $wps_variation_interface );
 		}
-		if( get_option( 'wps_variation_interface_display', true ) ) {
+		if( get_option( 'wps_variation_interface_display', false ) ) {
 			remove_meta_box( 'wpshop_wpshop_variations', WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT, 'normal' );
 			add_meta_box( 'wpshop_wpshop_variations', __('Product variation', 'wpshop'), array($this, 'meta_box_variation'), WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT, 'normal', 'default' );
 		}
@@ -51,13 +51,5 @@ class wps_product_variation_interface {
 		$variation_defining = is_array( $variation_defining ) ? $variation_defining : array();
 		$_wpshop_variation_defining = array_merge( isset( $_POST['wpshop_variation_defining'] ) ? $_POST['wpshop_variation_defining'] : array(), $variation_defining );
 		update_post_meta( $post_id, '_wpshop_variation_defining', $_wpshop_variation_defining );
-	}
-	// AJAX
-	public function add_empty_variation() {
-		check_ajax_referer( 'wps_add_empty_variation_variation_interface' );
-		$attributes_for_variation = isset($_POST['variation_attr']) ? (array) $_POST['variation_attr'] : null;
-		$current_post_id = isset($_POST['post_id']) ? sanitize_key($_POST['post_id']) : null;
-		echo json_encode( array( 'ID' => wpshop_products::creation_variation_callback( array( 0 => $attributes_for_variation ), $current_post_id ) ) );
-		wp_die();
 	}
 }

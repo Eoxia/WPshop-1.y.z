@@ -422,13 +422,16 @@ jQuery(document).ready( function() {
 			size.total = wps_variations_price_option_raw.model.length - 1;
 			jQuery.each( wps_variations_price_option_raw.model, function( index, element ) {
 				var data =  {
-					action: 'add_empty_variation',
-					post_id: jQuery( '#post_ID' ).val(),
+					action: 'add_new_single_variation',
+					wpshop_head_product_id: jQuery( '#post_ID' ).val(),
 					variation_attr: {},
+					wpshop_admin_use_attribute_for_single_variation_checkbox: {},
+					data: true,
 					_wpnonce: jQuery( '#wps_variations_apply_btn' ).data( 'nonce' )
 				};
 				jQuery.each( element.name.model,function( index_new_variation, element_new_variation ) {
 					data.variation_attr[element_new_variation.option_code] = element_new_variation.option_value;
+					data.wpshop_admin_use_attribute_for_single_variation_checkbox[element_new_variation.option_code] = element_new_variation.option_code;
 				} );
 				jQuery.post(ajaxurl, data, function( response ) {
 					var parameter = jQuery.extend({}, element);
