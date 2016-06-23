@@ -665,28 +665,11 @@ class wps_address {
 	 */
 	public static function save_address_infos( $attribute_set_id, $address_id_to_copy = 0, $address_info_to_copy = array() ) {
 		global $wpdb;
+
 		$adress_save_the_first = !empty( $_POST['wps-address-save-the-first'] ) ? sanitize_text_field( $_POST['wps-address-save-the-first'] ) : '';
-		$attribute = !empty( $address_info_to_copy ) && !empty( $address_info_to_copy[ 'attribute' ] ) ? $address_info_to_copy[ 'attribute' ] : ( !empty( $_POST['attribute'] ) ? (array)$_POST['attribute'] : '' );
-		if ( !empty( $attribute[$attribute_set_id] ) ) {
-			$attribute[$attribute_set_id]['varchar']['address_title'] = sanitize_text_field( $attribute[$attribute_set_id]['varchar']['address_title'] );
-			$attribute[$attribute_set_id]['varchar']['address_last_name'] = sanitize_text_field( $attribute[$attribute_set_id]['varchar']['address_last_name'] );
-			$attribute[$attribute_set_id]['varchar']['address_first_name'] = sanitize_text_field( $attribute[$attribute_set_id]['varchar']['address_first_name'] );
-			$attribute[$attribute_set_id]['varchar']['company'] = sanitize_text_field( $attribute[$attribute_set_id]['varchar']['company'] );
-			$attribute[$attribute_set_id]['varchar']['company'] = sanitize_text_field( $attribute[$attribute_set_id]['varchar']['company'] );
-			$attribute[$attribute_set_id]['varchar']['postcode'] = sanitize_text_field( $attribute[$attribute_set_id]['varchar']['postcode'] );
-			$attribute[$attribute_set_id]['varchar']['city'] = sanitize_text_field( $attribute[$attribute_set_id]['varchar']['city'] );
-			$attribute[$attribute_set_id]['varchar']['country'] = sanitize_text_field( $attribute[$attribute_set_id]['varchar']['country'] );
-			$attribute[$attribute_set_id]['varchar']['state'] = sanitize_text_field( $attribute[$attribute_set_id]['varchar']['state'] );
-			$attribute[$attribute_set_id]['varchar']['longitude'] = sanitize_text_field( $attribute[$attribute_set_id]['varchar']['longitude'] );
-			$attribute[$attribute_set_id]['varchar']['latitude'] = sanitize_text_field( $attribute[$attribute_set_id]['varchar']['latitude'] );
-			$attribute[$attribute_set_id]['integer']['civility'] = (int)$attribute[$attribute_set_id]['integer']['civility'];
 
-			if ( !empty( $attribute[$attribute_set_id]['item_id'] ) ) {
-				$attribute[$attribute_set_id]['item_id'] = (int)$attribute[$attribute_set_id]['item_id'];
-			}
-		}
+		$attribute = (array)$_POST['attribute'];
 
-		$shipping_address = (int)$_POST['shipping_address'];
 		$type_of_form = (int)$_POST['type_of_form'];
 		$current_item_edited = !empty($_POST['attribute'][$attribute_set_id]['item_id']) ? (int)wpshop_tools::varSanitizer($_POST['attribute'][$attribute_set_id]['item_id']) : null;
 		$current_attribute_set_id = !empty( $_POST['current_attribute_set_id'] ) ? (int)$_POST['current_attribute_set_id'] : '';
@@ -694,7 +677,6 @@ class wps_address {
 		$shipping_to_billing_id = !empty( $_POST['wps-shipping-to-billing-id'] ) ? (int)$_POST['wps-shipping-to-billing-id'] : $address_id_to_copy;
 
 		// Create or update the post address
-
 		// @TODO : REQUEST
 		$post_parent = '';
 		$post_author = get_current_user_id();
@@ -713,7 +695,7 @@ class wps_address {
 		}
 		$post_address = array(
 			'post_author' => $post_author,
-			'post_title' => $attribute[$attribute_set_id]['varchar']['address_title'],
+			'post_title' => !empty( $attribute ) && !empty( $attribute[$attribute_set_id] ) && !empty( $attribute[$attribute_set_id]['varchar'] ) && !empty( $attribute[$attribute_set_id]['varchar']['address_title'] ) ? $attribute[$attribute_set_id]['varchar']['address_title'] : '',
 			'post_status' => 'draft',
 			'post_name' => WPSHOP_NEWTYPE_IDENTIFIER_ADDRESS,
 			'post_type' => WPSHOP_NEWTYPE_IDENTIFIER_ADDRESS,
@@ -1382,39 +1364,17 @@ class wps_address {
 	 * AJAX - Function for save address
 	 */
 	function wps_save_address() {
+		check_ajax_referer( 'wps_save_address' );
 		global $wpshop, $wpdb;
 
-		check_ajax_referer( 'wps_save_address' );
-
-		$adress_save_the_first = !empty( $_POST['wps-address-save-the-first'] ) ? sanitize_text_field( $_POST['wps-address-save-the-first'] ) : '';
-		$attribute = !empty( $_POST['attribute'] ) ? (array)$_POST['attribute'] : '';
-		if ( !empty( $attribute[$attribute_set_id] ) ) {
-			$attribute[$attribute_set_id]['varchar']['address_title'] = sanitize_text_field( $attribute[$attribute_set_id]['varchar']['address_title'] );
-			$attribute[$attribute_set_id]['varchar']['address_last_name'] = sanitize_text_field( $attribute[$attribute_set_id]['varchar']['address_last_name'] );
-			$attribute[$attribute_set_id]['varchar']['address_first_name'] = sanitize_text_field( $attribute[$attribute_set_id]['varchar']['address_first_name'] );
-			$attribute[$attribute_set_id]['varchar']['company'] = sanitize_text_field( $attribute[$attribute_set_id]['varchar']['company'] );
-			$attribute[$attribute_set_id]['varchar']['company'] = sanitize_text_field( $attribute[$attribute_set_id]['varchar']['company'] );
-			$attribute[$attribute_set_id]['varchar']['postcode'] = sanitize_text_field( $attribute[$attribute_set_id]['varchar']['postcode'] );
-			$attribute[$attribute_set_id]['varchar']['city'] = sanitize_text_field( $attribute[$attribute_set_id]['varchar']['city'] );
-			$attribute[$attribute_set_id]['varchar']['country'] = sanitize_text_field( $attribute[$attribute_set_id]['varchar']['country'] );
-			$attribute[$attribute_set_id]['varchar']['state'] = sanitize_text_field( $attribute[$attribute_set_id]['varchar']['state'] );
-			$attribute[$attribute_set_id]['varchar']['longitude'] = sanitize_text_field( $attribute[$attribute_set_id]['varchar']['longitude'] );
-			$attribute[$attribute_set_id]['varchar']['latitude'] = sanitize_text_field( $attribute[$attribute_set_id]['varchar']['latitude'] );
-			$attribute[$attribute_set_id]['integer']['civility'] = (int)$attribute[$attribute_set_id]['integer']['civility'];
-
-			if ( !empty( $attribute[$attribute_set_id]['item_id'] ) ) {
-				$attribute[$attribute_set_id]['item_id'] = (int)$attribute[$attribute_set_id]['item_id'];
-			}
-		}
-
-		$shipping_address = (int)$_POST['shipping_address'];
-		$type_of_form = (int)$_POST['type_of_form'];
-		$current_item_edited = !empty($_POST['attribute'][$attribute_set_id]['item_id']) ? (int)wpshop_tools::varSanitizer($_POST['attribute'][$attribute_set_id]['item_id']) : null;
-		$current_attribute_set_id = !empty( $_POST['current_attribute_set_id'] ) ? (int)$_POST['current_attribute_set_id'] : '';
-		$shipping_to_billing = !empty( $_POST['wps-shipping-to-billing'] ) ? sanitize_text_field( $_POST['wps-shipping-to-billing'] ) : '';
+ ini_set("display_errors", true);
+ error_reporting(E_ALL);
 
 		$status = false;
 		$result = $address_type = $same_address_type = '';
+
+		$adress_save_the_first = !empty( $_POST['wps-address-save-the-first'] ) ? sanitize_text_field( $_POST['wps-address-save-the-first'] ) : '';
+		$attribute = !empty( $_POST['attribute'] ) ? (array)$_POST['attribute'] : '';
 
 		foreach ( $attribute as $id_group => $attribute_group ) {
 			$address_type = $id_group;
