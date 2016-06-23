@@ -483,8 +483,8 @@ class wps_account_ctr {
 						if( !empty( $attribute ) ) {
 							$user_info = array();
 							foreach( $attribute as $type => $attributes ) {
-								foreach( $attributes as $meta => $attribute ) {
-									$user_info[$meta] = sanitize_text_field( $attribute );
+								foreach( $attributes as $meta => $attribute_value ) {
+									$user_info[$meta] = sanitize_text_field( $attribute_value );
 								}
 							}
 							wps_customer_ctr::save_customer_synchronize( $customer_post_ID, $user_id, $user_info );
