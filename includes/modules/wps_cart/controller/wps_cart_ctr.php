@@ -429,7 +429,7 @@ class wps_cart {
 		foreach ($product_list as $pid => $product_more_content) {
 			if ( count($product_list) == 1 ) {
 				if ( !isset( $quantity[$pid] ) ) $quantity[$pid] = 1;
-				$product = wpshop_products::get_product_data($product_more_content['id'], false, '"publish"');
+				$product = wpshop_products::get_product_data($product_more_content['id'], false, '"publish", "free_product"');
 				/** Check if the selected product exist	*/
 				if ( $product === false ) return __('This product does not exist', 'wpshop');
 

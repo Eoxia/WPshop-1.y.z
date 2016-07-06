@@ -48,7 +48,8 @@ foreach ( $unitList as $file_url )
 				!preg_match( '#\( ?float ?\)#', $lines[$key] ) &&
 				!preg_match( '#\( ?bool ?\)#', $lines[$key] ) &&
 				!preg_match( '#intval#', $lines[$key] ) &&
-				!preg_match( '#varSanitizer#', $lines[$key] ) ) {
+				!preg_match( '#varSanitizer#', $lines[$key] ) &&
+				!preg_match( '#filter_var#', $lines[$key] ) ) {
 				  $string_post_unsecured[$file_url][$key + 1] = htmlentities( $lines[$key] );
 				  $total_unsecured_line++;
 			  }

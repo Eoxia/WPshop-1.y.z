@@ -53,7 +53,7 @@ ob_end_clean();
  */
 ob_start();
 ?>
-<button itemprop="availability" content="in_stock" id="wpshop_ask_a_quotation_{WPSHOP_PRODUCT_ID}" class="wpshop_ask_a_quotation_button wps-bton-second"><i class="wps-icon-quotation"></i><?php _e('Ask a quotation', 'wpshop'); ?></button><?php
+<button itemprop="availability" content="in_stock" data-nonce="<?php echo wp_create_nonce( 'ajax_pos_product_variation_selection' ); ?>" id="wpshop_ask_a_quotation_{WPSHOP_PRODUCT_ID}" class="wpshop_ask_a_quotation_button wps-bton-second"><i class="wps-icon-quotation"></i><?php _e('Ask a quotation', 'wpshop'); ?></button><?php
 $tpl_element['ask_quotation_button'] = ob_get_contents();
 ob_end_clean();
 
