@@ -23,6 +23,7 @@ class wpshop_form_management {
 
 	var $errors = array(); // Stores store errors
 	var $messages = array(); // Stores store messages
+	var $filters = array(); // Stores store filters
 
 	/**
 	* Add an error
@@ -37,6 +38,13 @@ class wpshop_form_management {
 	function add_message( $message ) {
 		$this->messages[] = $message;
 	}
+
+		/**
+		* Add a filter
+		*/
+		function add_filter( $attribute_frontend_verification, $function ) {
+			$this->filters[$attribute_frontend_verification] = $function;
+		}
 
 	/**
 	* Get error count
@@ -73,13 +81,13 @@ class wpshop_form_management {
 	* @return boolean
 	*/
 	function validateForm($array, $values = array(), $from = '', $partial = false, $user = 0) {
-	
-		
+
+
 		$user_id = empty( $user ) ? get_current_user_id() : $user;
 		foreach($array as $attribute_id => $attribute_definition):
 			$values_array = !empty($values) ? $values : (array) $_POST['attribute'];
 			$value = ( !empty($values_array[$attribute_definition['data_type']][$attribute_definition['name']]) ) ? $values_array[$attribute_definition['data_type']][$attribute_definition['name']] : '';
-		
+
 			// Si le champ est obligatoire
 			if ( empty($value) && ($attribute_definition['required'] == 'yes') ) {
 				$this->add_error(sprintf(__('The field "%s" is required','wpshop'),__( $attribute_definition['label'], 'wpshop' ) ));
@@ -123,6 +131,12 @@ class wpshop_form_management {
 							$this->add_error( __('An account is already registered with that username. Please choose another.', 'wpshop') );
 						endif;
 					break;
+				}
+				if (array_key_exists($attribute_definition['name'], $this->filters) && is_callable($this->filters[$attribute_definition['name']])) {
+					$validation = call_user_func($this->filters[$attribute_definition['name']], $value);
+					if( !filter_var($validation, FILTER_VALIDATE_BOOLEAN) ) {
+						$this->add_error( $validation );
+					}
 				}
 			}
 		endforeach;
