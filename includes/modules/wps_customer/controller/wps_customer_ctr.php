@@ -678,6 +678,8 @@ class wps_customer_ctr {
 			),
 		);
 		$customer_search = new WP_User_Query( $args );
+
+		$customer_list = array();
 		if ( !empty($customer_search->results) ) {
 			foreach ( $customer_search->results as $customer ) {
 				/** Check the username, if last name and first name are empty we select email **/

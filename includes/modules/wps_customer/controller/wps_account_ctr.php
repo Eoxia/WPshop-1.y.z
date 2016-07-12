@@ -542,14 +542,14 @@ class wps_account_ctr {
 	 * ACCOUNT - Display Account informations
 	 * @return string
 	 */
-	function display_account_informations( $customer_id = '' ) {
+	function display_account_informations( $customer_id = '', $force_edition_form = false ) {
 		global $wpdb;
 		$output = $attributes_sections_tpl = $attribute_details = '';
 		$is_from_admin = ( !empty($customer_id) ) ? true : false;
 		$customer_id = ( !empty($customer_id) ) ? $customer_id : get_current_user_id();
 		if( $customer_id != 0 ) {
 			$screen = get_current_screen();
-			if( is_admin() && isset( $screen ) && is_object( $screen ) && $screen->post_type == WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ) {
+			if( ( is_admin() && isset( $screen ) && is_object( $screen ) && $screen->post_type == WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ) || $force_edition_form ) {
 				$customer_entity_type_id = wpshop_entities::get_entity_identifier_from_code( WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS );
 				$query = $wpdb->prepare( 'SELECT ID FROM ' .$wpdb->posts. ' WHERE post_type = %s AND post_author = %d', WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, $customer_id );
 				$cid = $wpdb->get_var( $query );
