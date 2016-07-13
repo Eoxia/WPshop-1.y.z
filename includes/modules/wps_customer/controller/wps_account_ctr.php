@@ -320,10 +320,7 @@ class wps_account_ctr {
 
 	/** FORGOT PASSWORD - AJAX - Make renew password action **/
 	function wps_forgot_password_renew() {
-		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
-
-		if ( !wp_verify_nonce( $_wpnonce, 'wps_forgot_password_renew' ) )
-			wp_die();
+		check_ajax_referer( 'wps_forgot_password_renew' );
 
 		global $wpdb;
 		$status = false; $result = $form = '';
@@ -335,7 +332,7 @@ class wps_account_ctr {
 			if ( !empty($activation_key) && !empty($login) ) {
 				$existing_user = false;
 				$user = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpdb->users WHERE user_activation_key = %s AND user_login = %s", $activation_key, $login ) );
-				if( empty($user) ) {
+				if( !empty($user) ) {
 					$existing_user = true;
 				}
 				else {
