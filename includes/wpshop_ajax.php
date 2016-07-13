@@ -2054,7 +2054,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		}
 
 		if ( $return == 'success' ) {
-			$cart_page_url = get_permalink( wpshop_tools::get_page_id(get_option('wpshop_cart_page_id')) );
+			$cart_page_url = apply_filters( 'wps_cart_page_url', get_permalink( wpshop_tools::get_page_id( get_option( 'wpshop_cart_page_id' ) ) ) );
 			/** Template parameters	*/
 			$template_part = 'product_added_to_cart_message';
 
