@@ -380,10 +380,7 @@ class wps_orders_in_back_office {
 	 * AJAX - Add product to order in back-office panel
 	 */
 	function wps_add_product_to_order_admin() {
-		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
-
-		if ( !wp_verify_nonce( $_wpnonce, 'wps_add_product_to_order_admin' ) )
-			wp_die();
+		check_ajax_referer( 'wps_add_product_to_order_admin' );
 
 		$status = false; $response = ''; $product_have_variations = false;
 		// Sended vars

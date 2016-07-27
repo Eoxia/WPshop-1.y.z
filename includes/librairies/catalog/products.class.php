@@ -2701,7 +2701,6 @@ class wpshop_products {
 		if ( $from_admin && !empty($order_id) ) {
 			$variation_tpl['FROM_ADMIN_INDICATOR'] = '<input type="hidden" name="wps_orders_from_admin" value="1" />';
 			$variation_tpl['ORDER_ID_INDICATOR'] = '<input type="hidden" name="wps_orders_order_id" value="' .$order_id. '" />';
-
 		}
 		$output = !empty($variation_tpl['VARIATION_FORM_VARIATION_LIST']) ? wpshop_display::display_template_element('product_variation_form', $variation_tpl) : '';
 
