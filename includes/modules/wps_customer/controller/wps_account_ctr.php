@@ -779,10 +779,7 @@ class wps_account_ctr {
 	 * ACCOUNT - AJAX - Reload account informations data
 	 */
 	function wps_account_reload_informations() {
-		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
-
-		if ( !wp_verify_nonce( $_wpnonce, 'wps_account_reload_informations' ) )
-			wp_die();
+		check_ajax_referer( 'wps_account_reload_informations' );
 
 		$status = false;
 		$response = do_shortcode('[wps_account_informations]');
@@ -797,10 +794,7 @@ class wps_account_ctr {
 	 * ACCOUNT - AJAX - Fill account informations modal
 	 */
 	function wps_fill_account_informations_modal() {
-		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
-
-		if ( !wp_verify_nonce( $_wpnonce, 'wps_fill_account_informations_modal' ) )
-			wp_die();
+		check_ajax_referer( 'wps_fill_account_informations_modal' );
 
 		$title = $content = '';
 		$title = __('Edit your account informations', 'wpshop');
