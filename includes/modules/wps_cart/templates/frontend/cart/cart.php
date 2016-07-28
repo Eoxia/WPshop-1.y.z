@@ -53,7 +53,7 @@
 						$variations_indicator .= $attribute_variation_to_output;
 					}
 				}
-				$variations_indicator = apply_filters( 'wps_cart_item_variation_list', $variations_indicator, $variation_attribute_ordered, $item );
+				$variations_indicator = apply_filters( 'wps_cart_item_variation_list', $variations_indicator, $variation_attribute_ordered, $item, $oid );
 				$variations_indicator .= '</ul>';
 
 			}

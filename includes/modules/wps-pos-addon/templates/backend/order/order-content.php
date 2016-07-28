@@ -34,7 +34,9 @@
 					<?php if ( !empty( $attribute_variation_to_output ) ) : ?>
 						<?php echo $attribute_variation_to_output; ?>
 					<?php endif; ?>
-				<?php endforeach; ?>
+				<?php endforeach;
+						echo '<hr/>' . apply_filters( 'wps_order_variation_list', '', $variation_attribute_ordered, $item );
+				?>
 					</ul>
 				<?php endif; ?>
 			</div>
