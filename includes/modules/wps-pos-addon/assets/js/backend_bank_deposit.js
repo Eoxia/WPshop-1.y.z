@@ -143,7 +143,7 @@ jQuery( document ).ready( function(){
 		}
 		jQuery( "#total_amount" ).html( total_payments.toFixed(2) + " " + jQuery( "#total_amount" ).data( "currency" ) );
 	}
-	
+
 	///////////////////////////////////////// Histo UI /////////////////////////////////////////
 	var more_histo = false;
 	array_display_histo( historics );
@@ -167,7 +167,7 @@ jQuery( document ).ready( function(){
 	function save_historics( amount, payments_histo ) {
 		now = new Date();
 		jQuery.post(
-			ajaxurl + '?tab=bank_deposit', { action: "save_historic_query", date: now.getFullYear() + '-' + ( now.getMonth() + 1 ) + '-' + now.getDate() + ' ' + now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds(), amount: amount, payments: payments_histo, }, function( response ) {
+			ajaxurl + '?action=wps_bank_deposit', { action: "save_historic_query", date: now.getFullYear() + '-' + ( now.getMonth() + 1 ) + '-' + now.getDate() + ' ' + now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds(), amount: amount, payments: payments_histo, }, function( response ) {
 				array_display_histo( response );
 			}, "json"
 		);
