@@ -825,7 +825,7 @@ wpshop(document).ready(function(){
 
 
 
-	jQuery('#send_downloadable_file_dialog').dialog({
+	jQuery('.send_downloadable_file_dialog').dialog({
 		modal: true,
 		dialogClass: "wpshop_uidialog_box",
 		autoOpen:false,
@@ -834,48 +834,66 @@ wpshop(document).ready(function(){
 		width: 600
 	});
 
-	jQuery(document).on('click','#send_downlodable_file', function() {
-		jQuery( '#send_downlodable_file' ).addClass( 'wps-bton-loading' );
+	jQuery(document).on('click','.send_downlodable_file', function() {
+		var send_downlodable_file = jQuery( this );
+		send_downlodable_file.addClass( 'wps-bton-loading' );
 		var data = {
-				action: "fill_the_downloadable_dialog",
-				_wpnonce: jQuery( this ).data( 'nonce' ),
-				product_identifer : jQuery('#product_identifer_field').val()
-			};
-			jQuery.post(ajaxurl, data, function(response) {
-				if ( response['status'] ) {
-					jQuery('#send_downloadable_file_dialog').html( response['response'] );
-					jQuery('#send_downloadable_file_dialog').dialog('open');
-					jQuery( '#send_downlodable_file' ).removeClass( 'wps-bton-loading' );
-				}
-				else {
-					jQuery( '#send_downlodable_file' ).removeClass( 'wps-bton-loading' );
-				}
-
-			}, 'json');
+			action: "fill_the_downloadable_dialog",
+			_wpnonce: send_downlodable_file.data( 'nonce' ),
+			product_identifier : send_downlodable_file.parent().find(' .product_identifer_field').val()
+		};
+		jQuery.post(ajaxurl, data, function(response) {
+			if ( response['status'] ) {
+				jQuery('.send_downloadable_file_dialog').html( response['response'] );
+				jQuery('.send_downloadable_file_dialog').dialog('open');
+			}
+			send_downlodable_file.removeClass( 'wps-bton-loading' );
+		}, 'json');
 	});
 
 
-	if ( jQuery('.wpshop_product_attribute_is_downloadable_ option:selected').length ) {
-		show_downloadable_interface_in_admin( jQuery('.wpshop_product_attribute_is_downloadable_ option:selected').val() );
-	}
+	jQuery('.wpshop_product_attribute_is_downloadable_').each(function() {
+		new show_downloadable_interface_in_admin( this );
+	});
 
 	jQuery( document ).on('change', '.wpshop_product_attribute_is_downloadable_', function() {
-		show_downloadable_interface_in_admin( jQuery('.wpshop_product_attribute_is_downloadable_ option:selected').val() );
+		new show_downloadable_interface_in_admin( this );
 	});
 
 	function show_downloadable_interface_in_admin( selected_value ) {
+		var fields;
+		if( jQuery(selected_value).parent().hasClass('wpshop_form_input_element') ) {
+			fields = jQuery(selected_value).parent().parent();
+		} else if( jQuery(selected_value).parent().hasClass('wpshop_variation_special_value_container') ) {
+			fields = jQuery(selected_value).parent();
+		}
 		var data = {
-				action: "show_downloadable_interface_in_admin",
-				selected_value :selected_value
-			};
-			jQuery.post(ajaxurl, data, function(response) {
-				if ( response['status'] ) {
-					jQuery('.attribute_option_is_downloadable_').fadeIn( 'slow' );
-				}
-				else {
-					jQuery('.attribute_option_is_downloadable_').fadeOut( 'slow' );
-				}
-			}, 'json');
+			action: "show_downloadable_interface_in_admin",
+			_wpnonce: fields.find('.attribute_option_is_downloadable_ input[name="_wpnonce"]').val(),
+			post_id: fields.find('.attribute_option_is_downloadable_ .wpshop_form_input_element .product_identifer_field').val(),
+			selected_value: jQuery(selected_value).find("option:selected").val()
+		};
+		var request = function( data, callback ) {
+			if( typeof show_downloadable_interface_in_admin.cache_request == "undefined" ) {
+				show_downloadable_interface_in_admin.cache_request = [];
+			}
+			if( typeof show_downloadable_interface_in_admin.cache_request[data.selected_value] == "undefined" ) {
+				jQuery.post(ajaxurl, data, function(response) {
+					show_downloadable_interface_in_admin.cache_request[data.selected_value] = response['status'];
+					callback( show_downloadable_interface_in_admin.cache_request[data.selected_value] );
+				}, 'json');
+			} else {
+				callback( show_downloadable_interface_in_admin.cache_request[data.selected_value] );
+			}
+		}
+		request( data, function( request ) {
+			if( request ) {
+				fields.find('.attribute_option_is_downloadable_').fadeIn( 'slow' );
+			}
+			else {
+				fields.find('.attribute_option_is_downloadable_').fadeOut( 'slow' );
+			}
+		} );
 	}
 
 	/** Search on order **/

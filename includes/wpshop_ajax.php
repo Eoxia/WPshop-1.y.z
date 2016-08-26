@@ -2782,19 +2782,19 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action('wp_ajax_upload_downloadable_file_action', 'ajax_wpshop_upload_downloadable_file_action');
 
 	function ajax_wpshop_fill_the_downloadable_dialog() {
-		check_ajax_referer( 'ajax_wpshop_fill_the_downloadable_dialog' );
-		$product_id = !empty( $_POST ) && !empty( $_POST[ 'product_identifier' ] ) && is_int( (int)$_POST[ 'product_identifier' ] ) ? (int)$_POST[ 'product_identifier' ] : 0;
+		$product_id = ( !empty( $_POST ) && !empty( $_POST[ 'product_identifier' ] ) ) ? (int)$_POST[ 'product_identifier' ] : 0;
+		check_ajax_referer( "ajax_wpshop_fill_the_downloadable_dialog".$product_id );
 		$output  = '<form method="post" action="' .admin_url('admin-ajax.php') .'" name="" id="upload_downloadable_file" enctype="multipart/form-data" >';
 		$output .= '<p class="formField"><label for="wpshop_file">' .__('Choose your file to send', 'wpshop'). '</label><input type="file" name="wpshop_file" /></p>';
 		$output .= '<input type="hidden" name="action" value="upload_downloadable_file_action" />';
-		$output .= wp_nonce_field( 'ajax_wpshop_upload_downloadable_file_action' );
 		$output .= '<input type="hidden" name="element_identifer" id="element_identifer" value="' .esc_attr( $product_id). '" />';
+		$output .= wp_nonce_field( 'ajax_wpshop_upload_downloadable_file_action', '_wpnonce', true, false );
 		$output .= '<p class="formField"><a id="send_downloadable_file_button" class="wps-bton-first-mini-rounded">' .__('Send your file', 'wpshop'). '</a></p>';
 		$output .= '</form>';
 		$output .='<script type="text/javascript">jQuery("#upload_downloadable_file").ajaxForm({
 		beforeSubmit : function() { },success: function(response) {
-		jQuery("#send_downloadable_file_dialog").dialog("close");
-		jQuery(".statut").html( response );
+		jQuery(".send_downloadable_file_dialog").dialog("close");
+		jQuery(".is_downloadable_statut_'.$product_id.'").html( response );
 		}});</script>';
 
 		$response = array( 'status' => true, 'response' => $output);
@@ -2804,7 +2804,8 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action('wp_ajax_fill_the_downloadable_dialog', 'ajax_wpshop_fill_the_downloadable_dialog');
 
 	function ajax_wpshop_show_downloadable_interface_in_admin() {
-		check_ajax_referer( 'ajax_wpshop_show_downloadable_interface_in_admin' );
+		$post_id = !empty( $_POST ) && !empty( $_POST[ 'post_id' ] ) && is_int( (int)$_POST[ 'post_id' ] ) ? (int)$_POST[ 'post_id' ] : 0;
+		check_ajax_referer( 'ajax_wpshop_show_downloadable_interface_in_admin'.$post_id );
 		global $wpdb;
 		$status = false;
 		$selected_value = ( !empty($_POST['selected_value']) ) ? sanitize_text_field( $_POST['selected_value'] ) : '';
@@ -3471,11 +3472,11 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action( 'wp_ajax_wps_attribute_unit_load', 'load_attribute_units' );
 
 	function add_edit_attribute_unit() {
-		check_ajax_referer( 'add_edit_attribute_unit' );
 		$atribute_unit = '';
 		if ( $action == 'edit_attribute_unit' ) {
 			$atribute_unit = (int) $_REQUEST['elementIdentifier'];
 		}
+		check_ajax_referer( 'add_edit_attribute_unit_'.$atribute_unit );
 		echo wpshop_attributes_unit::elementEdition($atribute_unit);
 		wp_die();
 	}

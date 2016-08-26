@@ -419,10 +419,7 @@ class wps_orders_in_back_office {
 	 * AJAX - Refresh cart in administration
 	 */
 	function refresh_cart_order() {
-		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
-
-		if ( !wp_verify_nonce( $_wpnonce, 'wps_pos_order_content' ) )
-			wp_die();
+		check_ajax_referer( 'wps_reload_cart' );
 
 		$status = false; $response = '';
 		$order_id = ( !empty($_POST['order_id']) ) ? intval($_POST['order_id']) : null;
@@ -438,11 +435,7 @@ class wps_orders_in_back_office {
 	 * AJAX - Refresh cart in administration
 	 */
 	function refresh_payments_order() {
-		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
-
-		if ( !wp_verify_nonce( $_wpnonce, 'wps_pos_order_content' ) )
-			wp_die();
-
+		check_ajax_referer( 'wps_reload_cart' );
 		$status = false; $response = '';
 		$order_id = ( !empty($_POST['order_id']) ) ? intval($_POST['order_id']) : null;
 		if( !empty($order_id) ) {
@@ -460,10 +453,7 @@ class wps_orders_in_back_office {
 	 * AJAX - Update product Quantity in Back-office Panel
 	 */
 	function wps_update_product_qty_in_admin() {
-		$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
-
-		if ( !wp_verify_nonce( $_wpnonce, 'wps_pos_order_content' ) )
-			wp_die();
+		check_ajax_referer( 'wps_reload_cart' );
 
 		$status = false; $response = '';
 		$product_id = ( !empty($_POST['product_id']) ) ? wpshop_tools::varSanitizer( $_POST['product_id'] ) : null;

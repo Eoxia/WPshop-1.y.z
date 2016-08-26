@@ -27,8 +27,6 @@ get_header(); ?>
 		the_post();
 
 
-	//$wpshop_display_option = get_option('wpshop_display_option');
-	//var_dump($wpshop_display_option);
 	$output_type = (isset($wpshop_display_option['wpshop_display_list_type']) && ($wpshop_display_option['wpshop_display_list_type'] != '')) ? $wpshop_display_option['wpshop_display_list_type'] : 'grid';
 
 	$category_has_content = false;

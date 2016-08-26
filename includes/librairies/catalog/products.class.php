@@ -2488,7 +2488,7 @@ class wpshop_products {
 				$tpl_component['VARIATION_DETAIL'] = substr($tpl_component['VARIATION_DETAIL'], 0, -2);
 
 				$tpl_component['ADMIN_VARIATION_SPECIFIC_DEFINITION_CONTAINER_CLASS'] = ' wpshopHide';
-				$tpl_component['VARIATION_DEFINITION'] = wpshop_attributes::get_variation_attribute( array('input_class' => ' ', 'field_name' => wpshop_products::current_page_variation_code . '[' . $variation['post']->ID . ']','page_code' => self::current_page_variation_code, 'field_id' => self::current_page_variation_code . '_' . $variation['post']->ID, 'variation_dif_values' => (!empty($variation['variation_dif']) ? $variation['variation_dif'] : array())) );
+				$tpl_component['VARIATION_DEFINITION'] = wpshop_attributes::get_variation_attribute( array('post_id' => $variation['post']->ID, 'input_class' => ' ', 'field_name' => wpshop_products::current_page_variation_code . '[' . $variation['post']->ID . ']','page_code' => self::current_page_variation_code, 'field_id' => self::current_page_variation_code . '_' . $variation['post']->ID, 'variation_dif_values' => (!empty($variation['variation_dif']) ? $variation['variation_dif'] : array())) );
 				$tpl_component['VARIATION_DEFINITION_CONTENT'] = wpshop_display::display_template_element('wpshop_admin_variation_item_specific_def', $tpl_component, array(WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT => $head_product, WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION => $variation['post']->ID), 'admin');
 
 				/*	Add the variation definition to output	*/

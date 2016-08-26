@@ -48,7 +48,7 @@ wpshop(document).ready(function(){
 					else {
 						alert( wpshopConvertAccentTojs( WPSHOP_NO_ATTRIBUTES_SELECT_FOR_VARIATION ) );
 					};
-					
+
 				},
 				class: "button-primary",
 			 }
@@ -130,7 +130,7 @@ wpshop(document).ready(function(){
 			return false;
 		}
 	});
-	
+
 	/*	Create a dialog box for new variation creation	*/
 	jQuery(".wpshop_admin_variation_parameter_dialog").dialog({
 		modal: true,
@@ -234,7 +234,7 @@ wpshop(document).ready(function(){
 		};
 		jQuery.post(ajaxurl, data, function(response){
 			if ( response[0] ) {
-				
+
 				jQuery("#wpshop_loading_duplicate_pdt_" + product_id).html( response[1] );
 				jQuery("#wpshop_loading_duplicate_pdt_" + product_id).prepend('<span class="success"></span>');
 				jQuery( '#wpshop_product_id_' + product_id ).removeClass( 'wps-bton-loading');
@@ -284,17 +284,6 @@ wpshop(document).ready(function(){
 		}, 'json');
 	});
 
-/*	Manage options for a file input	*/
-	jQuery('.wpshop_form_input_element select').change(function() {
-		var myclass = jQuery(this).attr('name').split('[');
-		myclass = myclass[2].slice(0,-1);
-
-		/*	Check if value is realy set to "yes/true"	*/
-		if(jQuery('option:selected',this).val() && (jQuery('option:selected',this).val().toLowerCase() == 'yes')) {
-			jQuery('.attribute_option_'+myclass).show();
-		} else jQuery('.attribute_option_'+myclass).hide();
-	});
-	
 
 /*	Update product information from bulk edition	*/
 	jQuery( '#bulk_edit' ).live('click', function() {

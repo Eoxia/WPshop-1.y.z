@@ -303,7 +303,7 @@ class wpshop_attributes_unit
 				{
 					$editAction = admin_url('admin.php?page=' . $attributeSlugUrl . '&amp;action=edit&amp;id=' . $element->id);
 					$subRowActions .= '
-		<a href="#" id="edit_attribute_unit_' . $element->id . '" class="edit_attribute_unit" >' . __('Edit', 'wpshop') . '</a>';
+		<a href="#" id="edit_attribute_unit_' . $element->id . '" class="edit_attribute_unit" data-nonce="' . wp_create_nonce( 'add_edit_attribute_unit_' . $element->id ) . '" >' . __('Edit', 'wpshop') . '</a>';
 				}
 				elseif(current_user_can('wpshop_view_attributes_unit'))
 				{
@@ -316,7 +316,7 @@ class wpshop_attributes_unit
 						$subRowActions .= '&nbsp;|&nbsp;';
 					}
 					$subRowActions .= '
-		<a href="#" id="delete_attribute_unit_' . $element->id . '" class="delete_attribute_unit" data-nonce="' . wp_create_nonce( 'delete_attribute_unit' ) . '" >' . __('Delete', 'wpshop') . '</a>';
+		<a href="#" id="delete_attribute_unit_' . $element->id . '" class="delete_attribute_unit" data-nonce="' . wp_create_nonce( 'delete_attribute_unit_' . $element->id ) . '" >' . __('Delete', 'wpshop') . '</a>';
 				}
 
 				$rowActions = '
@@ -351,11 +351,12 @@ class wpshop_attributes_unit
 		if(current_user_can('wpshop_delete_attributes_unit')){
 			$listItemOutput .= '
 		wpshop(".delete_attribute_unit").click(function(){
+			var nonce = jQuery( this ).data( "nonce" );
 			if(confirm(wpshopConvertAccentTojs("' . __('Are you sure you want to delete this unit', 'wpshop')  .' ?"))){
 				wpshop("#wpshop_unit_list").load(ajaxurl,{
 					"action": "wps_attribute_unit_delete",
 					"elementIdentifier": wpshop(this).attr("id").replace("delete_attribute_unit_", ""),
-					"_wpnonce": jQuery(".delete_attribute_unit").data( "nonce" )
+					"_wpnonce":nonce
 				});
 			}
 		});';
@@ -363,9 +364,10 @@ class wpshop_attributes_unit
 		if(current_user_can('wpshop_edit_attributes_unit')){
 			$listItemOutput .= '
 		jQuery(".edit_attribute_unit").click(function(){
+			var nonce = jQuery( this ).data( "nonce" );
 			jQuery("#wpshop_unit_list").load(ajaxurl,{
 				"action": "wps_attribute_unit_edit",
-				"_wpnonce": "<?php echo wp_create_nonce("add_edit_attribute_unit"); ?>",
+				"_wpnonce": nonce,
 				"elementIdentifier": wpshop(this).attr("id").replace("edit_attribute_unit_", "")
 			});
 		});';
@@ -375,7 +377,7 @@ class wpshop_attributes_unit
 		jQuery("#add_attribute_unit").click(function(){
 			jQuery("#wpshop_unit_list").load(ajaxurl,{
 				"action": "wps_attribute_unit_add",
-				"_wpnonce": "<?php echo wp_create_nonce("add_edit_attribute_unit"); ?>",
+				"_wpnonce": "' . wp_create_nonce("add_edit_attribute_unit") . '",
 			});
 		});';
 		}

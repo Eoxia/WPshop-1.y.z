@@ -143,6 +143,7 @@ jQuery( document ).ready( function() {
 		jQuery( this ).addClass( 'wps-bton-loading' );
 		var data = {
 				action: "wps-orders-update-cart-informations",
+				_wpnonce: jQuery( '#wps-orders-update-cart-informations' ).data( 'nonce' ),
 				order_id : jQuery( '#post_ID' ).val(),
 				shipping_cost : jQuery( '#wps-orders-shipping-cost').val(),
 				discount_amount : jQuery( '#wps-orders-discount-value').val(),
@@ -281,13 +282,13 @@ function refresh_cart() {
 }
 function  refresh_payments() {
 	var data = {
-			action: "wps_refresh_payments_order",
-			_wpnonce: jQuery( '#wps_cart_container' ).data( 'nonce' ),
-			order_id : jQuery( '#post_ID').val(),
-		};
-		jQuery.post(ajaxurl, data, function(response){
-			if ( response['status'] ) {
-				jQuery('#wpshop_order_payment .inside').html( response['response'] );
-			}
-		}, 'json');
+		action: "wps_refresh_payments_order",
+		_wpnonce: jQuery( '#wps_cart_container' ).data( 'nonce' ),
+		order_id : jQuery( '#post_ID').val(),
+	};
+	jQuery.post(ajaxurl, data, function(response){
+		if ( response['status'] ) {
+			jQuery('#wpshop_order_payment .inside').html( response['response'] );
+		}
+	}, 'json');
 }

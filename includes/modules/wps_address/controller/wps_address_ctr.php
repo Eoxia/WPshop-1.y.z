@@ -666,15 +666,19 @@ class wps_address {
 	public static function save_address_infos( $attribute_set_id, $address_id_to_copy = 0, $address_info_to_copy = array() ) {
 		global $wpdb;
 
-		$adress_save_the_first = !empty( $_POST['wps-address-save-the-first'] ) ? sanitize_text_field( $_POST['wps-address-save-the-first'] ) : '';
+		if( empty( $address_info_to_copy ) ) {
+			$address_info_to_copy = (array)$_POST;
+		}
 
-		$attribute = (array)$_POST['attribute'];
+		$adress_save_the_first = !empty( $address_info_to_copy['wps-address-save-the-first'] ) ? sanitize_text_field( $address_info_to_copy['wps-address-save-the-first'] ) : '';
 
-		$type_of_form = (int)$_POST['type_of_form'];
-		$current_item_edited = !empty($_POST['attribute'][$attribute_set_id]['item_id']) ? (int)wpshop_tools::varSanitizer($_POST['attribute'][$attribute_set_id]['item_id']) : null;
-		$current_attribute_set_id = !empty( $_POST['current_attribute_set_id'] ) ? (int)$_POST['current_attribute_set_id'] : '';
-		$shipping_to_billing = !empty( $_POST['wps-shipping-to-billing'] ) ? sanitize_text_field( $_POST['wps-shipping-to-billing'] ) : '';
-		$shipping_to_billing_id = !empty( $_POST['wps-shipping-to-billing-id'] ) ? (int)$_POST['wps-shipping-to-billing-id'] : $address_id_to_copy;
+		$attribute = (array)$address_info_to_copy['attribute'];
+
+		$type_of_form = (int)$address_info_to_copy['type_of_form'];
+		$current_item_edited = !empty($address_info_to_copy['attribute'][$attribute_set_id]['item_id']) ? (int)wpshop_tools::varSanitizer($address_info_to_copy['attribute'][$attribute_set_id]['item_id']) : null;
+		$current_attribute_set_id = !empty( $address_info_to_copy['current_attribute_set_id'] ) ? (int)$address_info_to_copy['current_attribute_set_id'] : '';
+		$shipping_to_billing = !empty( $address_info_to_copy['wps-shipping-to-billing'] ) ? sanitize_text_field( $address_info_to_copy['wps-shipping-to-billing'] ) : '';
+		$shipping_to_billing_id = !empty( $address_info_to_copy['wps-shipping-to-billing-id'] ) ? (int)$address_info_to_copy['wps-shipping-to-billing-id'] : $address_id_to_copy;
 
 		// Create or update the post address
 		// @TODO : REQUEST
