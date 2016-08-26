@@ -377,7 +377,7 @@ class wpshop_attributes_unit
 		jQuery("#add_attribute_unit").click(function(){
 			jQuery("#wpshop_unit_list").load(ajaxurl,{
 				"action": "wps_attribute_unit_add",
-				"_wpnonce": "' . wp_create_nonce("add_edit_attribute_unit") . '",
+				"_wpnonce": "' . wp_create_nonce("add_edit_attribute_unit_") . '",
 			});
 		});';
 		}
@@ -454,8 +454,9 @@ class wpshop_attributes_unit
 		}
 
 		$the_form = '
-<form name="' . self::getDbTable() . '_form" id="' . self::getDbTable() . '_form" method="post" action="' . admin_ajax( 'admin_ajax.php' ) . '" >
+<form name="' . self::getDbTable() . '_form" id="' . self::getDbTable() . '_form" method="post" action="' . admin_url( 'admin-ajax.php' ) . '" >
 ' . wpshop_form::form_input('action', 'action', 'wps_attribute_group_unit_edit', 'hidden') . '
+' . wp_nonce_field( 'add_edit_attribute_unit_group', '_wpnonce', true, false ) . '
 ' . wpshop_form::form_input(self::currentPageCode . '_form_has_modification', self::currentPageCode . '_form_has_modification', 'no' , 'hidden') . '
 	' . $the_form_content_hidden .'' . $the_form_general_content . '
 	<input type="button" value="' . __('Back', 'wpshop') . '" class="button-primary alignright" name="cancel_unit_edition" id="cancel_unit_edition" />

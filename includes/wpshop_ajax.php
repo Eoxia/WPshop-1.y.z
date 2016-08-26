@@ -3473,7 +3473,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 
 	function add_edit_attribute_unit() {
 		$atribute_unit = '';
-		if ( $action == 'edit_attribute_unit' ) {
+		if ( $_REQUEST['action'] == 'wps_attribute_unit_edit' ) {
 			$atribute_unit = (int) $_REQUEST['elementIdentifier'];
 		}
 		check_ajax_referer( 'add_edit_attribute_unit_'.$atribute_unit );
