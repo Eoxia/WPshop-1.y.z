@@ -30,7 +30,7 @@ class wps_marketing_tools_ctr {
 			$old_wpshop_shop_type = !empty( $_POST['old_wpshop_shop_type'] ) ? sanitize_text_field( $_POST['old_wpshop_shop_type'] ) : '';
 
 			if ( ( $wpshop_shop_type == '' || $wpshop_shop_type != 'presentation' )
-				&& ( $old_wpshop_shop_type == '' && $old_wpshop_shop_type != 'presentation' ) ) {
+				&& ( $old_wpshop_shop_type == '' || $old_wpshop_shop_type != 'presentation' ) ) {
 					register_setting('wpshop_options', 'wpshop_cart_option', array($this, 'wpshop_options_validate_free_shipping_cost_alert'));
 					add_settings_field('wpshop_free_shipping_cost_alert', __('Display a free shipping cost alert in the cart', 'wpshop'), array( $this, 'wpshop_free_shipping_cost_alert_field'), 'wpshop_cart_info', 'wpshop_cart_info');
 					// Low stock alert option

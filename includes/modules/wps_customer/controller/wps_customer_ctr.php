@@ -48,7 +48,7 @@ class wps_customer_ctr {
 			$old_wpshop_shop_type = !empty( $_POST['old_wpshop_shop_type'] ) ? sanitize_text_field( $_POST['old_wpshop_shop_type'] ) : '';
 
 			if ( ( $wpshop_shop_type == '' || $wpshop_shop_type != 'presentation' )
-				&& ( $old_wpshop_shop_type == '' && $old_wpshop_shop_type != 'presentation' ) ) {
+				&& ( $old_wpshop_shop_type == '' || $old_wpshop_shop_type != 'presentation' ) ) {
 					/**	Add module option to wpshop general options	*/
 					register_setting('wpshop_options', 'wpshop_cart_option', array('wps_customer_ctr', 'wpshop_options_validate_customers_newsleters'));
 					add_settings_field('display_newsletters_subscriptions', __('Display newsletters subscriptions', 'wpshop'), array('wps_customer_ctr', 'display_newsletters_subscriptions'), 'wpshop_cart_info', 'wpshop_cart_info');

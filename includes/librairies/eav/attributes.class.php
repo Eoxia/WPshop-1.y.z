@@ -2502,7 +2502,7 @@ GROUP BY ATT.id, chosen_val", $element_id, $attribute_code);
 			case 'is_downloadable_':
 				$data = get_post_meta($postid, 'attribute_option_'.$code, true);
 				$data['file_url'] = !empty($data['file_url'])?$data['file_url']:__('No file selected', 'wpshop');
-				$fields =  wp_nonce_field( 'ajax_wpshop_show_downloadable_interface_in_admin'.$postid, '_wpnonce', true, false );
+				$fields =  wp_nonce_field( 'ajax_wpshop_show_downloadable_interface_in_admin'.$postid, '_show_downloadable_interface_in_admin_wpnonce', true, false );
 				$fields .= '<div class="wpshop_form_label alignleft">&nbsp;</div>
 						<div class="wpshop_form_input_element alignleft">
 						<div class="send_downloadable_file_dialog wpshop_add_box" title="' .__('Send the downloadable file', 'wpshop'). '"></div>

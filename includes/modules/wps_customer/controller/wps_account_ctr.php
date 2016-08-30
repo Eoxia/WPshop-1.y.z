@@ -445,7 +445,7 @@ class wps_account_ctr {
 						if( !empty($user_id) ) {
 							foreach( $attribute_set_field['content'] as $attribute_code => $att_def ) {
 								if( $attribute_code != 'account_user_email' ) {
-									 $attribute_set_field['content'][$attribute_code]['required'] = 'no';
+									$attribute_set_field['content'][$attribute_code]['required'] = 'no';
 								}
 							}
 						}
@@ -461,12 +461,12 @@ class wps_account_ctr {
 								$account_creation = true;
 								/** Update newsletter user preferences **/
 								$newsletter_preferences = array();
-								$newsletters_site = !empty( $_POST['newsletters_site'] ) ? (int) $_POST['newsletters_site'] : 0;
-								if( !empty($newsletters_site) ) {
+								$newsletters_site = !empty( $_POST['newsletters_site'] ) ? (bool) $_POST['newsletters_site'] : false;
+								if( $newsletters_site ) {
 									$newsletter_preferences['newsletters_site'] = 1;
 								}
-								$newsletters_site_partners = !empty( $_POST['newsletters_site_partners'] ) ? (int) $_POST['newsletters_site_partners'] : 0;
-								if( !empty($newsletters_site_partners) ) {
+								$newsletters_site_partners = !empty( $_POST['newsletters_site_partners'] ) ? (bool) $_POST['newsletters_site_partners'] : false;
+								if( $newsletters_site_partners ) {
 									$newsletter_preferences['newsletters_site_partners'] = 1;
 								}
 

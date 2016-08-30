@@ -62,7 +62,7 @@ class wps_cart {
 			$old_wpshop_shop_type = !empty( $_POST['old_wpshop_shop_type'] ) ? sanitize_text_field( $_POST['old_wpshop_shop_type'] ) : '';
 
 			if ( ( $wpshop_shop_type == '' || $wpshop_shop_type != 'presentation' )
-				&& ( $old_wpshop_shop_type == '' && $old_wpshop_shop_type != 'presentation' ) ) {
+				&& ( $old_wpshop_shop_type == '' || $old_wpshop_shop_type != 'presentation' ) ) {
 					/**	Add module option to wpshop general options	*/
 					register_setting('wpshop_options', 'wpshop_cart_option', array('wps_cart', 'wpshop_options_validate_cart_type'));
 					add_settings_field('wpshop_cart_type', __('Which type of cart do you want to display', 'wpshop'), array('wps_cart', 'wpshop_cart_type_field'), 'wpshop_cart_info', 'wpshop_cart_info');

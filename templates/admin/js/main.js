@@ -869,7 +869,7 @@ wpshop(document).ready(function(){
 		}
 		var data = {
 			action: "show_downloadable_interface_in_admin",
-			_wpnonce: fields.find('.attribute_option_is_downloadable_ input[name="_wpnonce"]').val(),
+			_wpnonce: fields.find('.attribute_option_is_downloadable_ input[name="_show_downloadable_interface_in_admin_wpnonce"]').val(),
 			post_id: fields.find('.attribute_option_is_downloadable_ .wpshop_form_input_element .product_identifer_field').val(),
 			selected_value: jQuery(selected_value).find("option:selected").val()
 		};
