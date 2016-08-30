@@ -996,31 +996,31 @@ function function_before_add_to_cart_form_submit(formData, jqForm, options) {
 	var button_id = 'wpshop_add_to_cart_' + formData[0].value;
 	jQuery( '#' + button_id ).addClass( 'wps-bton-loading' );
 
-	for (var i=0; i < formData.length; i++) {
-		if ( !form_is_complete ) {
-	        jQuery('.wpshop_cart_loading_picture').addClass('error');
-	        jQuery('#wpshop_add_to_cart_form').before( WPSHOP_PRODUCT_VARIATION_REQUIRED_MSG );
-	        jQuery( '.wpshop_add_to_cart_button' ).removeClass( 'wps-bton-loading' );
-	 }
-		/*if ( !form_is_complete ) {
-			jQuery('.wpshop_cart_loading_picture').addClass('error');
-			jQuery('#wpshop_add_to_cart_form').before( WPSHOP_PRODUCT_VARIATION_REQUIRED_MSG );
-			jQuery( '.wpshop_add_to_cart_button' ).removeClass( 'wps-bton-loading' );
-		}*/
+	var required_fields = [];
+	var highlight_fields = [];
+	jQuery( '.attribute_is_required_input' ).each(function( index, element ) {
+		required_fields.push( jQuery( element ).attr( 'name' ) );
+	});
 
-		// jQuery(element).closest(".attribute_is_required_container").removeClass("wpshop_variation_required_attribute");
-		// if ( jQuery(element).hasClass("attribute_is_required_input") ) {
-		// 	if ( (!formData[i].value) || (formData[i].value == 0) ) {
-		// 		form_is_complete = false;
-		// 		jQuery(element).closest(".attribute_is_required_container").addClass("wpshop_variation_required_attribute");
-		// 	}
-		// }
+	for (var i=0; i < formData.length; i++) {
+		if( required_fields.indexOf( formData[i].name ) && ( !formData[i].value ) || ( formData[i].value == 0 ) ) {
+			highlight_fields.push( {element: jQuery('*[name="'+formData[i].name+'"]'), border: jQuery('*[name="'+formData[i].name+'"]').css('border')} );
+			form_is_complete = false;
+		}
 	}
 
 	if ( !form_is_complete ) {
 		jQuery('.wpshop_cart_loading_picture').addClass('error');
 		jQuery('#wpshop_add_to_cart_form').before( WPSHOP_PRODUCT_VARIATION_REQUIRED_MSG );
 		jQuery( '.wpshop_add_to_cart_button' ).removeClass( 'wps-bton-loading' );
+		for(var i=0; i < highlight_fields.length; i++) {
+			highlight_fields[i].element.css('border', '1px solid red');
+		}
+		setTimeout(function(){
+			for(var i=0; i < highlight_fields.length; i++) {
+				jQuery(highlight_fields[i].element).css('border', highlight_fields[i].border);
+			}
+		}, 3000);
 	}
 
 	return form_is_complete;

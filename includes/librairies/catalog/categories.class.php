@@ -364,6 +364,13 @@ class wpshop_categories
 			$cat_list = explode(',', $atts['cid']);
 
 			if ( (count($cat_list) > 1) || ( !empty($atts['display']) && ($atts['display'] == 'only_cat') ) ) {
+				if( count($cat_list) == 1) {
+					$args = array('taxonomy' => WPSHOP_NEWTYPE_IDENTIFIER_CATEGORIES, 'parent' => $cat_list[0]);
+					$categories = get_terms( $args );
+					foreach($categories as $category) {
+						$cat_list[] = $category->term_id;
+					}
+				}
 				$string .= '
 					<div class="wpshop_categories_' . $atts['type'] . '" >';
 					foreach( $cat_list as $cat_id ){

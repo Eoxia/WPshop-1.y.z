@@ -3,8 +3,8 @@ Contributors: Eoxia
 Tags: boutique, catalog, catalogue, commerce, e-commerce, ecommerce, m-commerce, mcommerce, produits, responsive, shop, shopping cart, wp shop, wordpress ecommerce, wordpress shop, WPshop, wp-shop, french payment gateway, passerelle de paiement française
 Donate link: http://www.wpshop.fr/documentations/presentation-wpshop/
 Requires at least: 3.4.0
-Tested up to: 4.5.2
-Stable tag: 1.4.2.1
+Tested up to: 4.6
+Stable tag: 1.4.2.3
 License: GPLv2 or later
 
 Simple and powerfull eCommerce plugin, with French Payment and Shipping systems : Paybox, Paypal, Atos, Cybermut, SystemPay, Paysite-cash, Colissimo
@@ -96,6 +96,28 @@ Il faut vérifier que le réglage des permaliens pour votre site est bien régl�
 
 
 == Changelog ==
+
+= Version 1.4.2.3 =
+
+Corrections / Fix
+
+* 4759 - Correctif produits téléchargeable / Fix downloadable products
+* 4761 - Correctif newsletter / Fix newsletter
+* 4207 - Correctif des options libre / Fix free variations
+* 4757 - Correctif des options obligatoire dans le produit / Fix required attributes in product
+
+= Version 1.4.2.2 =
+
+Corrections / Fix
+
+* 4742 - Correctif des adresses dans les commandes / Fix addresses in order
+* 4737 - Correctif des avoirs dans les commandes / Fix credits in orders
+* 4736 - Correctif produits dans les commandes / Fix products in order
+* 4734 - Correctif paiements CIC et Paypal / Fix paiements for CIC & Paypal
+* 4731 - Correction des produits téléchargeables en administration / Fix download product admin
+* 4730 - Correction des produits téléchargeables / Fix download product
+* 4169 - Règles d'utilisation pour les coupons / Rules on coupons
+* 4145 - [wpshop_filter_search] button reset
 
 = Version 1.4.2.1 =
 
@@ -379,7 +401,7 @@ Corrections
 
 * Fix wpshop contact email not saved at install / Email de contact de la boutique mal sauvegardée lors de l'installation
 * Problem when saving email history / Problème d'enregistrement de l'historique des emails envoyés
-* Fix opinion comment area / Problème d'enregistrement des avis 
+* Fix opinion comment area / Problème d'enregistrement des avis
 
 = Version 1.4.0.0 =
 
@@ -484,13 +506,13 @@ Améliorations / Improvments
 * T15737 - Suppression de la vignette de l'image a la une si une seule image / Delete display of main picture of product from gallery when only one picture
 * T15615 - Gestion de l'affichage des checkbox d'inscription à la newsletter / Manage display of newsletter in user account form
 
-= Version 1.3.9.3 = 
+= Version 1.3.9.3 =
 
 Corrections
 
 * ST1001 - Erreur fatale lors de la mise à jour du plugin / fatal error on plugin update
 
-= Version 1.3.9.2 = 
+= Version 1.3.9.2 =
 
 Améliorations / Improvments
 
@@ -510,7 +532,7 @@ Corrections
 * ST1000 - Création de compte client / Customer account creation
 
 
-= Version 1.3.9.1 = 
+= Version 1.3.9.1 =
 
 Améliorations / Improvments
 
@@ -527,12 +549,12 @@ Corrections
 * ST985 - Affichage des éléments du compte / Account elements display
 * ST986 - Tableau de bord de la boutique / Shop dashboard
 * ST987 - Affichage des options de la boutique / Shop options display
-* ST988 - Produits téléchargeables / Downloadable products 
+* ST988 - Produits téléchargeables / Downloadable products
 * ST989 - Création d'adresse doublée / Double address creation
 * ST990 - Calcul des frais de port sur produits / Shipping cost calcul on products
 
 
-= Version 1.3.9.0 = 
+= Version 1.3.9.0 =
 
 Améliorations / Improvments
 
@@ -611,7 +633,7 @@ Corrections
 * ST944 - Options texte et zone de texte obligatoires / Required text and textarea variations
 
 
-= Version 1.3.8.6 = 
+= Version 1.3.8.6 =
 
 Améliorations / Improvments
 
@@ -754,7 +776,7 @@ Corrections
 * ST821 - Calcul du prix sur les produits à options combinées / Combined variations product price calcul
 
 
-= Version 1.3.7.6 = 
+= Version 1.3.7.6 =
 
 Améliorations / Improvments
 
@@ -772,7 +794,7 @@ Corrections
 * ST813 - Calcul des prix sur les produits à option / Variations product price calcul
 * ST814 - Produit à plusieurs options différentes dans le même panier / Many variations product in the same cart (Avant l'option était écrasé / Before variations was erased.)
 
-= Version 1.3.7.5 = 
+= Version 1.3.7.5 =
 
 Améliorations / Improvements
 
@@ -788,7 +810,7 @@ Corrections
 * ST805 - Mise en cache du prix des produits / Product price cache action
 
 
-= Version 1.3.7.4 = 
+= Version 1.3.7.4 =
 
 Améliorations
 
@@ -807,7 +829,7 @@ Corrections
 * ST798 - Vérifications sur les types de champs des attributs / Checking on Attributes field type
 
 
-= Version 1.3.7.3 = 
+= Version 1.3.7.3 =
 
 Améliorations
 
@@ -826,7 +848,7 @@ Corrections
 * ST778 - Récapitulatif des variations
 
 
-= Version 1.3.7.2 = 
+= Version 1.3.7.2 =
 
 * ST763 - Calcul de la TVA
 * ST764 - Facture et facture d'acompte (Présentation)
@@ -874,7 +896,7 @@ Corrections
 
 
 
-= Version 1.3.6.9 = 
+= Version 1.3.6.9 =
 
 Corrections
 
@@ -898,7 +920,7 @@ Corrections
 * ST733 - Gestion de l'affichage des attributs.
 
 
-= Version 1.3.6.7 = 
+= Version 1.3.6.7 =
 
 Corrections
 
@@ -910,7 +932,7 @@ Corrections
 * ST727 - Champs paramètres d'options (Les options "Afficher à partir de" et "Afficher le prix le plus bas" se sélectionnaient systématiquement.)
 
 
-= Version 1.3.6.6 = 
+= Version 1.3.6.6 =
 
 Corrections
 
@@ -918,7 +940,7 @@ Corrections
 
 
 
-= Version 1.3.6.5 = 
+= Version 1.3.6.5 =
 
 Améliorations
 
@@ -941,7 +963,7 @@ Corrections
 * ST721 - Mise au panier d'un produit à option (sans option sélectionné)
 
 
-= Version 1.3.6.4 = 
+= Version 1.3.6.4 =
 
 Améliorations
 
@@ -956,7 +978,7 @@ Corrections
 
 
 
-= Version 1.3.6.3 = 
+= Version 1.3.6.3 =
 
 Améliorations
 
@@ -965,7 +987,7 @@ Améliorations
 * ST698 - Finalisation des commandes à un montant nul
 
 IMPORTANT : LES UTILISATEURS DU THEME WPSHOP SLICKSHOP DOIVENT LE TELECHARGER A NOUVEAU VIA LEUR COMPTE SUR WPSHOP.FR
-POUR LES UTILISATEURS DE SO COLISSIMO, LA VERSION ACTUELLE EST OBSOLETE ET NE FONCTIONNE PLUS. UNE MISE A JOUR SERA APPORTE ET VOUS EN SEREZ INFORME. 
+POUR LES UTILISATEURS DE SO COLISSIMO, LA VERSION ACTUELLE EST OBSOLETE ET NE FONCTIONNE PLUS. UNE MISE A JOUR SERA APPORTE ET VOUS EN SEREZ INFORME.
 
 = Version 1.3.6.2 =
 
@@ -1008,7 +1030,7 @@ Corrections
 Améliorations
 
 * ST658 - Ajout du Message Annulation de commande
-		
+
 Corrections
 
 * ST654 - Lien JS Google Maps
@@ -1025,7 +1047,7 @@ Corrections
 * ST651 - Affichage en Javascript de l'interface d'upload du fichier téléchargeable (Administration)
 
 
-= Version 1.3.5.8 = 
+= Version 1.3.5.8 =
 
 Améliorations
 
@@ -1044,14 +1066,14 @@ Corrections
 
 
 
-= Version 1.3.5.7 = 
+= Version 1.3.5.7 =
 
 Améliorations
 
 * ST630 - Envoi lien produit téléchargeable (Lorsque le paiement d'une commande est complet et que la commande contient un produit téléchargeable, un e-mail automatique contenant un lien de téléchargement du produit est envoyé automaiquement.)
 * ST631 - Box Livraison Administration des commandes (Amélioration de présentation + rafraichissement des données en Javascript sur la Box Livraison dans l'administration des commandes)
 * ST636 - Promotions sur options (Sur les produits à plusieurs options)
-		
+
 Corrections
 
 * ST635 - Ajout au Panier (Produit à une option)
@@ -1062,7 +1084,7 @@ Corrections
 
 
 
-= Version 1.3.5.6 = 
+= Version 1.3.5.6 =
 
 Améliorations
 
@@ -1211,7 +1233,7 @@ Améliorations
 * ST508 - Installation des données relatives aux attributs
 * ST510 - Affichage Prix (Ajout d'une classe CSS entre les entiers et les décimales sur les prix pour permettre une personnalisation plus poussée de l'affichage des prix.)
 * ST513 - Message montant d'économie (Affiche un message "Vous économisez xxx &euro;" lorsque les remises sur produits sont actives.)
-		
+
 Corrections
 
 * ST495 - Frais de port min-max
@@ -1233,7 +1255,7 @@ Améliorations
 * ST486 - Affichage des prix dans le listing produit de l'administration
 * ST487 - Période de promotion (Possibilité de configurer une période de validité pour une promotion sur produit)
 * ST493 - Recherche dans interface administration des attributs
-		
+
 Corrections
 
 * ST488 - Calcul prix
@@ -1254,8 +1276,8 @@ Améliorations
 * ST480 - Options sur l'affichage du prix d'un produit avec option
 * ST483 - Gestion des remises (Gestion des remises sur les produits par montant absolu ou taux de remise. Option d'activation générale des remises dans la partie option de WPSHOP)
 * ST484 - Interface de création de compte client
-		
-		
+
+
 Corrections
 
 * ST476 - Modification groupée (Répercution sur les produits option des valeurs des attributs communs entre produits parent et produit option.)
@@ -1273,7 +1295,7 @@ Améliorations
 * ST472 - Générer la facture avant paiement
 * ST473 - Interface Devis - Produits avec option
 * ST475 - Affichage informations Client dans l'interface de gestion de la commande
-		
+
 Corrections
 
 * ST466 - Calcul des frais de port
@@ -1290,7 +1312,7 @@ Corrections
 Améliorations
 
 * ST455 - Message Frais de port offert dans le mini panier
-		
+
 Corrections
 
 * ST456 - Logo boutique
@@ -1311,7 +1333,7 @@ Améliorations
 * ST449 - Module Devis (Création de nouveaux utilisateurs et devis dans la back-office, génération du devis en .pdf. Alerte e-mail Nouveau Devis demandé)
 * ST452 - Modules de paiement (Possibilité de choisir une méthode de paiement par défaut et d'en gérer l'ordre d'affichage.)
 * ST454 - Logo de la boutique (Possibilité d'ajouter le logo de votre boutique pour qu'il soit intégré dans le devis et les factures)
-		
+
 Corrections
 
 * ST443 - Email de confirmation de paiement n'est plus envoyé lorsque le paiement a échoué
@@ -1331,7 +1353,7 @@ Améliorations
 * ST434 - Choix de la méthode de paiement par défault
 * ST435 - Choix de l'ordre d'affichage des méthodes de paiements
 * ST437 - Ajout de la méthode de paiement par Virement bancaire
- 
+
 Corrections
 
 * ST432 - Attribute set id a regénérer pour les produit
@@ -1553,8 +1575,8 @@ Améliorations
 
 Corrections
 
-* ST309 - Erreur php si aucune case cochée dans les sections supportées pour les entités 
-* ST310 - Duplication automatique des entités 
+* ST309 - Erreur php si aucune case cochée dans les sections supportées pour les entités
+* ST310 - Duplication automatique des entités
 
 
 = Version 1.3.2.4 =
@@ -1640,35 +1662,35 @@ Corrections
 
 Améliorations
 
-* ST245 - Ajout d'une aide pour la page de réglages boutique (Ajout d'une aide pour la page de réglages boutique) 
-* ST248 - Gestion des frais de port personnalisé (Il est maintenant possible de gérer ses frais de port de manière précise en fixant une table de prix par poid et/ou prix total du panier) 
-* ST252 - Possibilité pour le vendeur de choisir les frais de port personnalisé pour les commandes 
-* ST256 - Gestion des produits téléchargeables (Attribution d'un fichier attaché à un produit que l'on peut télécharger une fois la commande terminée) 
-* ST257 - Installation simplifiée - catalogue de présentation/site de vente 
-* ST260 - Possibilité de vider le panier via un seul bouton (Possibilité de vider le panier via un seul bouton) 
-* ST261 - Ajout de chams personnalisés pour les attributs (Ajout de chams personnalisés pour les attributs (notament file_url, manage_stock et allow_presale pour l'attribut is_downloadable_)) 
-* ST263 - Ajout d'un tableau de bord de la boutique(Ajout d'un tableau de bord de la boutique) 
-* ST264 - Possibilité de payer une commande non terminée depuis l'interface client 
+* ST245 - Ajout d'une aide pour la page de réglages boutique (Ajout d'une aide pour la page de réglages boutique)
+* ST248 - Gestion des frais de port personnalisé (Il est maintenant possible de gérer ses frais de port de manière précise en fixant une table de prix par poid et/ou prix total du panier)
+* ST252 - Possibilité pour le vendeur de choisir les frais de port personnalisé pour les commandes
+* ST256 - Gestion des produits téléchargeables (Attribution d'un fichier attaché à un produit que l'on peut télécharger une fois la commande terminée)
+* ST257 - Installation simplifiée - catalogue de présentation/site de vente
+* ST260 - Possibilité de vider le panier via un seul bouton (Possibilité de vider le panier via un seul bouton)
+* ST261 - Ajout de chams personnalisés pour les attributs (Ajout de chams personnalisés pour les attributs (notament file_url, manage_stock et allow_presale pour l'attribut is_downloadable_))
+* ST263 - Ajout d'un tableau de bord de la boutique(Ajout d'un tableau de bord de la boutique)
+* ST264 - Possibilité de payer une commande non terminée depuis l'interface client
 
 Corrections
 
-* ST244 - Bugs tri produits 
-* ST246 - Duplication de produits (Duplication de produits => la duplication des attributs servant dans le tri ne se faisait pas) 
-* ST247 - Téléchargement facture (La facture s'affiche maintenant dans le navigateur et laisse le choix a l'utilisateur de la télécharger ou non) 
-* ST250 - URL catégories et sous catégories (Corrections URL catégories et sous catégories) 
-* ST258 - Correction affichage bouton d'achat et prix en fonction du type de magasin (Correction affichage bouton d'achat et prix en fonction du type de magasin) 
-* ST259 - Correction bug suppression dernier produit panier (La fonction de suppression du dernier produit du panier a été corrigée) 
-* ST262 - Correction bug sur les stocks (Correction du bug sur les stock qui ne réduisait pas les stock après un achat validé) 
-* ST266 - Corrections de bugs mineurs (Notice php) 
+* ST244 - Bugs tri produits
+* ST246 - Duplication de produits (Duplication de produits => la duplication des attributs servant dans le tri ne se faisait pas)
+* ST247 - Téléchargement facture (La facture s'affiche maintenant dans le navigateur et laisse le choix a l'utilisateur de la télécharger ou non)
+* ST250 - URL catégories et sous catégories (Corrections URL catégories et sous catégories)
+* ST258 - Correction affichage bouton d'achat et prix en fonction du type de magasin (Correction affichage bouton d'achat et prix en fonction du type de magasin)
+* ST259 - Correction bug suppression dernier produit panier (La fonction de suppression du dernier produit du panier a été corrigée)
+* ST262 - Correction bug sur les stocks (Correction du bug sur les stock qui ne réduisait pas les stock après un achat validé)
+* ST266 - Corrections de bugs mineurs (Notice php)
 
 
 = Version 1.3.1.5 =
 
-Améliorations 
+Améliorations
 
-* ST241 - Personnalisation de la page de résultats de recherche (Si lors d'une recherche on a des post de type wpshop_product alors afficher ce post sous forme de produit et non pas d'article de wordpress modifiable avce un shortcode) 
+* ST241 - Personnalisation de la page de résultats de recherche (Si lors d'une recherche on a des post de type wpshop_product alors afficher ce post sous forme de produit et non pas d'article de wordpress modifiable avce un shortcode)
 
-Corrections 
+Corrections
 
 * ST243 - chmod upload_dir
 
@@ -1677,8 +1699,8 @@ Corrections
 
 Améliorations
 
-* ST233 - Simplification du menu de l'administration de la boutique 
-* ST239 - Ajout du numéro d'identification de TVA intracommunautaire (Inscription client et facture) 
+* ST233 - Simplification du menu de l'administration de la boutique
+* ST239 - Ajout du numéro d'identification de TVA intracommunautaire (Inscription client et facture)
 * ST240 - Possibilité de télécharger les factures depuis l'admin
 
 Corrections
@@ -1717,7 +1739,7 @@ Corrections
 * ST226 - Accès au récapitulatif des commandes autres utilisateurs (L'accès à toute les commandes est possible en touchant le numéro dans l'url...)
 
 
-= Version 1.3.1.1 = 
+= Version 1.3.1.1 =
 
 Améliorations
 
@@ -1755,11 +1777,11 @@ Corrections
 
 Améliorations
 
-* ST190 - Ajout de possibilité de tri par défaut (Nom du produit / Date d'ajout / Date de modification / Stock) 
+* ST190 - Ajout de possibilité de tri par défaut (Nom du produit / Date d'ajout / Date de modification / Stock)
 
 Corrections
 
-* ST191 - Lorsque le tri ne retourne pas de résultat, on affiche la liste normale (L'ajax retournait false et n'affichait plus rien dans la liste des produits) 
+* ST191 - Lorsque le tri ne retourne pas de résultat, on affiche la liste normale (L'ajax retournait false et n'affichait plus rien dans la liste des produits)
 * ST192 - Mise à jour des attributs utilisés pour le tri dans les post meta
 * ST193 - Reprise des commande exec lors de l'envoi et des copies de fichiers
 * ST194 - Onglets des fiches produits qui ne s'affichaient pas
@@ -1769,21 +1791,21 @@ Corrections
 
 Améliorations
 
-* ST72 - Gestion des nouveautés / produits en vedettes (Possibilité de choisir des dates pour définir l'intervalle pendant lequel le produit est marqué comme nouveau ou à la une) 
-* ST170 - Gestion du listing des produits par attributs avec un shortcode ([wpshop_products att_name="CODE_ATTRIBUT" att_value="VALEUR_DE_L_ATTRIBUT"]) 
-* ST171 - Simplification de la gestion des templates (Les templates sont inclus directement depuis le dossier du plugin. Pour modifier le comportement de l'affichage dans le front, il faut copier le fichier désiré dans le dossier du thème utilisé actuellement) 
-* ST173 - Mise en place des templates conforme aux normes HTML 
-* ST174 - Possiblités d'ajouter une commande depuis l'administration pour un client donné (V1 - L'utilisateur et les produits doivent être déjà existant) 
-* ST175 - Factorisation du code pour une meilleure maintenance et une meilleure fiabilité 
-* ST183 - Possibilité de choisir le début de la réécriture d'url pour les produits et catégories dans les options 
-* ST184 - Possibilité de choisir les fonctionnalités wordpress associées aux post sur les produits de wpshop depuis les options 
-* ST185 - Possibilité de choisir l'url depuis les options lorsqu'un produit n'est affecté a aucune catégorie 
-* ST189 - Gestion des coupons de réductions sur une commande 
+* ST72 - Gestion des nouveautés / produits en vedettes (Possibilité de choisir des dates pour définir l'intervalle pendant lequel le produit est marqué comme nouveau ou à la une)
+* ST170 - Gestion du listing des produits par attributs avec un shortcode ([wpshop_products att_name="CODE_ATTRIBUT" att_value="VALEUR_DE_L_ATTRIBUT"])
+* ST171 - Simplification de la gestion des templates (Les templates sont inclus directement depuis le dossier du plugin. Pour modifier le comportement de l'affichage dans le front, il faut copier le fichier désiré dans le dossier du thème utilisé actuellement)
+* ST173 - Mise en place des templates conforme aux normes HTML
+* ST174 - Possiblités d'ajouter une commande depuis l'administration pour un client donné (V1 - L'utilisateur et les produits doivent être déjà existant)
+* ST175 - Factorisation du code pour une meilleure maintenance et une meilleure fiabilité
+* ST183 - Possibilité de choisir le début de la réécriture d'url pour les produits et catégories dans les options
+* ST184 - Possibilité de choisir les fonctionnalités wordpress associées aux post sur les produits de wpshop depuis les options
+* ST185 - Possibilité de choisir l'url depuis les options lorsqu'un produit n'est affecté a aucune catégorie
+* ST189 - Gestion des coupons de réductions sur une commande
 
 Corrections
 
-* ST172 - Lors de la duplication d'un produit tous les nouveaux produits avaient la même url 
-* ST176 - Configurations des tarifs de livraison généraux non pris en compte 
+* ST172 - Lors de la duplication d'un produit tous les nouveaux produits avaient la même url
+* ST176 - Configurations des tarifs de livraison généraux non pris en compte
 
 
 = Version 1.3.0.5 =
@@ -1804,17 +1826,17 @@ Corrections
 
 Améliorations
 
-* ST128 - Possibilité de dupliquer un produit 
-* ST161 - Changement de la page option : gestion à la wordpress 
-* ST162 - Gestion des frais de livraison (v1) (Gestion d'un prix min/max sur les frais de livraison - Possibilité de mettre la gratuité à partir d'une certaine somme) 
-* ST166 - Panier : ajout d'un bouton de rechargement (Le bouton permet de recalculer l'ensemble du panier avant de le soumettre) 
-* ST167 - Connexion et inscription en ajax (La connexion et l'inscription se fait maintenant en ajax.) 
+* ST128 - Possibilité de dupliquer un produit
+* ST161 - Changement de la page option : gestion à la wordpress
+* ST162 - Gestion des frais de livraison (v1) (Gestion d'un prix min/max sur les frais de livraison - Possibilité de mettre la gratuité à partir d'une certaine somme)
+* ST166 - Panier : ajout d'un bouton de rechargement (Le bouton permet de recalculer l'ensemble du panier avant de le soumettre)
+* ST167 - Connexion et inscription en ajax (La connexion et l'inscription se fait maintenant en ajax.)
 
-Corrections 
+Corrections
 
-* ST163 - Centrage de l'alert du panier (Correction de la fonction de centrage de l'alerte concernant l'ajoute d'articles au panier => bug sur certain écrans) 
-* ST164 - Correction du wpshop_mini_cart (Affichage du prix total du panier dans le mini cart) 
-* ST165 - Corrections javascript diverses et variées (Correction erreur javascript => élément non trouvable dans la page qui entrainait le bugguage de tout le javascript) 
+* ST163 - Centrage de l'alert du panier (Correction de la fonction de centrage de l'alerte concernant l'ajoute d'articles au panier => bug sur certain écrans)
+* ST164 - Correction du wpshop_mini_cart (Affichage du prix total du panier dans le mini cart)
+* ST165 - Corrections javascript diverses et variées (Correction erreur javascript => élément non trouvable dans la page qui entrainait le bugguage de tout le javascript)
 
 
 = Version 1.3.0.3 =
@@ -1822,64 +1844,64 @@ Corrections
 Améliorations
 
 * ST8 - interface de listing produit dans le front (Tri par nom/date/prix/stock/aléatoire + Pagination + Affichage en grille ou liste)
-* ST69 - Gestion de produits liés (Possibilité pour chaque produit de le lier avec d'autres (du genre "vous aimerez surement :")) 
-* ST147 - Gestion des devises par magasin (Gérable dans les options) 
-* ST150 - Envoie des mails au format HTML 
+* ST69 - Gestion de produits liés (Possibilité pour chaque produit de le lier avec d'autres (du genre "vous aimerez surement :"))
+* ST147 - Gestion des devises par magasin (Gérable dans les options)
+* ST150 - Envoie des mails au format HTML
 
 Corrections
 
-* ST146 - Ajouter de exec('chmod -R 755 lecheminachangerlesdroits'); partout ou il y a des créations de dossiers (Permet de corriger le fait que php ne donne pas les droits correct aux dossiers créés) 
-* ST148 - Modification de la génération des numéros de facture 
+* ST146 - Ajouter de exec('chmod -R 755 lecheminachangerlesdroits'); partout ou il y a des créations de dossiers (Permet de corriger le fait que php ne donne pas les droits correct aux dossiers créés)
+* ST148 - Modification de la génération des numéros de facture
 * ST149 - Correction variable "WPSHOP_UPLOAD_DIR" avec slash manquant
 
 
 = Version 1.3.0.2 =
 
-Améliorations 
+Améliorations
 
-* ST23 - Possibilité de choisir les fichiers à écraser dans le thèmes 
-* ST83 - Accès au template des photos du produit (La galerie des documents attachés à un produit est maintenant complètement personnalisable depuis les fichiers de template! Attention il faut réinitialiser les templates pour que cette modification soit prise en compte correctement) 
-* ST136 - Ajout du flag "par défaut" sur les groupes d'attributs et les sections des groupes d'attributs pour affecter les attributs créés automatiquement à ces groupes 
-* ST139 - On ne peut plus supprimer une option d'une liste déroulante dans les attributs si celle ci est déjà utilisée 
-* ST140 - Lors de la modification des valeurs des options de l'attribut Taxe (tx_tva) les prix sont recalculés automatiquement pour tous les produits utilisant la valeur modifiées 
-* ST141 - Possiblité d'ordonner les options des listes déroulantes, de choisir une valeur par défaut et gérer les labels 
-* ST142 - Prise en compte de la balise "more" dans la description des produits dans les shortcodes 
+* ST23 - Possibilité de choisir les fichiers à écraser dans le thèmes
+* ST83 - Accès au template des photos du produit (La galerie des documents attachés à un produit est maintenant complètement personnalisable depuis les fichiers de template! Attention il faut réinitialiser les templates pour que cette modification soit prise en compte correctement)
+* ST136 - Ajout du flag "par défaut" sur les groupes d'attributs et les sections des groupes d'attributs pour affecter les attributs créés automatiquement à ces groupes
+* ST139 - On ne peut plus supprimer une option d'une liste déroulante dans les attributs si celle ci est déjà utilisée
+* ST140 - Lors de la modification des valeurs des options de l'attribut Taxe (tx_tva) les prix sont recalculés automatiquement pour tous les produits utilisant la valeur modifiées
+* ST141 - Possiblité d'ordonner les options des listes déroulantes, de choisir une valeur par défaut et gérer les labels
+* ST142 - Prise en compte de la balise "more" dans la description des produits dans les shortcodes
 * ST143 - Ajout de la récusivité sur l'execution des shortcodes (Un shortcode qui est inclus dans la description d'un produit qui lui même est appelé par un shortcode sera exécuté)
- 
-Corrections 
 
-* ST127 - Fermeture de l'image agrandie (Les images permettant de naviguer et de fermer la fenêtre de visualisation des images associées aux produits n'était plus dans le bon dossier) 
-* ST133 - Masquage de deux champs de type hidden dans le formulaire de création d'un attribut 
+Corrections
+
+* ST127 - Fermeture de l'image agrandie (Les images permettant de naviguer et de fermer la fenêtre de visualisation des images associées aux produits n'était plus dans le bon dossier)
+* ST133 - Masquage de deux champs de type hidden dans le formulaire de création d'un attribut
 * ST134 - Modification d'un attribut (La modification d'un attribut entrainait une modification systématique du groupe d'attribut attribué à cet attribut et provoquait sa disparition de la page du produit dans certains cas)
 
 
 = Version 1.3.0.1 =
 
-Améliorations 
+Améliorations
 
-* ST17 - Gestion des prix de base (Prix de vente HT / Taxe / Prix de vente TTC) 
-* ST21 - Taxes (La gestion se fait par les attributs) 
-* ST49 - Message alerte à l'installation (- Ne pas mettre le message pour masquer / - Mettre un lien vers la page de configuration) 
-* ST58 - Configuration de la boutique (- Information sur la societe / - Mode de paiement disponible / - Emails de la boutique / - Personnalisation des emails / - Utilisation ou non * des permaliens personnalisés (si on décoche une confirmation est demandée) / - Nombre de chiffre minimum composant les numéros de facture et de commande) 
-* ST65 - Possibilité de modifier son mot de passe (client) 
-* ST117 - Modification des scripts de mise à jour de la base de données (- Une interface est disponible en changeant une variable de configuration dans les fichiers de config) 
-* ST118 - Vérification de certaines valeurs entrées avant enregistrement du produit (Référence: si vide on remplit avec un schéma définit (variable de configuration) / Prix: Calcul des différentes valeurs suivant le type de pilotage (variable de configuration)) 
-* ST119 - Possibilité de choisir liste déroulante pour les attributs (Avec gestion de la liste des éléments) 
-* ST121 - Interface de visualisation des emails envoyés par la boutique (Avec possiblité de les renvoyer) 
-* ST122 - Possibilité de facturer (Possibilité de facturer les commandes) 
-* ST123 - Ajout des frais de livraison (Ajout des frais de livraison) 
-* ST125 - Suivi des mails (Possibilité de gérer/renvoyer les emails envoyé via le plugin au client.) 
+* ST17 - Gestion des prix de base (Prix de vente HT / Taxe / Prix de vente TTC)
+* ST21 - Taxes (La gestion se fait par les attributs)
+* ST49 - Message alerte à l'installation (- Ne pas mettre le message pour masquer / - Mettre un lien vers la page de configuration)
+* ST58 - Configuration de la boutique (- Information sur la societe / - Mode de paiement disponible / - Emails de la boutique / - Personnalisation des emails / - Utilisation ou non * des permaliens personnalisés (si on décoche une confirmation est demandée) / - Nombre de chiffre minimum composant les numéros de facture et de commande)
+* ST65 - Possibilité de modifier son mot de passe (client)
+* ST117 - Modification des scripts de mise à jour de la base de données (- Une interface est disponible en changeant une variable de configuration dans les fichiers de config)
+* ST118 - Vérification de certaines valeurs entrées avant enregistrement du produit (Référence: si vide on remplit avec un schéma définit (variable de configuration) / Prix: Calcul des différentes valeurs suivant le type de pilotage (variable de configuration))
+* ST119 - Possibilité de choisir liste déroulante pour les attributs (Avec gestion de la liste des éléments)
+* ST121 - Interface de visualisation des emails envoyés par la boutique (Avec possiblité de les renvoyer)
+* ST122 - Possibilité de facturer (Possibilité de facturer les commandes)
+* ST123 - Ajout des frais de livraison (Ajout des frais de livraison)
+* ST125 - Suivi des mails (Possibilité de gérer/renvoyer les emails envoyé via le plugin au client.)
 
-Corrections 
+Corrections
 
-* ST64 - Mettre wp_reset_query(); dans le shortcode 
-* ST120 - L'affectation des vignettes pour le produit sont de nouveau en place pour la version 3.3.1 de wordpress 
-* ST124 - Redirections en javascript (Les redirections sont maintenant effectuées avec javascript) 
-	
-	
+* ST64 - Mettre wp_reset_query(); dans le shortcode
+* ST120 - L'affectation des vignettes pour le produit sont de nouveau en place pour la version 3.3.1 de wordpress
+* ST124 - Redirections en javascript (Les redirections sont maintenant effectuées avec javascript)
+
+
 = Version 1.3.0.0 =
 
-Améliorations 
+Améliorations
 
 * Vendre vos produits est maintenant possible (Ajout du bouton ajouter au panier / Gestion du panier d'achat / Gestion des commandes)
 * Ajout des prix sur les fiches produit
@@ -1888,27 +1910,27 @@ Améliorations
 * Configuration à l'installation
 * Possibilité de choisir le paiement par chèque ou par paypal
 
-Corrections 
+Corrections
 
 * Meilleure gestion des produits
 
 
 = Version 1.2.1.1 =
 
-Améliorations 
+Améliorations
 
-* Ajout de la box permettant l'insertion d'un shortcode dans les articles 
-* Affichage d'un bloc indiquant que le produit est inexistant si insertion d'un shortcode erroné 
+* Ajout de la box permettant l'insertion d'un shortcode dans les articles
+* Affichage d'un bloc indiquant que le produit est inexistant si insertion d'un shortcode erroné
 
-Corrections 
+Corrections
 
-* Le formulaire permettant de modifier les informations concernant les photos envoyées ne s'affichait plus (L'encodage du fichier des unités des attributs provoquait une erreur) 
-* Unité par défaut lors de la création d'un attribut 
-* Insertion d'un espace avant et aprés chaque shortcode inséré depuis la box dans les page et articles 
-* Suppression du caractère 'underscore' à la fin d'un attribut lors de la création 
-* Lors de l'activation du plugin un message d'erreur apparait (Encodage du fichier de la classe des unités des attributs défini en UTF8) 
-* Problème de création des tables de base du plugin (Vérification et création lors du chargement du plugin) 
-* Affichage des messages décalés sur certaines pages 
+* Le formulaire permettant de modifier les informations concernant les photos envoyées ne s'affichait plus (L'encodage du fichier des unités des attributs provoquait une erreur)
+* Unité par défaut lors de la création d'un attribut
+* Insertion d'un espace avant et aprés chaque shortcode inséré depuis la box dans les page et articles
+* Suppression du caractère 'underscore' à la fin d'un attribut lors de la création
+* Lors de l'activation du plugin un message d'erreur apparait (Encodage du fichier de la classe des unités des attributs défini en UTF8)
+* Problème de création des tables de base du plugin (Vérification et création lors du chargement du plugin)
+* Affichage des messages décalés sur certaines pages
 * Inclusion de certains javascript et de certaines fonctions entrant en conflit suivant les version de wordpress (Inférieure à 3.1 avant la mise à jour de Jquery dans wordpress)
 
 
@@ -1916,21 +1938,21 @@ Corrections
 
 Améliorations
 
-* Shortcodes pour afficher des catégories et/ou des produits(Catégories / Sous-catégories / Produits / Gestions de paramètres / Interface de gestion) 
-* Ajout de boxs séparées pour gérer les images et documents associés à un produit 
+* Shortcodes pour afficher des catégories et/ou des produits(Catégories / Sous-catégories / Produits / Gestions de paramètres / Interface de gestion)
+* Ajout de boxs séparées pour gérer les images et documents associés à un produit
 * Ajout des options permettant de choisir les types d'affichages pour la page catégorie(éléments à afficher (informations principales / sous-catégories / produits) - Affichage des produits et sous-catégories en liste ou grille (nombre de produit si mode grille))
-* Possibilité de choisir d'afficher ou non les produits dans le menu géré dans le widget 
+* Possibilité de choisir d'afficher ou non les produits dans le menu géré dans le widget
 * Dupliquer les éléments personnalisable dans le thème courant(Template hml / ccs / js / - Option permettant de réécraser)
 * Onglets fiche produit(Descriptif / Attributs)
-* Affectation d'un groupe d'unité aux attributs (Pour ne pas avoir la liste de toute les unités sur tous les attributs) 
+* Affectation d'un groupe d'unité aux attributs (Pour ne pas avoir la liste de toute les unités sur tous les attributs)
 * Générer un shortcode pour les attributs et les sections de groupes d'attributs (Récupérable et plaçable n'importe où)
-* Ajout d'une option sur les attributs permettant de les historiser 
-* Gestion des groupes d'attributs si plusieurs groupes existant (Permet de sélectionner le groupe d'attribut à utiliser par produit) 
+* Ajout d'une option sur les attributs permettant de les historiser
+* Gestion des groupes d'attributs si plusieurs groupes existant (Permet de sélectionner le groupe d'attribut à utiliser par produit)
 * Gestion automatique de la mise à jour de la base de donnée (Lors de l'ajout d'un champs ou d'une table lors du lancement la mise à jour est effectuée automatiquement)
 
 Corrections
 
-* Lors de la désactivation et de la réactivation certaines données étaient insérées plusieurs fois dans la base 
+* Lors de la désactivation et de la réactivation certaines données étaient insérées plusieurs fois dans la base
 
 
 = Version 1.1 =

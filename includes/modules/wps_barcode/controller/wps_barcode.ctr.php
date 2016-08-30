@@ -162,7 +162,6 @@ class wps_barcode {
 						}
 
 						$ref = '';
-						var_dump($post->ID);
 						if ( strlen($post->ID) < 5 ) {
 							$length = 5-strlen($post->ID);
 							for ($i = 0; $i < $length; $i++) {

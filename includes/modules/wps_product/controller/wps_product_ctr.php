@@ -112,7 +112,7 @@ class wps_product_ctr {
 				$product_id = $combined_variation_id;
 			}
 		}
-		$product_data = wpshop_products::get_product_data($product_id, false, '"publish"');
+		$product_data = wpshop_products::get_product_data($product_id, false, '"publish", "free_product"');
 
 		if(!empty($product_data)) {
 			$manage_stock = !empty($product_data['manage_stock']) ? $product_data['manage_stock'] : '';

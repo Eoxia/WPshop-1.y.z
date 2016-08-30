@@ -1070,7 +1070,7 @@ class wpshop_attributes_set{
 	* @param array $atts : tableau de param�tre du shortcode
 	* @return mixed
 	**/
-	function wpshop_att_group_func($atts) {
+	public static function wpshop_att_group_func($atts) {
 		global $wpdb;
 
 		$query = '

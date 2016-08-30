@@ -3,7 +3,7 @@ class wpshop_customer_search {
 
 	function __construct() {
 		if  ( is_admin() ) {
-			add_filter( 'posts_where', array(&$this, 'wpshop_search_where_in_customer'), 10, 2 );
+			add_filter( 'posts_where', array(&$this, 'wpshop_search_where_in_customer') );
 		}
 	}
 
@@ -87,6 +87,7 @@ class wpshop_customer_search {
 			}
 
 		}
+
 		return $where;
 	}
 

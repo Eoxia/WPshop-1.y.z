@@ -2340,42 +2340,41 @@ class wpshop_products {
 	 * @param integer $head_product The product identifier to get the variation for
 	 * @return object The variation list
 	 */
-	public static function get_variation( $head_product ) {
-		global $wpdb;
-		$variations_output = null;
-// 		$variations = query_posts(array(
-// 			'post_type' 	=> WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION,
-// 			'post_parent' 	=> $head_product,
-// 			'orderby' 		=> 'ID',
-// 			'order' 		=> 'ASC',
-// 			'posts_per_page'=> -1
-// 		));
+	 public static function get_variation( $head_product ) {
+ 		global $wpdb;
+ 		$variations_output = null;
+ 		$args = array(
+ 			'post_type'		=> WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION,
+ 			'post_parent'	=> $head_product,
+ 			'orderby'		=> 'ID',
+ 			'order'		=> 'ASC',
+ 			'posts_per_page'	=> -1,
+ 			'post_status'	=> 'any'
+ 		);
+ 		$variations = get_posts( $args );
 
-		$query = $wpdb->prepare( 'SELECT * FROM ' .$wpdb->posts.' WHERE post_type = %s AND post_parent = %d AND post_status = %s ORDER BY ID ASC', WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION, $head_product, 'publish' );
-		$variations = $wpdb->get_results( $query );
+ 		if ( !empty( $variations ) ) {
+ 			$head_wpshop_variation_definition = get_post_meta( $head_product, '_wpshop_variation_defining', true );
 
-		if ( !empty( $variations ) ) {
-			$head_wpshop_variation_definition = get_post_meta( $head_product, '_wpshop_variation_defining', true );
-
-			foreach ( $variations as $post_def ) {
-				$data = wpshop_attributes::get_attribute_list_for_item( wpshop_entities::get_entity_identifier_from_code(self::currentPageCode), $post_def->ID, WPSHOP_CURRENT_LOCALE, WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT );
-				foreach ( $data as $content ) {
-					$attribute_value = 'attribute_value_' . $content->data_type;
-					if ( !empty($content->$attribute_value) ) {
-						if ( !empty($head_wpshop_variation_definition['attributes']) && in_array($content->code, $head_wpshop_variation_definition['attributes']) ) {
-							$variations_output[$post_def->ID]['variation_def'][$content->code] = $content->$attribute_value;
-						}
-						else {
-							$variations_output[$post_def->ID]['variation_dif'][$content->code] = $content->$attribute_value;
-						}
-					}
-				}
-				$variations_output[$post_def->ID]['post'] = $post_def;
-			}
-		}
-		wp_reset_query();
-		return $variations_output;
-	}
+ 			foreach ( $variations as $post_def ) {
+ 				$data = wpshop_attributes::get_attribute_list_for_item( wpshop_entities::get_entity_identifier_from_code(self::currentPageCode), $post_def->ID, WPSHOP_CURRENT_LOCALE, WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT );
+ 				foreach ( $data as $content ) {
+ 					$attribute_value = 'attribute_value_' . $content->data_type;
+ 					if ( !empty($content->$attribute_value) ) {
+ 						if ( !empty($head_wpshop_variation_definition['attributes']) && in_array($content->code, $head_wpshop_variation_definition['attributes']) ) {
+ 							$variations_output[$post_def->ID]['variation_def'][$content->code] = $content->$attribute_value;
+ 						}
+ 						else {
+ 							$variations_output[$post_def->ID]['variation_dif'][$content->code] = $content->$attribute_value;
+ 						}
+ 					}
+ 				}
+ 				$variations_output[$post_def->ID]['post'] = $post_def;
+ 			}
+ 		}
+ 		wp_reset_query();
+ 		return $variations_output;
+ 	}
 
 
 	/**
@@ -2489,7 +2488,7 @@ class wpshop_products {
 				$tpl_component['VARIATION_DETAIL'] = substr($tpl_component['VARIATION_DETAIL'], 0, -2);
 
 				$tpl_component['ADMIN_VARIATION_SPECIFIC_DEFINITION_CONTAINER_CLASS'] = ' wpshopHide';
-				$tpl_component['VARIATION_DEFINITION'] = wpshop_attributes::get_variation_attribute( array('input_class' => ' ', 'field_name' => wpshop_products::current_page_variation_code . '[' . $variation['post']->ID . ']','page_code' => self::current_page_variation_code, 'field_id' => self::current_page_variation_code . '_' . $variation['post']->ID, 'variation_dif_values' => (!empty($variation['variation_dif']) ? $variation['variation_dif'] : array())) );
+				$tpl_component['VARIATION_DEFINITION'] = wpshop_attributes::get_variation_attribute( array('post_id' => $variation['post']->ID, 'input_class' => ' ', 'field_name' => wpshop_products::current_page_variation_code . '[' . $variation['post']->ID . ']','page_code' => self::current_page_variation_code, 'field_id' => self::current_page_variation_code . '_' . $variation['post']->ID, 'variation_dif_values' => (!empty($variation['variation_dif']) ? $variation['variation_dif'] : array())) );
 				$tpl_component['VARIATION_DEFINITION_CONTENT'] = wpshop_display::display_template_element('wpshop_admin_variation_item_specific_def', $tpl_component, array(WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT => $head_product, WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION => $variation['post']->ID), 'admin');
 
 				/*	Add the variation definition to output	*/
@@ -2702,7 +2701,6 @@ class wpshop_products {
 		if ( $from_admin && !empty($order_id) ) {
 			$variation_tpl['FROM_ADMIN_INDICATOR'] = '<input type="hidden" name="wps_orders_from_admin" value="1" />';
 			$variation_tpl['ORDER_ID_INDICATOR'] = '<input type="hidden" name="wps_orders_order_id" value="' .$order_id. '" />';
-
 		}
 		$output = !empty($variation_tpl['VARIATION_FORM_VARIATION_LIST']) ? wpshop_display::display_template_element('product_variation_form', $variation_tpl) : '';
 
@@ -3215,6 +3213,13 @@ class wpshop_products {
 				switch ( $free_variation_attribute_def->data_type ) {
 					case 'datetime':
 						$value_to_outut = mysql2date( get_option( 'date_format' ), $attribute_selected_value, true );
+					break;
+				}
+				switch ( $free_variation_attribute_def->data_type_to_use ) {
+					case 'custom':
+					case 'internal':
+						$possible_values = wpshop_attributes::get_select_output( $free_variation_attribute_def );
+						$value_to_outut = $possible_values['possible_value'][$attribute_selected_value];
 					break;
 				}
 				$variation_tpl_component['VARIATION_VALUE'] = stripslashes($value_to_outut);

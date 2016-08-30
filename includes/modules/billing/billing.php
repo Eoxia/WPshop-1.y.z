@@ -10,7 +10,6 @@
 
 /**	Check if billing class does not exist before creating the class	*/
 if ( !class_exists("wpshop_modules_billing") ) {
-
 	/**
 	 * Billing module utilities definition
 	 *
@@ -33,7 +32,7 @@ if ( !class_exists("wpshop_modules_billing") ) {
 				$old_wpshop_shop_type = !empty( $_POST['old_wpshop_shop_type'] ) ? sanitize_text_field( $_POST['old_wpshop_shop_type'] ) : '';
 
 				if ( ( $wpshop_shop_type == '' || $wpshop_shop_type != 'presentation' )
-					&& ( $old_wpshop_shop_type == '' && $old_wpshop_shop_type != 'presentation' ) ) {
+					&& ( $old_wpshop_shop_type == '' || $old_wpshop_shop_type != 'presentation' ) ) {
 						/**	Add module option to wpshop general options	*/
 						add_filter('wpshop_options', array(&$this, 'add_options'), 9);
 						add_action('wsphop_options', array(&$this, 'declare_options'), 8);

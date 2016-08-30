@@ -320,10 +320,7 @@ class wps_account_ctr {
 
 	/** FORGOT PASSWORD - AJAX - Make renew password action **/
 	function wps_forgot_password_renew() {
-		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
-
-		if ( !wp_verify_nonce( $_wpnonce, 'wps_forgot_password_renew' ) )
-			wp_die();
+		check_ajax_referer( 'wps_forgot_password_renew' );
 
 		global $wpdb;
 		$status = false; $result = $form = '';
@@ -335,7 +332,7 @@ class wps_account_ctr {
 			if ( !empty($activation_key) && !empty($login) ) {
 				$existing_user = false;
 				$user = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpdb->users WHERE user_activation_key = %s AND user_login = %s", $activation_key, $login ) );
-				if( empty($user) ) {
+				if( !empty($user) ) {
 					$existing_user = true;
 				}
 				else {
@@ -448,7 +445,7 @@ class wps_account_ctr {
 						if( !empty($user_id) ) {
 							foreach( $attribute_set_field['content'] as $attribute_code => $att_def ) {
 								if( $attribute_code != 'account_user_email' ) {
-									 $attribute_set_field['content'][$attribute_code]['required'] = 'no';
+									$attribute_set_field['content'][$attribute_code]['required'] = 'no';
 								}
 							}
 						}
@@ -464,12 +461,12 @@ class wps_account_ctr {
 								$account_creation = true;
 								/** Update newsletter user preferences **/
 								$newsletter_preferences = array();
-								$newsletters_site = !empty( $_POST['newsletters_site'] ) ? (int) $_POST['newsletters_site'] : 0;
-								if( !empty($newsletters_site) ) {
+								$newsletters_site = !empty( $_POST['newsletters_site'] ) ? (bool) $_POST['newsletters_site'] : false;
+								if( $newsletters_site ) {
 									$newsletter_preferences['newsletters_site'] = 1;
 								}
-								$newsletters_site_partners = !empty( $_POST['newsletters_site_partners'] ) ? (int) $_POST['newsletters_site_partners'] : 0;
-								if( !empty($newsletters_site_partners) ) {
+								$newsletters_site_partners = !empty( $_POST['newsletters_site_partners'] ) ? (bool) $_POST['newsletters_site_partners'] : false;
+								if( $newsletters_site_partners ) {
 									$newsletter_preferences['newsletters_site_partners'] = 1;
 								}
 
@@ -483,8 +480,8 @@ class wps_account_ctr {
 						if( !empty( $attribute ) ) {
 							$user_info = array();
 							foreach( $attribute as $type => $attributes ) {
-								foreach( $attributes as $meta => $attribute ) {
-									$user_info[$meta] = sanitize_text_field( $attribute );
+								foreach( $attributes as $meta => $attribute_value ) {
+									$user_info[$meta] = sanitize_text_field( $attribute_value );
 								}
 							}
 							wps_customer_ctr::save_customer_synchronize( $customer_post_ID, $user_id, $user_info );
@@ -542,14 +539,14 @@ class wps_account_ctr {
 	 * ACCOUNT - Display Account informations
 	 * @return string
 	 */
-	function display_account_informations( $customer_id = '' ) {
+	function display_account_informations( $customer_id = '', $force_edition_form = false ) {
 		global $wpdb;
 		$output = $attributes_sections_tpl = $attribute_details = '';
 		$is_from_admin = ( !empty($customer_id) ) ? true : false;
 		$customer_id = ( !empty($customer_id) ) ? $customer_id : get_current_user_id();
 		if( $customer_id != 0 ) {
 			$screen = get_current_screen();
-			if( is_admin() && isset( $screen ) && is_object( $screen ) && $screen->post_type == WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ) {
+			if( ( is_admin() && isset( $screen ) && is_object( $screen ) && $screen->post_type == WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ) || $force_edition_form ) {
 				$customer_entity_type_id = wpshop_entities::get_entity_identifier_from_code( WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS );
 				$query = $wpdb->prepare( 'SELECT ID FROM ' .$wpdb->posts. ' WHERE post_type = %s AND post_author = %d', WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, $customer_id );
 				$cid = $wpdb->get_var( $query );
@@ -782,10 +779,7 @@ class wps_account_ctr {
 	 * ACCOUNT - AJAX - Reload account informations data
 	 */
 	function wps_account_reload_informations() {
-		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
-
-		if ( !wp_verify_nonce( $_wpnonce, 'wps_account_reload_informations' ) )
-			wp_die();
+		check_ajax_referer( 'wps_account_reload_informations' );
 
 		$status = false;
 		$response = do_shortcode('[wps_account_informations]');
@@ -800,10 +794,7 @@ class wps_account_ctr {
 	 * ACCOUNT - AJAX - Fill account informations modal
 	 */
 	function wps_fill_account_informations_modal() {
-		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
-
-		if ( !wp_verify_nonce( $_wpnonce, 'wps_fill_account_informations_modal' ) )
-			wp_die();
+		check_ajax_referer( 'wps_fill_account_informations_modal' );
 
 		$title = $content = '';
 		$title = __('Edit your account informations', 'wpshop');

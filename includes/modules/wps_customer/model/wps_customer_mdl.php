@@ -31,23 +31,23 @@ class wps_customer_mdl {
 	 * @return WP_Query The complete query for customer list retrieving
 	 */
 	function get_customer_list( $nb_per_page = 10, $offset = 0, $extra_args = array() ) {
-
-		/**	Add a filter to wordpress query for search extension	*/
-		//add_filter( 'posts_where', array( &$this, 'wps_customer_search_extend' ), 10, 2 );
-
 		/**	Define args for listing	*/
 		$customer_list_args = array(
-			'post_type'			=> WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS,
-			'post_status'		=> array( 'pending', 'draft', 'publish', 'private', ),
+			'post_type'				=> WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS,
+			'post_status'			=> array( 'pending', 'draft', 'publish', 'private', ),
 			'posts_per_page'	=> $nb_per_page,
-			'offset'			=> $offset * $nb_per_page,
+			'offset'					=> $offset * $nb_per_page,
 		);
+
+		$wpshop_customer_search = new wpshop_customer_search();
+		add_filter( 'posts_where', array( $wpshop_customer_search, 'wpshop_search_where_in_customer') );
 
 		/**	Get customer list with builtin wordpress function	*/
 		$customer_list_query = new WP_Query( wp_parse_args( $extra_args, $customer_list_args ) );
+		// echo "<pre>"; print_r($customer_list_query); echo "</pre>";
 
 		/**	Remove previously added filter for search extension	*/
-		//remove_filter( 'posts_where', array( &$this, 'wps_customer_search_extend' ), 10, 2 );
+		remove_filter( 'posts_where', array( $wpshop_customer_search, 'wpshop_search_where_in_customer' ) );
 
 		return $customer_list_query;
 	}

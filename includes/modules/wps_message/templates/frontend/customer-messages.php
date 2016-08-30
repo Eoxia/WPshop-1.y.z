@@ -7,10 +7,13 @@
 		</div>
 		<?php $page_message_histo = isset( $_GET['page_message_histo'] ) ? (int) $_GET['page_message_histo'] : 1;
 		$nb_pages_messages_histo = ceil( count( $messages_histo ) / wps_message_ctr::$mails_display );
-		$messages_histo = array_slice( $messages_histo, ( $page_message_histo - 1 ) * wps_message_ctr::$mails_display, wps_message_ctr::$mails_display );
-		foreach( $messages_histo as $first_send_date => $messages ) : ?>
-		<?php foreach( $messages as $key => $message ) : ?>
-	
+		$messages_histo = array_slice( $messages_histo, ( count( $messages_histo ) - 1 ) - ( ( $page_message_histo - 1 ) * wps_message_ctr::$mails_display ), ( -1 ) * wps_message_ctr::$mails_display );
+		end( $messages_histo );
+		while( $messages = current( $messages_histo ) ) :
+			$first_send_date = key( $messages_histo );
+			end( $messages );
+			while( $message = current( $messages ) ) :
+				$key = key( $messages ); ?>
 		<div class="wps-table-content wps-table-row" data-date="<?php echo substr($first_send_date, 0, 7); ?>" >
 			<div class="wps-table-cell wps-message-title-container">
 				<?php $message_special_id = rand(); ?>
@@ -27,13 +30,15 @@
 			<?php endif; ?>
 			</div>
 		</div>
-		<?php endforeach;
-		endforeach; ?>
+		<?php	prev( $messages );
+			endwhile;
+			prev( $messages_histo );
+		endwhile; ?>
 	</div>
 	<?php if( $nb_pages_messages_histo != 1 ) {
 		for( $i = 1; $i <= $nb_pages_messages_histo; $i++ ) { ?>
 		<?php echo '<' . ( ( $page_message_histo == $i ) ? 'span' : 'a href="' . add_query_arg( array( 'page_message_histo' => $i ) ) . '"' ) . ' class="page-numbers">' . $i . '</' . ( ( $page_message_histo == $i ) ? 'span' : 'a' ) . '>'; ?>
-	<?php } 
+	<?php }
 	} ?>
 <?php else: ?>
 	<div class="wps-alert-info">

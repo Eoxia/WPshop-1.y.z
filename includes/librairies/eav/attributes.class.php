@@ -1992,7 +1992,7 @@ ob_end_clean();
 			$attribute_option_display = $attribute_def->backend_input=='select' && (strtolower( __(self::get_attribute_type_select_option_info($input['value'], 'value'), 'wpshop') ) == __('yes', 'wpshop')) ? '' : ' wpshopHide';
 
 			$output['field'] .= '
-	<div class="attribute_option_'.$attribute_def->code.''.$attribute_option_display.'" >'.self::get_attribute_option_fields($element_identifier, $attribute_def->code).'</div>';
+	<div class="attribute_option_'.$attribute_def->code.''.$attribute_option_display.'">'.self::get_attribute_option_fields($element_identifier, $attribute_def->code).'</div>';
 		}
 
 		$output['field'] .= '</div>';
@@ -2502,12 +2502,13 @@ GROUP BY ATT.id, chosen_val", $element_id, $attribute_code);
 			case 'is_downloadable_':
 				$data = get_post_meta($postid, 'attribute_option_'.$code, true);
 				$data['file_url'] = !empty($data['file_url'])?$data['file_url']:__('No file selected', 'wpshop');
-				$fields = '<div class="wpshop_form_label alignleft">&nbsp;</div>
+				$fields =  wp_nonce_field( 'ajax_wpshop_show_downloadable_interface_in_admin'.$postid, '_show_downloadable_interface_in_admin_wpnonce', true, false );
+				$fields .= '<div class="wpshop_form_label alignleft">&nbsp;</div>
 						<div class="wpshop_form_input_element alignleft">
-						<div id="send_downloadable_file_dialog" class="wpshop_add_box" title="' .__('Send the downloadable file', 'wpshop'). '"></div>
-						<a id="send_downlodable_file" data-nonce="' . wp_create_nonce( "ajax_wpshop_fill_the_downloadable_dialog" ) . '"  class="wps-bton-first-mini-rounded">' .__('Send a file', 'wpshop'). '</a>
-						<input type="hidden" id="product_identifer_field" value="' .( !empty($_GET['post']) ? esc_attr( $_GET['post'] ) : '') . '" /><br/><u>'.__('File url','wpshop').' :</u>
-						<div class="statut"><a href="' .$data['file_url']. '" target="_blank" download>'.basename($data['file_url']).'</a></div>
+						<div class="send_downloadable_file_dialog wpshop_add_box" data-post="'.$postid.'" title="' .__('Send the downloadable file', 'wpshop'). '"></div>
+						<a data-nonce="' . wp_create_nonce( "ajax_wpshop_fill_the_downloadable_dialog".$postid ) . '"  class="send_downlodable_file wps-bton-first-mini-rounded">' .__('Send a file', 'wpshop').'</a>
+						<input type="hidden" class="product_identifer_field" value="' .( !empty($postid) ? esc_attr( $postid ) : '') . '" /><br/><u>'.__('File url','wpshop').' :</u>
+						<div class="is_downloadable_statut_'.$postid.'"><a href="' .$data['file_url']. '" target="_blank" download>'.basename($data['file_url']).'</a></div>
 						</div>';
 				return $fields;
 				break;
@@ -3178,7 +3179,10 @@ GROUP BY ATT.id, chosen_val", $element_id, $attribute_code);
 				$sub_tpl_component['ADMIN_VARIATION_DETAIL_DEF_ID'] = $attribute_output_def['id'];
 				$sub_tpl_component['ADMIN_VARIATION_DETAIL_DEF_LABEL'] = $attribute_output_def['label'];
 				$sub_tpl_component['ADMIN_VARIATION_DETAIL_DEF_INPUT'] = $field_output;
-				$tpl_component['ADMIN_VARIATION_DETAIL'] .= wpshop_display::display_template_element('wpshop_admin_variation_item_details_line', $sub_tpl_component, array(), 'admin');;
+				if( isset( $variations_attribute_parameters['post_id'] ) ) {
+					$sub_tpl_component['ADMIN_VARIATION_DETAIL_DEF_INPUT'] .= '<div class="attribute_option_'.$attribute_def->code.'">'.self::get_attribute_option_fields($variations_attribute_parameters['post_id'], $attribute_def->code).'</div>';
+				}
+				$tpl_component['ADMIN_VARIATION_DETAIL'] .= wpshop_display::display_template_element('wpshop_admin_variation_item_details_line', $sub_tpl_component, array(), 'admin');
 				unset($sub_tpl_component);
 			}
 			$output .= wpshop_display::display_template_element('wpshop_admin_variation_item_details', $tpl_component, array(), 'admin');

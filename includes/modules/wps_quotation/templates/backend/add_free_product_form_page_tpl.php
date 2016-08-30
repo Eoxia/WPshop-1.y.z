@@ -31,7 +31,7 @@
 		$attribute_set_list = wpshop_attributes_set::get_attribute_set_list_for_entity(wpshop_entities::get_entity_identifier_from_code('wpshop_product'));
 		$id_attribute_set = null;
 		foreach( $attribute_set_list as $attribute_set ) {
-			if( $attribute_set->name == 'free_product' ) {
+			if( $attribute_set->slug == 'free_product' || $attribute_set->name == 'free_product' ) {
 				$id_attribute_set = $attribute_set->id;
 				break;
 			}

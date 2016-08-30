@@ -304,12 +304,14 @@ class wpshop_tools {
 	 */
 	public static function getMethode(){
 		$request_method = null;
-		if ($_SERVER["REQUEST_METHOD"] == "GET")
+		if ($_SERVER["REQUEST_METHOD"] == "GET") {
 			$request_method = (array)$_GET;
-		if ($_SERVER["REQUEST_METHOD"] == "POST")
+		}
+		if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			$request_method = (array)$_POST;
+		}
 
-		if ( null !== $request_method ) {
+		if ( null === $request_method ) {
 			die ('Invalid REQUEST_METHOD (not GET, not POST).');
 		}
 		else {
