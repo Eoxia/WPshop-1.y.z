@@ -2757,8 +2757,8 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	function ajax_wpshop_upload_downloadable_file_action() {
 		check_ajax_referer( 'ajax_wpshop_upload_downloadable_file_action' );
 		$result = '';
-		$element_identifier = !empty( $_POST ) && !empty( $_POST[ 'element_identifier' ] ) && is_int( (int)$_POST[ 'element_identifier' ] ) ? (int)$_POST[ 'element_identifier' ] : 0;
-		$wpshop_uploaded_file = !empty( $_FILES ) && !empty( $_FILES[ 'wpshop_file' ] ) && is_array( (array)$_FILES[ 'wpshop_file' ] ) ? (array)$_FILES[ 'wpshop_file' ] : array();
+		$element_identifier = ( !empty( $_POST ) && !empty( $_POST[ 'element_identifier' ] ) && is_int( (int)$_POST[ 'element_identifier' ] ) ) ? (int)$_POST[ 'element_identifier' ] : 0;
+		$wpshop_uploaded_file = ( !empty( $_FILES ) && !empty( $_FILES[ 'wpshop_file' ] ) && is_array( (array)$_FILES[ 'wpshop_file' ] ) ) ? (array)$_FILES[ 'wpshop_file' ] : array();
 
 		if ( !empty( $wpshop_uploaded_file ) && !empty( $element_identifier ) ) {
 			if(!is_dir(WPSHOP_UPLOAD_DIR)){
@@ -2767,7 +2767,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 			$file = $wpshop_uploaded_file;
 			$tmp_name = $file['tmp_name'];
 			$name = sanitize_file_name( current_time( 'mysql', 0 ).'__'.$file["name"] );
-			@move_uploaded_file($tmp_name, WPSHOP_UPLOAD_DIR.$name);
+			move_uploaded_file($tmp_name, WPSHOP_UPLOAD_DIR.$name);
 
 			$n = WPSHOP_UPLOAD_URL.'/'.$name;
 			update_post_meta( $element_identifier, 'attribute_option_is_downloadable_', array('file_url' => $n));
@@ -2784,10 +2784,10 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	function ajax_wpshop_fill_the_downloadable_dialog() {
 		$product_id = ( !empty( $_POST ) && !empty( $_POST[ 'product_identifier' ] ) ) ? (int)$_POST[ 'product_identifier' ] : 0;
 		check_ajax_referer( "ajax_wpshop_fill_the_downloadable_dialog".$product_id );
-		$output  = '<form method="post" action="' .admin_url('admin-ajax.php') .'" name="" id="upload_downloadable_file" enctype="multipart/form-data" >';
+		$output  = '<form method="post" action="' .admin_url('admin-ajax.php') .'" id="upload_downloadable_file" enctype="multipart/form-data" >';
 		$output .= '<p class="formField"><label for="wpshop_file">' .__('Choose your file to send', 'wpshop'). '</label><input type="file" name="wpshop_file" /></p>';
 		$output .= '<input type="hidden" name="action" value="upload_downloadable_file_action" />';
-		$output .= '<input type="hidden" name="element_identifer" id="element_identifer" value="' .esc_attr( $product_id). '" />';
+		$output .= '<input type="hidden" name="element_identifier" id="element_identifier" value="' .esc_attr( $product_id). '" />';
 		$output .= wp_nonce_field( 'ajax_wpshop_upload_downloadable_file_action', '_wpnonce', true, false );
 		$output .= '<p class="formField"><a id="send_downloadable_file_button" class="wps-bton-first-mini-rounded">' .__('Send your file', 'wpshop'). '</a></p>';
 		$output .= '</form>';

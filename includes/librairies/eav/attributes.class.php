@@ -2505,7 +2505,7 @@ GROUP BY ATT.id, chosen_val", $element_id, $attribute_code);
 				$fields =  wp_nonce_field( 'ajax_wpshop_show_downloadable_interface_in_admin'.$postid, '_show_downloadable_interface_in_admin_wpnonce', true, false );
 				$fields .= '<div class="wpshop_form_label alignleft">&nbsp;</div>
 						<div class="wpshop_form_input_element alignleft">
-						<div class="send_downloadable_file_dialog wpshop_add_box" title="' .__('Send the downloadable file', 'wpshop'). '"></div>
+						<div class="send_downloadable_file_dialog wpshop_add_box" data-post="'.$postid.'" title="' .__('Send the downloadable file', 'wpshop'). '"></div>
 						<a data-nonce="' . wp_create_nonce( "ajax_wpshop_fill_the_downloadable_dialog".$postid ) . '"  class="send_downlodable_file wps-bton-first-mini-rounded">' .__('Send a file', 'wpshop').'</a>
 						<input type="hidden" class="product_identifer_field" value="' .( !empty($postid) ? esc_attr( $postid ) : '') . '" /><br/><u>'.__('File url','wpshop').' :</u>
 						<div class="is_downloadable_statut_'.$postid.'"><a href="' .$data['file_url']. '" target="_blank" download>'.basename($data['file_url']).'</a></div>

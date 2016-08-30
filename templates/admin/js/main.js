@@ -844,8 +844,8 @@ wpshop(document).ready(function(){
 		};
 		jQuery.post(ajaxurl, data, function(response) {
 			if ( response['status'] ) {
-				jQuery('.send_downloadable_file_dialog').html( response['response'] );
-				jQuery('.send_downloadable_file_dialog').dialog('open');
+				jQuery('.send_downloadable_file_dialog[data-post="'+send_downlodable_file.parent().find(' .product_identifer_field').val()+'"]').html( response['response'] );
+				jQuery('.send_downloadable_file_dialog[data-post="'+send_downlodable_file.parent().find(' .product_identifer_field').val()+'"]').dialog('open');
 			}
 			send_downlodable_file.removeClass( 'wps-bton-loading' );
 		}, 'json');
