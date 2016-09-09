@@ -445,6 +445,19 @@ if ( !class_exists('wps_credit') ) {
 			$total_HT = $total_TTC = 0; $credit_TVA = array();
 			if ( !empty($credit['items']) ) {
 				foreach( $credit['items'] as $item ) {
+					if( __( $item['item_name'], 'wpshop' ) != __( 'Shipping cost', 'wpshop' ) ) {
+						if( $price_piloting == 'HT' ) {
+							$item['item_total_ht'] = $item['item_total_ttc'];
+							$item['item_total_ttc'] = $item['item_total_ht'] * ( 1 + ( $item['item_tva_rate'] / 100 ) );
+						} else {
+							$item['item_total_ttc'] = $item['item_total_ht'];
+							$item['item_total_ht'] = $item['item_total_ttc'] / ( 1 + ( $item['item_tva_rate'] / 100 ) );
+						}
+						$item['item_tva_total_amount'] = $item['item_total_ttc'] - $item['item_total_ht'];
+						$item['item_total_ttc'] = $item['item_total_ttc'] / 100;
+						$item['item_total_ht'] = $item['item_total_ht'] / 100;
+						$item['item_tva_total_amount'] = $item['item_tva_total_amount'] / 100;
+					}
 					$sub_tpl_component = array();
 					$sub_tpl_component['INVOICE_ROW_ITEM_NAME'] = $item['item_name'];
 					$sub_tpl_component['INVOICE_ROW_ITEM_TOTAL_HT'] = '-'.number_format( $item['item_total_ht'], 2, '.', '' );
