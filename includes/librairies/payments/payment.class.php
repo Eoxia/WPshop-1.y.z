@@ -561,7 +561,7 @@ class wpshop_payment {
 				if ( number_format((float)$total_received, 2, '.', '') >= number_format((float)$order_grand_total,2, '.', '') ) {
 					$payment_status = 'completed';
 
-					$order_meta['order_invoice_ref'] = ( empty ($order_meta['order_invoice_ref'] ) && !empty($order_meta['order_payment']['received'][$key]) && !empty($order_meta['order_payment']['received'][$key]['invoice_ref']) ) ? $order_meta['order_payment']['received'][$key]['invoice_ref'] : $order_meta['order_invoice_ref'] ;
+					$order_meta['order_invoice_ref'] = ( empty ($order_meta['order_invoice_ref'] ) && !empty($order_meta['order_payment']['received'][$key]) && !empty($order_meta['order_payment']['received'][$key]['invoice_ref']) ) ? $order_meta['order_payment']['received'][$key]['invoice_ref'] : ( empty($order_meta['order_invoice_ref']) ? null : $order_meta['order_invoice_ref'] ) ;
 					$order_meta['order_invoice_date'] = current_time('mysql', 0);
 
 					if (!empty($order_meta['order_items'])) {
@@ -639,7 +639,7 @@ class wpshop_payment {
 				$save_metadata = false;
 
 				$allow_send_invoice = get_option( 'wpshop_send_invoice' );
-				$invoice_attachment_file = ( !empty($allow_send_invoice) ) ? wpshop_modules_billing::generate_invoice_for_email( $order_id, $order_meta['order_payment']['received'][$key]['invoice_ref'] ) : '';
+				$invoice_attachment_file = ( !empty($allow_send_invoice) ) ? wpshop_modules_billing::generate_invoice_for_email( $order_id, empty( $order_meta['order_payment']['received'][$key]['invoice_ref'] ) ? $order_meta['order_invoice_ref'] : $order_meta['order_payment']['received'][$key]['invoice_ref'] ) : '';
 
 				$email_option = get_option( 'wpshop_emails' );
 
