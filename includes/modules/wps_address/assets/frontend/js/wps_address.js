@@ -61,7 +61,7 @@ jQuery( document ).ready( function() {
 	        		jQuery( '#wps_submit_address_form' ).removeClass( 'wps-bton-loading' );
 
 	        		reload_address_container( response[2], '' );
-	        		if( response[3] != null ) {
+	        		if( response[3] != null && response[3] != "" ) {
 	        			reload_address_container( response[3], '' );
 	        			setTimeout(function() {
 	        				var height_tab = parseFloat( jQuery( '#wps-address-container-' + response[2] + ' .wps-adresse-listing-select').height() );

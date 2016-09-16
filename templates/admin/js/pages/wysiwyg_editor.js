@@ -18,11 +18,11 @@
 						title : WPSHOP_BUTTON_DESCRIPTION,
 						image: false
 					});
-					
+
 					wpshop_wysiwyg_button.onRenderMenu.add(function(c, m) {
 						/*	Define wpshop products shortcodes menu	*/
 						var wpshop_product_shortode;
-						wpshop_product_shortode = m.addMenu({title : WPSHOP_WYSIWYG_MENU_TITLE_PRODUCT_LISTING});
+						wpshop_product_shortode = m.addMenu({title : wpshop_mce_shortcode.product_listing});
 						wpshop_product_shortode.add({title : WPSHOP_WYSIWYG_PRODUCT_LISTING_BY_PID_TITLE, onclick : function() {
 							tinyMCE.activeEditor.windowManager.open({
 								file : WPSHOP_ADMIN_URL + 'admin-post.php?action=wps_shortcodes_wysiwyg_dialog&type=product&post_type=' + jQuery("#post_type").val(),
