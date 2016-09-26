@@ -110,10 +110,7 @@ class wps_customer_admin {
 	 * AJAX - Customer creation form
 	 */
 	function wps_load_customer_creation_form_in_admin() {
-		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
-
-		if ( !wp_verify_nonce( $_wpnonce, 'wps_load_customer_creation_form_in_admin' ) )
-			wp_die();
+		check_ajax_referer( 'wps_load_customer_creation_form_in_admin' );
 
 		echo do_shortcode( '[wps_signup display="admin"]' );
 		wp_die();

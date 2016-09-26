@@ -260,7 +260,7 @@ if ( !class_exists('wps_credit') ) {
 					$items = self::check_existing_credits( $order_id, $order_meta['order_items'] );
 					if ( !empty($items) ) {
 						foreach( $items as $item_id => $item  ) {
-							$tpl_component['ITEM_ID'] = $item['item_id'];
+							$tpl_component['ITEM_ID'] = $item_id;
 							$tpl_component['ITEM_NAME'] = $item['item_name'];
 							$tpl_component['ITEM_QTY'] = $item['item_qty'];
 							$tpl_component['ITEM_PRICE'] = number_format( (( !empty($price_piloting_option) && $price_piloting_option == 'HT') ? $item['item_pu_ht'] : $item['item_pu_ttc']), 2, '.', '' );
@@ -408,6 +408,7 @@ if ( !class_exists('wps_credit') ) {
 		static function generate_credit_slip( $order_id, $credit_ref ) {
 			$order_meta = get_post_meta( $order_id, '_order_postmeta', true);
 			$credit_meta = get_post_meta( $order_id, '_wps_order_credit', true );
+			$price_piloting = get_option( 'wpshop_shop_price_piloting' );
 
 			if ( !empty($credit_meta) ) {
 				foreach( $credit_meta as $id => $credit_def ) {
@@ -445,6 +446,19 @@ if ( !class_exists('wps_credit') ) {
 			$total_HT = $total_TTC = 0; $credit_TVA = array();
 			if ( !empty($credit['items']) ) {
 				foreach( $credit['items'] as $item ) {
+					if( __( $item['item_name'], 'wpshop' ) != __( 'Shipping cost', 'wpshop' ) ) {
+						if( $price_piloting == 'HT' ) {
+							$item['item_total_ht'] = $item['item_total_ttc'];
+							$item['item_total_ttc'] = $item['item_total_ht'] * ( 1 + ( $item['item_tva_rate'] / 100 ) );
+						} else {
+							$item['item_total_ttc'] = $item['item_total_ht'];
+							$item['item_total_ht'] = $item['item_total_ttc'] / ( 1 + ( $item['item_tva_rate'] / 100 ) );
+						}
+						$item['item_tva_total_amount'] = $item['item_total_ttc'] - $item['item_total_ht'];
+						$item['item_total_ttc'] = $item['item_total_ttc'] / 100;
+						$item['item_total_ht'] = $item['item_total_ht'] / 100;
+						$item['item_tva_total_amount'] = $item['item_tva_total_amount'] / 100;
+					}
 					$sub_tpl_component = array();
 					$sub_tpl_component['INVOICE_ROW_ITEM_NAME'] = $item['item_name'];
 					$sub_tpl_component['INVOICE_ROW_ITEM_TOTAL_HT'] = '-'.number_format( $item['item_total_ht'], 2, '.', '' );
@@ -487,7 +501,7 @@ if ( !class_exists('wps_credit') ) {
 			$tpl_component['INVOICE_SUMMARY_PART'] = wpshop_display::display_template_element('credit_slip_summary_part', $sub_tpl_component, array(), 'common');
 
 
-			$tpl_component['RECEIVED_PAYMENT'] = '';
+			$tpl_component['RECEIVED_PAYMENT'] = $tpl_component['INVOICE_TRACKING'] = '';
 			$tpl_component['INVOICE_FOOTER'] = wpshop_modules_billing::generate_footer_invoice();
 
 

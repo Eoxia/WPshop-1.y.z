@@ -270,6 +270,49 @@ class wps_shortcodes_ctr
 
 	public function __construct() {
 		//add_action('init', array($this, 'help_tab_shortcodes'));
+		add_action( "admin_head", array( $this, 'shortcode_text_localization' ) );
+	}
+
+	/**
+	 * Localize Script
+	 */
+	function shortcode_text_localization() {
+	    $plugin_url = plugins_url( '/', __FILE__ );
+	?>
+	<!-- TinyMCE Shortcode Plugin -->
+	<script type='text/javascript'>
+	var wpshop_mce_shortcode = {
+	    'url': "<?php _e('Insert shortcode into page content', 'wpshop' ); ?>",
+	    'product_listing': "<?php _e('Product listing', 'wpshop' ); ?>",
+	    'url': "<?php _e('By product ID', 'wpshop' ); ?>",
+	    'url': "<?php _e('By attribute value', 'wpshop' ); ?>",
+	    'url': "<?php _e('Wpshop categories', 'wpshop' ); ?>",
+	    'url': "<?php _e('Attribute valuet', 'wpshop' ); ?>",
+	    'url': "<?php _e('Custom message content', 'wpshop' ); ?>",
+	    'url': "<?php _e('Customer first name', 'wpshop' ); ?>",
+	    'url': "<?php _e('Customer last name', 'wpshop' ); ?>",
+	    'url': "<?php _e('Customer email', 'wpshop' ); ?>",
+	    'url': "<?php _e('Order identifer', 'wpshop' ); ?>",
+	    'url': "<?php _e('Paypal transaction ID', 'wpshop' ); ?>",
+	    'url': "<?php _e('Order content', 'wpshop' ); ?>",
+	    'url': "<?php _e('Customer personnal informations', 'wpshop' ); ?>",
+	    'url': "<?php _e('Order addresses', 'wpshop' ); ?>",
+	    'url': "<?php _e('Billing order address', 'wpshop' ); ?>",
+	    'url': "<?php _e('Shipping order address', 'wpshop' ); ?>",
+	    'url': "<?php _e('Shipping method', 'wpshop' ); ?>",
+	    'url': "<?php _e('order payment_method', 'wpshop' ); ?>",
+	    'url': "<?php _e('Order customer comment', 'wpshop' ); ?>",
+	    'url': "<?php _e('Wpshop custom tags', 'wpshop' ); ?>",
+	    'url': "<?php _e('Cart', 'wpshop' ); ?>",
+	    'url': "<?php _e('Cart widget', 'wpshop' ); ?>",
+	    'url': "<?php _e('Checkout', 'wpshop' ); ?>",
+	    'url': "<?php _e('Customer account', 'wpshop' ); ?>",
+	    'url': "<?php _e('Shop', 'wpshop' ); ?>",
+	    'url': "<?php _e('Advanced search', 'wpshop' ); ?>",
+	};
+	</script>
+	<!-- TinyMCE Shortcode Plugin -->
+	    <?php
 	}
 
 	public function shortcode_xmlloader() {

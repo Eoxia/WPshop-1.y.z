@@ -3,8 +3,8 @@ Contributors: Eoxia
 Tags: boutique, catalog, catalogue, commerce, e-commerce, ecommerce, m-commerce, mcommerce, produits, responsive, shop, shopping cart, wp shop, wordpress ecommerce, wordpress shop, WPshop, wp-shop, french payment gateway, passerelle de paiement française
 Donate link: http://www.wpshop.fr/documentations/presentation-wpshop/
 Requires at least: 3.4.0
-Tested up to: 4.6
-Stable tag: 1.4.2.3
+Tested up to: 4.6.1
+Stable tag: 1.4.2.4
 License: GPLv2 or later
 
 Simple and powerfull eCommerce plugin, with French Payment and Shipping systems : Paybox, Paypal, Atos, Cybermut, SystemPay, Paysite-cash, Colissimo
@@ -96,6 +96,14 @@ Il faut vérifier que le réglage des permaliens pour votre site est bien régl�
 
 
 == Changelog ==
+
+= Version 1.4.2.4 =
+
+Corrections / Fix
+
+* 4857 - Correctifs mineurs / Minor fixes
+* 4856 - Correction de l'affichage des paiements dans la facture / Fix display of payments invoice
+* 4855 - Correctif des avoirs / Fix credits
 
 = Version 1.4.2.3 =
 

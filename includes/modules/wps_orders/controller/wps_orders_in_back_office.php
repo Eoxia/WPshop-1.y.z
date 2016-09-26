@@ -558,4 +558,5 @@ class wps_orders_in_back_office {
 		echo json_encode( array( 'status' => $status ) );
 		wp_die();
 	}
+
 }

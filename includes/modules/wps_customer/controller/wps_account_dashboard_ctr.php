@@ -2,7 +2,7 @@
 class wps_account_dashboard_ctr {
 	function __construct() {
 		add_shortcode( 'wps_account_dashboard', array( $this, 'display_account_dashboard') );
-// 		add_shortcode( 'wps_messages', array( 'wpshop_messages', 'get_histo_messages_per_customer' ) );
+		// add_shortcode( 'wps_messages', array( 'wpshop_messages', 'get_histo_messages_per_customer' ) );
 		add_shortcode( 'wps_account_last_actions_resume', array($this, 'display_account_last_actions' ) );
 	}
 

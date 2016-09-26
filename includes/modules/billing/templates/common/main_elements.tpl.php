@@ -125,7 +125,7 @@ ob_start();
 		margin: 40px 0px;
 	}
 	.wpshop_invoice_received_payment_container_infos {
-		width: 40%;
+		width: 30%;
 	}
 	.received_payment_list {
 		width: 100%;

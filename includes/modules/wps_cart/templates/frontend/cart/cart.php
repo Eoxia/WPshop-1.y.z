@@ -27,6 +27,7 @@
 		<div class="wps-cart-item-close"></div>
 		<?php endif; ?>
 	</li>
+	
 	<?php
 		foreach( $cart_items as $item_id => $item ) :
 			$product_key = $item_id;
