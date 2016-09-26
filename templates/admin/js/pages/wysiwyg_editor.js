@@ -18,7 +18,7 @@
 						title : WPSHOP_BUTTON_DESCRIPTION,
 						image: false
 					});
-					
+
 					wpshop_wysiwyg_button.onRenderMenu.add(function(c, m) {
 						/*	Define wpshop products shortcodes menu	*/
 						var wpshop_product_shortode;
