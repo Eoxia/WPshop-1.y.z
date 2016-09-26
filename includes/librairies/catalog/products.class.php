@@ -2595,10 +2595,9 @@ class wpshop_products {
 			if ( !empty($head_wpshop_variation_definition['attributes']) ) {
 				foreach ( $head_wpshop_variation_definition['attributes'] as $attribute_code ) {
 					$attribute_db_definition = wpshop_attributes::getElement($attribute_code, "'valid'", 'code');
+
 					if ( !empty( $attribute_db_definition ) ) {
 						$attribute_display_state = wpshop_attributes::check_attribute_display( $attribute_db_definition->is_visible_in_front, $wpshop_product_attributes_frontend_display, 'attribute', $attribute_code, 'complete_sheet');
-
-
 
 						$is_required = ( (!empty($head_wpshop_variation_definition['options']) && !empty($head_wpshop_variation_definition['options']['required_attributes']) && ( in_array( $attribute_code, $head_wpshop_variation_definition['options']['required_attributes']) )) ) ? true : false;
 						if ( !$is_required && $attribute_db_definition->is_required == 'yes' ) {
@@ -2636,6 +2635,7 @@ class wpshop_products {
 
 						$input_def['options_label']['original'] = true;
 						$input_def['option'] = 'data-nonce="' . wp_create_nonce( 'wpshop_ajax_wpshop_variation_selection' ) . '" class="wpshop_variation_selector_input' . ($is_required ? ' attribute_is_required_input attribute_is_required_input_' . $attribute_code . ' ' : '') . ( $attribute_db_definition->_display_informations_about_value == 'yes' ? ' wpshop_display_information_about_value' : '' ) . ' ' . (( is_admin() ) ? $attribute_db_definition->backend_css_class : $attribute_db_definition->frontend_css_class) . '" ';
+
 						if ( !empty(  $real_possible_values ) ) {
 							$tpl_component = array();
 							$attribute_output_def['value'] = isset($head_wpshop_variation_definition['options']['attributes_default_value'][$attribute_code]) ? $head_wpshop_variation_definition['options']['attributes_default_value'][$attribute_code] : $input_def['value'];
@@ -2688,7 +2688,6 @@ class wpshop_products {
 				}
 			}
 		}
-
 		$variation_tpl['VARIATION_FORM_VARIATION_LIST'] = '';
 		if ( !empty($variation_attribute_ordered) && is_array($variation_attribute_ordered) ) {
 			ksort($variation_attribute_ordered);
@@ -3218,8 +3217,8 @@ class wpshop_products {
 				switch ( $free_variation_attribute_def->data_type_to_use ) {
 					case 'custom':
 					case 'internal':
-						$possible_values = wpshop_attributes::get_select_output( $free_variation_attribute_def );
-						$value_to_outut = $possible_values['possible_value'][$attribute_selected_value];
+						// $possible_values = wpshop_attributes::get_select_output( $free_variation_attribute_def );
+						// $value_to_outut = $possible_values['possible_value'][$attribute_selected_value];
 					break;
 				}
 				$variation_tpl_component['VARIATION_VALUE'] = stripslashes($value_to_outut);

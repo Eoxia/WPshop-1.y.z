@@ -17,5 +17,3 @@ new wps_shortcodes_ctr();
 add_action('init', array('wps_shortcodes_ctr', 'wysiwyg_button'));
 add_filter('tiny_mce_version', array('wps_shortcodes_ctr', 'refresh_wysiwyg'));
 add_action('admin_post_wps_shortcodes_wysiwyg_dialog', array('wps_shortcodes_ctr', 'wps_shortcodes_wysiwyg_dialog'));
-
-?>

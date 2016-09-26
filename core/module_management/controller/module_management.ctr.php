@@ -130,7 +130,7 @@ class eo_module_management {
 			$parent_folder_content = scandir( $module_folder );
 			foreach ( $parent_folder_content as $folder ) {
 				if ( $folder && substr( $folder, 0, 1) != '.' && ( EOMODMAN_DIR != $folder ) ) {
-					if ( file_exists( $module_folder . $folder . '/' . $folder . '.php') ) {
+					if ( is_dir( $module_folder . $folder ) && file_exists( $module_folder . $folder . '/' . $folder . '.php') ) {
 						$f =  $module_folder . $folder . '/' . $folder . '.php';
 						require( $f );
 					}
@@ -171,7 +171,7 @@ class eo_module_management {
 					}
 
 					/**	Finaly include module if the state allow it	*/
-					if ( $is_activated && file_exists( $module_folder . $folder . '/' . $folder . '.php') ) {
+					if ( $is_activated && is_dir( $module_folder . $folder ) && file_exists( $module_folder . $folder . '/' . $folder . '.php') ) {
 						$f =  $module_folder . $folder . '/' . $folder . '.php';
 						require( $f );
 					}

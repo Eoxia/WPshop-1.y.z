@@ -853,7 +853,7 @@ wpshop(document).ready(function(){
 
 
 	jQuery('.wpshop_product_attribute_is_downloadable_').each(function() {
-		new show_downloadable_interface_in_admin( this );
+	//	new show_downloadable_interface_in_admin( this );
 	});
 
 	jQuery( document ).on('change', '.wpshop_product_attribute_is_downloadable_', function() {

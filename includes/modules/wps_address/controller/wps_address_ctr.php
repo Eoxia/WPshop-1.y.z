@@ -588,8 +588,7 @@ class wps_address {
 
 		$user_id = ( !empty($user_id) ) ? $user_id : get_current_user_id();
 		if ( !empty($address_id) ) {
-			$address_type = get_post_meta( $address_id, '_wpshop_address_attribute_set_id', true);
-			$response .= self::display_form_fields($address_type, $address_id, '', '', array(), array(), array(), $user_id);
+			$response .= self::display_form_fields($address_type_id, $address_id, '', '', array(), array(), array(), $user_id);
 			$title = __('Edit your address', 'wpshop');
 		}
 		elseif($address_type_id) {
@@ -804,7 +803,7 @@ class wps_address {
 		// Take the post id to make the link with the post meta of  address
 		$values = array();
 		// take the address informations
-		$current_item_edited = !empty($id) ? (int)wpshop_tools::varSanitizer($id) : null;
+		$current_item_edited = !empty($id) ? (int)$id : null;
 
 		foreach ( $form as $group_id => $group_fields) {
 			if ( empty($options) || (!empty($options) && ($options['title']))) $output_form_fields .= '<h2>'.__( $group_fields['name'], 'wpshop' ).'</h2>';
@@ -1318,10 +1317,7 @@ class wps_address {
 	 * AJAX - Relad Address Interface in new checkout tunnel
 	 */
 	function wps_reload_address_interface() {
-		$_wpnonce = ( !empty( $_REQUEST['_wpnonce'] ) ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
-
-		if ( !wp_verify_nonce( $_wpnonce, 'wps_reload_address_interface' ) )
-			die();
+		check_ajax_referer( 'wps_reload_address_interface' );
 
 		global $wpdb;
 		$status = false; $response = '';
@@ -1370,9 +1366,6 @@ class wps_address {
 	function wps_save_address() {
 		check_ajax_referer( 'wps_save_address' );
 		global $wpshop, $wpdb;
-
- ini_set("display_errors", true);
- error_reporting(E_ALL);
 
 		$status = false;
 		$result = $address_type = $same_address_type = '';
