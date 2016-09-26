@@ -688,7 +688,7 @@ class wps_account_ctr {
 	}
 
 	function save_account_informations( $cid, $args, $admin = true ) {
-		global $wpdb; global $wpshop;
+		global $wpdb, $wpshop;
 
 		$exclude_user_meta = array( 'user_email', 'user_pass' );
 		$wps_entities = new wpshop_entities();
@@ -698,7 +698,7 @@ class wps_account_ctr {
 		$user_id = $wpdb->get_var( $query );
 
 		$user_name = !empty($args['attribute']['varchar']['user_login']) ? $args['attribute']['varchar']['user_login'] : $args['attribute']['varchar']['user_email'];
-		$user_pass = ( !empty($args['attribute']['varchar']['user_pass']) ) ? $args['attribute']['varchar']['user_pass'] : '';
+		$user_pass = !empty($args['attribute']['varchar']['user_pass']) ? $args['attribute']['varchar']['user_pass'] : '';
 
 		$query = $wpdb->prepare('SELECT id FROM ' .WPSHOP_DBT_ATTRIBUTE_SET. ' WHERE entity_id = %d', $element_id );
 		$attribute_set_id = $wpdb->get_var( $query );
@@ -744,35 +744,30 @@ class wps_account_ctr {
 	 * ACCOUNT - Save account informations
 	 */
 	function wps_save_account_informations () {
-		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
-
-		if ( !wp_verify_nonce( $_wpnonce, 'wps_save_account_informations' ) )
-			wp_die();
+		check_ajax_referer( 'wps_save_account_informations' );
 
 		global $wpdb;
 		$status = false; $response = '';
 
 		$user_id = get_current_user_id();
-
 		if ( !empty($user_id) ) {
-			$query = $wpdb->prepare( 'SELECT ID FROM ' .$wpdb->posts. ' WHERE post_type = %s AND post_author = %d', WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, $user_id );
+			$query = $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_type = %s AND post_author = %d", WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, $user_id );
 			$cid = $wpdb->get_var( $query );
 		}
 
-		// @TODO
-		$errors = $this->save_account_informations( $cid, array() );
-
+		$errors = $this->save_account_informations( $cid, $_POST );
 		if( !empty( $errors ) ) {
 			$response = '<div class="wps-alert-error">' .__('Some errors have been detected', 'wpshop') . ' : <ul>';
 			foreach( $errors as $error ){
 				$response .= '<li>' . $error . '</li>';
 			}
 			$response .= '</div>';
-		} else {
+		}
+		else {
 			$status = true;
 		}
-		echo json_encode( array( 'status' => $status, 'response' => $response) );
-		wp_die();
+
+		wp_die( json_encode( array( 'status' => $status, 'response' => $response) ) );
 	}
 
 	/**
@@ -786,8 +781,8 @@ class wps_account_ctr {
 		if( !empty($response) ) {
 			$status = true;
 		}
-		echo json_encode( array('status' => $status, 'response' => $response) );
-		wp_die();
+
+		wp_die( json_encode( array( 'status' => $status, 'response' => $response ) ) );
 	}
 
 	/**
