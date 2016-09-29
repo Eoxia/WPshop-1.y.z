@@ -916,7 +916,6 @@ if ( !class_exists("wpshop_modules_billing") ) {
 			$order_postmeta = get_post_meta( $order_id, '_order_postmeta', true );
 			$address_info = ( $bon_colisage ) ? ( ( !empty($order_customer_postmeta['shipping']) && !empty($order_customer_postmeta['shipping']['address']) && is_array($order_customer_postmeta['shipping']['address']) )  ? $order_customer_postmeta['shipping']['address'] : array() ) : ( ( !empty($order_customer_postmeta['billing']) && !empty($order_customer_postmeta['billing']['address']) && is_array($order_customer_postmeta['billing']['address']) )  ? $order_customer_postmeta['billing']['address'] : array() );
 
-
 			if ( !empty($order_customer_postmeta) && !empty($address_info) ) {
 				$default_address_attributes = array('CIVILITY', 'ADDRESS_LAST_NAME', 'ADDRESS_FIRST_NAME', 'ADDRESS', 'POSTCODE', 'CITY', 'STATE', 'COUNTRY', 'PHONE', 'ADDRESS_USER_EMAIL', 'COMPANY');
 				foreach ( $default_address_attributes as $default_address_attribute ) {
@@ -954,7 +953,6 @@ if ( !class_exists("wpshop_modules_billing") ) {
 					$user_info = get_userdata( $order_postmeta['customer_id'] );
 					$tpl_component['ADDRESS_USER_EMAIL'] = ( !empty($user_info) && !empty($user_info->user_email) ) ? $user_info->user_email : '';
 				}
-
 
 
 				$output = wpshop_display::display_template_element('invoice_receiver_formatted_address', $tpl_component, array(), 'common');

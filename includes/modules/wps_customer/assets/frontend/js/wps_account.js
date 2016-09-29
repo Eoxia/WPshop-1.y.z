@@ -4,7 +4,7 @@ jQuery( document ).ready( function() {
 		jQuery( '#wps_modal_account_informations_opener' ).addClass( 'wps-bton-loading');
 		var data = {
 			action: "wps_fill_account_informations_modal",
-			_wpnonce: jQuery( this ).data( 'nonce' ).trim(),
+			_wpnonce: jQuery( this ).data( 'nonce' ).toString().trim(),
 		};
 		jQuery.post(ajaxurl, data, function(response) {
 			if( response['status'] ) {

@@ -662,7 +662,7 @@ class wps_address {
 	/** Treat the differents fields of form and classified them by form
 	 * @return boolean
 	 */
-	public static function save_address_infos( $attribute_set_id, $address_id_to_copy = 0, $address_info_to_copy = array() ) {
+	public static function save_address_infos( $attribute_set_id, $address_id_to_copy = 0, $address_info_to_copy = array(), $customer_id = false, $post_ID = false ) {
 		global $wpdb;
 
 		if( empty( $address_info_to_copy ) ) {
@@ -683,12 +683,13 @@ class wps_address {
 		// @TODO : REQUEST
 		$post_parent = '';
 		$post_author = get_current_user_id();
-		$customer_id = !empty( $_REQUEST['user']['customer_id'] ) ? (int)$_REQUEST['user']['customer_id'] : 0;
-		$post_ID = !empty( $_REQUEST['post_ID'] ) ? (int)$_REQUEST['post_ID'] : 0;
+		$customer_id = !empty( $customer_id ) ? (int) $customer_id : ( !empty( $_REQUEST['user']['customer_id'] ) ? (int) $_REQUEST['user']['customer_id'] : 0 );
+		$post_ID = !empty( $post_ID ) ? (int) $post_ID : ( !empty( $_REQUEST['post_ID'] ) ? (int) $_REQUEST['post_ID'] : 0 );
 
 		if ( !empty($customer_id) ) {
-			$post_parent = $customer_id;
-			$post_author = $customer_id;
+			$customer = get_post( $customer_id );
+			$post_parent = $customer->post_author;
+			$post_author = $customer->post_author;
 		}
 		elseif ( !empty( $post_ID ) ) {
 			$post_parent = $post_ID;

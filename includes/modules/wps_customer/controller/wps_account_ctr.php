@@ -439,7 +439,7 @@ class wps_account_ctr {
 			$query = $wpdb->prepare('SELECT id FROM ' .WPSHOP_DBT_ATTRIBUTE_SET. ' WHERE entity_id = %d', $element_id );
 			$attribute_set_id = $wpdb->get_var( $query );
 			if ( !empty($attribute_set_id) ){
-				$group  = wps_address::get_addresss_form_fields_by_type( $attribute_set_id );
+				$group = wps_address::get_addresss_form_fields_by_type( $attribute_set_id );
 				foreach ( $group as $attribute_sets ) {
 					foreach ( $attribute_sets as $attribute_set_field ) {
 						if( !empty($user_id) ) {
@@ -478,13 +478,34 @@ class wps_account_ctr {
 						$customer_post_ID = $wpdb->get_var( $customer_entity_request );
 
 						if( !empty( $attribute ) ) {
-							$user_info = array();
+							$user_info = $address_forms = $all_addresses_form = array();
+							$billing_option = get_option( 'wpshop_billing_address' );
 							foreach( $attribute as $type => $attributes ) {
-								foreach( $attributes as $meta => $attribute_value ) {
-									$user_info[$meta] = sanitize_text_field( $attribute_value );
+								if( $billing_option['integrate_into_register_form'] == 'yes' && ctype_digit( (string) $type ) ) {
+									//wps_address::save_address_infos( (int) $type );
+									foreach( $attributes as $sub_type => $sub_attributes ) {
+										if( !is_array( $sub_attributes ) ) {
+											$address_forms[$type][$sub_type] = sanitize_text_field( $sub_attributes );
+											continue;
+										}
+										foreach( $sub_attributes as $sub_meta => $sub_attribute_value ) {
+											$address_forms[$type][$sub_type][$sub_meta] = sanitize_text_field( $sub_attribute_value );
+										}
+									}
+								} else {
+									foreach( $attributes as $meta => $attribute_value ) {
+										$user_info[$meta] = sanitize_text_field( $attribute_value );
+										if( $billing_option['integrate_into_register_form'] == 'yes' && isset( $billing_option['integrate_into_register_form_matching_field'][$meta] ) ) {
+											$all_addresses_form[$type][$meta] = $user_info[$meta];
+										}
+									}
 								}
 							}
 							wps_customer_ctr::save_customer_synchronize( $customer_post_ID, $user_id, $user_info );
+							foreach( $address_forms as $type_of_form => $address_form ) {
+								$address_form = array_merge_recursive( $all_addresses_form, $address_form );
+								wps_address::save_address_infos( (int) $type_of_form, 0, array( 'type_of_form' => (int) $type_of_form, 'attribute' => array( $type_of_form => $address_form ) ), $customer_post_ID );
+							}
 						}
 
 						if ( !empty( $_SESSION ) && !empty( $_SESSION[ 'cart' ] ) ) {
@@ -498,14 +519,13 @@ class wps_account_ctr {
 						}
 						$status = true;
 
-						if ( $account_creation && !empty( $user_id ) ) {
+						if ( $account_creation && !empty( $user_id ) && !is_admin() ) {
 							$secure_cookie = is_ssl() ? true : false;
 							wp_set_auth_cookie( $user_id, true, $secure_cookie );
 						}
 						$wps_message->wpshop_prepared_email( sanitize_email($attribute['varchar']['user_email']), 'WPSHOP_SIGNUP_MESSAGE', array('customer_first_name' => ( !empty($attribute['varchar']['first_name']) ) ? sanitize_text_field( $attribute['varchar']['first_name'] ) : '', 'customer_last_name' => ( !empty($attribute['varchar']['last_name']) ) ? sanitize_text_field( $attribute['varchar']['last_name'] ) : '', 'customer_user_email' => ( !empty($attribute['varchar']['user_email']) ) ? sanitize_email( $attribute['varchar']['user_email'] ) : '') );
 
-					}
-					else {
+					} else {
 						$result = '<div class="wps-alert-error">' .__('Some errors have been detected', 'wpshop') . ' : <ul>';
 						foreach(  $wpshop->errors as $error ){
 							$result .= '<li>' .$error. '</li>';
@@ -774,7 +794,7 @@ class wps_account_ctr {
 	 * ACCOUNT - AJAX - Reload account informations data
 	 */
 	function wps_account_reload_informations() {
-		check_ajax_referer( 'wps_account_reload_informations' );
+		//check_ajax_referer( 'wps_account_reload_informations' );
 
 		$status = false;
 		$response = do_shortcode('[wps_account_informations]');

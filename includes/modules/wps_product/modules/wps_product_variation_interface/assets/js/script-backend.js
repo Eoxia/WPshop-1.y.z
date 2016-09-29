@@ -76,7 +76,7 @@ var wps_variations_options_raw = {
 				label: element.label,
 				type: element.attribute_complete_def.data_type,
 				requiered: (function() {
-					if( typeof wps_product_variation_interface.variation_defining.options.required_attributes !== 'undefined' && typeof wps_product_variation_interface.variation_defining.options.required_attributes[element.attribute_complete_def.code] !== 'undefined' ) {
+					if( typeof wps_product_variation_interface.variation_defining.options !== 'undefined' && typeof wps_product_variation_interface.variation_defining.options.required_attributes !== 'undefined' && typeof wps_product_variation_interface.variation_defining.options.required_attributes[element.attribute_complete_def.code] !== 'undefined' ) {
 						requiered = 'checked';
 					} else {
 						requiered = '';

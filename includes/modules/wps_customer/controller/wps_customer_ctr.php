@@ -565,7 +565,7 @@ class wps_customer_ctr {
 	public static function get_all_customer( $post_status = 'publish' ) {
 		global $wpdb;
 
-		$query 			= $wpdb->prepare( "SELECT * FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s", WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, $post_status );
+		$query = $wpdb->prepare( "SELECT * FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s", WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, $post_status );
 		$list_customer 	= $wpdb->get_results( $query );
 
 		return $list_customer;

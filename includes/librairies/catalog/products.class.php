@@ -3217,8 +3217,8 @@ class wpshop_products {
 				switch ( $free_variation_attribute_def->data_type_to_use ) {
 					case 'custom':
 					case 'internal':
-						// $possible_values = wpshop_attributes::get_select_output( $free_variation_attribute_def );
-						// $value_to_outut = $possible_values['possible_value'][$attribute_selected_value];
+						$possible_values = wpshop_attributes::get_select_output( $free_variation_attribute_def );
+						$value_to_outut = $possible_values['possible_value'][$attribute_selected_value];
 					break;
 				}
 				$variation_tpl_component['VARIATION_VALUE'] = stripslashes($value_to_outut);
