@@ -4,7 +4,7 @@ Tags: boutique, catalog, catalogue, commerce, e-commerce, ecommerce, m-commerce,
 Donate link: http://www.wpshop.fr/documentations/presentation-wpshop/
 Requires at least: 3.4.0
 Tested up to: 4.6.1
-Stable tag: 1.4.2.4
+Stable tag: 1.4.2.5
 License: GPLv2 or later
 
 Simple and powerfull eCommerce plugin, with French Payment and Shipping systems : Paybox, Paypal, Atos, Cybermut, SystemPay, Paysite-cash, Colissimo
@@ -96,6 +96,27 @@ Il faut vérifier que le réglage des permaliens pour votre site est bien régl�
 
 
 == Changelog ==
+
+= Version 1.4.2.5 =
+
+Corrections / Fix
+
+* 4991 - Correction création client commande / Fix order customer signup
+* 4770 - Nonce sur la modification du compte par le client / Nonce modify account by customer
+* 4761 - Correctif newsletter / Fix newsletter
+* 4760 - Erreur de client non connecté à la première commande / First order non connected user fix
+* 4759 - Correctif produits téléchargeable / Fix downloadable products
+* 4757 - Correctif des options obligatoires dans le produit / Fix required attributes in product
+* 4754 - Problème d'affichage des attributs dans la fiche produit / Display attributes in product sheet
+* 4753 - Function ajax_wpshop_fill_the_downloadable_dialog
+* 4735 - Correction unités / Fix units
+* 4733 - Correctif de création d'adresse avec inscription / Signup and create address in same page
+* 4278 - Dysfonctionnement du champs quantité dans les fiche produit / Quantity field in product is no longer functionnal
+* 4276 - Test du format des champs lors de l'enregistrement des attributs ( téléphone, ... ) / Test fields format when saving ( phone, ... )
+* 4207 - Champ texte dans le front / Text field in front
+* 4206 - Écrase l'option d'un même produit déjà au panier / Merge viariation of same product in cart
+* 4205 - Correctif des options libre / Fix free variations
+* 4057 - frontend_main.js correction pagination chargement infini / frontend_main.js fix page infinite loader
 
 = Version 1.4.2.4 =
 

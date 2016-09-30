@@ -3,7 +3,7 @@
  * Plugin Name: WP-Shop
  * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/
  * Description: With this plugin you will be able to manage the products you want to sell and user would be able to buy this products
- * Version: 1.4.2.4
+ * Version: 1.4.2.5
  * Author: Eoxia
  * Author URI: http://eoxia.com/
  */
