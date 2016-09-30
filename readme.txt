@@ -100,6 +100,7 @@ Il faut vérifier que le réglage des permaliens pour votre site est bien régl�
 = Version 1.4.2.6 =
 
 Corrections / Fix
+
 * 5007 - Erreur PRMOR au lieu de OR dans l'identifiant commande / Error PRMOR for order identifier
 
 = Version 1.4.2.5 =
