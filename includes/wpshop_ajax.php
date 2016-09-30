@@ -2796,6 +2796,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		jQuery(".send_downloadable_file_dialog").dialog("close");
 		jQuery(".is_downloadable_statut_'.$product_id.'").html( response );
 		}});</script>';
+		$output = apply_filters( 'wpshop_download_file_dialog', $output, $product_id );
 
 		$response = array( 'status' => true, 'response' => $output);
 		echo json_encode( $response );

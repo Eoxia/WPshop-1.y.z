@@ -110,6 +110,9 @@ class wps_product_ctr {
 			$variation_metadata = get_post_meta( $combined_variation_id, '_wpshop_product_metadata', true );
 			if ( isset($variation_metadata['product_stock']) ) {
 				$product_id = $combined_variation_id;
+			} else {
+				$product_id = wp_get_post_parent_id( $combined_variation_id );
+				$product_id = ( $product_id ) ? $product_id : $combined_variation_id;
 			}
 		}
 		$product_data = wpshop_products::get_product_data($product_id, false, '"publish", "free_product"');
