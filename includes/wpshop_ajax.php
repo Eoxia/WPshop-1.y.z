@@ -2986,7 +2986,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 				$wpdb->update($wpdb->users, array('user_activation_key' => $token), array('user_login' => $user_infos->user_login) );
 
 				$permalink_option = get_option( 'permalink_structure' );
-				$link = '<a href="' .get_permalink( wpshop_tools::get_page_id( get_option('wpshop_checkout_page_id') ) ).( (!empty($permalink_option)) ? '?' : '&').'action=direct_payment_link&token=' .$token. '&login=' .rawurlencode( $user_infos->user_login). '&order_id=' .$order_id. '">' .__( 'Click here to pay your order', 'wpshop' ). '</a>';
+				$link = '<a href="' . admin_url( 'admin-post.php?action=wps_direct_payment_link&token=' .$token. '&amp;login=' .rawurlencode( $user_infos->user_login). '&amp;order_id=' .$order_id ) . '">' .__( 'Click here to pay your order', 'wpshop' ). '</a>';
 
 				/** Send message **/
 				$wps_message = new wps_message_ctr();

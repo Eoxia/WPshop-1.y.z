@@ -386,14 +386,41 @@ class wps_orders_ctr {
 			$order_meta = get_post_meta( $order_id, '_order_postmeta', true );
 			$order_info = get_post_meta( $order_id, '_order_info', true );
 			$_SESSION['shipping_method'] = $order_meta['order_payment']['shipping_method'];
-			isset( $order_info['billing']['address_id'] ) ? $_SESSION['billing_address'] = $order_info['billing']['address_id'] : $status = false;
-			isset( $order_info['shipping']['address_id'] ) ? $_SESSION['shipping_address'] = $order_info['shipping']['address_id'] : false;
-			$_SESSION['cart'] = array();
-			$_SESSION['cart']['order_id'] = wpshop_tools::varSanitizer( $order_id );
-			$_SESSION['cart']['cart_type'] = 'normal';
-			$_SESSION['cart']['order_amount_to_pay_now'] = $order_meta['order_amount_to_pay_now'];
-			$_SESSION['cart']['order_items'] = $order_meta['order_items'];
-			return array( 'status' => $status, 'permalink' => get_permalink( get_option('wpshop_cart_page_id') ) . '?order_step=5' );
+			if( isset( $order_info['billing']['address_id'] ) ) {
+				$_SESSION['billing_address'] = $order_info['billing']['address_id'];
+	 			isset( $order_info['shipping']['address_id'] ) ? $_SESSION['shipping_address'] = $order_info['shipping']['address_id'] : false;
+	 			$_SESSION['cart'] = array();
+	 			$_SESSION['cart']['order_id'] = wpshop_tools::varSanitizer( $order_id );
+	 			$_SESSION['cart']['cart_type'] = 'normal';
+	 			$_SESSION['cart']['order_amount_to_pay_now'] = $order_meta['order_amount_to_pay_now'];
+	 			$_SESSION['cart']['order_items'] = $order_meta['order_items'];
+				$permalink = get_permalink( get_option('wpshop_cart_page_id') ) . '?order_step=5';
+			} else {
+				$status = self::add_order_to_session( $order_id );
+				$permalink = get_permalink( wpshop_tools::get_page_id( get_option('wpshop_checkout_page_id') ) );
+			}
+			return array( 'status' => $status, 'permalink' => $permalink );
+		}
+
+		/** Add order to SESSION **/
+		public static function add_order_to_session( $order_id ) {
+			$order_meta = get_post_meta($order_id, '_order_postmeta', true);
+			if( $order_meta != false ) {
+				$_SESSION['cart'] = array();
+	 			$_SESSION['cart']['order_amount_to_pay_now'] = $order_meta['order_amount_to_pay_now'];
+				$_SESSION['cart']['order_items'] = array();
+				if ( !empty($order_meta) && !empty( $order_meta['order_items']) ) {
+					$wpshop_cart_type = 'cart';
+					foreach( $order_meta['order_items'] as $item ) {;
+						$_SESSION['cart']['order_items'][$item['item_id']] = $item;
+					}
+					$wps_cart_ctr = new wps_cart();
+					$order = $wps_cart_ctr->calcul_cart_information( array() );
+					$wps_cart_ctr->store_cart_in_session( $order );
+				}
+				$_SESSION['order_id'] = $order_id;
+			}
+			return (bool) ($order_meta != false);
 		}
 		/**
 		 * AJAX - Delete order by order_id
@@ -429,9 +456,11 @@ class wps_orders_ctr {
 		 * AJAX - Pay billing
 		 */
 		public function wps_checkout_quotation() {
+			$is_link = !empty( $_REQUEST['is_link'] ) ? sanitize_text_field( $_REQUEST['is_link'] ) : '';
+
 			$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
 
-			if ( !wp_verify_nonce( $_wpnonce, 'wps_checkout_quotation' ) )
+			if ( !wp_verify_nonce( $_wpnonce, 'wps_checkout_quotation' ) && empty( $is_link ) )
 				wp_die();
 
 			$status = true;
@@ -442,8 +471,6 @@ class wps_orders_ctr {
 				$status = $pay_quotation['status'];
 			}
 
-			$is_link = !empty( $_REQUEST['is_link'] ) ? sanitize_text_field( $_REQUEST['is_link'] ) : '';
-
 			if( !empty( $is_link ) ) {
 				wp_redirect( $pay_quotation['permalink'] );
 				exit();
@@ -453,11 +480,6 @@ class wps_orders_ctr {
 			}
 		}
 		public function wps_checkout_quotation_no_login() {
-			$_wpnonce = !empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
-
-			if ( !wp_verify_nonce( $_wpnonce, 'wps_checkout_quotation' ) )
-				wp_die();
-
 			$order_id = !empty( $_REQUEST['order_id'] ) ? (int) $_REQUEST['order_id'] : 0;
 			wp_redirect( home_url('/wp-login.php') . '?redirect_to=' . urlencode( admin_url() . 'admin-ajax.php?action=wps_checkout_quotation&order_id=' . $order_id . '&is_link=link' ) );
 			exit();

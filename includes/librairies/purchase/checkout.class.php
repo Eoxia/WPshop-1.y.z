@@ -260,7 +260,10 @@ class wpshop_checkout {
 		}
 	}
 
-	public static function direct_payment_link( $token, $order_id, $login ) {
+	public static function wps_direct_payment_link() {
+		$token = !empty( $_GET['token'] ) ? sanitize_text_field( $_GET['token'] ) : '';
+		$login = !empty( $_GET['login'] ) ? sanitize_text_field( $_GET['login'] ) : '';
+		$order_id = !empty( $_GET['order_id'] ) ? (int) $_GET['order_id'] : '';
 
 		global $wpdb;
 		if( !empty($token) && !empty($order_id) && !empty($login) ) {
@@ -269,23 +272,10 @@ class wpshop_checkout {
 			$user_infos = $wpdb->get_row( $query );
 			if( !empty($user_infos) ) {
 				/** Connect the user **/
-				$secure_cookie = is_ssl() ? true : false;
-				wp_set_auth_cookie($user_infos->ID, true, $secure_cookie);
+				wp_set_auth_cookie( $user_infos->ID, true, is_ssl() );
 
-				/** Add order to SESSION **/
-				$order_meta = get_post_meta($order_id, '_order_postmeta', true);
-				$_SESSION['cart'] = array();
-				$_SESSION['cart']['order_items'] = array();
-				if ( !empty($order_meta) && !empty( $order_meta['order_items']) ) {
-					$wpshop_cart_type = 'cart';
-					foreach( $order_meta['order_items'] as $item ) {;
-						$_SESSION['cart']['order_items'][$item['item_id']] = $item;
-					}
-					$wps_cart_ctr = new wps_cart();
-					$order = $wps_cart_ctr->calcul_cart_information( array() );
-					$wps_cart_ctr->store_cart_in_session( $order );
-				}
-				$_SESSION['order_id'] = $order_id;
+				wps_orders_ctr::add_order_to_session( $order_id );
+
 				$wpdb->update($wpdb->users, array('user_activation_key' => ''), array('user_login' => $login) );
 				wpshop_tools::wpshop_safe_redirect( get_permalink( wpshop_tools::get_page_id( get_option('wpshop_checkout_page_id') ) ) );
 			}

@@ -345,7 +345,7 @@ class wps_shipping_mode_ctr {
 								}
 							}
 							/** Check Department limitation **/
-							$department = substr( $address_metadata['postcode'], 0, 2 );
+							$department = isset( $address_metadata['postcode'] ) ? substr( $address_metadata['postcode'], 0, 2 ) : '';
 							if ( !empty($shipping_mode['limit_destination']) && !empty($shipping_mode['limit_destination']['department']) ) {
 								$departments = explode(',', $shipping_mode['limit_destination']['department'] );
 								foreach( $departments as $department_id => $d ) {

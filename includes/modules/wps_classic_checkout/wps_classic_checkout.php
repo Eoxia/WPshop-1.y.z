@@ -47,6 +47,9 @@ if ( !class_exists("wps_classic_checkout") ) {
 			add_action( 'wp_ajax_wps-checkout_valid_step_three', array( &$this, 'wps_checkout_valid_step_three') );
 			add_action( 'wp_ajax_wps-checkout_valid_step_four', array( &$this, 'wps_checkout_valid_step_four') );
 			add_action( 'wp_ajax_wps-checkout_valid_step_five', array( &$this, 'wps_checkout_valid_step_five') );
+
+			add_action( 'admin_post_wps_direct_payment_link', array( 'wpshop_checkout', 'wps_direct_payment_link' ) );
+			add_action( 'admin_post_nopriv_wps_direct_payment_link', array( 'wpshop_checkout', 'wps_direct_payment_link' ) );
 		}
 
 		/**
@@ -61,14 +64,7 @@ if ( !class_exists("wps_classic_checkout") ) {
 		 * Display Classic Checkout
 		 */
 		function show_classic_checkout() {
-			$action = !empty( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
-			$token = !empty( $_GET['token'] ) ? sanitize_text_field( $_GET['token'] ) : '';
-			$login = !empty( $_GET['login'] ) ? sanitize_text_field( $_GET['login'] ) : '';
-			$order_id = !empty( $_GET['order_id'] ) ? (int) $_GET['order_id'] : '';;
-
-			if( !empty($action) && $action == 'direct_payment_link') {
-				wpshop_checkout::direct_payment_link( $token, $order_id, $login);
-			}
+			$order_id = !empty( $_GET['order_id'] ) ? (int) $_GET['order_id'] : '';
 
 			$wpshop_cart_option = get_option( 'wpshop_cart_option' );
 			$current_step = !empty( $_GET[ 'order_step' ] ) && is_int( (int)$_GET[ 'order_step' ] ) ? (int)$_GET[ 'order_step' ] : null;

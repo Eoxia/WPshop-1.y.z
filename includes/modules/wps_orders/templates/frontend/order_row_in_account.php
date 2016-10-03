@@ -5,7 +5,7 @@
 	<?php $color_label = array( 'awaiting_payment' => 'jaune', 'canceled' => 'rouge', 'partially_paid' => 'orange', 'incorrect_amount' => 'orange', 'denied' => 'rouge', 'shipped' => 'bleu', 'payment_refused' => 'rouge', 'completed' => 'vert', 'refunded' => 'rouge', 'pos' => 'bleu' ); ?>
 	<?php $currency = wpshop_tools::wpshop_get_currency( false ); ?>
 	<div class="wps-table-cell"><?php echo mysql2date( get_option('date_format'), $order_meta['order_date'], true ) . '<br>' . mysql2date( get_option('time_format'), $order_meta['order_date'], true ); ?></div>
-	<div class="wps-table-cell"><?php echo $order_meta['order_key']; ?></div>
+	<div class="wps-table-cell"><?php echo !empty( $order_meta['order_key'] ) ? $order_meta['order_key'] : ( !empty( $order_meta['order_temporary_key'] ) ? $order_meta['order_temporary_key'] : '' ); ?></div>
 	<div class="wps-table-cell"><?php echo wpshop_tools::formate_number( $order_meta['order_grand_total'] ).' '.$currency; ?></div>
 	<div class="wps-table-cell">
 		<span class="wps-label-<?php echo $color_label[$order_meta['order_status']]; ?>"><?php _e( $order_status[$order_meta['order_status']], 'wpshop' ); ?></span>

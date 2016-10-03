@@ -23,7 +23,7 @@ class wps_orders_in_back_office {
 		add_action('save_post', array( $this, 'save_order_custom_informations'));
 
 		// WP Filters
-		add_filter( 'wps_order_saving_admin_extra_action', array( $this, 'wps_notif_user_on_order_saving'), 100, 2 );
+		//add_filter( 'wps_order_saving_admin_extra_action', array( $this, 'wps_notif_user_on_order_saving'), 100, 2 );
 	}
 
 	/**
@@ -57,7 +57,9 @@ class wps_orders_in_back_office {
 		/**	Box with the complete order content	*/
 		add_meta_box( 'wpshop_order_content', '<span class="dashicons dashicons-cart"></span> '.__('Order content', 'wpshop'), array( $this, 'meta_box_order_content'), WPSHOP_NEWTYPE_IDENTIFIER_ORDER, 'normal', 'low');
 		/** Box Private order comments **/
-		add_meta_box('wpshop_order_private_comments', '<span class="dashicons dashicons-format-chat"></span> '.__('Comments', 'wpshop'), array( $this, 'meta_box_private_comment'), WPSHOP_NEWTYPE_IDENTIFIER_ORDER, 'normal', 'low');
+		if( !in_array( $post->post_status, array( 'auto-draft' ) ) ) {
+			add_meta_box('wpshop_order_private_comments', '<span class="dashicons dashicons-format-chat"></span> '.__('Comments', 'wpshop'), array( $this, 'meta_box_private_comment'), WPSHOP_NEWTYPE_IDENTIFIER_ORDER, 'normal', 'low');
+		}
 	}
 
 	/**
@@ -163,7 +165,7 @@ class wps_orders_in_back_office {
 			$order_meta = get_post_meta( $post_ID, '_order_postmeta', true);
 
 			// Save General information of order's attached customer
-			$wpdb->update( $wpdb->posts, array('post_parent' => $user_id, 'post_status' => 'publish'),  array('ID' => $post_ID) );
+			$wpdb->update( $wpdb->posts, array('post_author' => $user_id, 'post_parent' => $user_id, 'post_status' => 'publish'),  array('ID' => $post_ID) );
 			update_post_meta( $post_ID, '_wpshop_order_customer_id', $user_id );
 			$order_meta['customer_id'] = $user_id;
 			if ( empty($order_meta['order_key']) ) {
@@ -259,6 +261,7 @@ class wps_orders_in_back_office {
 	}
 
 	/**
+	 * DEPRECATED
 	 * Notificate customer on order saving action
 	 * @param array $order_metadata
 	 * @param array $posted_datas

@@ -168,13 +168,13 @@ class wpshop_orders {
 		 * To check because notification is not really send
 		 *
 		 */
-		if ( !empty($order->post_author) ) {
+		/*if ( !empty($order->post_author) ) {
 			$tpl_component['ADMIN_ORDER_ACTIONS_LIST'] .= '
 			<div class="wps-product-section wpshop_order_notify_customer_on_update_container" >
 				<input type="checkbox" name="notif_the_customer" id="wpshop_order_notif_the_customer_on_update" /> <label for="wpshop_order_notif_the_customer_on_update" >'.__('Send a notification to the customer', 'wpshop').'</label>
 				<!-- <br/><input type="checkbox" name="notif_the_customer_sendsms" id="wpshop_order_notif_the_customer_sendsms_on_update" /> <label for="wpshop_order_nnotif_the_customer_sendsms_on_update" >'.__('Send a SMS to the customer', 'wpshop').'</label> -->
 			</div>';
-		}
+		}*/
 
 		if( ( ( !empty($order_postmeta['cart_type']) && $order_postmeta['cart_type'] == 'quotation' ) || !empty( $order_postmeta['order_temporary_key'] ) ) && $order_postmeta['order_status'] != 'canceled' && (float) $order_postmeta['order_amount_to_pay_now'] != (float) 0 ) {
 			$tpl_component['ADMIN_ORDER_ACTIONS_LIST'] .= '<div class="wps-product-section">' . self::display_customer_pay_quotation( isset( $order_postmeta['pay_quotation'] ), $order->ID ) . '</div>';
@@ -384,7 +384,9 @@ class wpshop_orders {
 						echo '<b>' . $order_postmeta['order_key'] . '</b><br>';
 					}
 					if( !empty( $order_postmeta['order_invoice_ref'] ) ) {
-						echo ( !empty($order_postmeta['order_temporary_key'] ) ? '<b>' . $order_postmeta['order_invoice_ref'] . '</b>' :  '<i>' . $order_postmeta['order_invoice_ref'] . '</i>' );
+						echo '<i>' . $order_postmeta['order_invoice_ref'] . '</i>';
+					} elseif( !empty($order_postmeta['order_temporary_key'] ) ) {
+						echo '<b>' . $order_postmeta['order_temporary_key'] . '</b>';
 					}
 				break;
 
@@ -662,8 +664,7 @@ class wpshop_orders {
 	static function display_customer_pay_quotation( $state, $oid ) {
 		$btn = '<a role="button" data-nonce="' . wp_create_nonce( 'wps_quotation_is_payable_by_customer' ) . '" class="wps-bton-' . ( ( $state ) ? 'third' : 'second' ) . '-mini-rounded quotation_is_payable_by_customer" href="#" >'.__('Customer can pay', 'wpshop').'</a>';
 		if( $state ) {
-			$url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wps_checkout_quotation&order_id=' . $oid . '&is_link=link' ), 'wps_checkout_quotation', '_wpnonce' );
-			$btn .= '<br><a href="' . $url . '">' . __( 'Pay link', 'wpshop' ) . '</a>';
+			$btn .= '<br><a target="_blank" href="' . admin_url( 'admin-ajax.php?action=wps_checkout_quotation&order_id=' . $oid . '&is_link=link' ) . '">' . __( 'Pay link', 'wpshop' ) . '</a>';
 		}
 		return $btn;
 	}
