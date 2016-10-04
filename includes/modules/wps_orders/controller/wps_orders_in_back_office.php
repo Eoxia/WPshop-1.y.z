@@ -176,7 +176,7 @@ class wps_orders_in_back_office {
 			$order_meta['order_date'] = (isset($order_meta['order_date']) && ($order_meta['order_date'] != '')) ? $order_meta['order_date'] : current_time('mysql', 0);
 			$order_meta['order_currency'] = wpshop_tools::wpshop_get_currency(true);
 
-			$billing_adress_id = ( !empty( $_REQUEST['wps_order_selected_address'] ) && empty( $_REQUEST['wps_order_selected_address']['billing'] ) ) ? (int) $_REQUEST['wps_order_selected_address']['billing'] : 0;
+			$billing_adress_id = ( !empty( $_REQUEST['wps_order_selected_address'] ) && !empty( $_REQUEST['wps_order_selected_address']['billing'] ) ) ? (int) $_REQUEST['wps_order_selected_address']['billing'] : 0;
 
 			// Order Attached Addresses save
 			if( !empty( $billing_adress_id ) ) {
