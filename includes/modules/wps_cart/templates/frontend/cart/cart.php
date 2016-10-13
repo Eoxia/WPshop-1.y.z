@@ -72,7 +72,9 @@
 
 			/** Downloadable link in Order recap **/
 			$download_link = '';
-			if( !empty($parent_def) ) {
+			$item_id_for_download = null;
+			/** Check if the product or the head product is a download product	*/
+			if( !empty( $parent_def ) ) {
 				$parent_meta = $parent_def['parent_post_meta'];
 				if ( !empty($parent_meta['is_downloadable_']) ) {
 					$query = $wpdb->prepare( 'SELECT value FROM '. WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS .' WHERE id = %d', $parent_meta['is_downloadable_'] );
@@ -82,17 +84,19 @@
 					}
 				}
 			}
-
 			if ( !empty($item) && !empty($item['item_is_downloadable_']) && ( strtolower( __( $item['item_is_downloadable_'], 'wpshop') ) == strtolower( __('Yes', 'wpshop') ) ) ) {
-				if( isset( $item['item_meta']['variations'] ) ) {
-					foreach ( $item['item_meta']['variations'] as $variation_id => $variation ) {
-						if( isset( $variation['item_meta']['is_downloadable_'] ) ) {
-							$item_id_for_download = $item_id . '__' . $variation_id;
-						}
+				$item_id_for_download = $item_id;
+			}
+			if( isset( $item['item_meta']['variations'] ) ) {
+				foreach ( $item['item_meta']['variations'] as $variation_id => $variation ) {
+					if( isset( $variation['item_meta']['is_downloadable_'] ) ) {
+						$item_id_for_download = $item_id . '__' . $variation_id;
 					}
-				} else {
-					$item_id_for_download = $item_id;
 				}
+			}
+
+			/** In case there is a item identifier defined for download */
+			if ( null !== $item_id_for_download ) {
 				$download_codes = get_user_meta( get_current_user_id(), '_order_download_codes_'.$oid, true);
 				/**	Check if the current product exist into download code list, if not check if there is a composition between parent product and children product	*/
 				if ( empty( $download_codes[$item_id_for_download] ) ) {
