@@ -31,6 +31,9 @@ class wps_download_file_ctr {
 										$downloadable_product_id = $parent_post->ID;
 									}
 
+								} else {
+									$downloadable_product_id = explode( "__", $downloadable_product_id );
+									$downloadable_product_id = isset( $downloadable_product_id[1] ) ? $downloadable_product_id[1] : $downloadable_product_id[0];
 								}
 
 								$link = wpshop_attributes::get_attribute_option_output(

@@ -27,7 +27,7 @@
 		<div class="wps-cart-item-close"></div>
 		<?php endif; ?>
 	</li>
-	
+
 	<?php
 		foreach( $cart_items as $item_id => $item ) :
 			$product_key = $item_id;
@@ -84,7 +84,15 @@
 			}
 
 			if ( !empty($item) && !empty($item['item_is_downloadable_']) && ( strtolower( __( $item['item_is_downloadable_'], 'wpshop') ) == strtolower( __('Yes', 'wpshop') ) ) ) {
-				$item_id_for_download = $item_id;
+				if( isset( $item['item_meta']['variations'] ) ) {
+					foreach ( $item['item_meta']['variations'] as $variation_id => $variation ) {
+						if( isset( $variation['item_meta']['is_downloadable_'] ) ) {
+							$item_id_for_download = $item_id . '__' . $variation_id;
+						}
+					}
+				} else {
+					$item_id_for_download = $item_id;
+				}
 				$download_codes = get_user_meta( get_current_user_id(), '_order_download_codes_'.$oid, true);
 				/**	Check if the current product exist into download code list, if not check if there is a composition between parent product and children product	*/
 				if ( empty( $download_codes[$item_id_for_download] ) ) {

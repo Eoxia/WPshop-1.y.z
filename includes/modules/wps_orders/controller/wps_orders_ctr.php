@@ -411,7 +411,7 @@ class wps_orders_ctr {
 				$_SESSION['cart']['order_items'] = array();
 				if ( !empty($order_meta) && !empty( $order_meta['order_items']) ) {
 					$wpshop_cart_type = 'cart';
-					foreach( $order_meta['order_items'] as $item ) {;
+					foreach( $order_meta['order_items'] as $item ) {
 						$_SESSION['cart']['order_items'][$item['item_id']] = $item;
 					}
 					$wps_cart_ctr = new wps_cart();

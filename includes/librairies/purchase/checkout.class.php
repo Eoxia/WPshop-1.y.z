@@ -90,21 +90,33 @@ class wpshop_checkout {
 				$_SESSION['order_id'] = $order_id;
 
 				// Cr�ation des codes de t�l�chargement si il y a des produits t�l�chargeable dans le panier
-				if ( !empty( $cart['order_items']  ) ) {
-				foreach($cart['order_items'] as $c) {
-					$product = wpshop_products::get_product_data($c['item_id']);
-					/** Check if it's a variation and check the parent product **/
-					if ( get_post_type( $c['item_id'] ) == WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION ) {
-						$parent_def = wpshop_products::get_parent_variation( $c['item_id'] );
-						if ( !empty($parent_def) && !empty($parent_def['parent_post_meta']) && !empty($parent_def['parent_post_meta']['is_downloadable_']) ) {
-							$product['is_downloadable_'] = $parent_def['parent_post_meta']['is_downloadable_'];
+				if ( !empty( $cart['order_items'] ) ) {
+					foreach($cart['order_items'] as $c) {
+						$product_id = $c['item_id'];
+						$product = null;
+						if( isset( $c['item_meta']['variations'] ) ) {
+							foreach ( $c['item_meta']['variations'] as $variation_id => $variation ) {
+								if( isset( $variation['item_meta']['is_downloadable_'] ) ) {
+									$product_id = $c['item_id'] . '__' . $variation_id;
+									$product = wpshop_products::get_product_data( $product_id );
+								}
+							}
+						}
+						if( !isset( $product ) ) {
+							$product = wpshop_products::get_product_data( $c['item_id'] );
+							$product_id = $c['item_id'];
+							/** Check if it's a variation and check the parent product **/
+							if ( get_post_type( $c['item_id'] ) == WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION ) {
+								$parent_def = wpshop_products::get_parent_variation( $c['item_id'] );
+								if ( !empty($parent_def) && !empty($parent_def['parent_post_meta']) && !empty($parent_def['parent_post_meta']['is_downloadable_']) ) {
+									$product['is_downloadable_'] = $parent_def['parent_post_meta']['is_downloadable_'];
+								}
+							}
+						}
+						if(!empty($product['is_downloadable_'])) {
+							$download_codes[$product_id] = array('item_id' => $product_id, 'download_code' => uniqid('', true));
 						}
 					}
-					if(!empty($product['is_downloadable_'])) {
-						$download_codes[$c['item_id']] = array('item_id' => $c['item_id'], 'download_code' => uniqid('', true));
-					}
-
-				}
 				}
 				if(!empty($download_codes)) update_user_meta($user_id, '_order_download_codes_'.$order_id, $download_codes);
 

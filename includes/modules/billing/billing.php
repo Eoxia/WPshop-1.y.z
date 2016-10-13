@@ -296,7 +296,7 @@ if ( !class_exists("wpshop_modules_billing") ) {
 
 				$discounts_exists = false;
 
-				$is_quotation = ( empty($order_postmeta['order_key']) && !empty($order_postmeta['order_temporary_key']) ) ? true : false;
+				$is_quotation = ( empty($order_postmeta['order_key']) && !empty($order_postmeta['order_temporary_key']) && $invoice_ref == null ) ? true : false;
 				/** Check if it's a partial payment bill **/
 				$is_partial_payment = false;
 				if( isset( $order_postmeta['order_payment']['received'] ) && !empty($invoice_ref) && $order_postmeta['order_status'] == 'partially_paid' ) {
@@ -914,7 +914,16 @@ if ( !class_exists("wpshop_modules_billing") ) {
 			$output = '';
 			$order_customer_postmeta = get_post_meta($order_id, '_order_info', true);
 			$order_postmeta = get_post_meta( $order_id, '_order_postmeta', true );
-			$address_info = ( $bon_colisage ) ? ( ( !empty($order_customer_postmeta['shipping']) && !empty($order_customer_postmeta['shipping']['address']) && is_array($order_customer_postmeta['shipping']['address']) )  ? $order_customer_postmeta['shipping']['address'] : array() ) : ( ( !empty($order_customer_postmeta['billing']) && !empty($order_customer_postmeta['billing']['address']) && is_array($order_customer_postmeta['billing']['address']) )  ? $order_customer_postmeta['billing']['address'] : array() );
+			
+			if( $bon_colisage && !empty($order_customer_postmeta['shipping']) && !empty($order_customer_postmeta['shipping']['address']) && is_array($order_customer_postmeta['shipping']['address']) ) {
+				$address_info = $order_customer_postmeta['shipping']['address'];
+			} else {
+				if( !empty($order_customer_postmeta['billing']) && !empty($order_customer_postmeta['billing']['address']) && is_array($order_customer_postmeta['billing']['address']) ) {
+					$address_info = $order_customer_postmeta['billing']['address'];
+				} else {
+					$address_info = array();
+				}
+			}
 
 			if ( !empty($order_customer_postmeta) && !empty($address_info) ) {
 				$default_address_attributes = array('CIVILITY', 'ADDRESS_LAST_NAME', 'ADDRESS_FIRST_NAME', 'ADDRESS', 'POSTCODE', 'CITY', 'STATE', 'COUNTRY', 'PHONE', 'ADDRESS_USER_EMAIL', 'COMPANY');
