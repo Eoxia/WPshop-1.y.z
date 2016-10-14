@@ -3180,7 +3180,8 @@ GROUP BY ATT.id, chosen_val", $element_id, $attribute_code);
 				$sub_tpl_component['ADMIN_VARIATION_DETAIL_DEF_LABEL'] = $attribute_output_def['label'];
 				$sub_tpl_component['ADMIN_VARIATION_DETAIL_DEF_INPUT'] = $field_output;
 				if( isset( $variations_attribute_parameters['post_id'] ) ) {
-					$sub_tpl_component['ADMIN_VARIATION_DETAIL_DEF_INPUT'] .= '<div class="attribute_option_'.$attribute_def->code.'">'.self::get_attribute_option_fields($variations_attribute_parameters['post_id'], $attribute_def->code).'</div>';
+					$attribute_option_display = $attribute_def->backend_input=='select' && (strtolower( __(self::get_attribute_type_select_option_info($attribute_output_def['value'], 'value'), 'wpshop') ) == strtolower( __('yes', 'wpshop') )) ? '' : ' wpshopHide';
+					$sub_tpl_component['ADMIN_VARIATION_DETAIL_DEF_INPUT'] .= '<div class="attribute_option_'.$attribute_def->code.''.$attribute_option_display.'">'.self::get_attribute_option_fields($variations_attribute_parameters['post_id'], $attribute_def->code).'</div>';
 				}
 				$tpl_component['ADMIN_VARIATION_DETAIL'] .= wpshop_display::display_template_element('wpshop_admin_variation_item_details_line', $sub_tpl_component, array(), 'admin');
 				unset($sub_tpl_component);
