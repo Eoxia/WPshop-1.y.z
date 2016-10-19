@@ -322,7 +322,7 @@ if ( !class_exists("wpshop_modules_billing") ) {
 					/** Billing Header **/
 					//Logo
 					$logo_options = get_option('wpshop_logo');
-					$tpl_component['INVOICE_LOGO'] = ( !empty($logo_options) ) ? '<img src="' .$logo_options .'" alt="" />' : '';
+					$tpl_component['INVOICE_LOGO'] = ( !empty($logo_options) ) ? '<img src="' .str_replace( 'https', 'http', $logo_options ) .'" alt="" />' : '';
 
 					// Title
 					$tpl_component['INVOICE_TITLE'] = ($is_partial_payment) ? __('Bill payment', 'wpshop') : ( ( $is_quotation ) ?  __('Quotation', 'wpshop') : __('Invoice', 'wpshop') );
@@ -914,7 +914,7 @@ if ( !class_exists("wpshop_modules_billing") ) {
 			$output = '';
 			$order_customer_postmeta = get_post_meta($order_id, '_order_info', true);
 			$order_postmeta = get_post_meta( $order_id, '_order_postmeta', true );
-			
+
 			if( $bon_colisage && !empty($order_customer_postmeta['shipping']) && !empty($order_customer_postmeta['shipping']['address']) && is_array($order_customer_postmeta['shipping']['address']) ) {
 				$address_info = $order_customer_postmeta['shipping']['address'];
 			} else {
