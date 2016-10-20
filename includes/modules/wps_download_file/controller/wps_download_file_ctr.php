@@ -53,7 +53,13 @@ class wps_download_file_ctr {
 										$is_encrypted = true;
 									}
 
-									wpshop_tools::forceDownload($link, $is_encrypted);
+									$overload_force_download = apply_filters( 'wps_download_file_overload_force_download', false );
+									if ( !$overload_force_download ) {
+										wpshop_tools::forceDownload($link, $is_encrypted);
+									}
+									else {
+										wpshop_tools::wpshop_safe_redirect( str_replace( WP_CONTENT_DIR, WP_CONTENT_URL, $Fichier_a_telecharger ) );
+									}
 								}
 							}
 						}
