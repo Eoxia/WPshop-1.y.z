@@ -1989,7 +1989,7 @@ ob_end_clean();
 		 * Display attribute option if applicable
 		 */
 		if ( $output_from == 'admin') {
-			$attribute_option_display = $attribute_def->backend_input=='select' && (strtolower( __(self::get_attribute_type_select_option_info($input['value'], 'value'), 'wpshop') ) == __('yes', 'wpshop')) ? '' : ' wpshopHide';
+			$attribute_option_display = $attribute_def->backend_input=='select' && (strtolower( __(self::get_attribute_type_select_option_info($input['value'], 'value'), 'wpshop') ) == strtolower(__('yes', 'wpshop'))) ? '' : ' wpshopHide';
 
 			$output['field'] .= '
 	<div class="attribute_option_'.$attribute_def->code.''.$attribute_option_display.'">'.self::get_attribute_option_fields($element_identifier, $attribute_def->code).'</div>';
