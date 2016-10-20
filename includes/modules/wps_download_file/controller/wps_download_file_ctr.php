@@ -58,7 +58,7 @@ class wps_download_file_ctr {
 										wpshop_tools::forceDownload($link, $is_encrypted);
 									}
 									else {
-										wpshop_tools::wpshop_safe_redirect( str_replace( WP_CONTENT_DIR, WP_CONTENT_URL, $Fichier_a_telecharger ) );
+										wpshop_tools::wpshop_safe_redirect( str_replace( WP_CONTENT_DIR, WP_CONTENT_URL, $link ) );
 									}
 								}
 							}
