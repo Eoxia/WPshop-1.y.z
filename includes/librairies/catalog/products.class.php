@@ -3214,12 +3214,15 @@ class wpshop_products {
 						$value_to_outut = mysql2date( get_option( 'date_format' ), $attribute_selected_value, true );
 					break;
 				}
-				switch ( $free_variation_attribute_def->data_type_to_use ) {
-					case 'custom':
-					case 'internal':
-						$possible_values = wpshop_attributes::get_select_output( $free_variation_attribute_def );
-						$value_to_outut = $possible_values['possible_value'][$attribute_selected_value];
-					break;
+
+				if ( in_array( $free_variation_attribute_def->backend_input, array( 'select', 'multiple-select', ) )  ) {
+					switch ( $free_variation_attribute_def->data_type_to_use ) {
+						case 'custom':
+						case 'internal':
+							$possible_values = wpshop_attributes::get_select_output( $free_variation_attribute_def );
+							$value_to_outut = $possible_values['possible_value'][$attribute_selected_value];
+						break;
+					}
 				}
 				$variation_tpl_component['VARIATION_VALUE'] = stripslashes($value_to_outut);
 				$variation_tpl_component['VARIATION_ID'] = $attribute_code;
