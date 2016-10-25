@@ -289,7 +289,7 @@ ob_end_clean();
 /*	Product is new	|									Nouveauté produit */
 ob_start();
 ?>
-<span class="vignette_nouveaute wps-label wps-rouge"><?php _e('New', 'wpshop'); ?></span><?php
+<span class="vignette_nouveaute wps-label wps-rouge"><i class="wps-icon-love"></i><span><?php _e('New', 'wpshop'); ?></span></span><?php
 $tpl_element['product_is_new_sticker'] = ob_get_contents();
 ob_end_clean();
 
@@ -297,7 +297,7 @@ ob_end_clean();
 /*	Product is featured	|								En vedette produit */
 ob_start();
 ?>
-<span class="vignette_en_vedette wps-label wps-vert"><?php _e('Featured', 'wpshop'); ?></span><?php
+<span class="vignette_en_vedette wps-label wps-vert"><i class="wps-icon-star"></i><span><?php _e('Featured', 'wpshop'); ?></span></span><?php
 $tpl_element['product_is_featured_sticker'] = ob_get_contents();
 ob_end_clean();
 
@@ -535,6 +535,9 @@ ob_start();
 
 	<a href="{WPSHOP_PRODUCT_PERMALINK}" class="" title="{WPSHOP_PRODUCT_TITLE}">
 		{WPSHOP_PRODUCT_THUMBNAIL}
+		<div class="wps-extras">
+			{WPSHOP_PRODUCT_EXTRA_STATE}
+		</div>
 	</a>
 	<span class="product_information-mini-list" itemprop="offers" itemscope itemtype="http://data-vocabulary.org/Offers">
 		<a href="{WPSHOP_PRODUCT_PERMALINK}" title="{WPSHOP_PRODUCT_TITLE}" class="wpshop_clearfix">
@@ -544,9 +547,7 @@ ob_start();
 			<p itemprop="description" class="wpshop_liste_description">{WPSHOP_PRODUCT_EXCERPT}</p>
 		</a>
 		{WPSHOP_PRODUCT_BUTTONS}
-		<div class="wps-extras">
-			{WPSHOP_PRODUCT_EXTRA_STATE}
-		</div>
+		
 	</span>
 </li><?php
 $tpl_element['product_mini_list'] = ob_get_contents();
