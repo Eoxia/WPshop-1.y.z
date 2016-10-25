@@ -745,8 +745,7 @@ a[class*="wps-"][class*="-block"] {
   }
 }
 .wps-label {
-  font-size: 12.8px;
-  font-size: .8rem;
+  font-size: .8em;
   line-height: 1;
   padding: .3em .6em;
   display: inline-block;
@@ -781,8 +780,7 @@ a[class*="wps-"][class*="-block"] {
   background: #f9da07;
 }
 .wps-label-rouge {
-  font-size: 12.8px;
-  font-size: .8rem;
+  font-size: .8em;
   line-height: 1;
   padding: .3em .6em;
   display: inline-block;
@@ -803,8 +801,7 @@ a[class*="wps-"][class*="-block"] {
   color: #fff;
 }
 .wps-label-orange {
-  font-size: 12.8px;
-  font-size: .8rem;
+  font-size: .8em;
   line-height: 1;
   padding: .3em .6em;
   display: inline-block;
@@ -825,8 +822,7 @@ a[class*="wps-"][class*="-block"] {
   color: #fff;
 }
 .wps-label-bleu {
-  font-size: 12.8px;
-  font-size: .8rem;
+  font-size: .8em;
   line-height: 1;
   padding: .3em .6em;
   display: inline-block;
@@ -847,8 +843,7 @@ a[class*="wps-"][class*="-block"] {
   color: #fff;
 }
 .wps-label-vert {
-  font-size: 12.8px;
-  font-size: .8rem;
+  font-size: .8em;
   line-height: 1;
   padding: .3em .6em;
   display: inline-block;
@@ -869,8 +864,7 @@ a[class*="wps-"][class*="-block"] {
   color: #fff;
 }
 .wps-label-jaune {
-  font-size: 12.8px;
-  font-size: .8rem;
+  font-size: .8em;
   line-height: 1;
   padding: .3em .6em;
   display: inline-block;
@@ -2438,43 +2432,47 @@ a:hover .wps-icodoc:after {
   margin: 0 -1em;
   padding: 0;
 }
-[class*="wps"][class*="listwrapper"] > li {
+[class*="wps"][class*="listwrapper"] li {
   border-right: none;
   padding: 0;
   margin: 0;
   display: table;
   width: 100%;
 }
-[class*="wps"][class*="listwrapper"] > li > * {
+[class*="wps"][class*="listwrapper"] li > a,
+[class*="wps"][class*="listwrapper"] li > span {
   display: table-cell;
   position: relative;
   text-align: left;
   vertical-align: top;
   padding: 1em;
 }
-[class*="wps"][class*="listwrapper"] > li > *:first-child {
+[class*="wps"][class*="listwrapper"] li > a:first-child,
+[class*="wps"][class*="listwrapper"] li > span:first-child {
   width: 20%;
   min-width: 4em;
   line-height: 0;
   padding-right: 0;
 }
-[class*="wps"][class*="listwrapper"] > li p {
+[class*="wps"][class*="listwrapper"] li p {
   font-size: .9em;
   margin: .5em 0 .5em 0;
 }
-[class*="wps"][class*="listwrapper"] > li .wps-extras {
+[class*="wps"][class*="listwrapper"] li .wps-extras {
   position: absolute;
   top: 1em;
   right: 1em;
 }
-[class*="wps"][class*="listwrapper"] > li .wps-extras > .wps-label {
+[class*="wps"][class*="listwrapper"] li .wps-extras > .wps-label {
   margin-left: .5em;
 }
-[class*="wps"][class*="listwrapper"] > li:first-child {
+[class*="wps"][class*="listwrapper"] li:first-child {
   border-top: solid #ebebeb 1px;
 }
 [class*="wps"][class*="listwrapper"].wps-bordered {
   border: none;
+}
+@media (max-width: 60em) {
 }
 .wps-alert-error,
 .wps-alert-success,
