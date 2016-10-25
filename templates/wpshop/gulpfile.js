@@ -9,29 +9,36 @@ var rename = require("gulp-rename");
 var minifyCss = require('gulp-minify-css');
 
 var paths = {
-  styles: ['less/wps_style.less'],
-  images: 'client/img/**/*'
+  styles: ['less/wps_style.less']
 };
 
 gulp.task('default', function() {
-  return gulp.src(paths.styles)
-    .pipe(watch(paths.styles))
-    .pipe(stripCssComments())
-    .pipe(plumber())
-  	.pipe(less())
-    .pipe(stripCssComments())
-  	.pipe(please({
-        minifier: false,
-        autoprefixer: {"browsers": ["last 20 versions", "ios 6"]},
-        rem: true,
-        pseudoElements: true,
-        mqpacker: false,
-        opacity : true,
-        filters : true
-      }))
-    .pipe(concat('wps_style.css'))
-    .pipe(gulp.dest('css'))
-    .pipe(minifyCss())
-    .pipe(rename("wps_style.min.css"))
-    .pipe(gulp.dest('css'));
+  //return gulp.src(paths.styles)
+    //.watch(paths.styles, { ignoreInitial: false })
+    //.pipe(watch(paths.styles))
+    
+  
+    return watch(paths.styles, function () {
+        gulp.src(paths.styles)
+            .pipe(stripCssComments())
+            //.pipe(plumber())
+            .pipe(less())
+            .pipe(stripCssComments())
+            .pipe(please({
+                minifier: false,
+                autoprefixer: {"browsers": ["last 20 versions", "ios 6"]},
+                rem: true,
+                pseudoElements: true,
+                mqpacker: false,
+                opacity : true,
+                filters : true
+              }))
+            //.pipe(concat('wps_style.css'))
+            .pipe(gulp.dest('css'))
+            .pipe(minifyCss())
+            .pipe(rename("wps_style.min.css"))
+            .pipe(gulp.dest('css'));
+    });
+
+
 });

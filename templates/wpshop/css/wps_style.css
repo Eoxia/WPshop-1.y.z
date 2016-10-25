@@ -4070,6 +4070,9 @@ a:hover .wps-icodoc:after {
 [class*="wps-catalog"] a {
   text-decoration: none;
 }
+[class*="wps-catalog"] .product_information-mini-list a {
+  color: inherit;
+}
 .wps-catalog-hover {
   background: #65c2ee;
 }
