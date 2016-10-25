@@ -2242,18 +2242,6 @@ a:hover .wps-icodoc:after {
   -ms-transform: translate(0, 0);
       transform: translate(0, 0);
 }
-.wps-catalog-sorting {
-  padding-left: 10px;
-  zoom: 1;
-}
-.wps-catalog-sorting:before,
-.wps-catalog-sorting:after {
-  content: "";
-  display: table;
-}
-.wps-catalog-sorting:after {
-  clear: both;
-}
 .wps-catalog-sorting button {
   float: right;
 }
@@ -2264,7 +2252,6 @@ a:hover .wps-icodoc:after {
   margin-right: 8px;
 }
 .wps-catalog-sorting li {
-  font-size: 13px;
   list-style: none;
   margin: 0;
   display: inline-block;
@@ -2275,8 +2262,8 @@ a:hover .wps-icodoc:after {
   text-align: center;
   display: block;
   height: 4em;
-  width: 4em;
-  line-height: 4em;
+  width: 2em;
+  line-height: 4;
   border: none;
 }
 .wps-catalog-sorting li a:hover {
@@ -2288,7 +2275,7 @@ a:hover .wps-icodoc:after {
           transform: rotateZ(180deg);
 }
 .wps-catalog-sorting li i {
-  font-size: 2em;
+  font-size: 1.25em;
 }
 .wps-catalog-sorting .wps-bloc {
   position: relative;
@@ -2309,12 +2296,7 @@ a:hover .wps-icodoc:after {
   margin: 10px 0 10px 10px;
 }
 .wps-catalog-sorting .wps-sorting-tools {
-  min-width: 12em;
   text-align: right;
-  margin: 0;
-  list-style: none;
-  line-height: 1;
-  width: 50%;
 }
 @media (max-width: 480px) {
   .wps-catalog-sorting .wps-sorting-tools {
