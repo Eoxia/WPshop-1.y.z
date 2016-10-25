@@ -22,7 +22,7 @@ gulp.task('default', function() {
     .pipe(stripCssComments())
   	.pipe(please({
         minifier: false,
-        autoprefixer: {"browsers": ["last 40 versions", "ios 6"]},
+        autoprefixer: {"browsers": ["last 20 versions", "ios 6"]},
         rem: true,
         pseudoElements: true,
         mqpacker: false,
