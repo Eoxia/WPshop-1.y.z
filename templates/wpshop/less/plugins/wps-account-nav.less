@@ -1,0 +1,172 @@
+/* NEW */
+
+
+.wps-user-dashboard {
+	text-align: left;
+	border-top: solid #eee 1px;
+	border-bottom: solid #eee 1px;
+	font-size: 14px;
+	padding: .5em 0;
+	> * {
+		display: inline-block;
+		vertical-align: middle;
+		margin-left: 1em;
+	}
+	img {
+		border-radius: 50%;
+		box-shadow: none;
+	}
+	.wps-user-name {
+		font-size: 1.2em;
+		strong {
+			margin-left: .5em;
+		}
+	}
+	a {
+		box-shadow: none;
+	}
+}
+
+.wps-section-account {
+	clear: both;
+	display: table;
+	width: 100%;
+}
+.wps-section-taskbar {
+	display: table-cell;
+	vertical-align: top;
+	width: 200px;
+	ul {
+		margin:0;
+		padding:0;
+		position: relative;
+		right: -1px;
+		li {
+			position: relative;
+			margin:0;
+			padding: 0;
+			list-style:none;
+			border-bottom: solid #eee 1px;
+			&.wps-activ {
+				opacity: 1;				
+				a {
+					color: @c1;					
+					border-left: solid @c1 4px;
+					background:#fafafa;
+
+				}
+			}
+		}
+		a {
+			transition: all @time @trans;
+			outline: none;
+			display: block;
+			font-size: 13px;
+			text-decoration: none;
+			line-height: 3em;
+			padding: 0 1em;
+			border: none;
+			box-shadow: none;
+			i {
+				margin-right: .3em;
+				font-size: 1.6em;
+			}
+			&:hover {
+				color: @c1;
+				border-left: solid @c1 4px;
+			}
+		}
+		&::after {
+			content:'';
+			display: table;
+			clear:both;
+		}
+	}
+}
+.wps-section-content {
+	display: table-cell;
+	vertical-align: top;
+	border-right:solid #eee 1px;
+	border-bottom:solid #eee 1px;
+	border-left:solid #eee 1px;
+	padding: 1em;
+	background: #fafafa;
+	.wps-boxed {
+		box-shadow: 0 0 5px rgba(0,0,0,.07);
+	}
+}
+@media  (max-width: @mq3) {
+
+}
+@media  (max-width: @mq3) {
+	.wps-section-taskbar {
+		width: 100px;
+		> ul > li {
+			text-align: center;
+			line-height: 1.4em;
+			a {
+				line-height: 1.4em;
+				padding:1em;
+				span {
+					margin-top: .5em;
+					display: block;
+					line-height: 1;
+					font-weight: bold;
+					font-size: .8rem;
+				}
+				i {
+					margin: 0;
+				}
+			}
+		}
+		&::after {
+			content: '';
+			display: table;
+			clear:both;
+		}
+	}
+	
+}
+@media  (max-width: @mq4) {
+	.wps-section-taskbar {
+		> ul > li {
+			a {
+				padding:10px;
+				span {
+					display: none;
+				}
+			}
+		}
+	}
+}
+
+@media  (max-width: @mq5) {
+	.wps-section-account {
+		display: block;
+		> * {
+			display: block;
+			width: auto;
+		}
+	}
+	.wps-section-taskbar {
+		> ul {
+			display: table;
+			width: 100%;
+			> * {
+				display: table-cell;
+			}
+			li {
+				a {
+					&:hover {
+						border: none;
+					}
+				}
+				&.wps-activ {
+					a {
+						border: none;
+					}
+				}
+			}
+		}
+	}
+}

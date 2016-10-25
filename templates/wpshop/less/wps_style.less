@@ -1,0 +1,199 @@
+/* Mixins */
+@import "tools/_mixins.less";
+
+.get_icon(){
+	display: inline-block;
+	vertical-align: middle;
+	font-family: "icons";
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	speak: none;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+// wps_resume_cart
+
+// Module adresse / controleer / wpshop_adresse_ctr.php ligne 346
+
+// get_option();
+
+
+//@import "tools/_normalize.less";
+
+@import "../config.less";
+
+/****************************************************************************************** LAYERING */
+
+
+
+
+@res : 1;/*********************************************************************************** Responsive Activation 0|1 */
+@wm : 1400px;/******************************************************************************* Contrainte Largeur */
+@f : 100%; /********************************************************************************* Base Font size */
+
+@w_cart : 400px; /*************************************************************************** Largeur du panier */
+
+
+@mq1 : 1100px;/****************************************************************************** MediaQuery 1 */
+@mq2 : 1100px;/****************************************************************************** MediaQuery 2 */
+@mq3 : 960px;/******************************************************************************* MediaQuery 3 */
+@mq4 : 780px;/******************************************************************************* MediaQuery 4 */
+@mq5 : 480px;/******************************************************************************* MediaQuery 5 */
+
+/****************************************************************************************** COLORS */
+
+@b : #fff;/********************************************************************************** Blanc */
+@n : #222;/********************************************************************************** Noir */
+@bc : #ccc;/********************************************************************************* Utilisé pour les bordures et éléments par défaut */
+@t : #555;
+
+
+@l : #444; /********************************************************************************* Couleur des liens */
+@lhover : #444; /**************************************************************************** Couleur des liens Hover */
+
+
+@wps-bleu : #4285f4; /*********************************************************************** Bleu info */
+@wps-bleuc : lighten(@wps-bleu, 50%);
+@wps-bleuf : darken(@wps-bleu, 10%);
+
+
+@wps-rouge : #d8432e; /********************************************************************** Rouge error */
+@wps-rougec : lighten(@wps-rouge, 50%);
+@wps-rougef : darken(@wps-rouge, 10%);
+
+@wps-vert : #52bc8c; /*********************************************************************** Vert Success */
+@wps-vertc : lighten(@wps-vert, 50%);
+@wps-vertf : darken(@wps-vert, 10%);
+
+@wps-orange : #ffb504; /********************************************************************* Orange Warning */
+@wps-orangec : lighten(@wps-orange, 50%);
+@wps-orangef : darken(@wps-orange, 10%);
+
+
+ /************************************************************** Bouton primaire */
+@wps-bton-first-color : lighten(@c1, 70%);
+@c1-hover : lighten(@c1, 10%);
+@wps-bton-first-color-hover : lighten(@wps-bton-first-color, 60%);
+
+/************************************************************* Bouton Secondaire */
+@wps-bton-second-color : lighten(@c2, 60%);
+@c2-hover : lighten(@c2, 5%);
+@wps-bton-second-color-hover : lighten(@wps-bton-second-color, 60%);
+
+@wps-hightlight : #7ae6f3; /***************************************************************** Hightlight */
+
+@p : 16px; /********************************************************************************* Padding */
+
+
+
+
+@import "less/elements/init.less";
+
+@import "less/elements/grid-system.less";
+
+@import "less/elements/labels.less";
+
+@import "less/elements/forms.less";
+
+// @import "less/plugins/wps-adresses.less";
+
+@import "less/elements/adresses.less";
+
+//@import "less/plugins/wps-list-expander.less";
+
+@import "less/elements/icons.less";
+
+//@import "less/tools/wps-logos.less";
+
+@import "less/elements/buttons.less";
+
+@import "less/elements/animations.less";
+
+@import "less/plugins/wps-product-single.less";
+
+@import "less/plugins/wps-fixed-mini-cart";
+
+@import "less/plugins/wps-catalog.less";
+
+@import "less/plugins/wps-alerts.less";
+
+@import "less/elements/modals.less";
+
+
+
+@import "less/tools/wps-tools.less";
+
+//@import "less/plugins/wps-modal-icons.less";
+
+@import "less/plugins/wps-account-nav.less";
+
+@import "less/tools/wps-noui-tabs.less";
+
+@import "less/plugins/wps-cart.less";
+
+@import "less/plugins/wps-checkout.less";
+
+@import "less/tools/hightlights.less";
+
+@media (min-width: @mq4) {
+	.--wps-touch {
+		display: none;
+	}
+}
+
+
+
+// @media  (max-width: @mq1) {
+// 	@import "less/media/wps-bigscreen.less";
+// }
+// @media  (max-width: @mq2) {
+// 	@import "less/media/wps-screen.less";
+// }
+// @media  (max-width: @mq3) {
+// 	@import "less/media/wps-tablet.less";
+// }
+
+
+
+@media  (max-width: @mq4) {
+	.--wps-screen {
+		display: none !important;
+	}
+	.--wps-touch {
+		display: block;
+	}
+}
+// @media  (max-width: @mq5) {
+// 	@import "less/media/wps-smallphone.less";
+// }
+
+/***************************************************************************************************** Media Queries */
+
+// @media  (max-width: @mq1) {
+// 		@import "less/media/wps-bigscreen.less";
+// 	}
+// 	@media  (max-width: @mq2) {
+// 		@import "less/media/wps-screen.less";
+// 	}
+// 	@media  (max-width: @mq3) {
+// 		@import "less/media/wps-tablet.less";
+// 	}
+// 	@media  (max-width: @mq4) {
+// 		@import "less/media/wps-phone.less";
+// 	}
+// 	@media  (max-width: @mq5) {
+// 		@import "less/media/wps-smallphone.less";
+// 	}
+
+/*@media print {
+	@import "media/wps-print.less";
+}
+*/
+/*@import "plugins/_uislider.less";*/
+
+
+@import "less/themes/theme-@{theme}.less";

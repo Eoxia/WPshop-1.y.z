@@ -1,0 +1,22 @@
+{
+  "name": "wpshop",
+  "version": "1.0.0",
+  "description": "Css Builder",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Cédric Métairie",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-continuous-concat": "^0.1.1",
+    "gulp-less": "^3.1.0",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-pleeease": "^2.0.2",
+    "gulp-plumber": "^1.1.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-strip-css-comments": "^1.2.0",
+    "gulp-watch": "^4.3.10"
+  }
+}

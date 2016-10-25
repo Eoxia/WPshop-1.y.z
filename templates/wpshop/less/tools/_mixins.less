@@ -1,0 +1,352 @@
+.bb(){
+	box-sizing: border-box;
+}
+
+.smallerFont(@all : 90%){
+	font-size: @all;
+}
+
+.transition(@what: all, @time: 0.4s, @transition: cubic-bezier(0.190, 1.000, 0.220, 1.000)) {
+	-webkit-transition: @what @time @transition;
+	-moz-transition:    @what @time @transition;
+	-ms-transition:     @what @time @transition;
+	-o-transition:      @what @time @transition;
+	transition:         @what @time @transition;
+}
+
+.transition_style(@time: 0.4s, @transition: cubic-bezier(0.190, 1.000, 0.220, 1.000)) {
+	-webkit-transition: color @time @transition, background @time @transition;
+	-moz-transition:    color @time @transition, background @time @transition;
+	-ms-transition:     color @time @transition, background @time @transition;
+	-o-transition:      color @time @transition, background @time @transition;
+	transition:         color @time @transition, background @time @transition;
+}
+
+.css-gradient(@from: #dfdfdf, @to: #f8f8f8) {
+	background-color: @to;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(@from), to(@to));
+	background-image: -webkit-linear-gradient(top, @from, @to);
+	background-image: -moz-linear-gradient(top, @from, @to);
+	background-image: -o-linear-gradient(top, @from, @to);
+	background-image: linear-gradient(to bottom, @from, @to);
+}
+
+
+
+.boxShadow(@arguments) {
+  -webkit-box-shadow: @arguments;
+  -moz-box-shadow: @arguments;
+  box-shadow: @arguments;
+}
+
+.text-shadow (@string: 0 1px 3px rgba(0, 0, 0, 0.25)) {
+	text-shadow: @string;
+}
+.box-shadow (@string) {
+	-webkit-box-shadow: @string;
+	-moz-box-shadow:    @string;
+	box-shadow:         @string;
+}
+.drop-shadow (@x: 0, @y: 1px, @blur: 2px, @spread: 0, @alpha: 0.25) {
+	-webkit-box-shadow:	@x @y @blur @spread rgba(0, 0, 0, @alpha);
+	-moz-box-shadow:	@x @y @blur @spread rgba(0, 0, 0, @alpha);
+	box-shadow:		@x @y @blur @spread rgba(0, 0, 0, @alpha);
+}
+.inner-shadow (@x: 0, @y: 1px, @blur: 2px, @spread: 0, @alpha: 0.25) {
+	-webkit-box-shadow: inset @x @y @blur @spread rgba(0, 0, 0, @alpha);
+	-moz-box-shadow:    inset @x @y @blur @spread rgba(0, 0, 0, @alpha);
+	box-shadow:         inset @x @y @blur @spread rgba(0, 0, 0, @alpha);
+}
+
+.box-sizing (@type: border-box) {
+	-webkit-box-sizing: @type;
+	-moz-box-sizing:    @type;
+	box-sizing:         @type;
+}
+
+.border-radius (@radius: 5px) {
+	-webkit-border-radius: @radius;
+	-moz-border-radius:    @radius;
+	border-radius:         @radius;
+
+	-moz-background-clip:    padding;
+	-webkit-background-clip: padding-box;
+	background-clip:         padding-box;
+}
+.border-radiuses (@topright: 0, @bottomright: 0, @bottomleft: 0, @topleft: 0) {
+	-webkit-border-top-right-radius:    @topright;
+	-webkit-border-bottom-right-radius: @bottomright;
+	-webkit-border-bottom-left-radius:  @bottomleft;
+	-webkit-border-top-left-radius:     @topleft;
+
+	-moz-border-radius-topright:        @topright;
+	-moz-border-radius-bottomright:     @bottomright;
+	-moz-border-radius-bottomleft:      @bottomleft;
+	-moz-border-radius-topleft:         @topleft;
+
+	border-top-right-radius:            @topright;
+	border-bottom-right-radius:         @bottomright;
+	border-bottom-left-radius:          @bottomleft;
+	border-top-left-radius:             @topleft;
+
+	-moz-background-clip:    padding; 
+	-webkit-background-clip: padding-box; 
+	background-clip:         padding-box; 
+}
+
+.opacity(@opacity: 0.5) {
+	-moz-opacity: @opacity;
+	-khtml-opacity: @opacity;
+	-webkit-opacity: @opacity;
+	opacity: @opacity;
+	@opperc: @opacity * 100;
+	-ms-filter: ~"progid:DXImageTransform.Microsoft.Alpha(opacity=@{opperc})";
+	filter: ~"alpha(opacity=@{opperc})";
+}
+
+.gradient (@startColor: #eee, @endColor: white) {
+	background-color: @startColor;
+	background: -webkit-gradient(linear, left top, left bottom, from(@startColor), to(@endColor));
+	background: -webkit-linear-gradient(top, @startColor, @endColor);
+	background: -moz-linear-gradient(top, @startColor, @endColor);
+	background: -ms-linear-gradient(top, @startColor, @endColor);
+	background: -o-linear-gradient(top, @startColor, @endColor);
+}
+.horizontal-gradient (@startColor: #eee, @endColor: white) {
+ 	background-color: @startColor;
+	background-image: -webkit-gradient(linear, left top, right top, from(@startColor), to(@endColor));
+	background-image: -webkit-linear-gradient(left, @startColor, @endColor);
+	background-image: -moz-linear-gradient(left, @startColor, @endColor);
+	background-image: -ms-linear-gradient(left, @startColor, @endColor);
+	background-image: -o-linear-gradient(left, @startColor, @endColor);
+}
+
+.animation (@name, @duration: 300ms, @delay: 0, @ease: ease) {
+	-webkit-animation: @name @duration @delay @ease;
+	-moz-animation:    @name @duration @delay @ease;
+	-ms-animation:     @name @duration @delay @ease;
+}
+
+
+.transform(...) {
+  -webkit-transform: @arguments;
+  -moz-transform: @arguments;
+  -o-transform: @arguments;
+  -ms-transform: @arguments;
+  transform: @arguments;
+}
+.scale (@factor) {
+	-webkit-transform: scale(@factor);
+	-moz-transform: 	 scale(@factor);
+	-ms-transform: 		 scale(@factor);
+	-o-transform: 		 scale(@factor);
+}
+.rotate (@deg) {
+	-webkit-transform: rotate(@deg);
+	-moz-transform: 	 rotate(@deg);
+	-ms-transform: 		 rotate(@deg);
+	-o-transform: 		 rotate(@deg);
+}
+.skew (@deg, @deg2) {
+	-webkit-transform:       skew(@deg, @deg2);
+	-moz-transform: 	 skew(@deg, @deg2);
+	-ms-transform: 		 skew(@deg, @deg2);
+	-o-transform: 		 skew(@deg, @deg2);
+}
+.translate (@x, @y:0) {
+	-webkit-transform:       translate(@x, @y);
+	-moz-transform: 	 translate(@x, @y);
+	-ms-transform: 		 translate(@x, @y);
+	-o-transform: 		 translate(@x, @y);
+}
+.translate3d (@x, @y: 0, @z: 0) {
+	-webkit-transform:       translate3d(@x, @y, @z);
+	-moz-transform: 	 translate3d(@x, @y, @z);
+	-ms-transform: 		 translate3d(@x, @y, @z);
+	-o-transform: 		 translate3d(@x, @y, @z);
+}
+.perspective (@value: 1000) {
+	-webkit-perspective: 	@value;
+	-moz-perspective: 	@value;
+	-ms-perspective: 	@value;
+	perspective: 		@value;
+}
+.transform-origin (@x:center, @y:center) {
+	-webkit-transform-origin: @x @y;
+	-moz-transform-origin:    @x @y;
+	-ms-transform-origin:     @x @y;
+	-o-transform-origin:      @x @y;
+}
+
+.antialiased () {
+	-webkit-font-smoothing: antialiased;
+	-moz-font-smoothing: antialiased;
+	-o-font-smoothing: antialiased;
+	font-smoothing: antialiased;
+}
+
+.cls(){
+	zoom: 1;
+	&:before, &:after { content: ""; display: table; }
+	&:after { clear: both; }
+}
+
+.set_ratio(@v){
+	position:relative;
+	width:100%;
+	overflow: hidden;
+	&::before{
+		margin-top:percentage(@v);
+		content: "";
+		display: block;
+	}
+	> img {
+		position: absolute;
+		top:0;
+		right:0;
+		bottom:0;
+		left:0;					
+	}
+}
+
+.sf(){
+	float:none !important;
+	width:100% !important;
+	padding-left:0;
+}
+
+.colorize_light_bton(@name, @color){
+	[class*="wps"][class*="bton"][class*="@{name}"]{
+		text-decoration: none;
+		color:lighten(@color, 70%);
+		background:@color;
+		border: none;
+		//.box-shadow(0 .25em 0 0 desaturate(darken(@color, 20%),20%));
+		&> [class*="icon"] {
+			color:lighten(@color, 70%);
+			.text-shadow(none);
+			&:hover{
+				color:lighten(@color, 90%);
+			}
+		}
+	}
+	[class*="wps"][class*="bton"][class*="@{name}"]:hover {
+		text-decoration: none;
+		color:lighten(@color, 60%);
+		background:lighten(@color, 10%);
+		//.box-shadow(0 .25em 0 0 desaturate(darken(@color, 20%),20%));
+		i {
+			color:lighten(@color, 60%);
+		}
+	}
+	[class*="wps"][class*="bton"][class*="@{name}"]:active {
+		text-decoration: none;
+		//.box-shadow(0 .125em 0 0 desaturate(darken(@color, 20%),20%));
+		//top: .125em;
+		//position: relative;
+	}
+}
+
+.colorize_dark_bton(@name, @color){
+	[class*="wps"][class*="bton"][class*="@{name}"]{
+		text-decoration: none;
+		color:darken(@color, 35%);
+		background:@color;
+		border: none;
+		//.border-radius(4px);
+		//.box-shadow(0 .25em 0 0 desaturate(darken(@color, 20%),20%));
+		&> [class*="icon"] {
+			color:darken(@color, 35%);
+			.text-shadow(none);
+			&:hover{
+				color:lighten(@color, 90%);
+			}
+		}
+	}
+	[class*="wps"][class*="bton"][class*="@{name}"]:hover {
+		text-decoration: none;
+		color:darken(@color, 60%);
+		background:darken(@color, 5%);
+		//.box-shadow(0 .25em 0 0 desaturate(darken(@color, 20%),20%));
+		i {
+			color:darken(@color, 60%);
+		}
+	}
+	[class*="wps"][class*="bton"][class*="@{name}"]:active {
+		text-decoration: none;
+		//.box-shadow(0 .125em 0 0 desaturate(darken(@color, 20%),20%));
+		top: .125em;
+		position: relative;
+	}
+}
+
+.colorize_bordered_bton(@name, @color){
+	[class*="wps"][class*="bton"][class*="@{name}"]{
+		text-decoration: none;
+		color: @color;
+		background:none;
+		box-shadow: inset 0 0 0 2px @color;
+		border:none;
+		&:hover {
+			background-color: @color;
+			border-color: @color;
+			color:#fff;
+			&::after {
+				border-top-color: #fff !important;
+				border-right-color: #fff !important;
+				border-bottom-color: #fff !important;
+			}
+		}
+		&::after {
+			border-top-color: @color !important;
+			border-right-color: @color !important;
+			border-bottom-color: @color !important;
+		}
+	}
+	[class*="wps"][class*="bton"][class*="@{name}"]:active {
+		text-decoration: none;
+		top: .125em;
+		position: relative;
+	}
+}
+
+
+.colorize_minimal_bton(@name, @color){
+	[class*="wps"][class*="bton"][class*="@{name}"]{
+		text-decoration: none;
+		color: @color;
+		background:none;
+		border:none;
+		font-weight: normal;
+		&:hover {
+			color: @color;
+			text-decoration: underline;
+		}
+		&::after {
+			border-top-color: @color !important;
+			border-right-color: @color !important;
+			border-bottom-color: @color !important;
+		}
+	}
+	[class*="wps"][class*="bton"][class*="@{name}"]:active {
+		text-decoration: none;
+		top: .125em;
+		position: relative;
+	}
+}
+
+.create_bton(@name, @color, @light) when (@light = 1) {
+	.colorize_light_bton(@name, @color);
+}
+.create_bton(@name, @color, @light) when (@light = 0) {
+	.colorize_dark_bton(@name, @color);
+}
+.create_bton(@name, @color, @light) when (@light = 2) {
+	.colorize_bordered_bton(@name, @color);
+}
+.create_bton(@name, @color, @light) when (@light = 3) {
+	.colorize_minimal_bton(@name, @color);
+}
+
+
+/* */

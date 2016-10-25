@@ -1,0 +1,29 @@
+@w_fixedcart : @w_cart + 40;
+
+.wps-fixed-tool-bar {
+	width:@w_fixedcart;
+	height:100%;
+	position: fixed;
+	top:0;
+	right:0;
+	z-index: 1999;
+	-webkit-transform: translate(@w_fixedcart, 0);
+	-moz-transform:  translate(@w_fixedcart, 0);
+	-o-transform:  translate(@w_fixedcart, 0);
+	transform:  translate(@w_fixedcart, 0);
+	-webkit-transform-origin: 0 50%;
+	transform-origin: 0 50%;
+	padding:@p/2 @p;	
+	.transition();
+	background: @b;
+	overflow-y: auto;
+	&.wps-activ {
+		-webkit-transform: translate(0, 0);
+		-moz-transform:  translate(0, 0);
+		-o-transform:  translate(0, 0);
+		transform:  translate(0, 0);
+	}
+}
+
+
+

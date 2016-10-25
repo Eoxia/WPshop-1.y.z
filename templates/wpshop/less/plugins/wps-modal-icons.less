@@ -1,0 +1,71 @@
+[class*="wps-"][class*="-hightlight"]{
+	font-weight: bold;
+	font-size: 1.5em;
+}
+[class*="wps-boxplusun"] {
+	position:fixed;
+	width:120px;
+	height:120px;
+	top:50%;
+	left:50%;
+	background:@wps-hightlight;
+	.opacity(0);
+	visibility: hidden;
+	padding-top:20px;
+	box-shadow:inset 0 0 0 8px rgba(255,255,255,0.2);
+	.perspective(900px);
+
+	-webkit-transform-origin: 0 0;
+	-ms-transform-origin: 0 0;
+	transform-origin: 0 0;
+
+	animation: boxPlusUn 1.1s linear;
+	-moz-animation: boxPlusUn 1.1s linear;
+	-webkit-animation: boxPlusUn 1.1s linear;
+	
+	-webkit-transform: rotateY(180deg) scale(0.5) translate(-50%,-50%);
+	-moz-transform: rotateY(180deg) scale(0.5) translate(-50%,-50%);
+	-o-transform: rotateY(180deg) scale(0.5) translate(-50%,-50%);
+	-ms-transform: rotateY(180deg) scale(0.5) translate(-50%,-50%);
+	transform: rotateY(180deg) scale(0.5) translate(-50%,-50%);
+
+	span {
+		color:@b;
+		display: block;
+		text-align: center;
+		font-size:2em;
+	}
+	i {
+		color:@b;
+		display: block;
+		text-align: center;
+	}
+}
+
+[class*="wps-animate"][class*="plusun"] {
+	position: relative;
+	&[class*="wps-animated"] {
+		padding-right:1.55em;
+	}
+	&[class*="wps-animated"]:after{
+		content:'+1';
+		display: block;
+		position: absolute;
+		.transform-origin(50%,50%);
+		font-size:16px;
+		color:@b;
+		background:@wps-hightlight;
+		top:-20px;
+		right:-20px;
+		width: 40px;
+		height: 40px;
+		padding-top: 15px;
+		.opacity(1);
+		border:none;
+		.border-radius(50%);
+		text-align: center;
+		animation: plusun 1.6s linear;
+		-moz-animation: plusun 1.6s linear;
+		-webkit-animation: plusun 1.6s linear;
+	}	
+}

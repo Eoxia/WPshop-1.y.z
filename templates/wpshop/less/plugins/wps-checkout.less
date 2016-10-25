@@ -1,0 +1,281 @@
+.wps-checkout-steps {
+	&.--wps-touch {
+		text-align: center;		
+		.wps-h3 {
+			margin-bottom: 0;
+		}
+	}
+}
+.wps-checkout-steps-caption {
+	font-weight: bold;
+}
+.wps-checkout-step {
+	text-align: center;
+	position: relative;
+	padding-top: 2.5em !important;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+	width: percentage(1/6) !important;
+	a {
+		text-decoration: none;
+		border: none;
+		outline: none;
+	}	
+	span {
+		display: inline-block;
+		white-space: nowrap; 
+		overflow: hidden;
+		text-overflow: ellipsis;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		color: @bc;
+	}
+	i {
+		font-style:normal;
+		font-weight: bold;
+		display:inline-block;
+		padding:0;
+		width:3em;
+		height:3em;
+		line-height:2.75;
+		text-align:center;
+		vertical-align: middle;
+		z-index: 2;
+		position: relative;
+		color:#fff;
+		background:@bc;
+	}
+	&::after{
+		display: block;
+		content: "";
+		width: 100%;
+		height: 2px;
+		background: @bc;
+		overflow: hidden;	
+		position: relative;
+		top: -1.5em;
+		z-index: 1;
+	}
+	&:first-child::after{
+		max-width: 50%;
+		left:50%;
+	}
+	&:last-child::after{
+		max-width: 50%;
+	}
+	&.--wps-finished {
+		i {
+			background:lighten(@wps-vert,5%);
+		}
+		&::after{
+			background:lighten(@wps-vert,5%);
+		}
+		span {
+			color:lighten(@wps-vert,5%);
+		}
+	}
+	&.--wps-current {
+		i {
+			background:lighten(@wps-bleu,5%);
+		}
+		&::after{
+			background: lighten(@wps-bleu,5%);
+		}
+		span {
+			color:lighten(@wps-bleu,5%);
+		}
+	}
+	@media (max-width: 1400px) {
+	  
+	}
+	@media (max-width: 1100px) {
+	  
+	}
+	@media (max-width: 940px) {
+		font-size: 15px;
+	}
+	@media (max-width: 780px) {
+		font-size: 14px;
+	}
+	@media (max-width: 480px) {
+		font-size: 13px;
+	}
+}
+
+// .wps-sidebar-resume {
+// 	font-size: 12px;
+// 	// .wps-fullcart {
+// 	// 	margin-bottom: 1em;
+// 	// 	display: block;
+// 	// 	li {
+// 	// 		margin: 0;
+// 	// 		display: block;
+// 	// 		> * {
+// 	// 			display: block;
+// 	// 		}
+// 	// 	}
+// 	// }
+// 	.wps-cart-item-content {
+// 		width: 65%;		
+// 	}
+// 	@media (max-width: 780px) {
+// 		display: none;
+// 	}
+// }
+
+
+
+.wps-shipping-address, .wps-billing-address {
+	> button {
+		margin-top: 0;
+		padding-right: 0;
+		float: right;
+		&:hover {
+			padding-right: 0;
+		}
+	}
+	&::after {
+		content:'';
+		display: table;
+		clear: both;
+	}
+}
+
+.wps-checkout-wrapper {
+	.wps-sidebar-resume {
+		padding: 0 0 2em 2em;
+		width: 40%;
+		float: right;
+	}
+	.wps-checkout-content {
+		width: 60%;
+		float: left;
+	}
+	&::after {
+		content:'';
+		display: table;
+		clear: both;
+	}
+}
+
+.wps-cgv-line {
+	text-align: right;
+	font-size: .8rem;
+	padding: .5em 0;
+	a {
+		text-decoration: none;
+	}
+}
+
+.wps-checkout-content .wps-comment-box {
+	margin:1em 0;
+	textarea {
+		height: 10em;
+	}
+}
+
+[class*="wps-"][class*="mini"][class*="step"][class*="checkout"] {
+	text-align: left;
+	position: relative;
+	padding:0;
+	i {
+		position:absolute;
+		width:30px;
+		height:30px;
+		top:5px;
+		left:0;
+		line-height:28px;
+		font-size:12px;
+	}
+	&::after{
+		border:none;
+	}
+	[class*="wps"][class*="title"]{
+		h3 {
+			margin-left:40px;
+			height:40px;
+			line-height:40px;
+			button {
+				margin-left:6px;
+			}
+		}
+	}
+	[class*="wps"][class*="content"]{
+		padding-left:20px;
+		border-left:solid @bc 2px;
+		margin-left:14px;
+	}
+	&[class*="finished"]{
+		[class*="wps"][class*="content"]{
+			border-color:lighten(@wps-vert,35%);
+		}
+	}
+	&[class*="current"]{
+		[class*="wps"][class*="content"]{
+			border-color:@wps-bleu;
+		}
+	}
+	&:last-child{
+		[class*="wps"][class*="content"]{
+			border: none;
+			margin-bottom:@p*2;
+		}
+		//margin-bottom:@p*2;
+	}
+}
+
+[class*="wps"][class*="item-selector"] > * {
+	a {
+		display: block;
+		padding:@p;
+		text-align:center;
+		margin:@p/2;
+		background:@b;
+		.box-shadow(inset 0 0 0 1px @bc);
+		.transition(all, 0.2s);
+		&:hover {
+			.box-shadow(inset 0 0 0 6px @c2);
+		}
+	}
+}
+
+.wps-login-first-error {
+	margin: 1em 0;
+}
+
+.wps-password-reminder-link {
+	font-size: .9em;
+	opacity: .8;
+}
+
+.wps-welcome_back_message {
+	margin: 2em 0;
+}
+
+@media  (max-width: @mq3) {
+	[class*="wps-"][class*="step"][class*="checkout"]{
+		i {
+			height: 34px;
+			width: 34px;
+			line-height: 32px;
+			font-size: 12px;
+		}
+		&:after{
+			top:-18px;
+		}
+	}
+}
+@media (max-width: @mq3) {
+	.wps-checkout-content, .wps-sidebar-resume {
+		float: none !important;
+		width: auto !important;
+		padding: 0 !important;
+	}
+}
+@media (max-width: 480px) {
+	
+}
+
+

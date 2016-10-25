@@ -1,0 +1,46 @@
+.wps-body-inactiv {
+	overflow: hidden;
+	.wps-header-mini-cart, .wps-fixed-tool-bar {
+		z-index:0;
+	}
+	.wps-modal-overlay {
+		z-index:2000;
+	}
+}
+.wps-sidebar-sticker {
+	position: relative;
+}
+.wps-sticked-sidebar {
+	position: fixed;
+	top:0;
+}
+.wps-sticked-bottom-sidebar {
+	position:absolute;
+	bottom:0;
+}
+.wps-body-overlay {
+	overflow: hidden;
+	/*width: 100%;
+	height: 100%;
+	position: fixed;*/
+}
+.wps-clear::after {
+	content: '';
+	display: table;
+	clear:both;
+}
+/*.wps-wrapper {
+	.transition();
+		-webkit-transform-style: preserve-3d;
+		transform-style: preserve-3d;
+		-webkit-transform: translate3d(0, 0, 0);
+		transform: translate3d(0, 0, 0);
+}
+.wps-body-overlay {
+	.perspective(1500px);
+	.wps-wrapper {
+		
+		-webkit-transform: translate3d(-300px, 0, 0);
+		transform: translate3d(-300px, 0, 0);
+	}
+}*/

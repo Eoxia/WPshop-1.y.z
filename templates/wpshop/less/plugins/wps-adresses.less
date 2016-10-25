@@ -1,0 +1,218 @@
+[class*="wps"][class*="adresse"] address{
+	margin-top:@p;
+	font-size:.9em;
+}
+[class*="wps"][class*="adresse"] {
+		span {
+			font-size: 1.2em;
+			display: block;
+			//color:lighten(@n, 20%);
+		}
+		text-align: center;
+		font-size: 14px;
+		position: relative;
+		> a {
+			background:@b;
+			text-decoration: none;
+			min-height:200px;
+		}
+		h4 {
+			color:@n;
+			text-transform: uppercase;
+			font-weight: bold;
+			margin:0 0 20px 0;
+		}
+		&[class*="activator"]{
+			display: block;
+			box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+			padding:20px;
+			-webkit-transition: all 0.1s ease-in-out;
+			-moz-transition: all 0.1s ease-in-out;
+			-o-transition: all 0.1s ease-in-out;
+			-ms-transition: all 0.1s ease-in-out;
+			transition: all 0.1s ease-in-out;
+			&:hover {
+				box-shadow: inset 0 0 0 8px rgba(0,0,0,0.1);
+			}
+			&[class*="wps-activ"]{
+				box-shadow: inset 0 0 0 8px lighten(@wps-vert,40%);
+			}
+		}
+	}
+[class*="wps-adresse-listing"] {
+	&[class*="grid"]{
+		.wps-adresse {		
+			padding:@p;
+			> a {
+				position: relative;
+				min-height: 0;
+				background:#fff;
+				display: inline-block;
+				.box-shadow(0 0 2px rgba(0,0,0,.3));
+				&:first-child{
+					//.opacity(.5);
+					padding:@p;
+					.box-shadow(inset 0 0 0 0 #fff);
+					.transition();
+					//order:solid #fff 10px;					
+				}
+			}
+			&:hover a:first-child , &.wps-activ a:first-child {
+				.box-shadow(inset 0 0 0 10px @c2-hover);
+				//.opacity(1);
+			}
+			&:hover {
+				[class*="wps-bton-icon"]{
+					.scale(1);
+				}
+			}
+			[class*="wps-bton-icon"]{
+				.scale(0);
+				position: absolute;
+				top:0;
+				right: 0;
+				&:nth-child(3){
+					top:auto;
+					bottom:0;
+				}
+			}
+		}
+	}
+	&[class*="select"] {
+		position:relative;
+		overflow: hidden;
+		.wps-adresse {
+			position: absolute;
+			top:0;
+			left:0;
+			padding:0 @p @p 0;
+			width:100%;
+			visibility: hidden;
+			> address >	span {
+				&:nth-child(1){
+					.transition(all,0.1s,10ms);
+				}
+				&:nth-child(2){
+					.transition(all,0.2s,20ms);
+				}
+				&:nth-child(3){
+					.transition(all,0.3s,30ms);
+				}
+				&:nth-child(4){
+					.transition(all,0.4s,40ms);
+				}
+				&:nth-child(5){
+					.transition(all,0.5s,50ms);
+				}
+				&:nth-child(6){
+					.transition(all,0.6s,60ms);
+				}
+				&:nth-child(7){
+					.transition(all,0.7s,70ms);
+				}
+				&:nth-child(8){
+					.transition(all,0.8s,80ms);
+				}
+				&:nth-child(9){
+					.transition(all,0.9s,90ms);
+				}
+				&:nth-child(10){
+					.transition(all,0.10s,100ms);
+				}
+				&:nth-child(11){
+					.transition(all,0.10s,100ms);
+				}	
+				&:nth-child(12){
+					.transition(all,0.10s,100ms);
+				}	
+				&:nth-child(13){
+					.transition(all,0.10s,100ms);
+				}	
+				&:nth-child(14){
+					.transition(all,0.10s,100ms);
+				}	
+				&:nth-child(15){
+					.transition(all,0.10s,100ms);
+				}	
+				&:nth-child(16){
+					.transition(all,0.10s,100ms);
+				}	
+				&:nth-child(17){
+					.transition(all,0.10s,100ms);
+				}	
+				&:nth-child(18){
+					.transition(all,0.10s,100ms);
+				}	
+				&:nth-child(19){
+					.transition(all,0.10s,100ms);
+				}	
+				&:nth-child(20){
+					.transition(all,0.10s,100ms);
+				}		
+				.opacity(0);				
+				.translate(-100px);
+			}			
+			&.wps-inactiv {
+				visibility: visible;			
+				& > address > span {
+					.opacity(0);		
+					.translate(100px);
+				}
+			}
+			&.wps-activ {
+				visibility: visible;
+				& > address > span {
+					.opacity(1);
+					.translate(0px);
+				}				
+			}
+			.wps-nom {
+				font-size:1.6em;
+				margin-bottom:0.5em;
+				font-style:normal;
+				font-weight:bold;
+				line-height:1em;
+				color:@n;
+			}
+			.wps-commentaire {
+				font-size:90%;
+				color:lighten(@n, 40%);
+				padding-top:0.6em;
+			}
+
+		}
+	}
+}
+.wps-adresse-bton-container {	
+	display: block;
+	button {
+		margin-left:10px;
+	}
+}
+.wps-adresse .wps-mini-toolbox a {
+	position: absolute;
+	-webkit-transform: scale(0);
+	-moz-transform: scale(0);
+	-ms-transform: scale(0);
+	transform: scale(0);
+	-webkit-transition: all 0.1s ease-in-out;
+	-moz-transition: all 0.1s ease-in-out;
+	-o-transition: all 0.1s ease-in-out;
+	-ms-transition: all 0.1s ease-in-out;
+	transition: all 0.1s ease-in-out;
+	z-index:999;
+}
+.wps-adresse:hover .wps-mini-toolbox a, [class*="wps"][class*="adresse"][class*="activator"].wps-activ .wps-mini-toolbox a {
+	-webkit-transform: scale(1);
+	-moz-transform: scale(1);
+	-ms-transform: scale(1);
+	transform: scale(1);
+}
+.wps-adresse .wps-mini-toolbox .wps-edit {	
+	top:-10px;
+	right:-10px;
+}
+.wps-adresse .wps-mini-toolbox .wps-erase {
+	bottom:-10px;
+	right:-10px;
+}

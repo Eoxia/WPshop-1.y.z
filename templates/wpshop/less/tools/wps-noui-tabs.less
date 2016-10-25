@@ -1,0 +1,127 @@
+.wps-ui-tab {
+	font-size: 13px;
+	text-align: left;
+	margin: 0 0 20px 0;
+	> ul {
+		padding: 0;
+		margin: 0;
+		border-bottom: solid @bc 1px;
+		i {
+			margin-right: .4rem;
+		}		
+		> li {
+			display: inline-block;
+			margin:0;
+			&.wps-activ a {
+				background:#fff;
+				opacity: 1;
+				border-top:solid @bc 1px;
+				border-right:solid @bc 1px;
+				border-left:solid @bc 1px;
+			}
+		}
+		a {
+			display: block;
+			outline: none;
+			color:#666;
+			background: none;
+			border-top: solid #fff 1px;
+			border-right: solid #fff 1px;
+			border-left: solid #fff 1px;
+			border-bottom: none;
+			border-radius:3px 3px 0 0;
+			padding:12px 16px;
+			text-decoration: none;
+			opacity:.4;
+			/*font-size:12px;*/
+			margin-bottom:-1px;
+			line-height: 1.2;
+			word-wrap: break-word;
+		}
+	}
+	> div {
+		padding:@p*2;
+		border-right:solid @bc 1px;
+		border-bottom:solid @bc 1px;
+		border-left:solid @bc 1px;
+		border-radius:0 0 3px 3px;
+		ul {
+			margin:0 0 0 2rem;
+			padding:0;
+			li {
+				
+			}
+		}
+	}
+	@media (max-width: @mq1) {
+	  
+	}
+	@media (max-width: @mq2) {
+	  
+	}
+	@media (max-width: @mq3) {
+		/*> ul {
+			margin-bottom:1rem;
+			border: solid @bc 1px;
+			border-radius: 3px;			
+			li {
+				display: block;
+				border-top: solid @bc 1px;
+				&:first-child{
+					border-top:none;
+				}
+				a {
+					border:none !important;
+					margin:0;
+				}
+			}
+		}
+		> div {
+			border: solid @bc 1px;			
+		}*/
+	}
+	@media (max-width: @mq3) {
+		> ul {
+			position: relative;
+			z-index: 9;
+			width: 30%;
+			float: left;
+			margin-right: -1px;			
+			border: solid @bc 1px;
+			border-right: none;
+			border-radius: 3px;
+			li {
+				display: block;
+				border-right: solid @bc 1px;
+				border-top: solid @bc 1px;
+				a {
+					text-align: right;
+					border:none !important;
+					margin:0;
+					border-radius: 0;
+				}
+				&:first-child{
+					border-top:none;
+				}
+				&.wps-activ {
+					border-right: solid #fff 1px;
+					box-shadow: 1px 0px 0 0px #fff;
+					a {
+						border-right:none;
+					}
+				}
+			}
+		}
+		> div {
+			position: relative;
+			z-index: 8;
+			min-height: 20rem;
+			width: 70%;
+			float: left;
+			border: solid @bc 1px;
+		}
+	}
+	@media (max-width: @mq5) {
+		
+	}
+}
