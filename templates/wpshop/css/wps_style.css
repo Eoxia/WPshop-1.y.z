@@ -2242,6 +2242,9 @@ a:hover .wps-icodoc:after {
   -ms-transform: translate(0, 0);
       transform: translate(0, 0);
 }
+.wps-catalog-sorting {
+  margin-top: 1em;
+}
 .wps-catalog-sorting button {
   float: right;
 }
@@ -2261,9 +2264,7 @@ a:hover .wps-icodoc:after {
   outline: none;
   text-align: center;
   display: block;
-  height: 4em;
   width: 2em;
-  line-height: 4;
   border: none;
 }
 .wps-catalog-sorting li a:hover {
@@ -2297,14 +2298,11 @@ a:hover .wps-icodoc:after {
 }
 .wps-catalog-sorting .wps-sorting-tools {
   text-align: right;
+  margin: 0;
+  padding: 0;
+  width: 50%;
 }
 @media (max-width: 480px) {
-  .wps-catalog-sorting .wps-sorting-tools {
-    display: none;
-  }
-  .wps-catalog-sorting .wps-bloc {
-    border-right: solid #eee 1px;
-  }
 }
 .wps-catalog > li {
   margin: 0;
@@ -2455,6 +2453,17 @@ a:hover .wps-icodoc:after {
   border: none;
 }
 @media (max-width: 60em) {
+}
+@media (max-width: 40em) {
+  [class*="wps"][class*="listwrapper"] li p {
+    display: none;
+  }
+  .wps-catalog-sorting .wps-bloc span {
+    display: none;
+  }
+  .wps-catalog-sorting .wps-bloc select {
+    margin: 0;
+  }
 }
 .wps-alert-error,
 .wps-alert-success,
@@ -4048,6 +4057,7 @@ a:hover .wps-icodoc:after {
 [class*="wps-catalog"] a {
   text-decoration: none;
   color: inherit;
+  display: block;
 }
 .wps-catalog-hover {
   background: #65c2ee;
