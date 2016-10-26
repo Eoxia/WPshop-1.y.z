@@ -48,16 +48,16 @@ class WP_Widget_Wpshop_Products extends WP_Widget {
 		}else {
 			$chaine_shortcode .= 'cid="'.$wpshop_select_wpshop_categorie.'" type="'.$wpshop_select_wpshop_products_mode.'" ';
 		}
-		if($wpshop_select_wpshop_products_mode == 'list'){
+		// if($wpshop_select_wpshop_products_mode == 'list'){
 			$chaine_shortcode .= 'type="list" ';
-		}
-		elseif( $wpshop_select_wpshop_products_mode == 'grid' ) {
-			$chaine_shortcode .= 'type="grid" ';
-		}
+		// }
+		// elseif( $wpshop_select_wpshop_products_mode == 'grid' ) {
+		// 	$chaine_shortcode .= 'type="grid" ';
+		// }
 		if($wpshop_nb_par_ligne_wpshop_products){
 			$chaine_shortcode .= 'grid_element_nb_per_line="'.$wpshop_nb_par_ligne_wpshop_products.'" ';
 		}
-		$chaine_shortcode .= ' display_pagination="' . $display_pagination . '" ';
+		//$chaine_shortcode .= ' display_pagination="' . $display_pagination . '" ';
 		// [grid_element_nb_per_line]
 		$chaine_shortcode .= ' ]';
 		echo do_shortcode($chaine_shortcode);
@@ -132,26 +132,27 @@ class WP_Widget_Wpshop_Products extends WP_Widget {
 		<input value="<?php echo $instance['wpshop_nb_wpshop_products']; ?>" type="text"  id="<?php echo $this->get_field_id( 'wpshop_nb_wpshop_products' ); ?>" name="<?php echo $this->get_field_name( 'wpshop_nb_wpshop_products' ); ?>" />
 	</p>
 
-	<p class="<?php echo $this->id; ?>-select_nb_ligne">
+	<!-- <p class="<?php echo $this->id; ?>-select_nb_ligne">
 		<label for="<?php echo $this->get_field_id( 'wpshop_select_wpshop_products_mode' ); ?>"><?php _e("Display mode", 'wpshop'); ?> : <br></label>
 	 	<select name="<?php echo $this->get_field_name( 'wpshop_select_wpshop_products_mode' ); ?>" class="widefat wpshop_widget_wpshop_nb_ligne_selector">
 			<option value="grid" <?php selected( $instance['wpshop_select_wpshop_products_mode'], 'grid' ); ?>><?php _e("Grid mode", 'wpshop'); ?></option>
 			<option value="list" <?php selected( $instance['wpshop_select_wpshop_products_mode'], 'list' ); ?>><?php _e("List mode", 'wpshop'); ?></option>
 		</select>
-	</p>
+	</p> -->
+
 	<p class="<?php echo $this->id; ?>-select-container_nb_ligne wpshop_widget_wpshop_nb_ligne_container">
 		<label for="<?php echo $this->get_field_id( 'wpshop_nb_par_ligne_wpshop_products' ); ?>"><?php _e('Product number per line', 'wpshop'); ?> : <br></label>
 		<input value="<?php echo $instance['wpshop_nb_par_ligne_wpshop_products']; ?>" type="text"  id="<?php echo $this->get_field_id( 'wpshop_nb_par_ligne_wpshop_products' ); ?>" name="<?php echo $this->get_field_name( 'wpshop_nb_par_ligne_wpshop_products' ); ?>" />
 	</p>
 
 	<!-- Display pagination -->
-	<p class="<?php echo $this->id; ?>-display_pagination">
+	<!-- <p class="<?php echo $this->id; ?>-display_pagination">
 			<label for="<?php echo $this->get_field_id('wpshop_display_pagination'); ?>"><?php _e("Display pagination", "wpshop"); ?> : <br /></label>
 			<select name="<?php echo $this->get_field_name('wpshop_display_pagination'); ?> " class="widefat wpshop_widget_wpshop_nb_ligne_selector">
 				<option value="yes" <?php echo selected( !empty($instance['wpshop_display_pagination']) ? $instance['wpshop_display_pagination'] : "", 'yes' ); ?>><?php _e("Yes", "wpshop"); ?></option>
 				<option value="no" <?php echo selected( !empty($instance['wpshop_display_pagination']) ? $instance['wpshop_display_pagination'] : "", 'no' ); ?>><?php _e("No", "wpshop"); ?></option>
 			</select>
-	</p>
+	</p> -->
 </fieldset>
 <script type="text/javascript">
 	jQuery(document).ready(function($) {
