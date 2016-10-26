@@ -23,6 +23,9 @@
 	}
 	&[class*="-group"]{
 		//margin-bottom:@p/2;
+		font-size: .9em;
+		width: percentage(1/2);
+		float:left;
 		margin:0 0 1em 0;
 		label {
 			display: inline-block;
@@ -37,6 +40,9 @@
 			&[for] {
 				cursor: pointer;
 			}
+		}
+		&:nth-child(odd){
+			padding-left: 1em;
 		}
 	}
 	.wps-form-inliner {

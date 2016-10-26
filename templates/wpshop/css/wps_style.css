@@ -920,6 +920,9 @@ a[class*="wps-"][class*="-block"] {
           box-sizing: border-box;
 }
 [class*="wps-form"][class*="-group"] {
+  font-size: .9em;
+  width: 50%;
+  float: left;
   margin: 0 0 1em 0;
 }
 [class*="wps-form"][class*="-group"] label {
@@ -936,6 +939,9 @@ a[class*="wps-"][class*="-block"] {
 }
 [class*="wps-form"][class*="-group"] label[for] {
   cursor: pointer;
+}
+[class*="wps-form"][class*="-group"]:nth-child(odd) {
+  padding-left: 1em;
 }
 [class*="wps-form"] .wps-form-inliner {
   position: relative;
@@ -3663,6 +3669,12 @@ a:hover .wps-icodoc:after {
 }
 .wps-checkout-steps.--wps-touch .wps-h3 {
   margin-bottom: 0;
+}
+.wps-checkout-steps[class*="gridwrapper"] {
+  font-size: .9em;
+  padding: 2em;
+  max-width: 60em;
+  margin: 0 auto;
 }
 .wps-checkout-steps-caption {
   font-weight: bold;
