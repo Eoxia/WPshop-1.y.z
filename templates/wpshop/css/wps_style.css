@@ -224,7 +224,7 @@ a[class*="wps-"][class*="-block"] {
   display: table-cell;
 }
 .wps-product-section {
-  margin: 1em 0;
+  margin: 0 0 1em 0;
 }
 .wps-product-section:after {
   content: '';
@@ -1888,6 +1888,9 @@ a:hover .wps-icodoc:after {
 }
 .wps-productRating .dashicons-star-empty {
   color: #ddd;
+}
+.wps-single .wps-productRating {
+  margin-top: -1em;
 }
 .wps-product-section:empty {
   display: none;
