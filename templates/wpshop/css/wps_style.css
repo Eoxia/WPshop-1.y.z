@@ -2486,9 +2486,6 @@ a:hover .wps-icodoc:after {
 .WP_Widget_Wpshop_Products .wpshop_add_to_cart_button {
   display: none;
 }
-.WP_Widget_Wpshop_Products [class*="wps-listwrapper"] {
-  font-size: .85em;
-}
 .WP_Widget_Wpshop_Products [class*="wps-listwrapper"] .wps-extras .wps-label {
   font-size: .6em;
   height: 2em;
