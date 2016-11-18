@@ -88,7 +88,7 @@ class wpshop_products {
 		/*$product_slug .= '/%' . WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT . '%';*/
 
 		/*	Définition des produits 	*/
-		register_post_type(WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT, array(
+		register_post_type(WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT, apply_filters( WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT . '_register', array(
 			'labels' => array(
 				'name'					=> __( 'Products', 'wpshop' ),
 				'singular_name' 		=> __( 'Catalog', 'wpshop' ),
@@ -111,10 +111,10 @@ class wpshop_products {
 			'taxonomies' 			=> array( WPSHOP_NEWTYPE_IDENTIFIER_CATEGORIES ),
 			'menu_icon' 			=> 'dashicons-archive',
 			'rewrite' 				=> $slug,
-		));
+		)));
 
 		/*	Définition des variations de produit (Déclinaisons)	*/
-		register_post_type( WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION, array(
+		register_post_type( WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION, apply_filters( WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION . '_register', array(
 			'labels'				=> array(
 				'name' 					=> __( 'Variations', 'wpshop' ),
 				'singular_name' 		=> __( 'Variation', 'wpshop' ),
@@ -140,14 +140,14 @@ class wpshop_products {
 			'exclude_from_search' 	=> true,
 			'hierarchical' 			=> false,
 
-// 			'public' 				=> true,
-// 			'show_ui' 				=> false,
-// 			'rewrite' 				=> false,
-// 			'query_var'				=> true,
-// 			'supports' 				=> array( 'title', 'editor', 'page-attributes', 'thumbnail' ),
-// 			'show_in_nav_menus' 	=> false
+			// 			'public' 				=> true,
+			// 			'show_ui' 				=> false,
+			// 			'rewrite' 				=> false,
+			// 			'query_var'				=> true,
+			// 			'supports' 				=> array( 'title', 'editor', 'page-attributes', 'thumbnail' ),
+			// 			'show_in_nav_menus' 	=> false
 			)
-		);
+		) );
 
 		// add to our plugin init function
 		//global $wp_rewrite;
@@ -158,7 +158,7 @@ class wpshop_products {
 		$gallery_structure .= '/%' . WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT . '%';
 		$wp_rewrite->add_permastruct(WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT, $gallery_structure, false);
 		$wp_rewrite->add_rewrite_tag('%' . WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT . '%', '([^/]+)', WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT . "=");*/
-	//	flush_rewrite_rules();
+		//	flush_rewrite_rules();
 	}
 
 	public static function hidden_meta_boxes($hidden, $screen, $use_defaults) {
@@ -1314,7 +1314,7 @@ class wpshop_products {
 					update_post_meta($variation_id, WPSHOP_PRODUCT_ATTRIBUTE_META_KEY, $variation_metadata);
 
 					/** Save attached picture id **/
-					$attached_picture_id = ( !empty($data_to_save['wps_pdt_variations'][$variation_id]['wps_attached_picture_id']) ) ? intval( $data_to_save['wps_pdt_variations'][$variation_id]['wps_attached_picture_id'] ) : '';
+					$attached_picture_id = ( !empty($data_to_save[WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION][$variation_id]['wps_attached_picture_id']) ) ? intval( $data_to_save[WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION][$variation_id]['wps_attached_picture_id'] ) : '';
 					$selected_picture = update_post_meta( $variation_id, '_wps_variation_attached_picture', $attached_picture_id );
 
 					/*	Update product price looking for shop parameters	*/

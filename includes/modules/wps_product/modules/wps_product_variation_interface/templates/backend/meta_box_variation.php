@@ -13,7 +13,7 @@
 		<li class="wps_variations_generate_col"><input name="wps_variations_generate_option" onchange="wps_variations_options_raw.control.generate(this)" type="checkbox"%generate%></li>
 		<li class="wps_variations_label_col">%label%</li>
 		<li class="wps_variations_requiered_col"><input name="wpshop_variation_defining[options][required_attributes][%code%]" value="%code%" onchange="wps_variations_options_raw.control.requiered(this)" type="checkbox"%requiered%></li>
-		<li class="wps_variations_possibilities_col"><select class="chosen_select_%code%" name="wps_variations_possibilities" multiple data-placeholder="Select some options"><option data-view-model="wps_variations_possibilities_%code%" value="%value_possibility_code%">%value_possibility_label%</option></select></li>
+		<li class="wps_variations_possibilities_col"><select class="chosen_select_%code%" name="wpshop_product_attribute[%type%][%code%][]" multiple data-placeholder="Select some options"><option data-view-model="wps_variations_possibilities_%code%" value="%value_possibility_code%"%value_possibility_selected%>%value_possibility_label%</option></select></li>
 		<li class="wps_variations_default_col"><select name="wps_variations_default[%code%]" data-placeholder-select="Choose default"><option data-view-model="wps_variations_possibilities_%code%" value="%value_possibility_code%"%value_possibility_is_default%>%value_possibility_label%</option></select></li>
 	</ul>
 </div>
@@ -49,8 +49,8 @@
 	<ul data-view-model="wps_variations_price_option_raw">
 		<li class="wps_variations_price_id_col">%ID%</li>
 		<li class="wps_variations_price_name_col"><span data-view-model="wps_variations_price_option_name_%ID%"><input type="hidden" name="wps_pdt_variations[%ID%][attribute][%option_type%][%option_code%]" value="%option_value%">%option_name%<span class="option_value">%option_label%</span></span></li>
-		<li class="wps_variations_price_config_col"><span class="wps_variations_price_option_price_config" onclick="wps_variations_price_option_raw.control.config(this)">%price_config%</span><input type="text" pattern="[0-9]+(\.[0-9][0-9]?)?" onchange="wps_variations_price_option_raw.control.price(this)" name="wps_pdt_variations[%ID%][attribute][decimal][product_price]" align="right" value="%price_value%"></li>
-		<li class="wps_variations_price_final_col"><b>%price_option%%currency%</b> %piloting%</li>
+		<li class="wps_variations_price_config_col"><span class="wps_variations_price_option_price_config" onclick="wps_variations_price_option_raw.control.config(this)">%price_config%</span><input type="hidden" name="wps_pdt_variations[%ID%][attribute][integer][price_behaviour]" value="%price_config_id%"><input type="text" pattern="[0-9]+(\.[0-9][0-9]?)?" onchange="wps_variations_price_option_raw.control.price(this)" align="right" value="%price_value%"></li>
+		<li class="wps_variations_price_final_col"><input type="hidden" name="wps_pdt_variations[%ID%][attribute][decimal][product_price]" value="%price_option%"><b>%price_option%%currency%</b> %piloting%</li>
 		<li class="wps_variations_price_vat_col">%vat%%currency%</li>
 		<li class="wps_variations_price_stock_col"><input type="text" pattern="[0-9]*" onchange="wps_variations_price_option_raw.control.stock(this)" name="wps_pdt_variations[%ID%][attribute][decimal][product_stock]" align="right" value="%stock%"></li>
 		<li class="wps_variations_price_weight_col"><input type="text" pattern="[0-9]+(\.[0-9][0-9]?)?" onchange="wps_variations_price_option_raw.control.weight(this)" name="wps_pdt_variations[%ID%][attribute][decimal][product_weight]" align="right" value="%weight%"></li>

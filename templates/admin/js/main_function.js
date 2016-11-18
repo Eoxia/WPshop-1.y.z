@@ -404,11 +404,12 @@ function update_order_product_content(order_id, pdt_list_to_delete){
 }
 
 
-function wpshop_variation_delete( variation_to_delete ) {
+function wpshop_variation_delete( variation_to_delete, nonce ) {
+	nonce = ( typeof nonce == 'undefined' ) ? jQuery("#wpshop_variation_management").val() : nonce;
 	var data = {
 		action: "delete_variation",
 		current_post_id: variation_to_delete,
-		wpshop_ajax_nonce: jQuery("#wpshop_variation_management").val()
+		wpshop_ajax_nonce: nonce
 	};
 	jQuery.post(ajaxurl, data, function(response){
 		for( responseis in response ) {

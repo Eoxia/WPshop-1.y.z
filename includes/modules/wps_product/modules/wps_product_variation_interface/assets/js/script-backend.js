@@ -8,7 +8,7 @@ var wps_variations_price_option_raw = {
 	model: (function() {
 		var result = [];
 		jQuery.each( wps_product_variation_interface.variations_saved, function( saved_index, saved_element ) {
-			result.push( {
+			var saved = {
 				ID: saved_index,
 				name: {
 					model: (function() {
@@ -38,16 +38,31 @@ var wps_variations_price_option_raw = {
 						return result_name;
 					})()
 				},
-				price_config: '+',
-				price_value: fix_number( ( typeof saved_element.variation_def !== 'undefined' && typeof saved_element.variation_def.product_price !== 'undefined' ) ? saved_element.variation_def.product_price : '0.00' ),
-				price_option: fix_number( wps_product_variation_interface.product_price ),
+				price_config: (function() {
+					if( typeof saved_element.variation_dif !== 'undefined' && typeof saved_element.variation_dif.price_behaviour !== 'undefined' ) {
+						if( typeof wps_product_variation_interface.attribute_in_variation !== 'undefined' && typeof wps_product_variation_interface.attribute_in_variation.price_behaviour !== 'undefined' && typeof wps_product_variation_interface.attribute_in_variation.price_behaviour.possible_value !== 'undefined' && typeof wps_product_variation_interface.attribute_in_variation.price_behaviour.possible_value[saved_element.variation_dif.price_behaviour] !== 'undefined' ) {
+							result = wps_product_variation_interface.attribute_in_variation.price_behaviour.possible_value[saved_element.variation_dif.price_behaviour];
+						}
+					} else {
+						var result = '=';
+						if( typeof wps_product_variation_interface.variation_defining !== 'undefined' ) {
+							if( typeof wps_product_variation_interface.variation_defining.options !== 'undefined' ) {
+								if( typeof wps_product_variation_interface.variation_defining.options.price_behaviour !== 'undefined' ) {
+									if( typeof wps_product_variation_interface.variation_defining.options.price_behaviour[0] !== 'undefined' && wps_product_variation_interface.variation_defining.options.price_behaviour[0] == 'addition' ) {
+										var result = '+';
+									}
+								}
+							}
+						}
+					}
+					return result;
+				})(),
 				price_product: parseFloat( wps_product_variation_interface.product_price ),
 				currency: wps_product_variation_interface.currency,
 				piloting: wps_product_variation_interface.price_piloting,
 				tx_tva: parseFloat( wps_product_variation_interface.tx_tva ),
-				vat: fix_number( ( typeof saved_element.variation_def !== 'undefined' && typeof saved_element.variation_def.tva !== 'undefined' ) ? saved_element.variation_def.tva : wps_product_variation_interface.product_price - ( wps_product_variation_interface.product_price / ( 1 + ( wps_product_variation_interface.tx_tva / 100 ) ) ) ),
-				stock: '0',
-				weight: '0',
+				stock: fix_number( ( typeof saved_element.variation_dif !== 'undefined' && typeof saved_element.variation_dif.product_stock !== 'undefined' ) ? saved_element.variation_dif.product_stock : '0', 0 ),
+				weight: fix_number( ( typeof saved_element.variation_dif !== 'undefined' && typeof saved_element.variation_dif.product_weight !== 'undefined' ) ? saved_element.variation_dif.product_weight : '0', 2 ),
 				file: {
 					model: {
 						link: 'Click to add file',
@@ -55,7 +70,16 @@ var wps_variations_price_option_raw = {
 					}
 				},
 				price_option_activate: 'checked'
-			} );
+			}
+			config_id( saved );
+			if( saved.price_config == '+' ) {
+				saved.price_value = ( ( typeof saved_element.variation_dif !== 'undefined' && typeof saved_element.variation_dif.product_price !== 'undefined' ) ? saved_element.variation_dif.product_price : '0.00' ) - parseFloat( wps_product_variation_interface.product_price );
+			} else if( saved.price_config == '=' ) {
+				saved.price_value = ( typeof saved_element.variation_dif !== 'undefined' && typeof saved_element.variation_dif.product_price !== 'undefined' ) ? saved_element.variation_dif.product_price : '0.00';
+			}
+			saved.price_value = fix_number( saved.price_value, 2 );
+			calcul_price( saved );
+			result.push( saved );
 		} );
 		if( result.length > 0 && !jQuery( 'input[name=question_combine_options][value=combine]' ).is( ':checked' ) ) {
 			jQuery( 'input[name=question_combine_options][value=single]' ).prop( "checked", true );
@@ -87,7 +111,7 @@ var wps_variations_options_raw = {
 					model: (function() {
 						var result = [];
 						var re = element.attribute_complete_def.default_value.match('s:13:"default_value";(.*)"(.*?)";');
-						jQuery.each( element.values, function( index_values, element_values ) {
+						jQuery.each( element.available, function( index_values, element_values ) {
 							var is_default = '';
 							if( re != null && re[2] == element_values ) {
 								is_default = ' selected';
@@ -100,6 +124,11 @@ var wps_variations_options_raw = {
 										if( element_values == wps_product_variation_interface.variation_value[i].id ) {
 											return wps_product_variation_interface.variation_value[i].label;
 										}
+									}
+								} )(),
+								value_possibility_selected: ( function() {
+									if( element.values.indexOf( element_values ) > -1 ) {
+										return ' selected';
 									}
 								} )()
 							} );
@@ -120,13 +149,33 @@ var wps_variations_options_summary = {
 };
 
 
-function fix_number( parameter ) {
+function fix_number( parameter, decimal ) {
+	if (typeof(decimal)==='undefined') decimal = 2;
 	parameter = parseFloat( parseFloat( parameter ).toFixed(5) );
-	var parameter_fixed = parameter.toFixed(2);
+	var parameter_fixed = parameter.toFixed( decimal );
 	if( parameter_fixed != parameter ) {
 		parameter_fixed = parameter;
 	}
 	return parameter_fixed;
+}
+
+function config_id( parameter ) {
+	parameter.price_config_id = (function() {
+		if( typeof wps_product_variation_interface.attribute_in_variation !== 'undefined' && typeof wps_product_variation_interface.attribute_in_variation.price_behaviour !== 'undefined' && typeof wps_product_variation_interface.attribute_in_variation.price_behaviour.possible_value !== 'undefined' ) {
+			for (value in wps_product_variation_interface.attribute_in_variation.price_behaviour.possible_value) {
+				if( wps_product_variation_interface.attribute_in_variation.price_behaviour.possible_value[value] == parameter.price_config ) {
+					return value;
+				}
+			}
+		}
+	})();
+}
+
+function calcul_price( parameter ) {
+	if( parameter.price_config == '=' ) { parameter.price_option = parameter.price_value; }
+	else if( parameter.price_config == '+' ) { parameter.price_option = fix_number( parseFloat( parameter.price_value ) + parameter.price_product ); }
+	parameter.price_option = fix_number( parameter.price_option, 2 )
+	parameter.vat = fix_number( parameter.price_option - ( parameter.price_option / ( 1 + ( parameter.tx_tva / 100 ) ) ) );
 }
 
 //////////////////////////////////// PLACEHOLDER SELECT ////////////////////////////////////
@@ -220,7 +269,57 @@ jQuery(document).ready( function() {
 	};
 	jQuery.each( wps_variations_options_raw.model, function( index, element ) {
 		element.possibilities.control = new WPSVariationOptionsInterface( 'wps_variations_possibilities_' + element.code, element.possibilities.model );
-		jQuery('.chosen_select_' + element.code ).chosen();
+		jQuery('.chosen_select_' + element.code ).chosen({no_results_text: "No result found. Press enter to add "}).on('change', function(evt, params) {
+			if( typeof( params.selected ) !== 'undefined' ) {
+				for (var i = 0; i < evt.currentTarget.children.length; i++) {
+					if( evt.currentTarget.children[i].value == params.selected ) {
+						var child = jQuery.extend({}, element.possibilities.model[evt.currentTarget.children[i].dataset.identifier]);
+						child.value_possibility_selected = ' selected';
+						element.possibilities.control.change( evt.currentTarget.children[i].dataset.identifier, child );
+						return true;
+					}
+				}
+			}
+			if( typeof( params.deselected ) !== 'undefined' ) {
+				for (var i = 0; i < evt.currentTarget.children.length; i++) {
+					if( evt.currentTarget.children[i].value == params.deselected ) {
+						var child = jQuery.extend({}, element.possibilities.model[evt.currentTarget.children[i].dataset.identifier]);
+						child.value_possibility_selected = '';
+						element.possibilities.control.change( evt.currentTarget.children[i].dataset.identifier, child );
+						return true;
+					}
+				}
+			}
+		}).parent().find('.chzn-container .search-field input[type=text]').keydown( function (evt) {
+			var stroke, _ref, target, list;
+			stroke = (_ref = evt.which) != null ? _ref : evt.keyCode;
+			target = jQuery(evt.target);
+			if (stroke === 13) {
+				var value = jQuery.trim(target.val());
+				var new_val = {
+					value_possibility_is_default: '',
+					value_possibility_code: 0,
+					value_possibility_label: value,
+					value_possibility_selected: ' selected'
+				}
+				var new_val_id = element.possibilities.control.push( new_val );
+				jQuery('.chosen_select_' + element.code ).trigger('liszt:updated');
+				jQuery('.chosen_select_' + element.code ).parent().click();
+				var data = {
+					action: "new_option_for_select_from_product_edition",
+					wpshop_ajax_nonce: WPSHOP_NEWOPTION_CREATION_NONCE,
+					attribute_code: element.code,
+					attribute_new_label: value,
+					attribute_selected_values: [],
+					item_in_edition: jQuery("#post_ID").val()
+				};
+				jQuery.post(ajaxurl, data, function(response) {
+					new_val.value_possibility_code = response[3];
+					element.possibilities.control.change( new_val_id, new_val );
+				}, 'json' );
+				return true;
+			}
+		});
 		placeholder_select( element.code );
 	} );
 	wps_variations_price_option_raw.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_raw', wps_variations_price_option_raw.model );
@@ -229,9 +328,7 @@ jQuery(document).ready( function() {
 		var parameter = jQuery.extend({}, wps_variations_price_option_raw.model[id]);
 		var price_value = parseFloat( jQuery( element ).val().replace(',', '.') );
 		if( !Number.isNaN( Number( price_value ) ) ) { parameter.price_value = fix_number( price_value ); }
-		if( parameter.price_config == '=' ) { parameter.price_option = parameter.price_value; }
-		else if( parameter.price_config == '+' ) { parameter.price_option = fix_number( parseFloat( parameter.price_value ) + parameter.price_product ); }
-		parameter.vat = fix_number( parameter.price_option - ( parameter.price_option / ( 1 + ( parameter.tx_tva / 100 ) ) ) );
+		calcul_price( parameter );
 		this.change( id, parameter );
 		parameter.name.control.refresh();
 		parameter.file.control.refresh();
@@ -241,12 +338,11 @@ jQuery(document).ready( function() {
 		var parameter = jQuery.extend({}, wps_variations_price_option_raw.model[id]);
 		if( parameter.price_config == '+' ) {
 			parameter.price_config = '=';
-			parameter.price_option = parameter.price_value
 		} else if( parameter.price_config == '=' ) {
 			parameter.price_config = '+';
-			parameter.price_option = fix_number( parseFloat( parameter.price_value ) + parameter.price_product );
 		}
-		parameter.vat = fix_number( parameter.price_option - ( parameter.price_option / ( 1 + ( parameter.tx_tva / 100 ) ) ) );
+		config_id( parameter );
+		calcul_price( parameter );
 		this.change( id, parameter );
 		parameter.name.control.refresh();
 		parameter.file.control.refresh();
@@ -270,7 +366,6 @@ jQuery(document).ready( function() {
 		parameter.file.control.refresh();
 	};
 	wps_variations_price_option_raw.control.file = function( element ) {
-		console.log(wps_variations_price_option_raw.model[jQuery( element ).closest( "ul[data-view-model='wps_variations_price_option_raw']" ).data('identifier')]);
 		wps_variations_price_option_raw.model[jQuery( element ).closest( "ul[data-view-model='wps_variations_price_option_raw']" ).data('identifier')].file.control.file( element );
 	}
 	wps_variations_price_option_raw.control.link = function( event, input ) {
@@ -325,43 +420,45 @@ jQuery(document).ready( function() {
 			}
 			wps_variations_price_option_raw.control.remove( i );
 		}
-		wpshop_variation_delete ( variation_to_delete );
+		wpshop_variation_delete ( variation_to_delete, wps_product_variation_interface.nonce_delete );
 		var result = [];
 		if( jQuery( 'input[name=question_combine_options]:checked' ).val() == 'single' ) {
 			var id = 0;
 			jQuery.each( wps_variations_options_raw.model, function( index, element ) {
 				if( element.generate != '' ) {
 					jQuery.each( element.possibilities.model, function( possibility_index, possibility_element ) {
-						result.push( {
-							ID: id,
-							name: {
-								model: [ {
-									option_code: element.code,
-									option_type: element.type,
-									option_name: element.label,
-									option_value: possibility_element.value_possibility_code,
-									option_label: possibility_element.value_possibility_label
-								} ]
-							},
-							price_config: '+',
-							price_value: '0.00',
-							price_option: fix_number( wps_product_variation_interface.product_price ),
-							price_product: parseFloat( wps_product_variation_interface.product_price ),
-							currency: wps_product_variation_interface.currency,
-							piloting: wps_product_variation_interface.price_piloting,
-							tx_tva: parseFloat( wps_product_variation_interface.tx_tva ),
-							vat: fix_number( wps_product_variation_interface.product_price - ( wps_product_variation_interface.product_price / ( 1 + ( wps_product_variation_interface.tx_tva / 100 ) ) ) ),
-							stock: '0',
-							weight: '0',
-							file: {
-								model: {
-									link: 'Click to add file',
-									path: ''
-								}
-							},
-							price_option_activate: 'checked'
-						} );
-						id++;
+						if( typeof possibility_element.value_possibility_selected !== 'undefined' && possibility_element.value_possibility_selected != '' ) {
+							result.push( {
+								ID: id,
+								name: {
+									model: [ {
+										option_code: element.code,
+										option_type: element.type,
+										option_name: element.label,
+										option_value: possibility_element.value_possibility_code,
+										option_label: possibility_element.value_possibility_label
+									} ]
+								},
+								price_config: '+',
+								price_value: '0.00',
+								price_option: fix_number( wps_product_variation_interface.product_price ),
+								price_product: parseFloat( wps_product_variation_interface.product_price ),
+								currency: wps_product_variation_interface.currency,
+								piloting: wps_product_variation_interface.price_piloting,
+								tx_tva: parseFloat( wps_product_variation_interface.tx_tva ),
+								vat: fix_number( wps_product_variation_interface.product_price - ( wps_product_variation_interface.product_price / ( 1 + ( wps_product_variation_interface.tx_tva / 100 ) ) ) ),
+								stock: '0',
+								weight: '0.00',
+								file: {
+									model: {
+										link: 'Click to add file',
+										path: ''
+									}
+								},
+								price_option_activate: 'checked'
+							} );
+							id++;
+						}
 					} );
 				}
 			} );
@@ -398,7 +495,7 @@ jQuery(document).ready( function() {
 								tx_tva: parseFloat( wps_product_variation_interface.tx_tva ),
 								vat: fix_number( wps_product_variation_interface.product_price - ( wps_product_variation_interface.product_price / ( 1 + ( wps_product_variation_interface.tx_tva / 100 ) ) ) ),
 								stock: '0',
-								weight: '0',
+								weight: '0.00',
 								file: {
 									model: {
 										link: 'Click to add file',

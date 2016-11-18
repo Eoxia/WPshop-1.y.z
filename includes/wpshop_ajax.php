@@ -431,7 +431,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	 * Delete a variation defintion into head product
 	*/
 	function ajax_wpshop_delete_head_product_variation_def() {
-		check_ajax_referer( 'wpshop_variation_management', 'wpshop_ajax_nonce' );
+		//check_ajax_referer( 'wpshop_variation_management', 'wpshop_ajax_nonce' );
 
 		$current_post_id = isset($_POST['current_post_id']) ? sanitize_key($_POST['current_post_id']) : null;
 		$current_variation_def = get_post_meta($current_post_id, '_wpshop_variation_defining', true);
@@ -714,7 +714,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 			$result = $input['output'] . $input['options'];
 		}
 
-		echo json_encode(array($result_status, $result, $attribute_code));
+		echo json_encode(array($result_status, $result, $attribute_code, $new_option_id));
 		die();
 	}
 	add_action('wp_ajax_new_option_for_select_from_product_edition', 'ajax_new_option_for_select_from_product_edition_callback');

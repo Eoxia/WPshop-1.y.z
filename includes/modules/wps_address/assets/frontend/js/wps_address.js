@@ -97,6 +97,7 @@ jQuery( document ).ready( function() {
 	/** Edit an address **/
 	jQuery( document ).on( 'click', '.wps-address-edit-address', function(e) {
 		e.preventDefault();
+		console.log( 'ok' );
 		var address_id = jQuery( this ).attr( 'id' ).replace( 'wps-address-edit-address-', '' );
 		jQuery( this ).closest( 'li' ).addClass( 'wps-bloc-loading' );
 		var data = {

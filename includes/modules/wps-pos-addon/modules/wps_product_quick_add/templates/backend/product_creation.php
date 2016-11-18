@@ -1,6 +1,6 @@
 <?php if ( !defined( 'ABSPATH' ) ) exit;
 ?>
-<form id="wps_product_quick_add_form" method="post" action="<?php echo admin_url( 'admin-ajax.php' ); ?>" >
+<form id="wps_product_quick_add_form" method="post" action="<?php echo admin_url( 'admin-ajax.php' ); ?>" data-nonce="<?php echo wp_create_nonce( 'ajax_pos_product_variation_selection' ); ?>" >
 	<input type="hidden" name="action" value="wpspos-product-quick-add">
 	<?php wp_nonce_field( 'create_product' ); ?>
 	<div class="wps-boxed" style="margin-top:10px;" >
@@ -101,7 +101,7 @@
 				if ( responseText[ 'status' ] ) {
 					/**	At last remove the loading class	*/
 					jQuery( "#wps_cart_container" ).addClass( "wps-bloc-loading" );
-					wps_pos_add_simple_product_to_cart( responseText[ 'pid' ] );
+					wps_pos_add_simple_product_to_cart( responseText[ 'pid' ], jQuery( $form ).data( 'nonce' ) );
 					if ( jQuery( ".wps-pos-product-letter-choice-" + responseText[ 'letter' ].toUpperCase() ).hasClass( "wps-bton-third-rounded" ) ) {
 						jQuery( ".wps-pos-product-letter-choice-" + responseText[ 'letter' ].toUpperCase() ).click();
 					}

@@ -148,6 +148,7 @@ class wps_pos_addon_order {
 	 * AJAX - Traite la commande / Process checkout
 	 */
 	function wps_pos_process_checkout() {
+		var_dump( $_SESSION );
 		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_pos_process_checkout' ) )

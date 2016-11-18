@@ -220,7 +220,7 @@ class wpshop_init{
 	var WPSHOP_WYSIWYG_MENU_TITLE_PRODUCT_LISTING = "'.__('Product listing', 'wpshop').'";
 	var WPSHOP_WYSIWYG_PRODUCT_LISTING_BY_PID_TITLE = "'.__('By product ID', 'wpshop').'";
 	var WPSHOP_WYSIWYG_PRODUCT_LISTING_BY_ATTRIBUTE_TITLE = "'.__('By attribute value', 'wpshop').'";
-	var WPSHOP_WYSIWYG_MENU_TITLE_CATEGORIES = "'.__('Wpshop categories', 'wpshop').'";
+	var WPSHOP_WYSIWYG_MENU_TITLE_CATEGORIES = "'.__('WPShop categories', 'wpshop').'";
 	var WPSHOP_WYSIWYG_MENU_TITLE_ATTRIBUTE_VALUE = "'.__('Attribute value', 'wpshop').'";
 	var WPSHOP_CUSTOM_MESSAGE_CONTENT_TITLE = "'.__('Custom message content', 'wpshop').'";
 	var WPSHOP_CUSTOM_MESSAGE_CONTENT_CUSTOMER_FIRST_NAME = "'.__('Customer first name', 'wpshop').'";

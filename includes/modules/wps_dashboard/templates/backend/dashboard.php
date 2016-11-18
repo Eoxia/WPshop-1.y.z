@@ -420,11 +420,11 @@
 
 
 			<div class="postbox">
-				<h3 class="hndle"><span class="dashicons dashicons-heart"></span> <span>WPShop : Wordpress e-commerce</span></h3>
+				<h3 class="hndle"><span class="dashicons dashicons-heart"></span> <span>WPShop : WordPress e-commerce</span></h3>
 				<div class="inside">
 
 					<div class="wps-boxed">
-						<span class="wps-h5"><?php _e( 'WPSHOP is also...', 'wpshop'); ?></span>
+						<span class="wps-h5"><?php _e( 'WPShop is also...', 'wpshop'); ?></span>
 						<div class="wps-gridwrapper4-padded">
 							<div><a href="http://shop.eoxia.com/ecommerce/wpshop_product/assistance-wordpress/" target="_blank" title="<?php _e( 'Assistance', 'wpshop'); ?>"><img src="<?php echo WPSHOP_MEDIAS_IMAGES_URL; ?>assistance_wpshop.jpg" alt="WPSHOP Assistance" /></a><div class="wps-h5"><center><?php _e( 'Assistance', 'wpshop'); ?></center></div><center><?php _e('To assist you in your WPShop Experience', 'wpshop'); ?></center></div>
 							<div><a href="http://shop.eoxia.com/boutique/shop/themes-wpshop/" target="_blank" title="<?php _e( 'WPSHOP Themes', 'wpshop'); ?>"><img src="<?php echo WPSHOP_MEDIAS_IMAGES_URL; ?>themes_wpshop.jpg" alt="WPSHOP Themes" /></a><div class="wps-h5"><center><?php _e( 'WPSHOP Themes', 'wpshop'); ?></center></div><center><?php _e('To offer to your customer all WPShop\'s powerful experience', 'wpshop'); ?></center></div>
@@ -445,7 +445,7 @@
 					</div>
 
 					<div class="wps-boxed">
-						<span class="wps-h5"><?php _e( 'WPSHOP\'s Video Tutorials', 'wpshop')?></span>
+						<span class="wps-h5"><?php _e( 'WPShop\'s Video Tutorials', 'wpshop')?></span>
 						<div><?php $this->wpshop_rss_tutorial_videos(); ?></div>
 					</div>
 

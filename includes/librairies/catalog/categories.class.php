@@ -66,19 +66,19 @@ class wpshop_categories
 		( empty($options['wpshop_catalog_categories_slug']) || $options['wpshop_catalog_categories_slug'] == '/' ) ? $slug = false : $slug['slug'] = $options['wpshop_catalog_categories_slug'];
 		register_taxonomy(WPSHOP_NEWTYPE_IDENTIFIER_CATEGORIES, array(WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT), array(
 			'labels' => array(
-				'name' => __('WPshop categories', 'wpshop'),
-				'singular_name' => __('WPshop category', 'wpshop'),
-				'add_new_item' => __('Add new wpshop category', 'wpshop'),
+				'name' => __('WPShop categories', 'wpshop'),
+				'singular_name' => __('WPShop category', 'wpshop'),
+				'add_new_item' => __('Add new WPShop category', 'wpshop'),
 				'add_new' => _x( 'Add new', 'admin menu: add new wpshop category', 'wpshop'),
-				'add_new_item' => __('Add new wpshop category', 'wpshop'),
-				'edit_item' => __('Edit wpshop category', 'wpshop'),
-				'new_item' => __('New wpshop category', 'wpshop'),
-				'view_item' => __('View wpshop category', 'wpshop' ),
-				'search_items' => __('Search wpshop categories', 'wpshop'),
-				'not_found' =>  __('No wpshop categories found', 'wpshop'),
-				'not_found_in_trash' => __('No wpshop categories found in trash', 'wpshop'),
+				'add_new_item' => __('Add new WPShop category', 'wpshop'),
+				'edit_item' => __('Edit WPShop category', 'wpshop'),
+				'new_item' => __('New WPShop category', 'wpshop'),
+				'view_item' => __('View WPShop category', 'wpshop' ),
+				'search_items' => __('Search WPShop categories', 'wpshop'),
+				'not_found' =>  __('No WPShop categories found', 'wpshop'),
+				'not_found_in_trash' => __('No WPShop categories found in trash', 'wpshop'),
 				'parent_item_colon' => '',
-				'menu_name' => __('WPshop Categories', 'wpshop')
+				'menu_name' => __('WPShop Categories', 'wpshop')
 			),
 			'rewrite' => $slug,
 			'hierarchical' => true,

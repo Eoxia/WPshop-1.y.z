@@ -2257,7 +2257,7 @@ ob_end_clean();
 								$value = empty($value) ? $attributeSetId : $value;
 							}
 							$attribute_specification['current_value'] = $value;
-							$attribute_output_def = wpshop_attributes::display_attribute( $attribute->code, 'admin', $attribute_specification);
+							$attribute_output_def = apply_filters( 'wpshop_attribute_output_def', wpshop_attributes::display_attribute( $attribute->code, 'admin', $attribute_specification), $itemToEdit );
 							if ( ($attribute_output_def['field_definition']['type'] != 'hidden') && ($attribute->code != 'product_attribute_set_id') ) {
 								$currentTabContent .= $attribute_output_def['field'];
 								$shortcode_code_def=array();
@@ -2473,7 +2473,7 @@ GROUP BY ATT.id, chosen_val", $element_id, $attribute_code);
 
 		$attribute_values_for_variations = $wpdb->get_results($query);
 		foreach ( $attribute_values_for_variations as $attribute_def ) {
-			$affected_value[] = $attribute_def->chosen_val;
+			$affected_value[] = (int) $attribute_def->chosen_val;
 		}
 
 		return $affected_value;

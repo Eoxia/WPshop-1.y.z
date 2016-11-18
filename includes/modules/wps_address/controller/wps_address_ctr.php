@@ -1346,10 +1346,14 @@ class wps_address {
 	 * AJAX - Load address form in Modal Box
 	 */
 	function wps_load_address_form() {
-		$response = '';
+		//$response = '';
 		$address_id = ( !empty( $_POST['address_id'] ) ) ? (int) $_POST['address_id'] : '';
 		$address_type_id = ( !empty( $_POST['address_type_id']) ) ? sanitize_text_field( $_POST['address_type_id'] ) : '';
-		$_wpnonce = ( !empty( $_REQUEST['_wpnonce'] ) ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+		//$_wpnonce = ( !empty( $_REQUEST['_wpnonce'] ) ) ? sanitize_text_field( $_REQUEST['_wpnonce'] ) : '';
+
+		check_ajax_referer( 'wps_load_address_form_' . $address_type_id );
+		echo 'salut';
+		wp_die();
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_load_address_form_' . $address_type_id ) )
 			wp_die();
