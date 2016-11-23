@@ -404,8 +404,9 @@ function update_order_product_content(order_id, pdt_list_to_delete){
 }
 
 
-function wpshop_variation_delete( variation_to_delete, nonce ) {
+function wpshop_variation_delete( variation_to_delete, nonce, callback ) {
 	nonce = ( typeof nonce == 'undefined' ) ? jQuery("#wpshop_variation_management").val() : nonce;
+	callback = ( typeof callback == 'undefined' ) ? function() {} : callback;
 	var data = {
 		action: "delete_variation",
 		current_post_id: variation_to_delete,
@@ -421,13 +422,14 @@ function wpshop_variation_delete( variation_to_delete, nonce ) {
 
 			var data = {
 				action: "wpshop_delete_head_product_variation_def",
-				wpshop_ajax_nonce: jQuery("#wpshop_variation_management").val(),
+				wpshop_ajax_nonce: nonce,
 				current_post_id: jQuery("#post_ID").val(),
 			};
 			jQuery.post(ajaxurl, data, function(response){
 
 			});
 		}
+		callback();
 	}, 'json');
 }
 function wpshop_create_variation( action ) {

@@ -261,6 +261,9 @@ class wpshop_attributes{
 			// $attribute_parameter['use_ajax_for_filling_field']='no';
 		// }
 		$attribute_parameter['use_ajax_for_filling_field'] = 'yes';
+		if( $attribute_parameter['backend_input'] == 'multiple-select' ) {
+			$attribute_parameter['is_used_for_variation'] = 'yes';
+		}
 
 		/*	Define the database operation type from action launched by the user	 */
 		$attribute_parameter['default_value'] = (!empty($attribute_parameter['default_value']) && is_array($attribute_parameter['default_value'])) ? serialize($attribute_parameter['default_value']) : (isset($attribute_parameter['default_value']) ? str_replace('"', "'", $attribute_parameter['default_value']) : '');

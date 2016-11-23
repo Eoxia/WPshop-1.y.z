@@ -350,10 +350,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		$options = !empty( $_POST[WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION]['options'] ) ? (array)$_POST[WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION]['options'] : array();
 
 		if ( !empty($options) ) {
-			$variation_post_meta = get_post_meta($current_post_id, '_wpshop_variation_defining', true);
-			$variation_post_meta['options'] = $options;
-			unset( $variation_post_meta['follow_general_config'] );
-			update_post_meta($current_post_id, '_wpshop_variation_defining', $variation_post_meta);
+			wpshop_products::variation_parameters_save( $post_id, $options );
 		}
 
 		die();

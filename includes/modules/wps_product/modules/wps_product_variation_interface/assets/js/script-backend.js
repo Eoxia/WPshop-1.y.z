@@ -113,7 +113,7 @@ var wps_variations_options_raw = {
 						var re = element.attribute_complete_def.default_value.match('s:13:"default_value";(.*)"(.*?)";');
 						jQuery.each( element.available, function( index_values, element_values ) {
 							var is_default = '';
-							if( re != null && re[2] == element_values ) {
+							if( typeof wps_product_variation_interface.variation_defining.options.attributes_default_value[element.attribute_complete_def.code] !== 'undefined' && wps_product_variation_interface.variation_defining.options.attributes_default_value[element.attribute_complete_def.code] == element_values ) {
 								is_default = ' selected';
 							}
 							result.push( {
@@ -180,20 +180,27 @@ function calcul_price( parameter ) {
 
 //////////////////////////////////// PLACEHOLDER SELECT ////////////////////////////////////
 function placeholder_select( code ) {
-	var select_element = jQuery( 'select[name="wps_variations_default[' + code + ']"]' );
+	var select_element = jQuery( 'select[name="wpshop_variation_defining[options][attributes_default_value][' + code + ']"]' );
 	var optionPlaceholder = document.createElement( 'option' );
 	optionPlaceholder.appendChild( document.createTextNode( select_element.data( 'placeholder-select' ) ) );
-	jQuery( optionPlaceholder ).attr( 'disabled', 'disabled' );
-	jQuery( optionPlaceholder ).attr( 'hidden', 'hidden' );
 	var have_selected_value = false;
 	select_element.find( 'option' ).each( function( index_select, element_select ) { if( element_select.getAttribute( 'selected' ) != null ) { have_selected_value = true; return false; } } );
-	if( !have_selected_value ) {
-		jQuery( optionPlaceholder ).attr( 'selected', 'selected' );
-		select_element.addClass( 'placeholder-select' );
-		jQuery( select_element ).change( function() {
+	/*jQuery( optionPlaceholder ).attr( 'disabled', 'disabled' );
+	jQuery( optionPlaceholder ).attr( 'hidden', 'hidden' );*/
+	function placeholder_selecter() {
+		if( select_element.val() == select_element.data( 'placeholder-select' ) || !have_selected_value ) {
+			jQuery( optionPlaceholder ).attr( 'selected', 'selected' );
+			select_element.addClass( 'placeholder-select' );
+		} else {
+			jQuery( optionPlaceholder ).removeAttr( 'selected' );
 			select_element.removeClass( 'placeholder-select' );
-		} );
+		}
+		have_selected_value = true;
 	}
+	placeholder_selecter();
+	jQuery( select_element ).change( function() {
+		placeholder_selecter();
+	} );
 	select_element.prepend( optionPlaceholder );
 }
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -420,7 +427,6 @@ jQuery(document).ready( function() {
 			}
 			wps_variations_price_option_raw.control.remove( i );
 		}
-		wpshop_variation_delete ( variation_to_delete, wps_product_variation_interface.nonce_delete );
 		var result = [];
 		if( jQuery( 'input[name=question_combine_options]:checked' ).val() == 'single' ) {
 			var id = 0;
@@ -518,29 +524,6 @@ jQuery(document).ready( function() {
 			size.current = 0;
 			size.total = wps_variations_price_option_raw.model.length - 1;
 			jQuery.each( wps_variations_price_option_raw.model, function( index, element ) {
-				var data =  {
-					action: 'add_new_single_variation',
-					wpshop_head_product_id: jQuery( '#post_ID' ).val(),
-					variation_attr: {},
-					wpshop_admin_use_attribute_for_single_variation_checkbox: {},
-					data: true,
-					_wpnonce: jQuery( '#wps_variations_apply_btn' ).data( 'nonce' )
-				};
-				jQuery.each( element.name.model,function( index_new_variation, element_new_variation ) {
-					data.variation_attr[element_new_variation.option_code] = element_new_variation.option_value;
-					data.wpshop_admin_use_attribute_for_single_variation_checkbox[element_new_variation.option_code] = element_new_variation.option_code;
-				} );
-				jQuery.post(ajaxurl, data, function( response ) {
-					var parameter = jQuery.extend({}, element);
-					parameter.ID = response.ID;
-					wps_variations_price_option_raw.control.change( index, parameter );
-					wps_variations_price_option_raw.model[index].name.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_name_' + response.ID, parameter.name.model );
-					wps_variations_price_option_raw.model[index].file.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_file_' + response.ID, parameter.file.model );
-					if( size.current >= size.total ) {
-						jQuery( '#wps_variations_apply_btn' ).removeClass( 'disabled' );
-					}
-					size.current++;
-				}, 'JSON');
 				element.name.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_name_' + element.ID, element.name.model );
 				element.file.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_file_' + element.ID, element.file.model );
 				element.file.control.file = function( element ) {
@@ -569,6 +552,33 @@ jQuery(document).ready( function() {
 					});
 					this.change( { link: link, path: path } );
 				}
+			} );
+			wpshop_variation_delete ( variation_to_delete, wps_product_variation_interface.nonce_delete, function() {
+				jQuery.each( wps_variations_price_option_raw.model, function( index, element ) {
+					var data =  {
+						action: 'add_new_single_variation',
+						wpshop_head_product_id: jQuery( '#post_ID' ).val(),
+						variation_attr: {},
+						wpshop_admin_use_attribute_for_single_variation_checkbox: {},
+						data: true,
+						_wpnonce: jQuery( '#wps_variations_apply_btn' ).data( 'nonce' )
+					};
+					jQuery.each( element.name.model,function( index_new_variation, element_new_variation ) {
+						data.variation_attr[element_new_variation.option_code] = element_new_variation.option_value;
+						data.wpshop_admin_use_attribute_for_single_variation_checkbox[element_new_variation.option_code] = element_new_variation.option_code;
+					} );
+					jQuery.post(ajaxurl, data, function( response ) {
+						var parameter = jQuery.extend({}, element);
+						parameter.ID = response.ID;
+						wps_variations_price_option_raw.control.change( index, parameter );
+						wps_variations_price_option_raw.model[index].name.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_name_' + response.ID, parameter.name.model );
+						wps_variations_price_option_raw.model[index].file.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_file_' + response.ID, parameter.file.model );
+						if( size.current >= size.total ) {
+							jQuery( '#wps_variations_apply_btn' ).removeClass( 'disabled' );
+						}
+						size.current++;
+					}, 'JSON');
+				} );
 			} );
 			jQuery( 'li[data-tab=wps_variations_price_option_tab]' ).removeClass( 'disabled' );
 			if( !jQuery( 'li[data-tab=wps_variations_price_option_tab]' ).hasClass( 'active' ) ) {

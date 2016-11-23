@@ -3438,4 +3438,11 @@ class wpshop_products {
 		}
 		return $new_value;
 	}
+
+	public static function variation_parameters_save( $current_post_id, $options ) {
+	     $variation_post_meta = get_post_meta($current_post_id, '_wpshop_variation_defining', true);
+	     $variation_post_meta['options'] = $options;
+	     unset( $variation_post_meta['follow_general_config'] );
+	     update_post_meta($current_post_id, '_wpshop_variation_defining', $variation_post_meta);
+	}
 }
