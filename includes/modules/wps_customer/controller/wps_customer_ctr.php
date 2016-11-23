@@ -431,8 +431,7 @@ class wps_customer_ctr {
 	function list_table_column_content( $column, $post_id ) {
 		global $wpdb;
 		/**	Get wp_users idenfifier from customer id	*/
-		$query = $wpdb->prepare( "SELECT post_author FROM {$wpdb->posts} WHERE ID = %d", $post_id);
-		$current_user_id_in_list = $wpdb->get_var( $query );
+		$current_user_id_in_list = self::get_author_id_by_customer_id( $post_id );
 
 		/**	Get current post informations	*/
 		$customer_post = get_post( $post_id );
@@ -584,6 +583,21 @@ class wps_customer_ctr {
 		$customer_id = $wpdb->get_var( $query );
 
 		return $customer_id;
+	}
+
+	/**
+	 * Récupère l'id de l'utilisateur selon l'id du client / Get author id by customer id
+	 *
+	 * @method get_author_id_by_customer_id
+	 * @param  int $customer_id ID in wpshop_customers type.
+	 * @return int
+	 */
+	public static function get_author_id_by_customer_id( $customer_id ) {
+		global $wpdb;
+
+		$author_id = $wpdb->get_var( $wpdb->prepare( "SELECT post_author FROM {$wpdb->posts} WHERE ID = %d", $customer_id ) );
+
+		return $author_id;
 	}
 
 	/**

@@ -113,7 +113,7 @@ var wps_variations_options_raw = {
 						var re = element.attribute_complete_def.default_value.match('s:13:"default_value";(.*)"(.*?)";');
 						jQuery.each( element.available, function( index_values, element_values ) {
 							var is_default = '';
-							if( typeof wps_product_variation_interface.variation_defining.options.attributes_default_value[element.attribute_complete_def.code] !== 'undefined' && wps_product_variation_interface.variation_defining.options.attributes_default_value[element.attribute_complete_def.code] == element_values ) {
+							if( typeof wps_product_variation_interface.variation_defining.options !== 'undefined' && typeof wps_product_variation_interface.variation_defining.options.attributes_default_value[element.attribute_complete_def.code] !== 'undefined' && wps_product_variation_interface.variation_defining.options.attributes_default_value[element.attribute_complete_def.code] == element_values ) {
 								is_default = ' selected';
 							}
 							result.push( {

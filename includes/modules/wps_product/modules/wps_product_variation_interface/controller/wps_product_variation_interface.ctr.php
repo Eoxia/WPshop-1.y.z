@@ -123,7 +123,7 @@ class wps_product_variation_interface {
 	 * @return void
 	 */
 	private function save_post( $post_id, $post ) {
-		if ( wp_is_post_revision( $post_id ) && WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT !== $post->post_type ) {
+		if ( wp_is_post_revision( $post_id ) || WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT !== $post->post_type || ! isset( $_REQUEST['wpshop_variation_defining']['options'] ) ) {
 			return;
 		}
 		wpshop_products::variation_parameters_save( $post_id, $_REQUEST['wpshop_variation_defining']['options'] );

@@ -229,7 +229,7 @@ if ( !class_exists("wps_classic_checkout") ) {
 		function wps_summary_order() {
 			ob_start();
 			require( wpshop_tools::get_template_part( WPS_CLASSIC_CHECKOUT_DIR, $this->template_dir,"frontend", "confirmation/confirmation-summary") );
-			$output .= ob_get_contents();
+			$output = ob_get_contents();
 			ob_end_clean();
 			return $output;
 		}
