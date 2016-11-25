@@ -1001,7 +1001,6 @@ wpshop(document).ready(function(){
 				}).on('select', function() {
 					var selected_picture = uploader_category.state().get( 'selection' );
 					var attachment = selected_picture.first().toJSON();
-					//console.log( attachment );
 					jQuery( '#wps_category_picture_id' ).val( attachment.id );
 					jQuery( '.wps_category_thumbnail_preview_container img' ).attr( 'src', attachment.url);
 					jQuery( '#add_picture_to_category' ).removeClass( 'wps-bton-loading' );

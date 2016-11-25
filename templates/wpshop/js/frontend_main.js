@@ -437,7 +437,6 @@ wpshop(document).ready(function(){
 		xhr = jQuery.getJSON(ajax_url, {}, function(data){
 				if(data[0]) {
 					// On injecte le nouveau contenu
-					// console.log( data[1] );
 
 					jQuery(wpshop_product_container).html(data[1]);
 

@@ -2357,7 +2357,7 @@ class wpshop_products {
  			$head_wpshop_variation_definition = get_post_meta( $head_product, '_wpshop_variation_defining', true );
 
  			foreach ( $variations as $post_def ) {
- 				$data = wpshop_attributes::get_attribute_list_for_item( wpshop_entities::get_entity_identifier_from_code(self::currentPageCode), $post_def->ID, WPSHOP_CURRENT_LOCALE, WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT );
+ 				$data = wpshop_attributes::get_attribute_list_for_item( wpshop_entities::get_entity_identifier_from_code(self::currentPageCode), $post_def->ID, WPSHOP_CURRENT_LOCALE, WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT, "'valid', 'deleted'" );
  				foreach ( $data as $content ) {
  					$attribute_value = 'attribute_value_' . $content->data_type;
  					if ( !empty($content->$attribute_value) ) {

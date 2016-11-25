@@ -1571,7 +1571,7 @@ ob_end_clean();
 		return $elements;
 	}
 
-	public static function get_attribute_list_for_item($entityId, $elementId, $language = WPSHOP_CURRENT_LOCALE, $defined_entity_type = '') {
+	public static function get_attribute_list_for_item($entityId, $elementId, $language = WPSHOP_CURRENT_LOCALE, $defined_entity_type = '', $ead_status = "'valid', 'deleted'") {
 		global $wpdb;
 		$elementsWithAttributeAndValues = array();
 		$moreQuery = "";
@@ -1603,7 +1603,7 @@ ob_end_clean();
 					LEFT JOIN " . WPSHOP_DBT_ATTRIBUTE_UNIT . " AS ATTR_UNIT_DATETIME ON ((ATTR_UNIT_DATETIME.id = ATTR_VALUE_DATETIME.unit_id) AND (ATTR_UNIT_DATETIME.status = 'valid'))
 				WHERE
 					ATTR.status = 'valid'
-					AND EAD.status = 'valid'
+					AND EAD.status IN ( " . $ead_status . " )
 					AND ATTRIBUTE_GROUP.status = 'valid'
 					AND EAD.entity_type_id = '" . $entityId . "' " . $moreQuery . "
 			ORDER BY ATTRIBUTE_GROUP.position",

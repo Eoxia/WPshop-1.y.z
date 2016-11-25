@@ -77,7 +77,6 @@ function wpshop_go_to(ancre){
 
 function calcul_price_from_ET(){
 	var ht_amount = parseFloat(jQuery(".wpshop_form_input_element .wpshop_product_attribute_" + WPSHOP_PRODUCT_PRICE_HT).val().replace(",", "."));
-	//console.log( jQuery('.wpshop_product_attribute_' + WPSHOP_PRODUCT_PRICE_HT).val() );
 	var value_tx = parseFloat( jQuery( '.wpshop_product_attribute_tx_tva>option:selected').text() );
 	if ( jQuery(".wpshop_form_input_element .wpshop_product_attribute_" + WPSHOP_PRODUCT_SPECIAL_PRICE).val() != 'undefined') {
 		//ht_amount = jQuery(".wpshop_form_input_element .wpshop_product_attribute_" + WPSHOP_PRODUCT_SPECIAL_PRICE).val().replace(",", ".");

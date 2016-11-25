@@ -9,7 +9,6 @@ jQuery( document ).ready(function() {
 			};
 			jQuery.post(ajaxurl, data, function(response) {
 				if( response['status'] ) {
-					//console.log( response['content'] );
 					fill_the_modal( response['title'], response['content'], '' );
 					//jQuery('.wps-password-reminder-content').html( response['content'] );
 				}

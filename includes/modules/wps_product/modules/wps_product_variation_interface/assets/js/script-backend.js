@@ -185,8 +185,6 @@ function placeholder_select( code ) {
 	optionPlaceholder.appendChild( document.createTextNode( select_element.data( 'placeholder-select' ) ) );
 	var have_selected_value = false;
 	select_element.find( 'option' ).each( function( index_select, element_select ) { if( element_select.getAttribute( 'selected' ) != null ) { have_selected_value = true; return false; } } );
-	/*jQuery( optionPlaceholder ).attr( 'disabled', 'disabled' );
-	jQuery( optionPlaceholder ).attr( 'hidden', 'hidden' );*/
 	function placeholder_selecter() {
 		if( select_element.val() == select_element.data( 'placeholder-select' ) || !have_selected_value ) {
 			jQuery( optionPlaceholder ).attr( 'selected', 'selected' );
@@ -257,8 +255,7 @@ jQuery(document).ready( function() {
 		}
 		this.change( id, parameter );
 		parameter.possibilities.control.refresh();
-		jQuery('.chosen_select_' + parameter.code ).chosen();
-		placeholder_select( parameter.code );
+		wps_variations_options_raw.control.chosenPossibilities(parameter);
 	};
 	wps_variations_options_raw.control.generate = function( element ) {
 		var id = jQuery( element ).closest( "ul[data-view-model='wps_variations_options_raw']" ).data('identifier');
@@ -271,11 +268,34 @@ jQuery(document).ready( function() {
 		this.change( id, parameter );
 		parameter.possibilities.control.refresh();
 		wps_variations_options_summary.control.summary();
-		jQuery('.chosen_select_' + parameter.code ).chosen();
-		placeholder_select( parameter.code );
+		wps_variations_options_raw.control.chosenPossibilities(parameter);
 	};
-	jQuery.each( wps_variations_options_raw.model, function( index, element ) {
-		element.possibilities.control = new WPSVariationOptionsInterface( 'wps_variations_possibilities_' + element.code, element.possibilities.model );
+	wps_variations_options_raw.control.chosenPossibilities = function( element ) {
+		function chosenPossibilitiesDefault() {
+			jQuery.each( element.possibilities.model, function( deep_index, deep_element ) {
+				if( typeof deep_element.value_possibility_selected == 'undefined' || deep_element.value_possibility_selected == '' ) {
+					jQuery( 'select[name="wpshop_variation_defining[options][attributes_default_value][' + element.code + ']"] option[value=' + deep_element.value_possibility_code + ']').attr( 'hidden', 'hidden' );
+				} else {
+					jQuery( 'select[name="wpshop_variation_defining[options][attributes_default_value][' + element.code + ']"] option[value=' + deep_element.value_possibility_code + ']').removeAttr( 'hidden' );
+				}
+			} );
+		}
+		jQuery( 'select[name="wpshop_variation_defining[options][attributes_default_value][' + element.code + ']"]' ).on( 'change', function() {
+			var val = jQuery( this ).val();
+			jQuery.each( element.possibilities.model, function( index_default, element_default ) {
+				if( element_default.value_possibility_code == val ) {
+					var child = jQuery.extend({}, element.possibilities.model[index_default]);
+					child.value_possibility_is_default = ' selected';
+					element.possibilities.control.change( index_default, child );
+				} else if( typeof element_default.value_possibility_is_default != 'undefined' || element_default.value_possibility_is_default != '' ) {
+					var child = jQuery.extend({}, element.possibilities.model[index_default]);
+					child.value_possibility_is_default = '';
+					element.possibilities.control.change( index_default, child );
+				}
+			} );
+		} );
+		chosenPossibilitiesDefault( element );
+		placeholder_select( element.code );
 		jQuery('.chosen_select_' + element.code ).chosen({no_results_text: "No result found. Press enter to add "}).on('change', function(evt, params) {
 			if( typeof( params.selected ) !== 'undefined' ) {
 				for (var i = 0; i < evt.currentTarget.children.length; i++) {
@@ -283,20 +303,18 @@ jQuery(document).ready( function() {
 						var child = jQuery.extend({}, element.possibilities.model[evt.currentTarget.children[i].dataset.identifier]);
 						child.value_possibility_selected = ' selected';
 						element.possibilities.control.change( evt.currentTarget.children[i].dataset.identifier, child );
-						return true;
 					}
 				}
-			}
-			if( typeof( params.deselected ) !== 'undefined' ) {
+			} else if( typeof( params.deselected ) !== 'undefined' ) {
 				for (var i = 0; i < evt.currentTarget.children.length; i++) {
 					if( evt.currentTarget.children[i].value == params.deselected ) {
 						var child = jQuery.extend({}, element.possibilities.model[evt.currentTarget.children[i].dataset.identifier]);
 						child.value_possibility_selected = '';
 						element.possibilities.control.change( evt.currentTarget.children[i].dataset.identifier, child );
-						return true;
 					}
 				}
 			}
+			chosenPossibilitiesDefault( element );
 		}).parent().find('.chzn-container .search-field input[type=text]').keydown( function (evt) {
 			var stroke, _ref, target, list;
 			stroke = (_ref = evt.which) != null ? _ref : evt.keyCode;
@@ -327,7 +345,10 @@ jQuery(document).ready( function() {
 				return true;
 			}
 		});
-		placeholder_select( element.code );
+	}
+	jQuery.each( wps_variations_options_raw.model, function( index, element ) {
+		element.possibilities.control = new WPSVariationOptionsInterface( 'wps_variations_possibilities_' + element.code, element.possibilities.model );
+		wps_variations_options_raw.control.chosenPossibilities(element);
 	} );
 	wps_variations_price_option_raw.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_raw', wps_variations_price_option_raw.model );
 	wps_variations_price_option_raw.control.price = function( element ) {
@@ -419,7 +440,6 @@ jQuery(document).ready( function() {
 
 	jQuery( '#wps_variations_apply_btn:not(.disabled)' ).click( function() {
 		jQuery( this ).addClass( 'disabled' );
-		if( typeof jQuery( 'input[name=question_combine_options]:checked' ).val() === 'undefined' ) { return; }
 		var variation_to_delete = [];
 		for ( var i = wps_variations_price_option_raw.model.length; wps_variations_price_option_raw.model.length != 0; i-- ) {
 			if( typeof wps_variations_price_option_raw.model[i] !== 'undefined' ) {
@@ -428,7 +448,59 @@ jQuery(document).ready( function() {
 			wps_variations_price_option_raw.control.remove( i );
 		}
 		var result = [];
-		if( jQuery( 'input[name=question_combine_options]:checked' ).val() == 'single' ) {
+		if( jQuery( 'input[name=question_combine_options]:checked' ).val() == 'combine' ) {
+			var first = true;
+			jQuery.each( wps_variations_options_raw.model, function( deep_index, deep_element ) {
+				if( deep_element.generate != '' ) {
+					if( first ) {
+						result.push( { name: { model: [] } } );
+						first = false;
+					}
+					var raw = result;
+					result = [];
+					var id = 0;
+					jQuery.each( raw, function( index_raw, element_raw ) {
+						jQuery.each( deep_element.possibilities.model, function( deep_possibility_index, deep_possibility_element ) {
+							if( typeof deep_possibility_element.value_possibility_selected !== 'undefined' && deep_possibility_element.value_possibility_selected != '' ) {
+								result.push( {
+									ID: id,
+									name: {
+										model: element_raw.name.model.concat( [ {
+											option_code: deep_element.code,
+											option_type: deep_element.type,
+											option_name: deep_element.label,
+											option_value: deep_possibility_element.value_possibility_code,
+											option_label: deep_possibility_element.value_possibility_label
+										} ] )
+									},
+									price_config: '+',
+									price_value: '0.00',
+									price_option: fix_number( wps_product_variation_interface.product_price ),
+									price_product: parseFloat( wps_product_variation_interface.product_price ),
+									currency: wps_product_variation_interface.currency,
+									piloting: wps_product_variation_interface.price_piloting,
+									tx_tva: parseFloat( wps_product_variation_interface.tx_tva ),
+									vat: fix_number( wps_product_variation_interface.product_price - ( wps_product_variation_interface.product_price / ( 1 + ( wps_product_variation_interface.tx_tva / 100 ) ) ) ),
+									stock: '0',
+									weight: '0.00',
+									file: {
+										model: {
+											link: 'Click to add file',
+											path: ''
+										}
+									},
+									price_option_activate: 'checked'
+								} );
+								id++;
+							}
+						} );
+					} );
+				}
+			} );
+		} else {
+			if( jQuery( 'input[name=question_combine_options]:checked' ).val() != 'single' ) {
+				jQuery( 'input[name=question_combine_options][value=single]' ).prop( 'checked', true );
+			}
 			var id = 0;
 			jQuery.each( wps_variations_options_raw.model, function( index, element ) {
 				if( element.generate != '' ) {
@@ -468,60 +540,13 @@ jQuery(document).ready( function() {
 					} );
 				}
 			} );
-		} else if( jQuery( 'input[name=question_combine_options]:checked' ).val() == 'combine' ) {
-			var first = true;
-			jQuery.each( wps_variations_options_raw.model, function( deep_index, deep_element ) {
-				if( deep_element.generate != '' ) {
-					if( first ) {
-						result.push( { name: { model: [] } } );
-						first = false;
-					}
-					var raw = result;
-					result = [];
-					var id = 0;
-					jQuery.each( raw, function( index_raw, element_raw ) {
-						jQuery.each( deep_element.possibilities.model, function( deep_possibility_index, deep_possibility_element ) {
-							result.push( {
-								ID: id,
-								name: {
-									model: element_raw.name.model.concat( [ {
-										option_code: deep_element.code,
-										option_type: deep_element.type,
-										option_name: deep_element.label,
-										option_value: deep_possibility_element.value_possibility_code,
-										option_label: deep_possibility_element.value_possibility_label
-									} ] )
-								},
-								price_config: '+',
-								price_value: '0.00',
-								price_option: fix_number( wps_product_variation_interface.product_price ),
-								price_product: parseFloat( wps_product_variation_interface.product_price ),
-								currency: wps_product_variation_interface.currency,
-								piloting: wps_product_variation_interface.price_piloting,
-								tx_tva: parseFloat( wps_product_variation_interface.tx_tva ),
-								vat: fix_number( wps_product_variation_interface.product_price - ( wps_product_variation_interface.product_price / ( 1 + ( wps_product_variation_interface.tx_tva / 100 ) ) ) ),
-								stock: '0',
-								weight: '0.00',
-								file: {
-									model: {
-										link: 'Click to add file',
-										path: ''
-									}
-								},
-								price_option_activate: 'checked'
-							} );
-							id++;
-						} );
-					} );
-				}
-			} );
 		}
+		var size = {};
+		size.current = size.total = 0;
 		if( result != 0 ) {
 			jQuery.each( result, function( index, element ) {
 				wps_variations_price_option_raw.control.push( element );
 			} );
-			var size = {};
-			size.current = 0;
 			size.total = wps_variations_price_option_raw.model.length - 1;
 			jQuery.each( wps_variations_price_option_raw.model, function( index, element ) {
 				element.name.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_name_' + element.ID, element.name.model );
@@ -553,46 +578,48 @@ jQuery(document).ready( function() {
 					this.change( { link: link, path: path } );
 				}
 			} );
-			wpshop_variation_delete ( variation_to_delete, wps_product_variation_interface.nonce_delete, function() {
-				jQuery.each( wps_variations_price_option_raw.model, function( index, element ) {
-					var data =  {
-						action: 'add_new_single_variation',
-						wpshop_head_product_id: jQuery( '#post_ID' ).val(),
-						variation_attr: {},
-						wpshop_admin_use_attribute_for_single_variation_checkbox: {},
-						data: true,
-						_wpnonce: jQuery( '#wps_variations_apply_btn' ).data( 'nonce' )
-					};
-					jQuery.each( element.name.model,function( index_new_variation, element_new_variation ) {
-						data.variation_attr[element_new_variation.option_code] = element_new_variation.option_value;
-						data.wpshop_admin_use_attribute_for_single_variation_checkbox[element_new_variation.option_code] = element_new_variation.option_code;
-					} );
-					jQuery.post(ajaxurl, data, function( response ) {
-						var parameter = jQuery.extend({}, element);
-						parameter.ID = response.ID;
-						wps_variations_price_option_raw.control.change( index, parameter );
-						wps_variations_price_option_raw.model[index].name.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_name_' + response.ID, parameter.name.model );
-						wps_variations_price_option_raw.model[index].file.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_file_' + response.ID, parameter.file.model );
-						if( size.current >= size.total ) {
-							jQuery( '#wps_variations_apply_btn' ).removeClass( 'disabled' );
-						}
-						size.current++;
-					}, 'JSON');
-				} );
-			} );
+		}
+		if( size.total == 0 ) {
+			if( jQuery( 'li[data-tab=wps_variations_price_option_tab]' ).hasClass( 'active' ) ) {
+				jQuery( 'li[data-tab=wps_variations_price_option_tab]' ).click();
+			}
+			jQuery( 'li[data-tab=wps_variations_price_option_tab]' ).addClass( 'disabled' );
+		} else {
 			jQuery( 'li[data-tab=wps_variations_price_option_tab]' ).removeClass( 'disabled' );
 			if( !jQuery( 'li[data-tab=wps_variations_price_option_tab]' ).hasClass( 'active' ) ) {
 				jQuery( 'li[data-tab=wps_variations_price_option_tab]' ).click();
 			}
 		}
+		wpshop_variation_delete ( variation_to_delete, wps_product_variation_interface.nonce_delete, function() {
+			if( size.total == 0 ) {
+				jQuery( '#wps_variations_apply_btn' ).removeClass( 'disabled' );
+			}
+			jQuery.each( wps_variations_price_option_raw.model, function( index, element ) {
+				var data = {
+					action: 'add_new_single_variation',
+					wpshop_head_product_id: jQuery( '#post_ID' ).val(),
+					variation_attr: {},
+					wpshop_admin_use_attribute_for_single_variation_checkbox: {},
+					data: true,
+					_wpnonce: jQuery( '#wps_variations_apply_btn' ).data( 'nonce' )
+				};
+				jQuery.each( element.name.model,function( index_new_variation, element_new_variation ) {
+					data.variation_attr[element_new_variation.option_code] = element_new_variation.option_value;
+					data.wpshop_admin_use_attribute_for_single_variation_checkbox[element_new_variation.option_code] = element_new_variation.option_code;
+				} );
+				jQuery.post(ajaxurl, data, function( response ) {
+					var parameter = jQuery.extend({}, element);
+					parameter.ID = response.ID;
+					wps_variations_price_option_raw.control.change( index, parameter );
+					wps_variations_price_option_raw.model[index].name.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_name_' + response.ID, parameter.name.model );
+					wps_variations_price_option_raw.model[index].file.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_file_' + response.ID, parameter.file.model );
+					if( size.current >= size.total ) {
+						jQuery( '#wps_variations_apply_btn' ).removeClass( 'disabled' );
+					}
+					size.current++;
+				}, 'JSON');
+			} );
+		} );
 	} );
 
 });
-
-/* function myFunction() {
-    console.log('It works!');
-}
-
-var name = 'myFunction';
-
-window[name].call(); */
