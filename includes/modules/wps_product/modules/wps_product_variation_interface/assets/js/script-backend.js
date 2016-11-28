@@ -69,7 +69,13 @@ var wps_variations_price_option_raw = {
 						path: ''
 					}
 				},
-				price_option_activate: 'checked'
+				price_option_activate: (function() {
+					if( saved_element.post.post_status == 'publish' ) {
+						return 'checked';
+					} else {
+						return '';
+					}
+				})()
 			}
 			config_id( saved );
 			if( saved.price_config == '+' ) {
@@ -398,6 +404,18 @@ jQuery(document).ready( function() {
 	}
 	wps_variations_price_option_raw.control.link = function( event, input ) {
 		wps_variations_price_option_raw.model[jQuery( input ).closest( "ul[data-view-model='wps_variations_price_option_raw']" ).data('identifier')].file.control.link( event, input );
+	}
+	wps_variations_price_option_raw.control.activate = function( element ) {
+		var id = jQuery( element ).closest( "ul[data-view-model='wps_variations_price_option_raw']" ).data('identifier');
+		var parameter = jQuery.extend({}, wps_variations_price_option_raw.model[id]);
+		if( parameter.price_option_activate == 'checked' ) {
+			parameter.price_option_activate = '';
+		} else {
+			parameter.price_option_activate = 'checked';
+		}
+		this.change( id, parameter );
+		parameter.name.control.refresh();
+		parameter.file.control.refresh();
 	}
 	var display_price_tab = false;
 	jQuery.each( wps_variations_price_option_raw.model, function( index, element ) {

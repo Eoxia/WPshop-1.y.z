@@ -39,10 +39,16 @@ class wps_product_variation_interface {
 	 */
 	private function is_activate( $new_val = null ) {
 		if ( ! isset( $this->is_active ) ) {
-			$this->is_active = (bool) get_option( 'wps_variation_interface_display', false );
+			$option = get_option( 'wps_variation_interface_display', null );
+			if ( is_null( $option ) ) {
+				$new_val = true;
+				$option = false;
+			}
+	    	$this->is_active = (bool) $option;
 		}
 		if ( isset( $new_val ) && $this->is_active !== $new_val ) {
 			update_option( 'wps_variation_interface_display', $new_val );
+			$this->is_active = $new_val;
 		}
 		return $this->is_active;
 	}
@@ -91,6 +97,8 @@ class wps_product_variation_interface {
 			$available = wpshop_attributes::get_select_output( $variation['attribute_complete_def'] );
 			$this->variations[ $key ]['available'] = array_keys( $available['possible_value'] );
 			$ids = array_merge( $ids, array_keys( $available['possible_value'] ) );
+			$data = get_post_meta( $key, 'attribute_option_is_downloadable', true );
+			$data['file_url'] = ! empty( $data['file_url'] )?$data['file_url']:__( 'No file selected', 'wpshop' );
 		}
 		$query = $wpdb->prepare( 'SELECT * FROM ' . WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS . " WHERE id IN ('" . implode( "', '", $ids ) . "') AND status = %s", 'valid' );
 		$product = wpshop_products::get_product_data( $post->ID, false, '"publish"' );
@@ -123,10 +131,21 @@ class wps_product_variation_interface {
 	 * @return void
 	 */
 	private function save_post( $post_id, $post ) {
-		if ( wp_is_post_revision( $post_id ) || WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT !== $post->post_type || ! isset( $_REQUEST['wpshop_variation_defining']['options'] ) ) {
+		if ( wp_is_post_revision( $post_id ) || WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT !== $post->post_type || ! isset( $_REQUEST['wpshop_variation_defining']['options'] ) || ! isset( $_REQUEST['wps_pdt_variations'] ) ) {
 			return;
 		}
 		wpshop_products::variation_parameters_save( $post_id, $_REQUEST['wpshop_variation_defining']['options'] );
+		remove_action( 'save_post', array( $this, 'save_post' ) );
+		foreach ( $_REQUEST['wps_pdt_variations'] as $variation_id => $data ) {
+			$variation = array( 'ID' => $variation_id );
+			if ( isset( $data['status'] ) && 'on' === $data['status'] ) {
+				$variation['post_status'] = 'publish';
+			} else {
+				$variation['post_status'] = 'draft';
+			}
+			wp_update_post( $variation );
+		}
+		add_action( 'save_post', array( $this, 'save_post' ), 10, 2 );
 	}
 	/**
 	 * Delete display in attributes products always in metabox.

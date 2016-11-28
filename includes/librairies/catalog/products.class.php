@@ -2619,6 +2619,13 @@ class wpshop_products {
 							foreach ( $possible_values[$attribute_code] as $position => $def ) {
 								foreach ( $def as $attribute_value => $attribute_value_output ) {
 									$real_possible_values[$attribute_value] = $attribute_value_output;
+									if( !empty( $attribute_value ) ) {
+										global $wpdb;
+										$query = $wpdb->prepare("SELECT post_status FROM " . $wpdb->postmeta . " AS P_META INNER JOIN " . $wpdb->posts . " as P ON ((P.ID = P_META.post_id) AND (P.post_parent = %d)) WHERE P_META.meta_value LIKE '%%" . serialize($attribute_code) . serialize($attribute_value) . "%%'", $product_id);
+										if( 'draft' == $wpdb->get_var($query) ) {
+											unset( $real_possible_values[$attribute_value] );
+										}
+									}
 								}
 							}
 						}
@@ -2877,7 +2884,7 @@ class wpshop_products {
 					$the_product['tva'] = ( !empty($price_infos['discount']) &&  !empty($price_infos['discount']['discount_exist']) && $price_infos['discount']['discount_exist']) ? $price_infos['discount']['discount_tva'] : $price_infos['tva'];
 				}
 
-				$product = wpshop_products::get_product_data( $product_id, true );
+				$product = wpshop_products::get_product_data( $product_id, true, '"publish", "draft"' );
 				// Add free variations to product
 				if (  !empty( $wpshop_free_variation )  ) {
 					$the_product['item_meta']['free_variation'] = $wpshop_free_variation;
@@ -3058,14 +3065,14 @@ class wpshop_products {
 						}
 					}
 
-					$product_variation_def = wpshop_products::get_product_data($product_variation, true);
+					$product_variation_def = wpshop_products::get_product_data($product_variation, true, '"publish", "draft"');
 					$product_into_cart['item_meta']['variations'][$product_variation] = $product_variation_def;
 				}
 			}
 
 			// Check if add or replace variation price to head product
 			$product_variation_defining = get_post_meta( $head_product_id, '_wpshop_variation_defining', true );
-			if( empty($product_variation_defining) || ( !empty($product_variation_defining) && empty($product_variation_defining['options']) ) || ( ( !empty($product_variation_defining) ) && !empty($product_variation_defining['options']) && !empty($product_variation_defining['options']['price_behaviour']) && !empty($product_variation_defining['options']['price_behaviour'][0]) && $product_variation_defining['options']['price_behaviour'][0] == 'replacement' ) ){
+			if( ( !empty( $product_variation_def['price_behaviour'] ) ) || empty($product_variation_defining) || ( !empty($product_variation_defining) && empty($product_variation_defining['options']) ) || ( ( !empty($product_variation_defining) ) && !empty($product_variation_defining['options']) && !empty($product_variation_defining['options']['price_behaviour']) && !empty($product_variation_defining['options']['price_behaviour'][0]) && $product_variation_defining['options']['price_behaviour'][0] == 'replacement' ) ) {
 				//Replace the product price
 				if( !empty($variations_discount_total_price) && !empty($variations_discount_total_price['price_ati']) ) {
 					$product_into_cart['price_ttc_before_discount'] = $variations_total_price['price_ati'];

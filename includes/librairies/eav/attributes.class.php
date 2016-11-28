@@ -3195,7 +3195,7 @@ GROUP BY ATT.id, chosen_val", $element_id, $attribute_code);
 		return $output;
 	}
 
-	public static function get_attribute_user_defined( $use_defined_parameters ) {
+	public static function get_attribute_user_defined( $use_defined_parameters, $status = "'publish'" ) {
 		global $wpdb;
 		$attribute_user_defined_list = array();
 
