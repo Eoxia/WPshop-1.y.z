@@ -65,8 +65,9 @@ var wps_variations_price_option_raw = {
 				weight: fix_number( ( typeof saved_element.variation_dif !== 'undefined' && typeof saved_element.variation_dif.product_weight !== 'undefined' ) ? saved_element.variation_dif.product_weight : '0', 2 ),
 				file: {
 					model: {
-						link: 'Click to add file',
-						path: ''
+						link: ( ( typeof saved_element.file !== 'undefined' ) ? saved_element.file.name : 'Click to add file' ),
+						download: ( ( typeof saved_element.file !== 'undefined' ) ? 'inline' : 'none' ),
+						path: ( ( typeof saved_element.file !== 'undefined' ) ? saved_element.file.path : '' )
 					}
 				},
 				price_option_activate: (function() {
@@ -119,7 +120,7 @@ var wps_variations_options_raw = {
 						var re = element.attribute_complete_def.default_value.match('s:13:"default_value";(.*)"(.*?)";');
 						jQuery.each( element.available, function( index_values, element_values ) {
 							var is_default = '';
-							if( typeof wps_product_variation_interface.variation_defining.options !== 'undefined' && typeof wps_product_variation_interface.variation_defining.options.attributes_default_value[element.attribute_complete_def.code] !== 'undefined' && wps_product_variation_interface.variation_defining.options.attributes_default_value[element.attribute_complete_def.code] == element_values ) {
+							if( typeof wps_product_variation_interface.variation_defining.options !== 'undefined' && typeof wps_product_variation_interface.variation_defining.options.attributes_default_value !== 'undefined' && typeof wps_product_variation_interface.variation_defining.options.attributes_default_value[element.attribute_complete_def.code] !== 'undefined' && wps_product_variation_interface.variation_defining.options.attributes_default_value[element.attribute_complete_def.code] == element_values ) {
 								is_default = ' selected';
 							}
 							result.push( {
@@ -434,6 +435,7 @@ jQuery(document).ready( function() {
 			data.append( 'element_identifier', element.ID );
 			data.append( '_wpnonce', jQuery( input ).parent().find( '[name=wpshop_file_nonce]' ).val() );
 			data.append( '_wp_http_referer', jQuery( input ).parent().find( '[name=_wp_http_referer]' ).val() );
+			var this_element = this;
 			jQuery.ajax({
 				type: 'POST',
 				url: ajaxurl,
@@ -443,9 +445,14 @@ jQuery(document).ready( function() {
 				enctype: 'multipart/form-data',
 				data: data
 			}).done(function( response ) {
-				console.log( response );
+				var div = document.createElement('div');
+				div.innerHTML = response;
+				response = div.firstChild;
+				var basename = /(?:http:\/\/.*\/)(.*)/g;
+				var match = basename.exec(response.href);
+				this_element.change( { link: match[1], download: 'inline', path: match[0] } );
 			});
-			this.change( { link: link, path: path } );
+			this_element.change( { link: link, download: 'none', path: path } );
 		}
 		display_price_tab = true;
 	} );
@@ -504,6 +511,7 @@ jQuery(document).ready( function() {
 									file: {
 										model: {
 											link: 'Click to add file',
+											download: 'none',
 											path: ''
 										}
 									},
@@ -548,6 +556,7 @@ jQuery(document).ready( function() {
 								file: {
 									model: {
 										link: 'Click to add file',
+										download: 'none',
 										path: ''
 									}
 								},

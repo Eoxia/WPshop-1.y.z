@@ -13,7 +13,7 @@ class wps_product_variation_interface {
 	 * Call hooks.
 	 */
 	public function __construct() {
-		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 11 );
+		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 11, 2 );
 		add_action( 'save_post', array( $this, 'save_post' ), 10, 2 );
 		add_filter( 'wpshop_attribute_output_def', array( $this, 'wpshop_attribute_output_def' ), 10, 2 );
 	}
@@ -37,7 +37,7 @@ class wps_product_variation_interface {
 	 * @param  boolean $new_val If set & db is different, save it.
 	 * @return boolean          Actual state of module.
 	 */
-	private function is_activate( $new_val = null ) {
+	public function is_activate( $new_val = null ) {
 		if ( ! isset( $this->is_active ) ) {
 			$option = get_option( 'wps_variation_interface_display', null );
 			if ( is_null( $option ) ) {
@@ -65,18 +65,19 @@ class wps_product_variation_interface {
 			unset( $variations );
 		}
 	}
-	/**
-	 * Add metabox & remove old one (cqfd).
-	 */
-	public function add_meta_boxes() {
+	public function add_meta_boxes( $post_status, $post ) {
+		global $pagenow;
 		$_wpnonce = ! empty( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : ''; // Input var okay.
 		$wps_variation_interface = ! empty( $_GET['wps_variation_interface'] ) ? filter_var( wp_unslash( $_GET['wps_variation_interface'] ), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE ) : null; // Input var okay.
 		if ( wp_verify_nonce( $_wpnonce, 'wps_remove_variation_interface' ) && null !== $wps_variation_interface ) {
 			$this->is_activate( $wps_variation_interface );
 		}
 		if ( $this->is_activate() ) {
+			$this->get_variations( $post->ID );
 			remove_meta_box( 'wpshop_wpshop_variations', WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT, 'normal' );
-			add_meta_box( 'wpshop_wpshop_variations', __( 'Product variation', 'wpshop' ), array( $this, 'meta_box_variation' ), WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT, 'normal', 'default' );
+			if ( $pagenow !== 'post-new.php' && ! empty( $this->variations ) ) {
+				add_meta_box( 'wpshop_wpshop_variations', __( 'Product variation', 'wpshop' ), array( $this, 'meta_box_variation' ), WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT, 'normal', 'default' );
+			}
 		}
 	}
 	/**
@@ -87,18 +88,12 @@ class wps_product_variation_interface {
 	 */
 	private function meta_box_variation( $post ) {
 		$this->get_variations( $post->ID );
-		if ( empty( $this->variations ) ) {
-			remove_meta_box( 'wpshop_wpshop_variations', WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT, 'normal' );
-			return;
-		}
 		global $wpdb;
 		$ids = array();
 		foreach ( $this->variations as $key => $variation ) {
 			$available = wpshop_attributes::get_select_output( $variation['attribute_complete_def'] );
 			$this->variations[ $key ]['available'] = array_keys( $available['possible_value'] );
 			$ids = array_merge( $ids, array_keys( $available['possible_value'] ) );
-			$data = get_post_meta( $key, 'attribute_option_is_downloadable', true );
-			$data['file_url'] = ! empty( $data['file_url'] )?$data['file_url']:__( 'No file selected', 'wpshop' );
 		}
 		$query = $wpdb->prepare( 'SELECT * FROM ' . WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS . " WHERE id IN ('" . implode( "', '", $ids ) . "') AND status = %s", 'valid' );
 		$product = wpshop_products::get_product_data( $post->ID, false, '"publish"' );
@@ -115,6 +110,15 @@ class wps_product_variation_interface {
 		}
 		$variation_defining = get_post_meta( $post->ID, '_wpshop_variation_defining', true );
 		$variations_saved = wpshop_products::get_variation( $post->ID );
+		if ( ! empty( $variations_saved ) ) {
+			foreach ( $variations_saved as $variation_id => $variation ) {
+				$downloadable = get_post_meta( $variation_id, 'attribute_option_is_downloadable_', true );
+				if ( ! empty( $downloadable['file_url'] ) ) {
+					$variations_saved[ $variation_id ]['file']['path'] = $downloadable['file_url'];
+					$variations_saved[ $variation_id ]['file']['name'] = basename( $downloadable['file_url'] );
+				}
+			}
+		}
 		$price_piloting = get_option( 'wpshop_shop_price_piloting' );
 		$product_currency = wpshop_tools::wpshop_get_currency();
 		wp_enqueue_style( 'wps-product-variation-interface-style', WPSPDTVARIATION_INTERFACE_ASSETS_MAIN_DIR . '/css/style-backend.css' );
@@ -135,6 +139,7 @@ class wps_product_variation_interface {
 			return;
 		}
 		wpshop_products::variation_parameters_save( $post_id, $_REQUEST['wpshop_variation_defining']['options'] );
+		/*
 		remove_action( 'save_post', array( $this, 'save_post' ) );
 		foreach ( $_REQUEST['wps_pdt_variations'] as $variation_id => $data ) {
 			$variation = array( 'ID' => $variation_id );
@@ -145,7 +150,7 @@ class wps_product_variation_interface {
 			}
 			wp_update_post( $variation );
 		}
-		add_action( 'save_post', array( $this, 'save_post' ), 10, 2 );
+		add_action( 'save_post', array( $this, 'save_post' ), 10, 2 );*/
 	}
 	/**
 	 * Delete display in attributes products always in metabox.
