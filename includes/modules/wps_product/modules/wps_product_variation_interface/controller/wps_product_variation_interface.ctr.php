@@ -131,7 +131,7 @@ class wps_product_variation_interface
         wp_enqueue_style('wps-product-variation-interface-style', WPSPDTVARIATION_INTERFACE_ASSETS_MAIN_DIR . '/css/style-backend.css');
         wp_enqueue_script('wps-product-variation-interface-script', WPSPDTVARIATION_INTERFACE_ASSETS_MAIN_DIR . '/js/script-backend.js');
         wp_enqueue_script('wps-product-variation-interface-script-utils', WPSPDTVARIATION_INTERFACE_ASSETS_MAIN_DIR . '/js/script-backend-utils.js');
-        wp_localize_script('wps-product-variation-interface-script', 'wps_product_variation_interface', array('variation' => $this->variations, 'nonce_delete' => wp_create_nonce('wpshop_variation_management'), 'variation_value' => $wpdb->get_results($query), 'product_price' => $product['product_price'], 'tx_tva' => $product['tx_tva'], 'attribute_in_variation' => $attribute_list, 'variations_saved' => $variations_saved, 'price_piloting' => $price_piloting, 'currency' => $product_currency, 'variation_defining' => $variation_defining));
+        wp_localize_script('wps-product-variation-interface-script', 'wps_product_variation_interface', array('variation' => $this->variations, 'nonce_delete' => wp_create_nonce('wpshop_variation_management'), 'variation_value' => $wpdb->get_results($query), 'product_price' => $product['product_price'], 'tx_tva' => $product['tx_tva'], 'attribute_in_variation' => $attribute_list, 'variations_saved' => $variations_saved, 'price_piloting' => $price_piloting, 'currency' => $product_currency, 'variation_defining' => $variation_defining, 'label_file' => __('Click to add file', 'wpshop')));
         require_once wpshop_tools::get_template_part(WPSPDTVARIATION_INTERFACE_DIR, WPSPDTVARIATION_INTERFACE_TEMPLATES_MAIN_DIR, 'backend', 'meta_box_variation');
     }
     /**

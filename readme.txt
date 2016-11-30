@@ -4,7 +4,7 @@ Tags: boutique, catalog, catalogue, commerce, e-commerce, ecommerce, m-commerce,
 Donate link: http://www.wpshop.fr/documentations/presentation-wpshop/
 Requires at least: 3.4.0
 Tested up to: 4.6.1
-Stable tag: 1.4.2.7
+Stable tag: 1.4.2.8
 License: GPLv2 or later
 
 Simple and powerfull eCommerce plugin, with French Payment and Shipping systems : Paybox, Paypal, Atos, Cybermut, SystemPay, Paysite-cash, Colissimo
@@ -96,6 +96,27 @@ Il faut vérifier que le réglage des permaliens pour votre site est bien régl�
 
 
 == Changelog ==
+
+= Version 1.4.2.8 =
+
+Améliorations / Improvments
+
+* 5756 - Amélioration du jeu d'affichage des metabox (nouvelle interface) / Improvments for displaing metaboxes (new interface)
+* 5755 - Ajout du filtre 'wpshop_attribute_output_def' contenant l'affichage de l'attribut en backoffice / Add filter 'wpshop_attribute_output_def' for attributes in admin
+* 5754 - Les attributs multiples devienne obligatoirement des attributs définissant les options
+* 5753 - Ajout de la fonction get_author_id_by_customer_id() / New function get_author_id_by_customer_id()
+* 5752 - Possibilité de retirer les options simples du front / Disable singly variations on front
+* 5751 - Nouvelle interface des options / New interface for options
+* 5749 - Ajout de price_behaviour / New attribute price_behaviour
+* 5253 - Ajout d'un filtre permettant de surcharger la fonction forceDownload dans le cas d'un fichier trop lourd
+
+Corrections / Fix
+
+* 5743 - Correction de la sauvegarde dans les options des attributs hors d'un groupe / Fix save attributes out of group for variations
+* 5740 - Correction de connexion à l'inscription / Signup login fix
+* 5737 - Correction des téléchargements sans être connecté / Downloads without connection
+* 5280 - Problème d'affichage des valeurs des attributs de type texte libre dans les commandes et résumé de commande
+* 5252 - Problème de génération des factures en https à cause du logo du site
 
 = Version 1.4.2.7 =
 

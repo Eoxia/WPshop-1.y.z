@@ -99,22 +99,20 @@
 	padding: 10px 0 0 0;
 }
 #wps_variations_options .wps_variations_options_raw li .chzn-container-multi {
-	height: 25px;
 	display: inline-block;
 	width: calc(100% - 24px) !important;
 }
 #wps_variations_options .wps_variations_options_raw li .chzn-choices {
-	height: 24px !important;
+	height: 24px;
 	width: 100%;
-	display: flex;
-	flex-direction: column;
+	display: block;
 	border: 1px solid #DDD;
 }
 #wps_variations_options .wps_variations_options_raw li .search-choice {
 	margin: 2px;
 	padding: 3px 20px 3px 3px;
-	display: block;
-	position: absolute;
+	display: inline-block;
+    float: left;
 	height: auto;
 	font-size: 12px;
 }
@@ -315,6 +313,13 @@
 }
 #wps_variations_price_option_tab .wps_variations_price_active_col {
 	text-align: right;
+}
+#wps_variations_price_option_tab .wps_variations_price_file_col .wps_variations_price_option_price_download_file {
+	margin-left: 12px;
+	text-decoration: none;
+}
+#wps_variations_price_option_tab .wps_variations_price_file_col .wps_variations_price_option_price_download_file .dashicons {
+	height: 15px;
 }
 #wps_variations_price_option_tab .wps_variations_price_file_col .wps_variations_price_option_price_file {
 	text-decoration: underline;

@@ -65,7 +65,7 @@ var wps_variations_price_option_raw = {
 				weight: fix_number( ( typeof saved_element.variation_dif !== 'undefined' && typeof saved_element.variation_dif.product_weight !== 'undefined' ) ? saved_element.variation_dif.product_weight : '0', 2 ),
 				file: {
 					model: {
-						link: ( ( typeof saved_element.file !== 'undefined' ) ? saved_element.file.name : 'Click to add file' ),
+						link: ( ( typeof saved_element.file !== 'undefined' ) ? saved_element.file.name : wps_product_variation_interface.label_file ),
 						download: ( ( typeof saved_element.file !== 'undefined' ) ? 'inline' : 'none' ),
 						path: ( ( typeof saved_element.file !== 'undefined' ) ? saved_element.file.path : '' )
 					}
@@ -476,8 +476,7 @@ jQuery(document).ready( function() {
 			wps_variations_price_option_raw.control.remove( i );
 		}
 		var result = [];
-		var question_combine_options = jQuery( 'input[name=question_combine_options]:checked' ).val();
-		if( question_combine_options == 'combine' ) {
+		if( jQuery( 'input[name=question_combine_options]:checked' ).val() == 'combine' ) {
 			var first = true;
 			jQuery.each( wps_variations_options_raw.model, function( deep_index, deep_element ) {
 				if( deep_element.generate != '' ) {
@@ -514,13 +513,17 @@ jQuery(document).ready( function() {
 									weight: '0.00',
 									file: {
 										model: {
-											link: 'Click to add file',
+											link: wps_product_variation_interface.label_file,
 											download: 'none',
 											path: ''
 										}
 									}
 								};
-								parameter.price_option_activate =  'checked disabled><input type="hidden" value="on" name="wps_pdt_variations[' + parameter.ID + '][status]"';
+								if( parameter.name.model.length > 1 ) {
+									parameter.price_option_activate =  'checked disabled><input type="hidden" value="on" name="wps_pdt_variations[' + parameter.ID + '][status]"';
+								} else {
+									parameter.price_option_activate =  'checked';
+								}
 								config_id( parameter );
 								result.push( parameter );
 								id++;
@@ -532,7 +535,6 @@ jQuery(document).ready( function() {
 		} else {
 			if( jQuery( 'input[name=question_combine_options]:checked' ).val() != 'single' ) {
 				jQuery( 'input[name=question_combine_options][value=single]' ).prop( 'checked', true );
-				question_combine_options = 'single';
 			}
 			var id = 0;
 			jQuery.each( wps_variations_options_raw.model, function( index, element ) {
@@ -562,7 +564,7 @@ jQuery(document).ready( function() {
 								weight: '0.00',
 								file: {
 									model: {
-										link: 'Click to add file',
+										link: wps_product_variation_interface.label_file,
 										download: 'none',
 										path: ''
 									}
@@ -646,7 +648,7 @@ jQuery(document).ready( function() {
 				jQuery.post(ajaxurl, data, function( response ) {
 					var parameter = jQuery.extend({}, element);
 					parameter.ID = response.ID;
-					if( question_combine_options == 'combine' ) {
+					if( parameter.name.model.length > 1 ) {
 						parameter.price_option_activate = 'checked disabled><input type="hidden" value="on" name="wps_pdt_variations[' + parameter.ID + '][status]"';
 					}
 					wps_variations_price_option_raw.control.change( index, parameter );

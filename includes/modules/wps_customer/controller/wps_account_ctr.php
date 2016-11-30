@@ -481,7 +481,7 @@ class wps_account_ctr {
 							$user_info = $address_forms = $all_addresses_form = array();
 							$billing_option = get_option( 'wpshop_billing_address' );
 							foreach( $attribute as $type => $attributes ) {
-								if( $billing_option['integrate_into_register_form'] == 'yes' && ctype_digit( (string) $type ) ) {
+								if( !empty( $billing_option['integrate_into_register_form'] ) && $billing_option['integrate_into_register_form'] == 'yes' && ctype_digit( (string) $type ) ) {
 									//wps_address::save_address_infos( (int) $type );
 									foreach( $attributes as $sub_type => $sub_attributes ) {
 										if( !is_array( $sub_attributes ) ) {
@@ -495,7 +495,7 @@ class wps_account_ctr {
 								} else {
 									foreach( $attributes as $meta => $attribute_value ) {
 										$user_info[$meta] = sanitize_text_field( $attribute_value );
-										if( $billing_option['integrate_into_register_form'] == 'yes' && isset( $billing_option['integrate_into_register_form_matching_field'][$meta] ) ) {
+										if( !empty( $billing_option['integrate_into_register_form'] ) && $billing_option['integrate_into_register_form'] == 'yes' && isset( $billing_option['integrate_into_register_form_matching_field'], $billing_option['integrate_into_register_form_matching_field'][$meta] ) ) {
 											$all_addresses_form[$type][$meta] = $user_info[$meta];
 										}
 									}
@@ -519,7 +519,7 @@ class wps_account_ctr {
 						}
 						$status = true;
 
-						if ( $account_creation && !empty( $user_id ) && !is_admin() ) {
+						if ( $account_creation && !empty( $user_id ) ) {
 							$secure_cookie = is_ssl() ? true : false;
 							wp_set_auth_cookie( $user_id, true, $secure_cookie );
 						}
