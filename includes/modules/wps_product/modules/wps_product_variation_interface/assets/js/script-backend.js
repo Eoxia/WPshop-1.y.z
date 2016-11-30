@@ -78,6 +78,9 @@ var wps_variations_price_option_raw = {
 					}
 				})()
 			}
+			if( saved.name.model.length > 1 ) {
+				saved.price_option_activate = 'checked disabled><input type="hidden" value="on" name="wps_pdt_variations[' + saved.ID + '][status]"';
+			}
 			config_id( saved );
 			if( saved.price_config == '+' ) {
 				saved.price_value = ( ( typeof saved_element.variation_dif !== 'undefined' && typeof saved_element.variation_dif.product_price !== 'undefined' ) ? saved_element.variation_dif.product_price : '0.00' ) - parseFloat( wps_product_variation_interface.product_price );
@@ -473,7 +476,8 @@ jQuery(document).ready( function() {
 			wps_variations_price_option_raw.control.remove( i );
 		}
 		var result = [];
-		if( jQuery( 'input[name=question_combine_options]:checked' ).val() == 'combine' ) {
+		var question_combine_options = jQuery( 'input[name=question_combine_options]:checked' ).val();
+		if( question_combine_options == 'combine' ) {
 			var first = true;
 			jQuery.each( wps_variations_options_raw.model, function( deep_index, deep_element ) {
 				if( deep_element.generate != '' ) {
@@ -487,7 +491,7 @@ jQuery(document).ready( function() {
 					jQuery.each( raw, function( index_raw, element_raw ) {
 						jQuery.each( deep_element.possibilities.model, function( deep_possibility_index, deep_possibility_element ) {
 							if( typeof deep_possibility_element.value_possibility_selected !== 'undefined' && deep_possibility_element.value_possibility_selected != '' ) {
-								result.push( {
+								var parameter = {
 									ID: id,
 									name: {
 										model: element_raw.name.model.concat( [ {
@@ -514,9 +518,11 @@ jQuery(document).ready( function() {
 											download: 'none',
 											path: ''
 										}
-									},
-									price_option_activate: 'checked'
-								} );
+									}
+								};
+								parameter.price_option_activate =  'checked disabled><input type="hidden" value="on" name="wps_pdt_variations[' + parameter.ID + '][status]"';
+								config_id( parameter );
+								result.push( parameter );
 								id++;
 							}
 						} );
@@ -526,13 +532,14 @@ jQuery(document).ready( function() {
 		} else {
 			if( jQuery( 'input[name=question_combine_options]:checked' ).val() != 'single' ) {
 				jQuery( 'input[name=question_combine_options][value=single]' ).prop( 'checked', true );
+				question_combine_options = 'single';
 			}
 			var id = 0;
 			jQuery.each( wps_variations_options_raw.model, function( index, element ) {
 				if( element.generate != '' ) {
 					jQuery.each( element.possibilities.model, function( possibility_index, possibility_element ) {
 						if( typeof possibility_element.value_possibility_selected !== 'undefined' && possibility_element.value_possibility_selected != '' ) {
-							result.push( {
+							var parameter = {
 								ID: id,
 								name: {
 									model: [ {
@@ -561,7 +568,9 @@ jQuery(document).ready( function() {
 									}
 								},
 								price_option_activate: 'checked'
-							} );
+							};
+							config_id( parameter );
+							result.push( parameter );
 							id++;
 						}
 					} );
@@ -637,9 +646,44 @@ jQuery(document).ready( function() {
 				jQuery.post(ajaxurl, data, function( response ) {
 					var parameter = jQuery.extend({}, element);
 					parameter.ID = response.ID;
+					if( question_combine_options == 'combine' ) {
+						parameter.price_option_activate = 'checked disabled><input type="hidden" value="on" name="wps_pdt_variations[' + parameter.ID + '][status]"';
+					}
 					wps_variations_price_option_raw.control.change( index, parameter );
 					wps_variations_price_option_raw.model[index].name.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_name_' + response.ID, parameter.name.model );
 					wps_variations_price_option_raw.model[index].file.control = new WPSVariationOptionsInterface( 'wps_variations_price_option_file_' + response.ID, parameter.file.model );
+					wps_variations_price_option_raw.model[index].file.control.file = function( element ) {
+						jQuery( element ).next().click();
+					}
+					wps_variations_price_option_raw.model[index].file.control.link = function( event, input ) {
+						var path = jQuery( input ).val();
+						var file = event.target.files[0];
+						var link = file.name;
+						var data = new FormData();
+						data.append( 'wpshop_file', file, file.name );
+						data.append( 'action', 'upload_downloadable_file_action' );
+						data.append( 'element_identifier', response.ID );
+						data.append( '_wpnonce', jQuery( input ).parent().find( '[name=wpshop_file_nonce]' ).val() );
+						data.append( '_wp_http_referer', jQuery( input ).parent().find( '[name=_wp_http_referer]' ).val() );
+						var this_element = this;
+						jQuery.ajax({
+							type: 'POST',
+							url: ajaxurl,
+							contentType: false,
+							cache: false,
+							processData:false,
+							enctype: 'multipart/form-data',
+							data: data
+						}).done(function( response ) {
+							var div = document.createElement('div');
+							div.innerHTML = response;
+							response = div.firstChild;
+							var basename = /(?:http:\/\/.*\/)(.*)/g;
+							var match = basename.exec(response.href);
+							this_element.change( { link: match[1], download: 'inline', path: match[0] } );
+						});
+						this_element.change( { link: link, download: 'none', path: path } );
+					}
 					if( size.current >= size.total ) {
 						jQuery( '#wps_variations_apply_btn' ).removeClass( 'disabled' );
 					}

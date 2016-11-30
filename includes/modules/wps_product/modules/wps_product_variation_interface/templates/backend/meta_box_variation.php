@@ -1,5 +1,5 @@
 <div id="wps_variations_summary">
-	<div data-view-model="wps_variations_options_summary" id="wps_variations_summary_display"><b>%summary%</b></div><a id="wps_variations_parameters" href="<?php print wp_nonce_url(get_edit_post_link( $post->ID ) . '&wps_variation_interface=false', 'wps_remove_variation_interface');?>"><span class="dashicons dashicons-admin-generic"></span></a>
+	<div data-view-model="wps_variations_options_summary" id="wps_variations_summary_display"><b>%summary%</b></div><a id="wps_variations_parameters" href="<?php print wp_nonce_url(get_edit_post_link($post->ID) . '&wps_variation_interface=false', 'wps_remove_variation_interface');?>" title="Back to old interface"><span class="dashicons dashicons-admin-generic"></span></a>
 </div>
 <div id="wps_variations_options">
 	<ul id="wps_variations_options_title">
@@ -31,7 +31,7 @@
 <div id="wps_variations_tabs">
 	<ul>
 		<li data-tab="wps_variations_price_option_tab" class="disabled">Options prices</li>
-		<li id="wps_variations_apply_btn" data-nonce="<?php echo wp_create_nonce( 'wpshop_variation_management' ); ?>">Apply modifications</li>
+		<li id="wps_variations_apply_btn" data-nonce="<?php echo wp_create_nonce('wpshop_variation_management'); ?>">Apply modifications</li>
 	</ul>
 </div>
 <div id="wps_variations_price_option_tab" class="wps_variations_tabs">
@@ -54,7 +54,7 @@
 		<li class="wps_variations_price_vat_col">%vat%%currency%</li>
 		<li class="wps_variations_price_stock_col"><input type="text" pattern="[0-9]*" onchange="wps_variations_price_option_raw.control.stock(this)" name="wps_pdt_variations[%ID%][attribute][decimal][product_stock]" align="right" value="%stock%"></li>
 		<li class="wps_variations_price_weight_col"><input type="text" pattern="[0-9]+(\.[0-9][0-9]?)?" onchange="wps_variations_price_option_raw.control.weight(this)" name="wps_pdt_variations[%ID%][attribute][decimal][product_weight]" align="right" value="%weight%"></li>
-		<li class="wps_variations_price_file_col" data-view-model="wps_variations_price_option_file_%ID%"><span class="wps_variations_price_option_price_file" onclick="wps_variations_price_option_raw.control.file(this)">%link%</span><input style="display: none;" type="file" name="wpshop_file" id="wpshop_file" onchange="wps_variations_price_option_raw.control.link(event, this)"><?php wp_nonce_field( 'ajax_wpshop_upload_downloadable_file_action', 'wpshop_file_nonce' ); ?><a href="%path%" target="_blank" download="" style="display: %download%"><span class="dashicons dashicons-download"></span></a></li>
+		<li class="wps_variations_price_file_col" data-view-model="wps_variations_price_option_file_%ID%"><span class="wps_variations_price_option_price_file" onclick="wps_variations_price_option_raw.control.file(this)">%link%</span><input style="display: none;" type="file" name="wpshop_file" id="wpshop_file" onchange="wps_variations_price_option_raw.control.link(event, this)"><?php wp_nonce_field('ajax_wpshop_upload_downloadable_file_action', 'wpshop_file_nonce');?><a href="%path%" target="_blank" download="" style="display: %download%"><span class="dashicons dashicons-download"></span></a></li>
 		<li class="wps_variations_price_active_col"><input name="wps_pdt_variations[%ID%][status]" onclick="wps_variations_price_option_raw.control.activate(this)" type="checkbox" %price_option_activate%></li>
 	</ul>
 </div>
