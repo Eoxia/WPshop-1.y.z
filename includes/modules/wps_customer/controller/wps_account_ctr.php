@@ -47,7 +47,7 @@ class wps_account_ctr {
 		add_action('wp_ajax_nopriv_wps_forgot_password_renew', array(&$this, 'wps_forgot_password_renew') );
 
 		add_action('wp_ajax_wps_signup_request', array(&$this, 'wps_save_signup_form') );
-		add_action('wp_ajax_nopriv_wps_signup_request', array(&$this, 'wps_save_signup_form') );
+		add_action('wp_ajax_nopriv_wps_signup_request', array(&$this, 'wps_save_signup_form_nopriv') );
 
 		add_action('wp_ajax_wps_login_first_request', array(&$this, 'wps_login_first_request') );
 		add_action('wp_ajax_nopriv_wps_login_first_request', array(&$this, 'wps_login_first_request') );
@@ -419,10 +419,14 @@ class wps_account_ctr {
 		return $output;
 	}
 
+	function wps_save_signup_form_nopriv() {
+		$this->wps_save_signup_form( true );
+	}
+
 	/**
 	 * SIGN UP - Save sign up form
 	 */
-	function wps_save_signup_form() {
+	function wps_save_signup_form( $connect = false ) {
 		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_save_signup_form' ) )
@@ -519,7 +523,7 @@ class wps_account_ctr {
 						}
 						$status = true;
 
-						if ( $account_creation && !empty( $user_id ) ) {
+						if ( $account_creation && !empty( $user_id ) && $connect ) {
 							$secure_cookie = is_ssl() ? true : false;
 							wp_set_auth_cookie( $user_id, true, $secure_cookie );
 						}
