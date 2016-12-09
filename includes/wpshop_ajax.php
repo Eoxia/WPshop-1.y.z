@@ -3663,7 +3663,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 			$att = explode(':',$attr);
 			$products_id = wpshop_products::get_products_matching_attribute($att[0],$att[1]);
 		}
-		$products_id = !empty($products_id) ? $products_id : (int) $_REQUEST['pid'];
+		$products_id = !empty($products_id) ? $products_id : sanitize_text_field( $_REQUEST['pid'] );
 		$page_number = !empty( $_REQUEST ) && !empty( $_REQUEST[ 'page_number' ] ) && is_int( (int) $_REQUEST['page_number'] ) ? (int) $_REQUEST['page_number'] : 0;
 
 		$criteria = !empty( $_REQUEST ) && !empty( $_REQUEST[ 'criteria' ] ) ? sanitize_text_field( $_REQUEST[ 'criteria' ] ) : null;

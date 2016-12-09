@@ -601,7 +601,7 @@ class wps_filter_search {
 		/** SQL request Construct for pick up all product with one of filter search element value **/
 		if ( !empty( $filter_search_elements ) ) {
 			foreach ( $filter_search_elements as $k=>$filter_search_element ) {
-				$search = isset( $_REQUEST['filter_search'.$k] ) ? sanitize_text_field( $_REQUEST['filter_search'.$k] ) : '';
+				$search = isset( $_REQUEST['filter_search'.$k] ) ? $_REQUEST['filter_search'.$k] : '';
 				$amount_min = !isset( $_REQUEST['amount_min'.$k] ) ? 0 : sanitize_text_field( $_REQUEST['amount_min'.$k] );
 				$amount_max = !isset( $_REQUEST['amount_max'.$k] ) ? 0 : sanitize_text_field( $_REQUEST['amount_max'.$k] );
 
@@ -719,7 +719,7 @@ class wps_filter_search {
 		$status = true;
 		if ( !empty($final_result) ) {
 			$data['status'] = true;
-			$data['result']  = do_shortcode( '[wpshop_products pid="' . implode(',', $final_result) . '" container="no" ]' ) ;
+			$data['result']  = do_shortcode( '[wpshop_products pid="' . implode(',', $final_result) . '" cid="' . $category_id . '" container="no" ]' ) ;
 			$data['products_count'] = $products_count;
 		}
 		else {
