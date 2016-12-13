@@ -587,8 +587,9 @@ class wps_address {
 		$first_address_checking = false;
 
 		$user_id = ( !empty($user_id) ) ? $user_id : get_current_user_id();
+		$customer_id = wps_customer_ctr::get_customer_id_by_author_id( $user_id );
 		if ( !empty($address_id) ) {
-			$response .= self::display_form_fields($address_type_id, $address_id, '', '', array(), array(), array(), $user_id);
+			$response .= self::display_form_fields($address_type_id, $address_id, '', '', array(), array(), array(), $customer_id);
 			$title = __('Edit your address', 'wpshop');
 		}
 		elseif($address_type_id) {
@@ -598,7 +599,7 @@ class wps_address {
 			$list_addresses = ( !empty($addresses[ $billing_option['choice'] ]) ) ? $addresses[ $billing_option['choice'] ] : array();
 			$first_address_checking = ( empty( $list_addresses ) ) ? true : false;
 
-			$response .= self::display_form_fields($address_type_id, '', '', '', array(), array(), array(), $user_id );
+			$response .= self::display_form_fields($address_type_id, '', '', '', array(), array(), array(), $customer_id );
 			$title = __('Add a new address', 'wpshop');
 		}
 

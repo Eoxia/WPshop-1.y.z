@@ -264,19 +264,21 @@ class wps_account_ctr {
 		$user_login = ( !empty( $_POST['wps_user_login']) ) ? wpshop_tools::varSanitizer($_POST['wps_user_login']) : null;
 		if ( !empty($user_login) ) {
 			$existing_user = false;
+			$key_for_update = 'user_login';
 			$exist_user = get_user_by('login', $user_login);
 			if( !empty($exist_user) ) {
 				$existing_user = true;
 			}
 			else {
 				$exist_user = get_user_by('email', $user_login);
+				$key_for_update = 'user_email';
 				if ( !empty($exist_user) ) {
 					$existing_user = true;
 				}
 			}
 
 			if ( $existing_user ) {
-				$key = $wpdb->get_var($wpdb->prepare("SELECT user_activation_key FROM $wpdb->users WHERE user_login = %s", $user_login));
+				$key = $wpdb->get_var($wpdb->prepare("SELECT user_activation_key FROM $wpdb->users WHERE $key_for_update = %s", $user_login));
 				if ( empty($key) ) {
 					$key = wp_generate_password(20, false);
 					$wpdb->update($wpdb->users, array('user_activation_key' => $key), array('user_login' => $user_login));
