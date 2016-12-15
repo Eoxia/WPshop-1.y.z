@@ -2,15 +2,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Wp Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-30 09:44+0100\n"
-"PO-Revision-Date: 2016-11-30 09:49+0100\n"
+"POT-Creation-Date: 2016-12-14 16:27+0100\n"
+"PO-Revision-Date: 2016-12-14 16:28+0100\n"
 "Last-Translator: Equipe de développement de digirisk <dev@digirisk.com>\n"
 "Language-Team: Développement Eoxia <dev@eoxia.com>\n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_e;_x\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_e;_x;esc_html__;"
+"esc_html_e\n"
 "X-Poedit-Basepath: ..\n"
 "X-Generator: Poedit 1.8.11\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -697,7 +698,7 @@ msgstr "Supprimer l'image de catégorie"
 #: includes/librairies/payments/payment.class.php:581
 #: includes/librairies/payments/payment.class.php:609
 #: includes/modules/wps-pos-addon/modules/wps_product_quick_add/templates/backend/product_creation.php:43
-#: includes/modules/wps_address/controller/wps_address_ctr.php:1121
+#: includes/modules/wps_address/controller/wps_address_ctr.php:1122
 #: includes/modules/wps_cart/controller/wps_cart_ctr.php:686
 #: includes/modules/wps_cart/templates/frontend/cart/cart.php:87
 #: includes/modules/wps_classic_checkout/wps_classic_checkout.php:321
@@ -1501,10 +1502,10 @@ msgstr "Mise en avant du produit"
 #: includes/modules/wps-pos-addon/templates/backend/customers/metabox-selected-customer.php:13
 #: includes/modules/wps-pos-addon/templates/backend/customers/metabox_title-list.php:7
 #: includes/modules/wps-pos-addon/templates/backend/customers/metabox_title-selected.php:7
-#: includes/modules/wps_address/controller/wps_address_ctr.php:875
-#: includes/modules/wps_address/controller/wps_address_ctr.php:910
+#: includes/modules/wps_address/controller/wps_address_ctr.php:876
 #: includes/modules/wps_address/controller/wps_address_ctr.php:911
-#: includes/modules/wps_address/controller/wps_address_ctr.php:1132
+#: includes/modules/wps_address/controller/wps_address_ctr.php:912
+#: includes/modules/wps_address/controller/wps_address_ctr.php:1133
 #: includes/modules/wps_message/controller/wps_message_ctr.php:492
 #: includes/modules/wps_orders/templates/backend/wps_order_customer_informations.php:12
 #: includes/modules/wps_shipping/templates/frontend/shipping-infos-summary.php:13
@@ -1517,10 +1518,10 @@ msgstr "Adresse de facturation"
 #: includes/librairies/install.class.php:1008
 #: includes/librairies/install.class.php:1282
 #: includes/modules/wps_address/controller/wps_address_ctr.php:500
-#: includes/modules/wps_address/controller/wps_address_ctr.php:875
-#: includes/modules/wps_address/controller/wps_address_ctr.php:913
+#: includes/modules/wps_address/controller/wps_address_ctr.php:876
 #: includes/modules/wps_address/controller/wps_address_ctr.php:914
-#: includes/modules/wps_address/controller/wps_address_ctr.php:1131
+#: includes/modules/wps_address/controller/wps_address_ctr.php:915
+#: includes/modules/wps_address/controller/wps_address_ctr.php:1132
 #: includes/modules/wps_message/controller/wps_message_ctr.php:492
 #: includes/modules/wps_orders/templates/backend/wps_order_customer_informations.php:26
 #: includes/modules/wps_shipping/templates/frontend/shipping-infos-summary.php:6
@@ -2028,7 +2029,7 @@ msgstr "Ajouter"
 #: includes/librairies/eav/attributes_unit.class.php:467
 #: includes/librairies/eav/attributes_unit.class.php:509
 #: includes/librairies/eav/attributes_unit.class.php:807
-#: includes/modules/wps_address/controller/wps_address_ctr.php:610
+#: includes/modules/wps_address/controller/wps_address_ctr.php:611
 #: includes/modules/wps_address/templates/frontend/address-container.php:34
 #: includes/modules/wps_address/templates/frontend/address-container.php:59
 #: includes/modules/wps_address/templates/frontend/address-first.php:17
@@ -2086,7 +2087,7 @@ msgstr "Cet addonn'est pas activé, cliquez ici pour l'activer"
 #: includes/librairies/eav/attributes.class.php:1995
 #: includes/librairies/eav/attributes.class.php:2491
 #: includes/librairies/eav/attributes.class.php:3186
-#: includes/modules/wps_address/controller/wps_address_ctr.php:1121
+#: includes/modules/wps_address/controller/wps_address_ctr.php:1122
 #: includes/modules/wps_cart/controller/wps_cart_ctr.php:686
 #: includes/modules/wps_classic_checkout/wps_classic_checkout.php:321
 #: includes/modules/wps_customer/controller/wps_provider_ctr.php:103
@@ -2830,6 +2831,7 @@ msgid "By attribute value"
 msgstr "Par valeur d'un attribut"
 
 #: includes/librairies/init.class.php:224
+#: includes/modules/wps_shortcodes/controller/wps_shortcodes_ctr.php:290
 msgid "Attribute value"
 msgstr "Valeur d'un attribut"
 
@@ -6048,43 +6050,43 @@ msgstr "Aucune données"
 msgid "You don't have any %s, %splease create a new one%s"
 msgstr "Vous n'avez encore créé aucune %s, %sen créer une nouvelle%s"
 
-#: includes/modules/wps_address/controller/wps_address_ctr.php:592
+#: includes/modules/wps_address/controller/wps_address_ctr.php:593
 msgid "Edit your address"
 msgstr "Modifier votre adresse"
 
-#: includes/modules/wps_address/controller/wps_address_ctr.php:602
+#: includes/modules/wps_address/controller/wps_address_ctr.php:603
 msgid "Add a new address"
 msgstr "Ajouter une nouvelle adresse"
 
-#: includes/modules/wps_address/controller/wps_address_ctr.php:607
+#: includes/modules/wps_address/controller/wps_address_ctr.php:608
 #: includes/modules/wps_address/templates/frontend/address-container.php:30
 #: includes/modules/wps_address/templates/frontend/address-container.php:55
 #: includes/modules/wps_address/templates/frontend/address-first.php:13
 msgid "Use the same address for billing"
 msgstr "Utiliser la même adresse pour la facturation"
 
-#: includes/modules/wps_address/controller/wps_address_ctr.php:930
-#: includes/modules/wps_address/controller/wps_address_ctr.php:937
+#: includes/modules/wps_address/controller/wps_address_ctr.php:931
+#: includes/modules/wps_address/controller/wps_address_ctr.php:938
 #: includes/modules/wps_shipping/templates/backend/main_elements.tpl.php:165
 #: includes/modules/wps_shipping/templates/backend/shipping-mode-configuration-interface.php:118
 msgid "Choose a country"
 msgstr "Choisissez un pays"
 
-#: includes/modules/wps_address/controller/wps_address_ctr.php:979
+#: includes/modules/wps_address/controller/wps_address_ctr.php:980
 #: includes/modules/wps_customer/templates/frontend/account/account_form.php:30
 #: includes/modules/wps_customer/templates/frontend/signup/signup.php:38
 #, php-format
 msgid "Confirm %s"
 msgstr "Confirmation %s"
 
-#: includes/modules/wps_address/controller/wps_address_ctr.php:1265
+#: includes/modules/wps_address/controller/wps_address_ctr.php:1266
 #, php-format
 msgid "No addresses are attached to this element type %s"
 msgstr "Aucune adresse n'est attaché à ce type d'élément %s"
 
-#: includes/modules/wps_address/controller/wps_address_ctr.php:1411
-#: includes/modules/wps_customer/controller/wps_account_ctr.php:529
-#: includes/modules/wps_customer/controller/wps_account_ctr.php:780
+#: includes/modules/wps_address/controller/wps_address_ctr.php:1401
+#: includes/modules/wps_customer/controller/wps_account_ctr.php:535
+#: includes/modules/wps_customer/controller/wps_account_ctr.php:786
 msgid "Some errors have been detected"
 msgstr "Des erreurs ont été détectées"
 
@@ -6775,38 +6777,38 @@ msgstr "Une adresse e-mail est requise "
 msgid "Forgot password"
 msgstr "Mot de passe oublié "
 
-#: includes/modules/wps_customer/controller/wps_account_ctr.php:285
+#: includes/modules/wps_customer/controller/wps_account_ctr.php:287
 msgid "An e-mail with an password renew link has been sent to you"
 msgstr ""
 "Un e-mail contenant un lien pour renouveler votre mot de passe vient de vous "
 "être envoyé"
 
-#: includes/modules/wps_customer/controller/wps_account_ctr.php:289
+#: includes/modules/wps_customer/controller/wps_account_ctr.php:291
 msgid "No customer account corresponds to this email"
 msgstr "Aucun compte utilisateur n'est associée à cette adresse e-mail."
 
-#: includes/modules/wps_customer/controller/wps_account_ctr.php:293
+#: includes/modules/wps_customer/controller/wps_account_ctr.php:295
 msgid "Please fill the required field"
 msgstr "Veuillez remplir les champs."
 
-#: includes/modules/wps_customer/controller/wps_account_ctr.php:349
+#: includes/modules/wps_customer/controller/wps_account_ctr.php:351
 msgid "Your password has been updated"
 msgstr "Votre mot de passe a été mis à jour"
 
-#: includes/modules/wps_customer/controller/wps_account_ctr.php:349
+#: includes/modules/wps_customer/controller/wps_account_ctr.php:351
 msgid "Connect you"
 msgstr "Connectez-vous"
 
-#: includes/modules/wps_customer/controller/wps_account_ctr.php:353
-#: includes/modules/wps_customer/controller/wps_account_ctr.php:357
+#: includes/modules/wps_customer/controller/wps_account_ctr.php:355
+#: includes/modules/wps_customer/controller/wps_account_ctr.php:359
 msgid "Invalid activation key"
 msgstr "Clé d'activation invalide"
 
-#: includes/modules/wps_customer/controller/wps_account_ctr.php:361
+#: includes/modules/wps_customer/controller/wps_account_ctr.php:363
 msgid "Password and confirmation password are differents"
 msgstr "Le mot de passe et sa confirmation sont différents"
 
-#: includes/modules/wps_customer/controller/wps_account_ctr.php:815
+#: includes/modules/wps_customer/controller/wps_account_ctr.php:821
 #: includes/modules/wps_customer/templates/frontend/account/account_informations.php:6
 msgid "Edit your account informations"
 msgstr "Modifier les informations de compte"
@@ -7024,6 +7026,10 @@ msgstr "Mes avis"
 #: includes/modules/wps_customer/templates/frontend/account/account-dashboard.php:64
 msgid "My messages"
 msgstr "Mes messages"
+
+#: includes/modules/wps_customer/templates/frontend/account/account_informations.php:8
+msgid "See customer"
+msgstr "Voir le client"
 
 #: includes/modules/wps_customer/templates/frontend/forgot-password/forgot-password.php:9
 #: includes/modules/wps_customer/templates/frontend/login/login-form-first.php:8
@@ -9238,10 +9244,6 @@ msgstr "Afficher un fil d'arianne"
 #: includes/modules/wps_shortcodes/controller/wps_shortcodes_ctr.php:289
 msgid "Wpshop categories"
 msgstr "Catégories wpshop"
-
-#: includes/modules/wps_shortcodes/controller/wps_shortcodes_ctr.php:290
-msgid "Attribute valuet"
-msgstr ""
 
 #: includes/modules/wps_shortcodes/templates/backend/list-shortcode.php:7
 msgid "Attributs"

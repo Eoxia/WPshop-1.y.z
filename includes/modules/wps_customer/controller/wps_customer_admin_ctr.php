@@ -73,7 +73,7 @@ class wps_customer_admin {
 				// Selected customer informations
 				$wps_account = new wps_account_ctr();
 				$customer_id = ( !empty($order_metadata['customer_id']) ) ? $order_metadata['customer_id'] : '';
-				$customer_datas = $wps_account->display_account_informations($customer_id);
+				$customer_datas = $wps_account->display_account_informations($customer_id, false, true);
 
 				// Selected customer address informations
 				// Billing datas

@@ -287,7 +287,7 @@ class wps_shortcodes_ctr
 	    'url': "<?php _e('By product ID', 'wpshop' ); ?>",
 	    'url': "<?php _e('By attribute value', 'wpshop' ); ?>",
 	    'url': "<?php _e('Wpshop categories', 'wpshop' ); ?>",
-	    'url': "<?php _e('Attribute valuet', 'wpshop' ); ?>",
+	    'url': "<?php _e('Attribute value', 'wpshop' ); ?>",
 	    'url': "<?php _e('Custom message content', 'wpshop' ); ?>",
 	    'url': "<?php _e('Customer first name', 'wpshop' ); ?>",
 	    'url': "<?php _e('Customer last name', 'wpshop' ); ?>",

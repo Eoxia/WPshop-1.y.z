@@ -565,7 +565,7 @@ class wps_account_ctr {
 	 * ACCOUNT - Display Account informations
 	 * @return string
 	 */
-	function display_account_informations( $customer_id = '', $force_edition_form = false ) {
+	function display_account_informations( $customer_id = '', $force_edition_form = false, $customer_link = false ) {
 		global $wpdb;
 		$output = $attributes_sections_tpl = $attribute_details = '';
 		$is_from_admin = ( !empty($customer_id) ) ? true : false;
