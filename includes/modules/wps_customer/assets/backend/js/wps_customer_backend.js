@@ -48,6 +48,7 @@ jQuery( document ).ready( function() {
 	        },
 		}).submit();
 	});
+	setTimeout(function(){ jQuery(window).off("beforeunload.edit-post") }, 1);
 
 	jQuery( document ).on( 'click', '#wps_account_form_button', function() {
 		jQuery( this ).addClass( 'wps-bton-loading' );
