@@ -752,7 +752,7 @@ class wps_cart {
 		}
 
 		// Checking Discounts
-		if( !empty($cart_infos['order_discount_type']) && !empty( $cart_infos['order_discount_value'] ) ) {
+		if( !empty($cart_infos['order_discount_type']) && isset( $cart_infos['order_discount_value'] ) ) {
 			// Calcul discount on Order
 			switch ($cart_infos['order_discount_type']) {
 				case 'amount':

@@ -252,7 +252,9 @@ class wps_orders_in_back_office {
 			$order_meta = apply_filters( 'wps_order_saving_admin_extra_action', $order_meta, $data );
 
 			// Save Shipping informations & Order status
-			update_post_meta( $post_ID, '_wpshop_order_shipping_date', $order_meta['order_shipping_date']);
+			if ( isset( $order_meta['order_shipping_date'] ) ) {
+				update_post_meta( $post_ID, '_wpshop_order_shipping_date', $order_meta['order_shipping_date']);
+			}
 			update_post_meta( $post_ID, '_wpshop_order_status', $order_meta['order_status']);
 
 			// Save Metadata
@@ -505,9 +507,9 @@ class wps_orders_in_back_office {
 
 		$status = false;
 		$order_id = ( !empty($_POST['order_id']) ) ? intval($_POST['order_id']) : '';
-		$shipping_cost = ( !empty($_POST['shipping_cost']) ) ? wpshop_tools::varSanitizer($_POST['shipping_cost']) : '';
-		$discount_value = ( !empty($_POST['discount_amount']) ) ? wpshop_tools::varSanitizer($_POST['discount_amount']) : '';
-		$discount_type = ( !empty($_POST['discount_type']) ) ? wpshop_tools::varSanitizer($_POST['discount_type']) : '';
+		$shipping_cost = isset($_POST['shipping_cost']) ? wpshop_tools::varSanitizer($_POST['shipping_cost']) : '';
+		$discount_value = isset($_POST['discount_amount']) ? wpshop_tools::varSanitizer($_POST['discount_amount']) : '';
+		$discount_type = isset($_POST['discount_type']) ? wpshop_tools::varSanitizer($_POST['discount_type']) : '';
 
 
 		if( !empty($order_id) ) {
@@ -515,7 +517,7 @@ class wps_orders_in_back_office {
 			$order_meta['order_shipping_cost'] = $shipping_cost;
 
 			//Add discounts if exists
-			if( !empty($discount_value) && !empty($discount_type) ) {
+			if( isset($discount_value) && !empty($discount_type) ) {
 				$order_meta['order_discount_type'] = $discount_type;
 				$order_meta['order_discount_value'] = $discount_value;
 			}

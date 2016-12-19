@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Wp Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-12-14 16:27+0100\n"
-"PO-Revision-Date: 2016-12-14 16:28+0100\n"
+"PO-Revision-Date: 2016-12-19 14:17+0100\n"
 "Last-Translator: Equipe de développement de digirisk <dev@digirisk.com>\n"
 "Language-Team: Développement Eoxia <dev@eoxia.com>\n"
 "Language: fr_FR\n"
@@ -6289,7 +6289,7 @@ msgstr "Valider mon devis"
 
 #: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:193
 msgid "Update order informations"
-msgstr "Mettre à jour les informations de la commande "
+msgstr "Mettre à jour les informations de la commande"
 
 #: includes/modules/wps_cart/templates/frontend/cart/cart.php:12
 msgid "P.U"

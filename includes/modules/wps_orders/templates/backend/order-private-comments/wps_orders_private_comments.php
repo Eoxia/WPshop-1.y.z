@@ -1,7 +1,7 @@
 <?php if ( !defined( 'ABSPATH' ) ) exit;
 ?>
 <div class="wps-gridwrapper2-padded">
-	<div>
+	<div style="width:100%">
 		<div class="wps-form-group">
 			<label><?php _e( 'Write your notification and send it to your customer', 'wpshop'); ?> :</label>
 			<div class="wps-form"><textarea name="order_private_comment"></textarea></div>

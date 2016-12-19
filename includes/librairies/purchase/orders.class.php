@@ -406,6 +406,7 @@ class wpshop_orders {
 						echo empty($billing['company'])?'<br />':', <i>'.$billing['company'].'</i><br />';
 						echo (!empty($billing['address']) ? $billing['address'] : null).'<br />';
 						echo (!empty($billing['postcode']) ? $billing['postcode'] : null).' '.(!empty($billing['city']) ? $billing['city'] : null).', '.(!empty($billing['country']) ? $billing['country'] : null);
+						echo (!empty($billing['phone']) ? '<br />' . $billing['phone'] : '');
 					}
 					else {
 						echo __('No information available for user billing', 'wpshop');

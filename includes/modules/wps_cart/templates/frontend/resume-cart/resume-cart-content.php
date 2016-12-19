@@ -26,9 +26,9 @@
 					</a>
 					<?php //echo $variations_indicator; ?>
 					<div class="wps-productQtyForm ">
-						<a href="" data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_set_qty_for_product_into_cart' ); ?>" class="wps-cart-reduce-product-qty"><i class="wps-icon-minus"></i></a>
-						<input type="text" name="french-hens" id="wps-cart-product-qty-<?php echo $product_key; ?>" value="<?php echo $item['item_qty']; ?>" class="wps-circlerounded wps-cart-product-qty">
-						<a href="" class="wps-cart-add-product-qty" data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_set_qty_for_product_into_cart' ); ?>"><i class="wps-icon-plus"></i></a>
+						<a href="" class="wps-cart-reduce-product-qty"><i class="wps-icon-minus"></i></a>
+						<input type="text" name="french-hens" id="wps-cart-product-qty-<?php echo $product_key; ?>" data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_set_qty_for_product_into_cart' ); ?>" value="<?php echo $item['item_qty']; ?>" class="wps-circlerounded wps-cart-product-qty">
+						<a href="" class="wps-cart-add-product-qty"><i class="wps-icon-plus"></i></a>
 			    	</div>
 				</div>
 				<div class="wps-cart-item-price">

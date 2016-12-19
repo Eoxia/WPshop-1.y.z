@@ -97,6 +97,22 @@ Il faut vérifier que le réglage des permaliens pour votre site est bien régl�
 
 == Changelog ==
 
+= Version 1.4.3.0 =
+
+Améliorations / Improvments
+
+* 6199 - Raccourci client dans la commande / Shortcut customer in order
+
+Corrections / Fix
+
+* 6195 - Adresse facturation disparaît dans mon compte / Billing address disapear in my account
+* 6196 - Notification WordPress edition client / Notice WordPress Popup when edit customer
+* 6323 - Adressses en 2 colonnes pour les écrans larges / Addresses in 2 columns for wide screens
+* 5673 - Téléphone dans liste commandes / Phone in commands list
+* 6322 - Correction d'erreurs PHP dans les commandes / Fix some PHP errors in orders
+* 6329 - Correction d'affichage des commandes admin / Fix display admin orders
+* 6326 - Correction des quantités dans le panier / Fix quantities in cart
+
 = Version 1.4.2.9 =
 
 Corrections / Fix
