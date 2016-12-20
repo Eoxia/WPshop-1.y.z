@@ -467,17 +467,17 @@ a[class*="wps-"][class*="-block"] {
 
 
 @media (max-width: 1100px) {
-  
+
 }
 @media (max-width: 1100px) {
-  
+
 }
 @media (max-width: 960px) {
-  
-  
+
+
 }
 @media (max-width: 780px) {
-  
+
   [class*=wps][class*="boxed"] {
     float: none !important;
     width: 100% !important;
@@ -992,7 +992,7 @@ a[class*="wps-"][class*="-block"] {
   vertical-align: middle;
   background-image: none;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  
+
 }
 [class*="wps-form"] input[type="text"]:focus,
 [class*="wps-form"] input[type="number"]:focus,
@@ -1333,7 +1333,7 @@ input[type=radio]:checked:before {
   margin: 0;
   max-height: 0;
   overflow: hidden;
-  
+
 }
 .wps-itemList li div span {
   display: block;
@@ -1912,7 +1912,7 @@ a:hover .wps-icodoc:after {
   display: block;
 }
 .wps-prices .wpshop_save_money_message {
-  
+
 }
 #wps-product-description [class*="wps-zoom-loupe"] {
   visibility: hidden;
@@ -2163,17 +2163,17 @@ a:hover .wps-icodoc:after {
   filter: alpha(opacity=100);
 }
 @media (max-width: 1100px) {
-  
+
 }
 @media (max-width: 1100px) {
-  
+
 }
 @media (max-width: 960px) {
-  
-  
+
+
 }
 @media (max-width: 780px) {
-  
+
   [class*=wps][class*="boxed"] {
     float: none !important;
     width: 100% !important;
@@ -3050,7 +3050,7 @@ a:hover .wps-icodoc:after {
 }
 .wps-body-overlay {
   overflow: hidden;
-  
+
 }
 .wps-clear:after {
   content: '';
@@ -3257,7 +3257,7 @@ a:hover .wps-icodoc:after {
   text-decoration: none;
   opacity: .4;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
-  
+
   margin-bottom: -1px;
   line-height: 1.2;
   word-wrap: break-word;
@@ -3277,7 +3277,7 @@ a:hover .wps-icodoc:after {
 }
 @media (max-width: 960px) {
   .wps-ui-tab {
-    
+
   }
 }
 @media (max-width: 960px) {
@@ -3810,9 +3810,12 @@ a:hover .wps-icodoc:after {
 }
 .wps-checkout-content .wps-comment-box {
   margin: 1em 0;
+  padding: 0 1em 0 1em;
+  width: auto;
+  float: none;
 }
 .wps-checkout-content .wps-comment-box textarea {
-  height: 10em;
+  height: 6em;
 }
 [class*="wps-"][class*="mini"][class*="step"][class*="checkout"] {
   text-align: left;
