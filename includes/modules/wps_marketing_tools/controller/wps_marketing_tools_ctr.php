@@ -139,7 +139,7 @@ class wps_marketing_tools_ctr {
 	 */
 	function display_message_you_save_money ( $price_infos ) {
 		$output = '';
-		if ( !empty($price_infos) ) {
+		/*if ( !empty($price_infos) ) {
 			if ( !empty($price_infos) && !empty($price_infos['discount']) && !empty($price_infos['discount']['discount_exist']) ) {
 				$tax_piloting_option = get_option('wpshop_shop_price_piloting');
 				$save_amount = ( !empty($tax_piloting_option) && $tax_piloting_option == 'HT') ? ( $price_infos['et'] - $price_infos['discount']['discount_et_price'] ) : ( $price_infos['ati'] - $price_infos['discount']['discount_ati_price'] );
@@ -148,7 +148,7 @@ class wps_marketing_tools_ctr {
 				$message .= ob_get_contents();
 				ob_end_clean();
 			}
-		}
+		}*/
 		return $output;
 	}
 
