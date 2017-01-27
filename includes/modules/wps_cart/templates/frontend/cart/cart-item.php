@@ -34,8 +34,14 @@
 	</div>
 	<?php endif; ?>
 
+	<?php if( $cart_option == 'full_cart' ) : ?>
+	<div class="wps-cart-item-unit-price wps-cart-item-unit-price-et">
+		<span class="wps-price"> <?php echo wpshop_tools::formate_number( $item['item_pu_ht'] ); ?><span><?php echo $currency; ?></span></span>
+	</div>
+	<?php endif; ?>
+
 	<?php if( $cart_option == 'full_cart' || $cart_option == 'simplified_ati' ) : ?>
-	<div class="wps-cart-item-unit-price">
+	<div class="wps-cart-item-unit-price<?php echo ( $cart_option == 'full_cart' ) ? " wps-cart-item-unit-price-ati" : ""; ?>">
 		<span class="wps-price"> <?php echo wpshop_tools::formate_number( $item['item_pu_ttc'] ); ?><span><?php echo $currency; ?></span></span>
 	</div>
 	<?php endif; ?>

@@ -30,7 +30,10 @@ class wps_export_ctr {
 		}
 	}
 
-	function add_scripts() {
+	function add_scripts($hook) {
+		if ( $hook != 'toplevel_page_wpshop_dashboard' )
+			return;
+
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 		wp_enqueue_script( 'wps_export_script', WPS_EXPORT_URL . WPS_EXPORT_DIR . "/assets/backend/js/wps_export.js");
 	}

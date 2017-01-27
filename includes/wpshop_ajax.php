@@ -2119,7 +2119,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 			$message_confirmation = sprintf( __('%s has been add to the cart', 'wpshop'), $product->post_title );
 
 			$modal_content = wpshop_display::display_template_element('wps_new_add_to_cart_confirmation_modal', array( 'RELATED_PRODUCTS' => $linked_products , 'PRODUCT_PICTURE' => $product_img, 'PRODUCT_TITLE' => $product_title, 'PRODUCT_PRICE' => $product_price, 'PRODUCT_DESCRIPTION' => $product_description) );
-			$modal_footer_content = wpshop_display::display_template_element('wps_new_add_to_cart_confirmation_modal_footer', array() );
+			$modal_footer_content = wpshop_display::display_template_element('wps_new_add_to_cart_confirmation_modal_footer', array( 'LINK_CART_PAGE' => wpshop_tools::get_page_id( get_permalink( get_option('wpshop_cart_page_id') ) ) ) );
 
 			$response = array( true, $succes_message_box, $action_after_add, $cart_page_url, $product_id, array($cart_animation_choice, $message_confirmation), array($product_img, $product_title, $linked_products, $product_price), $modal_content, $modal_footer_content );
 		}
@@ -2941,7 +2941,8 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	function wps_quotation_is_payable_by_customer() {
 		check_ajax_referer( 'wps_quotation_is_payable_by_customer' );
 		global $wpdb;
-		$status = false; $response = '';
+		$status = false;
+		$response = '';
 		$order_id = ( !empty($_POST['order_id']) ) ? intval( $_POST['order_id'] ) : null;
 		if( isset($order_id) ) {
 			$order_metadata = get_post_meta( $order_id, '_order_postmeta', true );
@@ -2979,11 +2980,12 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 
 
 				/** Create an activation key **/
-				$token = wp_generate_password(20, false);
-				$wpdb->update($wpdb->users, array('user_activation_key' => $token), array('user_login' => $user_infos->user_login) );
+				$token = wps_orders_ctr::wps_token_order_customer( $order_id );
+				/*$token = wp_generate_password(20, false);
+				$wpdb->update($wpdb->users, array('user_activation_key' => $token), array('user_login' => $user_infos->user_login) );*/
 
 				$permalink_option = get_option( 'permalink_structure' );
-				$link = '<a href="' . admin_url( 'admin-post.php?action=wps_direct_payment_link&token=' .$token. '&amp;login=' .rawurlencode( $user_infos->user_login). '&amp;order_id=' .$order_id ) . '">' .__( 'Click here to pay your order', 'wpshop' ). '</a>';
+				$link = '<a href="' . wpshop_checkout::wps_direct_payment_link_url( $order_id ) . '">' .__( 'Click here to pay your order', 'wpshop' ). '</a>';
 
 				/** Send message **/
 				$wps_message = new wps_message_ctr();

@@ -49,7 +49,7 @@ if ( !class_exists("wps_classic_checkout") ) {
 			add_action( 'wp_ajax_wps-checkout_valid_step_five', array( &$this, 'wps_checkout_valid_step_five') );
 
 			add_action( 'admin_post_wps_direct_payment_link', array( 'wpshop_checkout', 'wps_direct_payment_link' ) );
-			add_action( 'admin_post_nopriv_wps_direct_payment_link', array( 'wpshop_checkout', 'wps_direct_payment_link' ) );
+			add_action( 'admin_post_nopriv_wps_direct_payment_link', array( 'wpshop_checkout', 'wps_direct_payment_link_nopriv' ) );
 		}
 
 		/**
@@ -475,7 +475,7 @@ if ( !class_exists("wps_classic_checkout") ) {
 			$status = false;
 			$response = '';
 			$payment_method = ( !empty($_POST['wps-payment-method']) ) ? wpshop_tools::varSanitizer( $_POST['wps-payment-method'] ): null;
-			$order_id = ( !empty($_SESSION['cart']['order_id']) ) ? wpshop_tools::varSanitizer($_SESSION['cart']['order_id']) : 0;
+			$order_id = ( !empty($_SESSION['cart']['order_id']) ) ? (int) $_SESSION['cart']['order_id'] : 0;
 			$customer_comment = ( !empty($_POST['wps-customer-comment']) ) ? wpshop_tools::varSanitizer( $_POST['wps-customer-comment'] ) : null;
 
 			$terms_of_sale_required = isset( $_POST['terms_of_sale_indicator'] ) && !empty( $_POST['terms_of_sale_indicator'] ) ? (bool)$_POST['terms_of_sale_indicator'] : (bool)false;

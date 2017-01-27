@@ -10,7 +10,7 @@
 	<?php endif; ?>
 
 	<?php
-	$action = sanitize_text_field( $_GET['action'] );
+	$action = sanitize_text_field( isset( $_GET['action']) ? $_GET['action'] : '' );
 	if ( !empty( $action ) && 'edit' == $action ):
 		require_once( wpeo_template_01::get_template_part( WPEO_LOGS_DIR, WPEO_LOGS_TEMPLATES_MAIN_DIR, 'backend', 'list', 'service-edit' ) );
 	elseif ( !empty( $action ) && 'view' == $action ):

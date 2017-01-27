@@ -2,17 +2,17 @@
 var wpshop = jQuery.noConflict();
 
 /*	Center an element into the current page	*/
-wpshop.fn.center = function () {
-	this.css("top", ( jQuery(window).height() - this.height() ) / 2 + "px");
-	this.css("left", ( jQuery(window).width() - this.width() ) / 2 + "px");
+wpshop.fn.center = function() {
+	this.css( 'top', ( jQuery( window ).height() - this.height() ) / 2 + 'px' );
+	this.css( 'left', ( jQuery( window ).width() - this.width() ) / 2 + 'px' );
 	return this;
 };
 
 
 //START RICH TEXT EDIT
-wpshop(document).ajaxComplete(function(e, xhr, settings) {
-	if( (settings != null) && (settings.data != null) && (typeof(settings.data)!='undefined') && settings.data.match(/action=(add|update)-tag/)) {
-		tinyMCE.get(0).setContent('');
+wpshop( document ).ajaxComplete(function( e, xhr, settings ) {
+	if ( ( settings != null ) && ( settings.data != null ) && ( typeof( settings.data ) != 'undefined' ) && settings.data.match( /action=(add|update)-tag/ ) ) {
+		tinyMCE.get( 0 ).setContent( '' );
 		kwsTriggerSave();
 	}
 });
@@ -20,51 +20,50 @@ wpshop(document).ajaxComplete(function(e, xhr, settings) {
 
 
 /*	Action launched directly after the page is load	*/
-wpshop(document).ready(function(){
-	jQuery(".wpshop_input_radio_wpshop_cart_option_action_after_product_added_to_cart input[type=radio]").click(
-			function(){
-			if ( jQuery(this).val() == "dialog_msg") {
-				jQuery("#wpshop_cart_option_animation_cart_type").fadeIn('slow');
-			}
-			else{
-				jQuery("#wpshop_cart_option_animation_cart_type").fadeOut('slow');
+wpshop( document ).ready(function() {
+	jQuery( '.wpshop_input_radio_wpshop_cart_option_action_after_product_added_to_cart input[type=radio]' ).click(
+			function() {
+			if ( jQuery( this ).val() == 'dialog_msg' ) {
+				jQuery( '#wpshop_cart_option_animation_cart_type' ).fadeIn( 'slow' );
+			} else {
+				jQuery( '#wpshop_cart_option_animation_cart_type' ).fadeOut( 'slow' );
 			}
 	});
 /*	Chosen select librairy call	*/
 	// Normal chosen selects
-	jQuery("select.chosen_select").chosen( WPSHOP_CHOSEN_ATTRS );
+	jQuery( 'select.chosen_select' ).chosen( WPSHOP_CHOSEN_ATTRS );
 
 	// Ajax chosen selects
-	jQuery('select.ajax_chosen_select_related_products').ajaxChosen({
+	jQuery( 'select.ajax_chosen_select_related_products' ).ajaxChosen({
 		method: 'POST',
-		url: ajaxurl + "?action=wpshop_element_search&wpshop_ajax_nonce=" + jQuery( "#wpshop_nonce_ajax_search_related_products" ).val() + "&wpshop_element_type=" + jQuery( "#wpshop_ajax_search_element_type_related_products" ).val() + "&wpshop_format_result=0",
+		url: ajaxurl + '?action=wpshop_element_search&wpshop_ajax_nonce=' + jQuery( '#wpshop_nonce_ajax_search_related_products' ).val() + '&wpshop_element_type=' + jQuery( '#wpshop_ajax_search_element_type_related_products' ).val() + '&wpshop_format_result=0',
 		dataType: 'json',
 		jsonTermKey: 'wpshop_element_searched',
 		textTyping: WPSHOP_AJAX_CHOSEN_KEEP_TYPING,
 		textSearching: WPSHOP_AJAX_CHOSEN_SEARCHING,
 		minTermLength: 2
-	}, function (data) {
+	}, function( data ) {
 		var terms = {};
 
-		jQuery.each(data, function (i, val) {
+		jQuery.each( data, function( i, val ) {
 			terms[i] = val;
 		});
 
 		return terms;
 	});
 	// TOO MOCHE !!!
-	jQuery('select.ajax_chosen_select_provider_products').ajaxChosen({
+	jQuery( 'select.ajax_chosen_select_provider_products' ).ajaxChosen({
 		method: 'POST',
-		url: ajaxurl + "?action=wpshop_element_search&wpshop_ajax_nonce=" + jQuery( "#wpshop_nonce_ajax_search_provider_products" ).val() + "&wpshop_element_type=" + jQuery( "#wpshop_ajax_search_element_type_provider_products" ).val() + "&wpshop_format_result=0",
+		url: ajaxurl + '?action=wpshop_element_search&wpshop_ajax_nonce=' + jQuery( '#wpshop_nonce_ajax_search_provider_products' ).val() + '&wpshop_element_type=' + jQuery( '#wpshop_ajax_search_element_type_provider_products' ).val() + '&wpshop_format_result=0',
 		dataType: 'json',
 		jsonTermKey: 'wpshop_element_searched',
 		textTyping: WPSHOP_AJAX_CHOSEN_KEEP_TYPING,
 		textSearching: WPSHOP_AJAX_CHOSEN_SEARCHING,
 		minTermLength: 2
-	}, function (data) {
+	}, function( data ) {
 		var terms = {};
 
-		jQuery.each(data, function (i, val) {
+		jQuery.each( data, function( i, val ) {
 			terms[i] = val;
 		});
 
@@ -72,117 +71,114 @@ wpshop(document).ready(function(){
 	});
 
 	/** Allow user to select all values when a multiselect or a checkbox input are displayed */
-	jQuery(".wpshop_list_chosen_select_all").live('click', function(){
-		jQuery( "#" + jQuery(this).attr("id").replace("wpshop_list_chosen_select_all_", "") + " option" ).prop('selected', true);
-		jQuery( "#" + jQuery(this).attr("id").replace("wpshop_list_chosen_select_all_", "") ).trigger('liszt:updated');
+	jQuery( '.wpshop_list_chosen_select_all' ).live( 'click', function() {
+		jQuery( '#' + jQuery( this ).attr( 'id' ).replace( 'wpshop_list_chosen_select_all_', '' ) + ' option' ).prop( 'selected', true );
+		jQuery( '#' + jQuery( this ).attr( 'id' ).replace( 'wpshop_list_chosen_select_all_', '' ) ).trigger( 'liszt:updated' );
 		return false;
 	});
 	/** Allow user to deselect all values when a multiselect or a checkbox input are displayed */
-	jQuery(".wpshop_list_chosen_deselect_all").live('click', function(){
-		jQuery( "#" + jQuery(this).attr("id").replace("wpshop_list_chosen_deselect_all_", "") + " option" ).prop('selected', false);
-		jQuery( "#" + jQuery(this).attr("id").replace("wpshop_list_chosen_deselect_all_", "") ).trigger('liszt:updated');
+	jQuery( '.wpshop_list_chosen_deselect_all' ).live( 'click', function() {
+		jQuery( '#' + jQuery( this ).attr( 'id' ).replace( 'wpshop_list_chosen_deselect_all_', '' ) + ' option' ).prop( 'selected', false );
+		jQuery( '#' + jQuery( this ).attr( 'id' ).replace( 'wpshop_list_chosen_deselect_all_', '' ) ).trigger( 'liszt:updated' );
 		return false;
 	});
 
 	/**	Add a box for adding element to select list on the fly	*/
-	jQuery("#wpshop_new_attribute_option_value_add").dialog({
+	jQuery( '#wpshop_new_attribute_option_value_add' ).dialog({
 		modal: true,
-		dialogClass: "wpshop_uidialog_box",
+		dialogClass: 'wpshop_uidialog_box',
 		autoOpen:false,
-		show: "blind",
+		show: 'blind',
 		resizable: false,
 		buttons:{
-			'new-value-for-attribute-list' : {
+			'new-value-for-attribute-list': {
 				text: WPSHOP_ADD_TEXT,
-				click : function(){
+				click: function() {
 					var already_selected_items = [];
-					jQuery("select.wpshop_product_attribute_" + jQuery("#wpshop_attribute_type_select_code").val() + " option").each(function(){
-						if ( jQuery(this).is(":selected") ) {
-							already_selected_items.push(jQuery(this).val());
+					jQuery( 'select.wpshop_product_attribute_' + jQuery( '#wpshop_attribute_type_select_code' ).val() + ' option' ).each(function() {
+						if ( jQuery( this ).is( ':selected' ) ) {
+							already_selected_items.push( jQuery( this ).val() );
 						}
 					});
 					var data = {
-						action: "new_option_for_select_from_product_edition",
+						action: 'new_option_for_select_from_product_edition',
 						wpshop_ajax_nonce: WPSHOP_NEWOPTION_CREATION_NONCE,
-						attribute_code: jQuery("#wpshop_attribute_type_select_code").val(),
-						attribute_new_label: jQuery("#wpshop_new_attribute_option_value").val(),
+						attribute_code: jQuery( '#wpshop_attribute_type_select_code' ).val(),
+						attribute_new_label: jQuery( '#wpshop_new_attribute_option_value' ).val(),
 						attribute_selected_values: already_selected_items,
-						item_in_edition: jQuery("#post_ID").val()
+						item_in_edition: jQuery( '#post_ID' ).val()
 					};
-					jQuery.post(ajaxurl, data, function(response) {
-						if( response[0] ) {
-							var container = "wpshop_product_" + response[2] + "_input";
-							jQuery("." + container).html( response[1] );
-							jQuery("select.chosen_select").chosen({disable_search_threshold: 5, no_results_text: WPSHOP_CHOSEN_NO_RESULT});
-							jQuery("#wpshop_new_attribute_option_value_add").dialog("close");
-							jQuery("#wpshop_new_attribute_option_value_add").children("img").hide();
-							jQuery("#wpshop_attribute_type_select_code").val("");
-						}
-						else {
+					jQuery.post( ajaxurl, data, function( response ) {
+						if ( response[0] ) {
+							var container = 'wpshop_product_' + response[2] + '_input';
+							jQuery( '.' + container ).html( response[1] );
+							jQuery( 'select.chosen_select' ).chosen({ disable_search_threshold: 5, no_results_text: WPSHOP_CHOSEN_NO_RESULT });
+							jQuery( '#wpshop_new_attribute_option_value_add' ).dialog( 'close' );
+							jQuery( '#wpshop_new_attribute_option_value_add' ).children( 'img' ).hide();
+							jQuery( '#wpshop_attribute_type_select_code' ).val( '' );
+						} else {
 							alert( response[1] );
 						}
-					}, "json");
+					}, 'json' );
 
-					jQuery(this).children("img").show();
+					jQuery( this ).children( 'img' ).show();
 				},
-				class: "button-primary",
+				class: 'button-primary'
 			}
 		},
-		close:function(){
-			jQuery("#wpshop_new_attribute_option_value").val("");
+		close:function() {
+			jQuery( '#wpshop_new_attribute_option_value' ).val( '' );
 		}
 	});
 	/**	Open the box to create a new value for a list	*/
-	jQuery(".wpshop_icons_add_new_value_to_option_list").live('click', function(){
-		jQuery("#wpshop_attribute_type_select_code").val(jQuery(this).attr("id").replace("new_value_pict_", ""));
-		jQuery("#wpshop_new_attribute_option_value_add").dialog("open");
+	jQuery( '.wpshop_icons_add_new_value_to_option_list' ).live( 'click', function() {
+		jQuery( '#wpshop_attribute_type_select_code' ).val( jQuery( this ).attr( 'id' ).replace( 'new_value_pict_', '' ) );
+		jQuery( '#wpshop_new_attribute_option_value_add' ).dialog( 'open' );
 		return false;
 	});
 /*	Chosen select librairy call	*/
 
 
 	// Remove the non-rich fields
-	/*jQuery('.form-field').has('#tag-description').remove();
+	/*JQuery('.form-field').has('#tag-description').remove();
 	jQuery('.form-field').has('#category-description').remove();
 	jQuery('.form-field').has('#description').remove();*/
 	// Remove the non-rich fields new version
-	if( jQuery('#wpshop_transform_taxonomy_description_field_into_wysiwyg_for_js_duplicate').length ) {
-		var editor_wysiwyg_to_put = jQuery('#wpshop_transform_taxonomy_description_field_into_wysiwyg_for_js_duplicate').html();
-		jQuery('.form-field #tag-description').replaceWith( editor_wysiwyg_to_put );
-		jQuery('.form-field #category-description').replaceWith( editor_wysiwyg_to_put );
-		jQuery('.form-field #description').replaceWith( editor_wysiwyg_to_put );
-		jQuery('#wpshop_transform_taxonomy_description_field_into_wysiwyg_for_js_duplicate').remove();
+	if ( jQuery( '#wpshop_transform_taxonomy_description_field_into_wysiwyg_for_js_duplicate' ).length ) {
+		var editor_wysiwyg_to_put = jQuery( '#wpshop_transform_taxonomy_description_field_into_wysiwyg_for_js_duplicate' ).html();
+		jQuery( '.form-field #tag-description' ).replaceWith( editor_wysiwyg_to_put );
+		jQuery( '.form-field #category-description' ).replaceWith( editor_wysiwyg_to_put );
+		jQuery( '.form-field #description' ).replaceWith( editor_wysiwyg_to_put );
+		jQuery( '#wpshop_transform_taxonomy_description_field_into_wysiwyg_for_js_duplicate' ).remove();
 	}
 
-
-
-	var profileTable = jQuery('.user-edit-php .form-table, .profile-php .form-table').not('.rich-text-tags').has('textarea#description');
-	profileTable.prev('h3').insertBefore('table.rich-text-tags');
+	var profileTable = jQuery( '.user-edit-php .form-table, .profile-php .form-table' ).not( '.rich-text-tags' ).has( 'textarea#description' );
+	profileTable.prev( 'h3' ).insertBefore( 'table.rich-text-tags' );
 	profileTable.remove();
 
 	// Make sure you're saving the latest content
-	jQuery('input#submit').click(function(e){
+	jQuery( 'input#submit' ).click(function( e ) {
 		kwsTriggerSave();
 	});
 
-	jQuery(".wpshop_coupon_type").click(function(){
-		if(jQuery(this).is(":checked")){
-			jQuery(".wpshop_coupon_type_unit").hide();
-			jQuery(".wpshop_coupon_type_unit_" + jQuery(this).val()).show();
+	jQuery( '.wpshop_coupon_type' ).click(function() {
+		if ( jQuery( this ).is( ':checked' ) ) {
+			jQuery( '.wpshop_coupon_type_unit' ).hide();
+			jQuery( '.wpshop_coupon_type_unit_' + jQuery( this ).val() ).show();
 		}
 	});
 
 	// UPLOAD
-	if(wpshop('#wpshop_uploadForm').size()>0) {
-		wpshop('#wpshop_uploadForm').ajaxForm({
+	if ( wpshop( '#wpshop_uploadForm' ).size() > 0 ) {
+		wpshop( '#wpshop_uploadForm' ).ajaxForm({
 			beforeSend: function() {
-				wpshop('.wpshop_loading').show();
+				wpshop( '.wpshop_loading' ).show();
 			},
-			complete: function(xhr) {
-				wpshop('.wpshop_loading').hide();
-				wpshop('.statut').html(basename(xhr.responseText));
-				wpshop('input[name="attribute_option[is_downloadable_][file_url]"]').val(xhr.responseText);
-				wpshop('input[name=wpshop_file]').val('');
+			complete: function( xhr ) {
+				wpshop( '.wpshop_loading' ).hide();
+				wpshop( '.statut' ).html( basename( xhr.responseText ) );
+				wpshop( 'input[name="attribute_option[is_downloadable_][file_url]"]' ).val( xhr.responseText );
+				wpshop( 'input[name=wpshop_file]' ).val( '' );
 			}
 		});
 	}
@@ -191,61 +187,61 @@ wpshop(document).ready(function(){
 	/*
 	 * Manage form in frontend for adding new product
 	 */
-	if ( jQuery("#new_entity_quick_form").length > 0 ) {
-		jQuery('#new_entity_quick_form').ajaxForm({
+	if ( jQuery( '#new_entity_quick_form' ).length > 0 ) {
+		jQuery( '#new_entity_quick_form' ).ajaxForm({
 			dataType:  'json',
-	        beforeSubmit: function(a,f,o) {
-	        	animate_container('#new_entity_quick_form', jQuery("#new_entity_quick_form_container"));
+	        beforeSubmit: function( a, f, o ) {
+	        	animate_container( '#new_entity_quick_form', jQuery( '#new_entity_quick_form_container' ) );
 	        },
-	        success: function(data) {
-	        	desanimate_container(jQuery("#new_entity_quick_form_container"));
-	        	jQuery('#wpshop_quick_add_entity_result').html(data);
-	            jQuery('#wpshop_quick_add_entity_result').addClass("success");
-	        	jQuery('#wpshop_quick_add_entity_result').show();
-	            jQuery('#new_entity_quick_form')[0].reset();
-	            setTimeout(function(){
-	            	jQuery('#wpshop_quick_add_entity_result').html("");
-		            jQuery('#wpshop_quick_add_entity_result').slideUp();
-		            jQuery('#wpshop_quick_add_entity_result').removeClass("success");
-	            }, 3500);
-	        },
+	        success: function( data ) {
+	        	desanimate_container( jQuery( '#new_entity_quick_form_container' ) );
+	        	jQuery( '#wpshop_quick_add_entity_result' ).html( data );
+	            jQuery( '#wpshop_quick_add_entity_result' ).addClass( 'success' );
+	        	jQuery( '#wpshop_quick_add_entity_result' ).show();
+	            jQuery( '#new_entity_quick_form' )[0].reset();
+	            setTimeout(function() {
+	            	jQuery( '#wpshop_quick_add_entity_result' ).html( '' );
+		            jQuery( '#wpshop_quick_add_entity_result' ).slideUp();
+		            jQuery( '#wpshop_quick_add_entity_result' ).removeClass( 'success' );
+	            }, 3500 );
+	        }
 		});
 	}
 
-	wpshop('.edit-tags-php form').attr('enctype', 'multipart/form-data').attr('encoding', 'multipart/form-data');
+	wpshop( '.edit-tags-php form' ).attr( 'enctype', 'multipart/form-data' ).attr( 'encoding', 'multipart/form-data' );
 
 	/*	Hide the message container if not empty	*/
-	if(wpshop("#wpshopMessage").html != ''){
-		hideShowMessage(5000);
+	if ( wpshop( '#wpshopMessage' ).html != '' ) {
+		hideShowMessage( 5000 );
 	}
 
-	jQuery("#shortcode-tabs").tabs();
-	jQuery("#fixed-tabs").tabs();
+	jQuery( '#shortcode-tabs' ).tabs();
+	jQuery( '#fixed-tabs' ).tabs();
 
-	jQuery(".wpshop_icons_add_new_value_to_available_date_list").live('click', function(){
-		jQuery(this).before( jQuery("#wpshop_attribute_date_empy_field").html() );
+	jQuery( '.wpshop_icons_add_new_value_to_available_date_list' ).live( 'click', function() {
+		jQuery( this ).before( jQuery( '#wpshop_attribute_date_empy_field' ).html() );
 	});
 
 	/*	Start attribute unit management part	*/
-	wpshop("#wpshop_attribute_unit_manager").dialog({
+	wpshop( '#wpshop_attribute_unit_manager' ).dialog({
 		autoOpen: false,
 		width: 800,
 		height: 600,
 		modal: true,
-		dialogClass: "wpshop_uidialog_box",
+		dialogClass: 'wpshop_uidialog_box',
 		resizable: false,
-		close:function(){
-			wpshop("#wpshop_attribute_unit_manager").html("");
+		close:function() {
+			wpshop( '#wpshop_attribute_unit_manager' ).html( '' );
 
 			/* Test if combo-box exist in the DOM */
-			if ( jQuery('#wpshop_attributes_edition_table_field_id__unit_group_id').is(":input")  && jQuery('#wpshop_attributes_edition_table_field_id__default_unit').is(":input") ) {
+			if ( jQuery( '#wpshop_attributes_edition_table_field_id__unit_group_id' ).is( ':input' )  && jQuery( '#wpshop_attributes_edition_table_field_id__default_unit' ).is( ':input' ) ) {
 				/* UPDATE UNIT GROUP COMBO-BOX */
 				/* Hide the combo-box to refresh it */
-				jQuery('#wpshop_attributes_edition_table_field_id__unit_group_id').hide();
-				jQuery('#wpshop_attributes_edition_table_field_id__default_unit').hide();
+				jQuery( '#wpshop_attributes_edition_table_field_id__unit_group_id' ).hide();
+				jQuery( '#wpshop_attributes_edition_table_field_id__default_unit' ).hide();
 				/* Display a loader */
-				jQuery('#wpshop_loader_input_group_unit').css("display", "block");
-				jQuery('#wpshop_loader_input_group_unit').html("<div class='wpshopCenterContainer' >" + wpshop("#wpshopLoadingPicture").html() + "</div>");
+				jQuery( '#wpshop_loader_input_group_unit' ).css( 'display', 'block' );
+				jQuery( '#wpshop_loader_input_group_unit' ).html( '<div class=\'wpshopCenterContainer\' >' + wpshop( '#wpshopLoadingPicture' ).html() + '</div>' );
 				jQuery('#wpshop_loader_input_unit').css("display", "block");
 				jQuery('#wpshop_loader_input_unit').html("<div class='wpshopCenterContainer' >" + wpshop("#wpshopLoadingPicture").html() + "</div>");
 				var data = {
@@ -920,8 +916,9 @@ wpshop(document).ready(function(){
 	jQuery( document ).on( 'click', '.quotation_is_payable_by_customer', function( e ) {
 		e.preventDefault();
 		var order_id = jQuery( '#post_ID' ).val();
-		var btn = this;
-		jQuery( btn ).addClass( 'wps-bton-loading' );
+		var btn = jQuery( this );
+		var btnBlock = btn.parent();
+		btn.addClass( 'wps-bton-loading' );
 		var data = {
 				action: "wps_quotation_is_payable_by_customer",
 				_wpnonce: jQuery( this ).data( 'nonce' ),
@@ -929,10 +926,10 @@ wpshop(document).ready(function(){
 			};
 			jQuery.post(ajaxurl, data, function(response) {
 				if ( response['status'] ) {
-					jQuery( btn ).replaceWith( response['response'] );
+					btnBlock.replaceWith( response['response'] );
 				} else {
 					alert( response['response'] );
-					jQuery( btn ).addClass( 'wps-bton-loading' );
+					btn.addClass( 'wps-bton-loading' );
 				}
 		}, 'json');
 
@@ -959,7 +956,18 @@ wpshop(document).ready(function(){
 					jQuery( '#wps_send_direct_payment_link_loader').hide();
 				}
 		}, 'json');
-
+	});
+	jQuery( document ).on( 'click', '#wps_direct_link_url', function( e ) {
+		jQuery(this).select();
+	} );
+	jQuery( document ).on( 'click', '*[data-copy-target]', function( e ) {
+		jQuery( jQuery(this).data('copy-target') ).select();
+		try{
+			document.execCommand("copy");
+			alert('Copié');
+		} catch(e){
+			alert('Erreur');
+		}
 	});
 
 	jQuery( '#wps_delete_pîcture_cat_loader').hide();

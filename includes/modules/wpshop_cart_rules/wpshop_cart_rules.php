@@ -22,12 +22,9 @@ if ( !class_exists("wpshop_cart_rules") ) {
 
 			add_filter( 'wpshop_custom_template', array( &$this, 'custom_template_load' ) );
 
-			/**	Call style for administration	*/
-			add_action( 'admin_enqueue_scripts', array( &$this, 'admin_css' ) );
-
-			/**	Include the different javascript	*/
-			add_action( 'init', array(&$this, 'frontend_js') );
-			add_action( 'admin_init', array(&$this, 'admin_js') );
+			/**	Include the different javascript & style	*/
+			//add_action( 'init', array(&$this, 'frontend_js') );
+			add_action( 'admin_enqueue_scripts', array(&$this, 'admin_scripts') );
 
 			/** AJAX actions **/
 			add_action('wp_ajax_save_cart_rule',array( $this, 'wpshop_ajax_save_cart_rule'));
@@ -35,32 +32,25 @@ if ( !class_exists("wpshop_cart_rules") ) {
 		}
 
 		/**
-		 * Include stylesheets
+		 * Load the different javascript librairies
 		 */
-		function admin_css() {
-			/** CSS Include **/
-			if ( is_admin() ) {
-				wp_register_style( 'wpshop_cart_rules_css', plugins_url('templates/backend/css/wpshop_cart_rules.css', __FILE__) );
-				wp_enqueue_style( 'wpshop_cart_rules_css' );
-			}
-		}
+		// function frontend_js() {
+		// 	/** JS Include **/
+		// 	wp_enqueue_script("jquery");
+		// }
+		/**
+		 * Load the different javascript librairies
+		 */
+		function admin_scripts( $hook ) {
+			if ( $hook != 'settings_page_wpshop_option' )
+				return;
 
-		/**
-		 * Load the different javascript librairies
-		 */
-		function frontend_js() {
 			/** JS Include **/
 			wp_enqueue_script("jquery");
-		}
-		/**
-		 * Load the different javascript librairies
-		 */
-		function admin_js() {
-			/** JS Include **/
-			wp_enqueue_script("jquery");
-			if ( is_admin() ) {
-				wp_enqueue_script( 'wpshop_cart_rules', plugins_url('templates/backend/js/wpshop_cart_rules.js', __FILE__) );
-			}
+			wp_enqueue_script( 'wpshop_cart_rules', plugins_url('templates/backend/js/wpshop_cart_rules.js', __FILE__) );
+			/** CSS Include **/
+			wp_register_style( 'wpshop_cart_rules_css', plugins_url('templates/backend/css/wpshop_cart_rules.css', __FILE__) );
+			wp_enqueue_style( 'wpshop_cart_rules_css' );
 		}
 
 		/** Load the module template **/

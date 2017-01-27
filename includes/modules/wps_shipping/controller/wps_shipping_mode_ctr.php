@@ -68,6 +68,10 @@ class wps_shipping_mode_ctr {
 	 * Add JS and CSS files in back-office
 	 */
 	function add_scripts_in_admin() {
+		global $current_screen;
+		if( ! in_array( $current_screen->post_type, array( WPSHOP_NEWTYPE_IDENTIFIER_ORDER ), true ) )
+			return;
+
 		add_thickbox();
 		wp_enqueue_script('jquery');
 		wp_enqueue_script('jquery-ui-sortable');

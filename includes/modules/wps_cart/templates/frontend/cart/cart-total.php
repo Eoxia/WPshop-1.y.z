@@ -43,11 +43,7 @@
 						<strong><?php echo wpshop_tools::formate_number( $shipping_cost_et ); ?></strong> <?php echo $currency; ?>
 					<?php else : ?>
 						<?php if( ( empty( $cart_content['order_status'] ) || ( $cart_content['order_status'] == 'awaiting_payment' ) || ( ( !empty( $cart_content['cart_type'] ) && $cart_content['cart_type'] == 'quotation' ) && $cart_content['order_status'] != 'completed' ) ) && $price_piloting == 'HT' ) : ?>
-							<span class="wps-form-group">
-								<span class="wps-form">
-									<input type="text" size="5" value="<?php echo number_format( $shipping_cost_et, 2 ); ?>" id="wps-orders-shipping-cost" class="wps-error" style="text-align : right" />
-								</span>
-							</span>
+							<input type="text" size="5" value="<?php echo number_format( $shipping_cost_et, 2 ); ?>" id="wps-orders-shipping-cost" class="wps-error" style="text-align : right" />
 						<?php else : ?>
 							<strong><?php echo wpshop_tools::formate_number( $shipping_cost_et ); ?> <?php echo wpshop_tools::wpshop_get_currency(); ?></strong>
 						<?php endif; ?>
@@ -73,7 +69,6 @@
 						<strong><?php echo wpshop_tools::formate_number( $shipping_cost_ati ); ?></strong> <?php echo $currency; ?>
 					<?php else : ?>
 						<?php if( ( empty( $cart_content['order_status'] ) || ( $cart_content['order_status'] == 'awaiting_payment' ) || ( ( !empty( $cart_content['cart_type'] ) && $cart_content['cart_type'] == 'quotation' ) && $cart_content['order_status'] != 'completed' ) ) && $price_piloting == 'TTC' ) : ?>
-							<!--<span class="wps-form-group"><span class="wps-form"></span></span> -->
 							<input type="text" size="5" value="<?php echo number_format( $shipping_cost_ati, 2 ); ?>" id="wps-orders-shipping-cost" class="wps-error" style="text-align : right" />
 						<?php else : ?>
 							<strong><?php echo wpshop_tools::formate_number( $shipping_cost_ati ); ?> <?php echo wpshop_tools::wpshop_get_currency(); ?></strong>
@@ -101,7 +96,6 @@
 				<p>
 					<?php _e( 'Discount', 'wpshop'); ?>
 					<span class="wps-alignRight">
-						<!-- <span class="wps-form-group"><span class="wps-form"></span></span>-->
 						<?php if( ( $cart_type == 'admin-panel' ) && ( empty( $cart_content['order_status'] ) || $cart_content['order_status'] == 'awaiting_payment' || ( ( !empty( $cart_content['cart_type'] ) && $cart_content['cart_type'] == 'quotation' ) && $cart_content['order_status'] != 'completed' ) ) ) : ?>
 							<input type="text" id="wps-orders-discount-value" size="5" style="text-align : right" value="<?php echo ( !empty($cart_content['order_discount_value']) ) ? $cart_content['order_discount_value'] : number_format( 0, 2 ); ?>"/>
 						<?php else : ?>
@@ -121,7 +115,6 @@
 								<option value="percent" <?php echo ( !empty($cart_content) && !empty($cart_content['order_discount_type']) && $cart_content['order_discount_type'] == 'percent' ) ? 'selected="selected"' : ''; ?>>%</option>
 								<option value="amount" <?php echo ( !empty($cart_content) && !empty($cart_content['order_discount_type']) && $cart_content['order_discount_type'] == 'amount' ) ? 'selected="selected"' : ''; ?>><?php echo wpshop_tools::wpshop_get_currency(); ?></option>
 							</select>
-							<!--<span class="wps-form-group"><span class="wps-form"></span></span>-->
 						</span>
 					</p>
 				<?php endif; ?>
@@ -150,7 +143,7 @@
 				<p class="wps-hightlight"><?php _e( 'Total ATI', 'wpshop'); ?><span class="wps-alignRight"><strong><?php echo wpshop_tools::formate_number( $cart_content['order_grand_total'] ); ?></strong> <?php echo $currency; ?></span></p>
 				<?php $allready_received_amount = 0; ?>
 				<?php foreach ( $cart_content[ 'order_payment' ][ 'received' ] as $payment ) : ?>
-					<?php if ( 'payment_received' == $payment[ 'status' ] ) : ?>
+					<?php if ( ! empty( $payment[ 'status' ] ) && 'payment_received' == $payment[ 'status' ] ) : ?>
 						<?php $allready_received_amount += $payment[ 'received_amount' ]; ?>
 					<?php endif; ?>
 				<?php endforeach; ?>

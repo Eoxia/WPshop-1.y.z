@@ -55,8 +55,6 @@ class wpshop_init{
 			//add_action('admin_init', array('wpshop_init', 'admin_css'));
 		}
 		add_action('admin_init', array('wpshop_init', 'admin_css'));
-		/*	Include the different css	*/
-		add_action('admin_init', array('wpshop_init', 'wpshop_css'));
 
 		/*	Include the different css	*/
 		if ( !is_admin() ) {

@@ -22,7 +22,10 @@ class wps_quotation_backend_ctr {
 	/**
 	 * Inclusion des feuilles de styles pour l'administration / Admin css enqueue
 	 */
-	function admin_assets() {
+	function admin_assets($hook) {
+		if ( $hook != 'settings_page_wpshop_option' )
+			return;
+
 		wp_enqueue_script( 'wps_quotation_admin_js', WPS_QUOTATION_URL . '/assets/js/backend.js', array( 'jquery', ), WPSHOP_VERSION );
 	}
 

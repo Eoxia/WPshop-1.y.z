@@ -13,37 +13,15 @@
  * @version 1.0
  */
 class wps_provider_ctr {
-	public function __construct() {
-		for( $i = 0; method_exists( $this, 'sub_construct_' . $i ); $i++ ) {
-			$func = 'sub_construct_' . $i;
-			$this->$func();
-		}
-	}
 	// WORDPRESS
-	public function sub_construct_0() {
+	public function __construct() {
 		add_action( 'save_post', array( $this, 'save_post' ), 10, 3 );
 		add_action( 'add_meta_boxes_' . WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, array( $this, 'add_meta_box' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 	}
 	public function add_meta_box( $third ) {
 		/*$is_provider = $this->read( $third->ID );
 		if( isset( $is_provider ) ) {
 			add_meta_box( 'provider_products', __( 'Provider\'s products' ), array( $this, 'provider_products_box' ), WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, 'normal', 'low', $third );
-		}*/
-	}
-	function admin_enqueue_scripts( $hook ) {
-		/*if( 'post.php' != $hook ) {
-			return;
-		}
-
-		$post = !empty( $_GET['post'] ) ? (array)$_GET['post'] : array();
-		$action = !empty( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
-
-		if( isset( $post ) && $action == 'edit' ) {
-			$is_provider = $this->read( $post );
-			if( isset( $is_provider ) ) {
-				wp_enqueue_script( 'wps_provider_products', WPS_ACCOUNT_URL . WPS_ACCOUNT_DIR . '/assets/backend/js/wps_provider_products.js' );
-			}
 		}*/
 	}
 	public function save_post( $post_id, $post, $update ) {
@@ -93,15 +71,27 @@ class wps_provider_ctr {
 		}
 	}
 	// PROVIDER
-	private $id_attr;
-	private $value_attr;
-	public function sub_construct_1() {
-		global $wpdb;
-		$entity_id = wpshop_entities::get_entity_identifier_from_code( WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS );
-		$query = $wpdb->prepare( 'SELECT id FROM ' . WPSHOP_DBT_ATTRIBUTE . ' WHERE code = %s AND entity_id = %d', 'is_provider', $entity_id );
-		$this->id_attr = $wpdb->get_var( $query );
-		$query = $wpdb->prepare( 'SELECT id FROM ' . WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS . ' WHERE attribute_id = %d AND LOWER( value ) = %s', $this->id_attr, strtolower( __( 'yes', 'wpshop' ) ) );
-		$this->value_attr = $wpdb->get_var( $query );
+	private $id_attr = null;
+	private $value_attr = null;
+	private $entity_attr = null;
+	private function get_entity_attr() {
+		$this->entity_attr = wpshop_entities::get_entity_identifier_from_code( WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS );
+	}
+	private function get_id_attr() {
+		if( is_null( $this->id_attr ) ) {
+			global $wpdb;
+			$query = $wpdb->prepare( 'SELECT id FROM ' . WPSHOP_DBT_ATTRIBUTE . ' WHERE code = %s AND entity_id = %d', 'is_provider', $this->get_entity_attr() );
+			$this->id_attr = $wpdb->get_var( $query );
+		}
+		return $this->id_attr;
+	}
+	private function get_value_attr() {
+		if( is_null( $this->value_attr ) ) {
+			global $wpdb;
+			$query = $wpdb->prepare( 'SELECT id FROM ' . WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS . ' WHERE attribute_id = %d AND LOWER( value ) = %s', $this->get_id_attr(), strtolower( __( 'yes', 'wpshop' ) ) );
+			$this->value_attr = $wpdb->get_var( $query );
+		}
+		return $this->value_attr;
 	}
 	public function read( $args = array() ) {
 		global $wpdb;
@@ -110,12 +100,12 @@ class wps_provider_ctr {
 			if( isset( $args['posts_per_page'] ) ) {
 				$args['posts_per_page'] = -1;
 			}
-			$query = $wpdb->prepare( 'SELECT entity_id FROM ' . WPSHOP_DBT_ATTRIBUTE_VALUES_INTEGER . ' WHERE attribute_id = %d AND value = %d', $this->id_attr, $this->value_attr );
+			$query = $wpdb->prepare( 'SELECT entity_id FROM ' . WPSHOP_DBT_ATTRIBUTE_VALUES_INTEGER . ' WHERE attribute_id = %d AND value = %d', $this->get_id_attr(), $this->get_value_attr() );
 			$args['post__in'] = $wpdb->get_col( $query );
 			$query = new WP_Query( $args );
 			$return = $query->get_posts();
 		} elseif( is_numeric( $args ) ) {
-			$query = $wpdb->prepare( 'SELECT value_id FROM ' . WPSHOP_DBT_ATTRIBUTE_VALUES_INTEGER . ' WHERE entity_id = %d AND attribute_id = %d AND value = %d', $args, $this->id_attr, $this->value_attr );
+			$query = $wpdb->prepare( 'SELECT value_id FROM ' . WPSHOP_DBT_ATTRIBUTE_VALUES_INTEGER . ' WHERE entity_id = %d AND attribute_id = %d AND value = %d', $args, $this->get_id_attr(), $this->get_value_attr() );
 			$id = $wpdb->get_var( $query );
 			$exist = (bool) isset( $id );
 			if( $exist ) {

@@ -784,7 +784,7 @@ if ( !class_exists("wpshop_modules_billing") ) {
 				if ( !empty($order_postmeta['order_payment']) && !empty($order_postmeta['order_payment']['received']) ) {
 					$wps_payment_option = get_option( 'wps_payment_mode' );
 					foreach( $order_postmeta['order_payment']['received'] as $payment ) {
-						if ( !empty($payment) ) {
+						if ( ! empty( $payment ) && ! in_array( $payment['method'], array( 'quotation' ), true ) && ! empty( $payment['received_amount'] ) ) {
 							$sub_tpl_component = array();
 							$sub_tpl_component['INVOICE_RECEIVED_PAYMENT_RECEIVED_AMOUNT'] = ( !empty($payment['received_amount']) ) ? number_format( $payment['received_amount'], 2, ',', '' ).' '.wpshop_tools::wpshop_get_currency() : 0;
 							$sub_tpl_component['INVOICE_RECEIVED_PAYMENT_DATE'] = (!empty($payment['date']) ) ? mysql2date($date_ouput_format, $payment['date'], true) : '';

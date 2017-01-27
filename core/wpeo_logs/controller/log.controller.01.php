@@ -151,7 +151,10 @@ if ( !class_exists( "wpeologs_ctr" ) ) {
 			}
 		}
 
-		public function admin_enqueue_scripts() {
+		public function admin_enqueue_scripts($hook) {
+			if( 'tools_page_wpeo-log-page' != $hook )
+				return;
+
 			wp_register_script( 'wps_statistics_js_chart', WPEO_LOGS_URL . '/asset/js/chart.js');
 			wp_enqueue_script( 'wps_statistics_js_chart' );
 		}

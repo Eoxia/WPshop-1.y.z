@@ -15,7 +15,7 @@ if ( !class_exists('wps_credit') ) {
 			add_filter( 'wpshop_custom_template', array( &$this, 'custom_template_load' ) );
 
 			/**	Include the different javascript	*/
-			add_action( 'admin_init', array(&$this, 'admin_js') );
+			add_action( 'admin_enqueue_scripts', array(&$this, 'admin_js') );
 
 			/** Ajax actions **/
 			add_action( 'wp_ajax_wps_credit_make_credit', array( &$this, 'wps_credit_make_credit_interface'));
@@ -33,6 +33,10 @@ if ( !class_exists('wps_credit') ) {
 		 * Include stylesheets
 		 */
 		function admin_js() {
+			global $current_screen;
+		    if ( ! in_array( $current_screen->post_type, array( WPSHOP_NEWTYPE_IDENTIFIER_ORDER ), true ) )
+		        return;
+
 			add_thickbox();
 			wp_enqueue_script( 'wps_credit', plugins_url('templates/backend/js/wps_credit.js', __FILE__), array( "jquery" ) );
 		}

@@ -50,6 +50,10 @@ class wps_customer_admin {
 	 * Add Scripts
 	 */
 	function add_scripts() {
+		global $current_screen;
+		if( ! in_array( $current_screen->post_type, array( WPSHOP_NEWTYPE_IDENTIFIER_ORDER ), true ) )
+			return;
+
 		wp_enqueue_script( 'wps_customer_admin_js', WPS_ACCOUNT_URL . '/' . WPS_ACCOUNT_DIR . '/assets/backend/js/wps_customer_backend.js', '', WPSHOP_VERSION );
 	}
 

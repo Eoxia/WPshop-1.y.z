@@ -60,8 +60,7 @@ class wps_address {
 
 		/*	Include the different javascript	*/
 		add_action( 'wp_enqueue_scripts', array( &$this, 'frontend_js' ) );
-		add_action( 'admin_enqueue_scripts', array( &$this, 'admin_js' ) );
-		add_action( 'admin_enqueue_scripts', array( &$this, 'admin_css' ) );
+		add_action( 'admin_enqueue_scripts', array( &$this, 'admin_scripts' ) );
 
 		/**	Add addresses metaboxes to wordpress element	*/
 		add_action('add_meta_boxes', array( &$this, 'addresses_metaboxes'), 1);
@@ -265,10 +264,12 @@ class wps_address {
 		wp_enqueue_script( 'wps_address_js',  WPS_ADDRESS_URL . '/assets/frontend/js/wps_address.js', array( 'jquery', 'jquery-form' ) );
 	}
 
-	function admin_js() {
+	function admin_scripts() {
+		global $current_screen;
+	    if ( ! in_array( $current_screen->post_type, array( WPSHOP_NEWTYPE_IDENTIFIER_ORDER, WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ), true ) )
+	        return;
+
 		wp_enqueue_script( 'wps_address_js',  WPS_ADDRESS_URL . '/assets/backend/js/wps_address.js', array( 'jquery', 'jquery-form' ) );
-	}
-	function admin_css() {
 		wp_register_style( 'wps_address_backend_css', WPS_ADDRESS_URL . '/assets/backend/css/backend.css'/*, array( '' )*/ );
 		wp_enqueue_style( 'wps_address_backend_css' );
 	}

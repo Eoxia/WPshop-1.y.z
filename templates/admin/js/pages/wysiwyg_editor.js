@@ -1,5 +1,6 @@
 (function() {
-	tinymce.create('tinymce.plugins.wpshop_wysiwyg_shortcodes', {
+	console.log( tinymce );
+	tinymce.create( 'tinymce.plugins.wpshop_wysiwyg_shortcodes', {
 
 		/**
 		 * Creates control instances based in the incomming name. This method is normally not
@@ -11,74 +12,74 @@
 		 * @param {tinymce.ControlManager} cm Control manager to use inorder to create new control.
 		 * @return {tinymce.ui.Control} New control instance or null if no control was created.
 		 */
-		createControl : function(n, cm) {
-			switch (n) {
+		createControl: function( n, cm ) {
+			switch ( n ) {
 				case 'wpshop_wysiwyg_button':
-					var wpshop_wysiwyg_button = cm.createMenuButton(n,{
-						title : WPSHOP_BUTTON_DESCRIPTION,
+					var wpshop_wysiwyg_button = cm.createMenuButton( n, {
+						title: WPSHOP_BUTTON_DESCRIPTION,
 						image: false
 					});
 
-					wpshop_wysiwyg_button.onRenderMenu.add(function(c, m) {
+					wpshop_wysiwyg_button.onRenderMenu.add(function( c, m ) {
 						/*	Define wpshop products shortcodes menu	*/
 						var wpshop_product_shortode;
-						wpshop_product_shortode = m.addMenu({title : wpshop_mce_shortcode.product_listing});
-						wpshop_product_shortode.add({title : WPSHOP_WYSIWYG_PRODUCT_LISTING_BY_PID_TITLE, onclick : function() {
+						wpshop_product_shortode = m.addMenu({ title: wpshop_mce_shortcode.product_listing });
+						wpshop_product_shortode.add({ title: WPSHOP_WYSIWYG_PRODUCT_LISTING_BY_PID_TITLE, onclick: function() {
 							tinyMCE.activeEditor.windowManager.open({
-								file : WPSHOP_ADMIN_URL + 'admin-post.php?action=wps_shortcodes_wysiwyg_dialog&type=product&post_type=' + jQuery("#post_type").val(),
-								width : 800,
-								height : 600,
-								inline : 1
+								file: WPSHOP_ADMIN_URL + 'admin-post.php?action=wps_shortcodes_wysiwyg_dialog&type=product&post_type=' + jQuery( '#post_type' ).val(),
+								width: 800,
+								height: 600,
+								inline: 1
 							});
-						}});
-						wpshop_product_shortode.add({title : WPSHOP_WYSIWYG_PRODUCT_LISTING_BY_ATTRIBUTE_TITLE, onclick : function() {
+						} });
+						wpshop_product_shortode.add({ title: WPSHOP_WYSIWYG_PRODUCT_LISTING_BY_ATTRIBUTE_TITLE, onclick: function() {
 							tinyMCE.activeEditor.windowManager.open({
-								file : WPSHOP_ADMIN_URL + 'admin-post.php?action=wps_shortcodes_wysiwyg_dialog&type=product_by_attribute&post_type=' + jQuery("#post_type").val(),
-								width : 800,
-								height : 600,
-								inline : 1
+								file: WPSHOP_ADMIN_URL + 'admin-post.php?action=wps_shortcodes_wysiwyg_dialog&type=product_by_attribute&post_type=' + jQuery( '#post_type' ).val(),
+								width: 800,
+								height: 600,
+								inline: 1
 							});
-						}});
+						} });
 
 						/*	Define wpshop categories shortcode menu	*/
-						m.add({title : WPSHOP_WYSIWYG_MENU_TITLE_CATEGORIES, onclick : function() {
+						m.add({ title: WPSHOP_WYSIWYG_MENU_TITLE_CATEGORIES, onclick: function() {
 	                        tinyMCE.activeEditor.windowManager.open({
-	        					file : WPSHOP_ADMIN_URL + 'admin-post.php?action=wps_shortcodes_wysiwyg_dialog&type=categories&post_type=' + jQuery("#post_type").val(),
-	        					width : 800,
-	        					height : 600,
-	        					inline : 1
+	        					file: WPSHOP_ADMIN_URL + 'admin-post.php?action=wps_shortcodes_wysiwyg_dialog&type=categories&post_type=' + jQuery( '#post_type' ).val(),
+	        					width: 800,
+	        					height: 600,
+	        					inline: 1
 	        				});
-	                    }});
+	                    } });
 
 						/*	Define wpshop attributes shortcode menu	*/
-						m.add({title : WPSHOP_WYSIWYG_MENU_TITLE_ATTRIBUTE_VALUE, onclick : function() {
+						m.add({ title: WPSHOP_WYSIWYG_MENU_TITLE_ATTRIBUTE_VALUE, onclick: function() {
 							tinyMCE.activeEditor.windowManager.open({
-								file : WPSHOP_ADMIN_URL + 'admin-post.php?action=wps_shortcodes_wysiwyg_dialog&type=attribute_value&post_type=' + jQuery("#post_type").val(),
-								width : 800,
-								height : 600,
-								inline : 1
+								file: WPSHOP_ADMIN_URL + 'admin-post.php?action=wps_shortcodes_wysiwyg_dialog&type=attribute_value&post_type=' + jQuery( '#post_type' ).val(),
+								width: 800,
+								height: 600,
+								inline: 1
 							});
-						}});
+						} });
 
 						/*	Define wpshop custom tags	*/
-						if ( jQuery("#post_type").val() === 'page') {
+						if ( jQuery( '#post_type' ).val() === 'page' ) {
 							var wpshop_custom_tags;
-							wpshop_custom_tags = m.addMenu({title : WPSHOP_CUSTOM_TAGS_TITLE});
-							wpshop_custom_tags.add({title : WPSHOP_CUSTOM_TAGS_CART, onclick : function() {
-								tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[wpshop_cart]');
-							}});
-							wpshop_custom_tags.add({title : WPSHOP_CUSTOM_TAGS_CART_MINI, onclick : function() {
-								tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[wpshop_mini_cart]');
-							}});
-							wpshop_custom_tags.add({title : WPSHOP_CUSTOM_TAGS_CHECKOUT, onclick : function() {
-								tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[wpshop_checkout]');
-							}});
-							wpshop_custom_tags.add({title : WPSHOP_CUSTOM_TAGS_ACCOUNT, onclick : function() {
-								tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[wpshop_myaccount]');
-							}});
-							wpshop_custom_tags.add({title : WPSHOP_CUSTOM_TAGS_SHOP, onclick : function() {
-								tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[wpshop_products]');
-							}});
+							wpshop_custom_tags = m.addMenu({ title: WPSHOP_CUSTOM_TAGS_TITLE });
+							wpshop_custom_tags.add({ title: WPSHOP_CUSTOM_TAGS_CART, onclick: function() {
+								tinyMCE.activeEditor.execCommand( 'mceInsertContent', false, '[wpshop_cart]' );
+							} });
+							wpshop_custom_tags.add({ title: WPSHOP_CUSTOM_TAGS_CART_MINI, onclick: function() {
+								tinyMCE.activeEditor.execCommand( 'mceInsertContent', false, '[wpshop_mini_cart]' );
+							} });
+							wpshop_custom_tags.add({ title: WPSHOP_CUSTOM_TAGS_CHECKOUT, onclick: function() {
+								tinyMCE.activeEditor.execCommand( 'mceInsertContent', false, '[wpshop_checkout]' );
+							} });
+							wpshop_custom_tags.add({ title: WPSHOP_CUSTOM_TAGS_ACCOUNT, onclick: function() {
+								tinyMCE.activeEditor.execCommand( 'mceInsertContent', false, '[wpshop_myaccount]' );
+							} });
+							wpshop_custom_tags.add({ title: WPSHOP_CUSTOM_TAGS_SHOP, onclick: function() {
+								tinyMCE.activeEditor.execCommand( 'mceInsertContent', false, '[wpshop_products]' );
+							} });
 							//wpshop_custom_tags.add({title : WPSHOP_CUSTOM_TAGS_ADVANCED_SEARCH, onclick : function() {
 	                        //	tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[wpshop_custom_search]');
 	                        //}});

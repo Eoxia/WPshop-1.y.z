@@ -24,11 +24,8 @@ class wps_installer_ctr {
 	 */
 	function __construct() {
 
-		/**	Call administration style definition	*/
-		add_action( 'admin_init', array( &$this, 'admin_css' ) );
-
-		/**	Call administration scripts	*/
-		add_action( 'admin_init', array( &$this, 'admin_js' ));
+		/**	Call administration style definition & scripts	*/
+		add_action( 'admin_init', array( &$this, 'admin_scripts' ) );
 
 		$current_step = ( !empty( $_GET['wps-installation-step'] ) ) ? sanitize_title( $_GET['wps-installation-step'] ) : $this->current_installation_step;
 
@@ -66,7 +63,6 @@ class wps_installer_ctr {
 
 		/**	Create an administration menu	*/
 		add_action( 'admin_menu', array( $this, 'admin_menu' ), 10 );
-		add_action( 'admin_head', array( $this, 'admin_head' ), 11 );
 
 		/**	In case that configuration have not been done and that instalation is not asked to be ignored	*/
 		if ( empty( $wps_current_db_version ) || empty( $wps_current_db_version[ 'installation_state' ] ) || ( !empty( $wps_current_db_version[ 'installation_state' ] ) && !in_array( $wps_current_db_version[ 'installation_state' ], array( 'completed', 'ignored' ) ) ) ) {
@@ -87,18 +83,15 @@ class wps_installer_ctr {
 
 	/**
 	 * Enqueue style definition
+	 * Enqueue scripts definition
 	 */
-	function admin_css() {
-		wp_register_style('wps_installer_style', WPS_INSTALLER_URL . WPS_INSTALLER_DIR . '/assets/css/backend-styles.css', '', WPS_INSTALLER_VERSION);
-		wp_enqueue_style('wps_installer_style');
-	}
+	function admin_scripts($hook_suffix) {
+		if ( 'wps-installer.php' !== $hook_suffix )
+        	return;
 
-	/**
-	 * Hook administration head for removing about menu display
-	 */
-	function admin_head() {
-		// remove_menu_page( 'wps-about' );
-		remove_menu_page( 'wps-installer' );
+		wp_register_style( 'wps_installer_style', WPS_INSTALLER_URL . WPS_INSTALLER_DIR . '/assets/css/backend-styles.css', '', WPS_INSTALLER_VERSION );
+		wp_enqueue_style( 'wps_installer_style' );
+		wp_enqueue_script( 'wps-installer-admin-scripts', WPS_INSTALLER_URL . WPS_INSTALLER_DIR . '/assets/js/backend-scripts.js', array( 'jquery' ), WPS_INSTALLER_VERSION );
 	}
 
 	/**
@@ -108,19 +101,8 @@ class wps_installer_ctr {
 		/**	Get current version for wpshop plugin	*/
 		$wps_current_db_version = get_option( 'wpshop_db_options', 0 );
 
-		// About WPShop called in wps_help
-		// add_menu_page( __( 'About WPShop', 'wpshop' ), __( 'WPShop - about', 'wpshop' ), 'manage_options', 'wps-about', array( &$this, 'wps_about_page' ) );
 		add_menu_page( __( 'Install WPShop', 'wpshop' ), __( 'WPShop - install', 'wpshop' ), 'manage_options', 'wps-installer', array( &$this, 'installer_main_page' ) );
-		/*if ( empty( $wps_current_db_version ) || empty( $wps_current_db_version[ 'installation_state' ] ) || ( !empty( $wps_current_db_version[ 'installation_state' ] ) && !in_array( $wps_current_db_version[ 'installation_state' ], array( 'completed', 'ignored' ) ) ) ) {
-			add_menu_page( __( 'Wpshop installer', 'wpshop'), __( 'Wpshop', 'wpshop'), 'wpshop_view_dashboard', 'wps-installer', array( &$this, 'installer_main_page'), WPSHOP_MEDIAS_URL . "icones/wpshop_menu_icons.png", 34 );
-		}*/
-	}
-
-	/**
-	 * Enqueue scripts definition
-	 */
-	function admin_js() {
-		wp_enqueue_script( 'wps-installer-admin-scripts', WPS_INSTALLER_URL . WPS_INSTALLER_DIR . '/assets/js/backend-scripts.js', array( 'jquery' ), WPS_INSTALLER_VERSION);
+		remove_menu_page( 'wps-installer' );
 	}
 
 	/**

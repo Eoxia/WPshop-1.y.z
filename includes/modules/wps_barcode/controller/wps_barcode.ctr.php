@@ -3,7 +3,6 @@ class wps_barcode {
 	public function __construct() {
 		global $post_ID;
 
-		add_action( 'admin_init', array($this, 'add_scripts') );
 		$this->install();
 		add_action( 'save_post', array($this, 'insert_barcode' ), 10, 3 );
 	}
@@ -282,15 +281,6 @@ class wps_barcode {
 				$products->update_the_attribute_for_product($post_ID, 'varchar', 'barcode', $barcode);
 			}*/
 		}
-	}
-
-	/**
-	 * Adding JQuery scripts
-	 */
-	public function add_scripts() {
-		wp_enqueue_script('jquery');
-		wp_enqueue_script( 'wps_barcode_printelement',  WPS_BARCODE_JSCRIPTS.'/jquery.printElement.js' );
-		wp_enqueue_script( 'wps_barcode',  WPS_BARCODE_JSCRIPTS.'/wps.backend.wps_barcode.js' );
 	}
 
 	/**

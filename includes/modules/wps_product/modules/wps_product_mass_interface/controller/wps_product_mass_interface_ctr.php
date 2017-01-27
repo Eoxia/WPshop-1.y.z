@@ -21,11 +21,6 @@ class wps_product_mass_interface_ctr {
 		// Add submenu
 		add_action('admin_menu', array( $this, 'register_mass_products_edit_submenu' ), 350 );
 
-		// Declare Styles and JS Files
-		add_action( 'admin_enqueue_scripts', array( $this, 'add_admin_scripts') );
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_css' ) );
-		add_action( 'admin_print_scripts', array( $this, 'admin_print_scripts' ) );
-
 		// Trigger ajax action
 		add_action( 'wp_ajax_wps_mass_edit_change_page', array( $this, 'wps_mass_edit_change_page') );
 		add_action( 'wp_ajax_wps_mass_edit_product_save_action', array( $this, 'wps_save_product_quick_interface') );
@@ -128,6 +123,11 @@ class wps_product_mass_interface_ctr {
 	 * Display interafce
 	 */
 	function wps_display_mass_edit_interface() {
+		// Declare Styles and JS Files
+		add_action( 'admin_enqueue_scripts', array( $this, 'add_admin_scripts') );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_css' ) );
+		add_action( 'admin_print_scripts', array( $this, 'admin_print_scripts' ) );
+		
 		global $wpdb;
 
 		$wps_product_mass_interface_mdl = new wps_product_mass_interface_mdl();
@@ -180,7 +180,7 @@ class wps_product_mass_interface_ctr {
 				WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT, '_wpshop_product_attribute_set_id', $attribute_set_id);
 		$products = $wpdb->get_var( $query );
 
-			if( !empty($products) ) {
+		if( !empty($products) ) {
 			$args = array(
 			'base' => '%_%',
 			'format' => admin_url( 'admin-ajax.php?action=wps_add_quick_interface&page=%#%' ),
@@ -197,9 +197,9 @@ class wps_product_mass_interface_ctr {
 				require( wpshop_tools::get_template_part( WPS_PDCT_MASS_DIR, WPS_PDCT_MASS_TEMPLATES_MAIN_DIR, "backend", "quick_add_interface_pagination" ) );
 				$output = ob_get_contents();
 			ob_end_clean();
-			}
-			return $output;
-			}
+		}
+		return $output;
+	}
 
 	function wps_product_attached_files( $product_id ) {
 		global $wpdb;

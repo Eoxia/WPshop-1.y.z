@@ -3689,6 +3689,7 @@ a:hover .wps-icodoc:after {
 }
 .wps-checkout-step a {
   text-decoration: none;
+  box-shadow: 0 0;
   border: none;
   outline: none;
 }

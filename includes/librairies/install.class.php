@@ -2374,9 +2374,9 @@ WHERE ATTR_DET.attribute_id IN (" . $attribute_ids . ")"
             /*    Always add specific case before this bloc    */
             case 'dev':
 
-                wp_cache_flush();
+                //wp_cache_flush();
                 // Newsletters options
-                $wp_rewrite->flush_rules();
+                //$wp_rewrite->flush_rules();
                 return true;
                 break;
 

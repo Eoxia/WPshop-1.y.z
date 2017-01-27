@@ -9,12 +9,8 @@ class wps_statistics_ctr {
 		add_action( 'save_post', array( &$this, 'wps_statistics_save_customer_infos') );
 		add_action('add_meta_boxes', array( &$this, 'add_customer_meta_box'), 1 );
 
-		// Add Javascript Files in admin
+		// Add Javascript Files & CSS File in admin
 		add_action( 'admin_enqueue_scripts', array( $this, 'add_scripts' ) );
-		add_action('admin_footer', array( $this, 'admin_extra_js') );
-
-		// Add CSS File
-		add_action( 'admin_enqueue_scripts', array( $this, 'add_css_files' ) );
 
 		// Ajax Actions
 		// add_action('wap_ajax_wps_reload_statistics', array( &$this, 'wps_reload_statistics') );
@@ -25,32 +21,19 @@ class wps_statistics_ctr {
 
 
 	/**
-	* Add Javascript files
+	* Add Javascript & CSS files
 	*/
-	function add_scripts() {
+	function add_scripts( $hook ) {
+		global $current_screen;
+		if( ! in_array( $current_screen->post_type, array( WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ), true ) && $hook != 'wpshop_shop_order_page_wpshop_statistics' )
+			return;
+
 		wp_enqueue_script( 'jquery' );
 		wp_enqueue_script( 'jquery-ui-datepicker');
 		wp_enqueue_script( 'postbox');
 		wp_enqueue_script( 'wps_statistics_js_chart', WPSHOP_JS_URL.'Chart.js' );
 		wp_enqueue_script( 'wps_statistics_js', WPS_STATISTICS_URL.'/assets/js/wps_statistics.js' );
 		wp_enqueue_script( 'wps_hourlyorders', WPS_STATISTICS_URL.'/assets/js/hourlyorders.js' );
-	}
-
-	/**
-	 * Add Extra JS action to Custom Statistics Meta-Boxes
-	 */
-	function admin_extra_js() {
-// 		echo '<script type="text/javascript">';
-// 		echo 'jQuery(document).ready(function(){ postboxes.add_postbox_toggles(pagenow); });';
-// 		echo '</script>';
-	}
-
-	/**
-	* Add CSS files
-	*/
-	function add_css_files() {
-		wp_register_style('wps_statistics_css', WPS_STATISTICS_URL . '/assets/css/wps_statistics.css', '', WPS_STATISTICS_VERSION);
-		wp_enqueue_style('wps_statistics_css');
 	}
 
 	/**

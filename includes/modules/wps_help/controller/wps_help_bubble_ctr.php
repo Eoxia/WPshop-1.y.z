@@ -18,11 +18,8 @@ class wps_help_bubble_ctr {
 	 * CORE - Instanciate wpshop help
 	 */
 	function __construct() {
-		/**	Call style for administration	*/
-		add_action( 'admin_enqueue_scripts', array( &$this, 'admin_css' ) );
-
-		/**	Include the different javascript	*/
-		add_action( 'admin_init', array(&$this, 'admin_js') );
+		/**	Call style & javascript for administration	*/
+		add_action( 'admin_enqueue_scripts', array( &$this, 'admin_scripts' ) );
 
 		/**	Add the scripts into admin footer for future use	*/
 		add_action( 'admin_print_footer_scripts', array( &$this, 'wps_dashboard_help') );
@@ -34,14 +31,8 @@ class wps_help_bubble_ctr {
 	/**
 	 * Include stylesheets
 	 */
-	function admin_css() {
+	function admin_scripts() {
 		wp_enqueue_style( 'wp-pointer' );
-	}
-
-	/**
-	 * Load the different javascript librairies
-	 */
-	function admin_js() {
 		wp_enqueue_script( 'wp-pointer' );
 	}
 

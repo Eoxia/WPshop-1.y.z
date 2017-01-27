@@ -33,7 +33,10 @@ class eo_module_management {
 	/**
 	 * Inclusion des feuilles de styles pour l'administration / Admin css enqueue
 	 */
-	function admin_assets() {
+	function admin_assets( $hook ) {
+		if ( $hook != 'settings_page_wpshop_option' )
+			return;
+
 		wp_register_style( 'eomodmanager-admin-css', EOMODMAN_URL . '/assets/css/backend.css', '', EOMODMAN_VERSION );
 		wp_enqueue_style( 'eomodmanager-admin-css' );
 	}

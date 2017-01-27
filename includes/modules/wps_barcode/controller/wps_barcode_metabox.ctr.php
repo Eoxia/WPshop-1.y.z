@@ -3,6 +3,20 @@
 class wps_barcode_metabox {
 	public function __construct() {
 		add_action( 'add_meta_boxes', array($this, 'add_meta_box'), 10, 10 );
+		add_action( 'admin_enqueue_scripts', array($this, 'add_scripts') );
+	}
+
+	/**
+	 * Adding JQuery scripts
+	 */
+	public function add_scripts() {
+		global $current_screen;
+	    if ( ! in_array( $current_screen->post_type, array( WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT, WPSHOP_NEWTYPE_IDENTIFIER_ORDER, WPSHOP_NEWTYPE_IDENTIFIER_COUPON ), true ) )
+	        return;
+
+		wp_enqueue_script( 'jquery' );
+		wp_enqueue_script( 'wps_barcode_printelement',  WPS_BARCODE_JSCRIPTS.'/jquery.printElement.js' );
+		wp_enqueue_script( 'wps_barcode',  WPS_BARCODE_JSCRIPTS.'/wps.backend.wps_barcode.js' );
 	}
 
 	/**

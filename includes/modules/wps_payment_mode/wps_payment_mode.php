@@ -72,7 +72,10 @@ if ( !class_exists("wps_payment_mode") ) {
 			wp_enqueue_script( 'wps_payment_mode', plugins_url('assets/frontend/js/wps_payment_mode.js', __FILE__) );
 		}
 
-		function add_admin_scripts() {
+		function add_admin_scripts($hook) {
+			if( $hook != 'settings_page_wpshop_option' )
+				return;
+
 			add_thickbox();
 			wp_enqueue_script( 'jquery');
 			wp_enqueue_script('jquery-ui');

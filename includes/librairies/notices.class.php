@@ -52,11 +52,11 @@ class wpshop_notices{
 		}
 
 
-		$current_theme_option = get_option( 'current_theme' );
+		/*$current_theme_option = get_option( 'current_theme' );
 		if ( !empty($cuurent_theme_option) && $cuurent_theme_option == 'SlickShop mini' && ( empty($notice_display_user_option) || !array_key_exists('SLICKSHOP', $notice_display_user_option) ) )  {
 			$notice .= '<li>' .__('Some changes on templates files have been made on WPSHOP 1.3.6.3. You must download Slickshop on <a href="http://www.wpshop.fr/myaccount/">your account on WPSHOP.FR</a>', 'wpshop').'</li>';
 			$messages_to_hide .= 'SLICKSHOP,';
-		}
+		}*/
 
 		$install = !empty( $_GET[ 'install' ] ) ? sanitize_text_field( $_GET[ 'install' ] ) : '';
 

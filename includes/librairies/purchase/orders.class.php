@@ -176,20 +176,20 @@ class wpshop_orders {
 			</div>';
 		}*/
 
-		if( ( ( !empty($order_postmeta['cart_type']) && $order_postmeta['cart_type'] == 'quotation' ) || !empty( $order_postmeta['order_temporary_key'] ) ) && $order_postmeta['order_status'] != 'canceled' && (float) $order_postmeta['order_amount_to_pay_now'] != (float) 0 ) {
-			$tpl_component['ADMIN_ORDER_ACTIONS_LIST'] .= '<div class="wps-product-section">' . self::display_customer_pay_quotation( isset( $order_postmeta['pay_quotation'] ), $order->ID ) . '</div>';
-		}
+		/**
+		 * Only for quotations
+		 */
+		/*if( ( ( !empty($order_postmeta['cart_type']) && $order_postmeta['cart_type'] == 'quotation' ) || !empty( $order_postmeta['order_temporary_key'] ) ) && $order_postmeta['order_status'] != 'canceled' && (float) $order_postmeta['order_amount_to_pay_now'] != (float) 0 ) {
+			$tpl_component['ADMIN_ORDER_ACTIONS_LIST'] .= '<div class="wps-product-section"><input type="text" value="' . wpshop_checkout::wps_direct_payment_link_url( $order->ID ) . '"/></div>';
+		}*/
 
 		/*Add the button regarding the order status**/
 		if ( !empty($order_postmeta['order_status']) ) {
-			switch ( $order_postmeta['order_status'] ) {
-				case 'awaiting_payment':
-					$tpl_component['ADMIN_ORDER_ACTIONS_LIST'] .= '<div class="wps-product-section"><a data-nonce="' . wp_create_nonce( 'wps_send_direct_payment_link' ) . '" role="button" class="wps-bton-second-mini-rounded send_direct_payment_link" href="#" >'.__('Send a payment link to customer', 'wpshop').'</a></div>';
-					$tpl_component['ADMIN_ORDER_ACTIONS_LIST'] .= '<div class="wps-product-section"><button class="wps-bton-second-mini-rounded markAsCanceled order_'.$order->ID.'" >'.__('Cancel this order', 'wpshop').'</button><input type="hidden" id="markascanceled_order_hidden_indicator" name="markascanceled_order_hidden_indicator" /></div>';
-				break;
-				/*case 'completed' || 'shipped':
-					$tpl_component['ADMIN_ORDER_ACTIONS_LIST'] .= '<div class="wps-product-section wps_resend_order_to_customer" ><button class="wps-bton-second-mini-rounded wps_resend_order_to_customer order_' .$order->ID. '">' . __('Resend this order to customer', 'wpshop') . '</button><input type="hidden" id="resendordertocustomer_order_hidden_indicator" name="resendordertocustomer_order_hidden_indicator" /></div>';
-				break;*/
+			if( in_array( $order_postmeta['order_status'], array( 'awaiting_payment', 'partially_paid' ) ) ) {
+				$tpl_component['ADMIN_ORDER_ACTIONS_LIST'] .= '<div class="wps-product-section"><input id="wps_direct_link_url" type="text" value="' . wpshop_checkout::wps_direct_payment_link_url( $order->ID ) . '"/><a class="wps-bton-second-mini-rounded" data-copy-target="#wps_direct_link_url" title="Copier"><span class="dashicons dashicons-editor-paste-text"></span></a><a data-nonce="' . wp_create_nonce( 'wps_send_direct_payment_link' ) . '" role="button" class="wps-bton-second-mini-rounded send_direct_payment_link" href="#" title="Envoyer par mail"><span class="dashicons dashicons-email"></span></a></div>';
+			}
+			if( $order_postmeta['order_status'] == 'awaiting_payment' ) {
+				$tpl_component['ADMIN_ORDER_ACTIONS_LIST'] .= '<div class="wps-product-section"><button class="wps-bton-second-mini-rounded markAsCanceled order_'.$order->ID.'" >'.__('Cancel this order', 'wpshop').'</button><input type="hidden" id="markascanceled_order_hidden_indicator" name="markascanceled_order_hidden_indicator" /></div>';
 			}
 			$credit_meta = get_post_meta( $order->ID, '_wps_order_credit', true );
 
@@ -661,13 +661,6 @@ class wpshop_orders {
 		}
 
 		return $output;
-	}
-	static function display_customer_pay_quotation( $state, $oid ) {
-		$btn = '<a role="button" data-nonce="' . wp_create_nonce( 'wps_quotation_is_payable_by_customer' ) . '" class="wps-bton-' . ( ( $state ) ? 'third' : 'second' ) . '-mini-rounded quotation_is_payable_by_customer" href="#" >'.__('Customer can pay', 'wpshop').'</a>';
-		if( $state ) {
-			$btn .= '<br><a target="_blank" href="' . admin_url( 'admin-ajax.php?action=wps_checkout_quotation&order_id=' . $oid . '&is_link=link' ) . '">' . __( 'Pay link', 'wpshop' ) . '</a>';
-		}
-		return $btn;
 	}
 
 }

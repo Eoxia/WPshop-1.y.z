@@ -30,6 +30,10 @@ class wps_orders_in_back_office {
 	 * Add scripts
 	 */
 	function wps_orders_scripts() {
+		global $current_screen;
+		if( ! in_array( $current_screen->post_type, array( WPSHOP_NEWTYPE_IDENTIFIER_ORDER ), true ) )
+			return;
+
 		wp_enqueue_script( 'wps_orders_backend', WPS_ORDERS_URL.WPS_ORDERS_DIR.'/assets/backend/js/wps_orders.js' );
 	}
 
@@ -192,7 +196,7 @@ class wps_orders_in_back_office {
 						'address' => get_post_meta( $billing_adress_id, '_wpshop_address_metadata', true )
 				);
 				// Shipping datas
-				$shipping_adress_id = ( !empty( $_REQUEST['wps_order_selected_address'] ) && empty( $_REQUEST['wps_order_selected_address']['shipping'] ) ) ? (int) $_REQUEST['wps_order_selected_address']['shipping'] : 0;
+				$shipping_adress_id = ( !empty( $_REQUEST['wps_order_selected_address'] ) && !empty( $_REQUEST['wps_order_selected_address']['shipping'] ) ) ? (int) $_REQUEST['wps_order_selected_address']['shipping'] : 0;
 
 				if( !empty( $shipping_adress_id ) ) {
 					$shipping_address_option = get_option( 'wpshop_shipping_address_choice' );

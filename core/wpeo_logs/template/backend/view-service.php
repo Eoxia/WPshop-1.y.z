@@ -1,7 +1,7 @@
 <?php if ( !defined( 'ABSPATH' ) ) exit;
 $service_id = (int) $_GET['service_id'];
 $sanitize_type = sanitize_text_field( $_GET['type'] );
-$sanitize_key = (int) $_GET['key'];
+$sanitize_key = isset( $_GET['key'] ) ? (int) $_GET['key'] : null;
 
 ?>
 

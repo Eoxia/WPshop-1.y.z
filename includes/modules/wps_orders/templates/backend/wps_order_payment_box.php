@@ -19,7 +19,7 @@ $waited_amount_sum = $received_amount_sum = $i = 0;
 		<div class="wps-boxed">
 			<div class="wps-h2"><?php _e( 'Received payments', 'wpshop'); ?></div>
 		<?php foreach( $order_postmeta['order_payment']['received'] as $index_payment => $received_payment ) :
-				if( !empty( $received_payment['method'] ) ) :
+				if( !empty( $received_payment['method'] ) && $received_payment['method'] != 'quotation' ) :
 				$i++;
 		?>
 			<?php

@@ -49,7 +49,7 @@ class wpshop_checkout {
 				if(!empty($order)) {
 					if($order['customer_id'] == $user_id) {
 						$order['payment_method'] = $paymentMethod;
-						$_SESSION['order_id'] = wpshop_tools::varSanitizer( $order_id );
+						$_SESSION['order_id'] = (int) $order_id;
 						// Store cart in session
 						//wpshop_cart::store_cart_in_session($order);
 						// Add a payment
@@ -272,30 +272,57 @@ class wpshop_checkout {
 		}
 	}
 
-	public static function wps_direct_payment_link() {
-		$token = !empty( $_GET['token'] ) ? sanitize_text_field( $_GET['token'] ) : '';
-		$login = !empty( $_GET['login'] ) ? sanitize_text_field( $_GET['login'] ) : '';
-		$order_id = !empty( $_GET['order_id'] ) ? (int) $_GET['order_id'] : '';
-
-		global $wpdb;
-		if( !empty($token) && !empty($order_id) && !empty($login) ) {
-			/** Verify informations **/
-			$query = $wpdb->prepare( 'SELECT * FROM ' .$wpdb->users. ' WHERE user_login = %s AND user_activation_key = %s', $login, $token);
-			$user_infos = $wpdb->get_row( $query );
-			if( !empty($user_infos) ) {
-				/** Connect the user **/
-				wp_set_auth_cookie( $user_infos->ID, true, is_ssl() );
-
-				wps_orders_ctr::add_order_to_session( $order_id );
-
-				$wpdb->update($wpdb->users, array('user_activation_key' => ''), array('user_login' => $login) );
-				wpshop_tools::wpshop_safe_redirect( get_permalink( wpshop_tools::get_page_id( get_option('wpshop_checkout_page_id') ) ) );
-			}
-			else {
-				wpshop_tools::wpshop_safe_redirect( get_permalink( wpshop_tools::get_page_id( get_option('wpshop_myaccount_page_id') ) ) );
-			}
-
+	/**
+	 * Check token connect user and move to step 5.
+	 *
+	 * @method wps_direct_payment_link
+	 * @param mixed $data Array or false.
+	 * @return void
+	 */
+	public static function wps_direct_payment_link( $data = false ) {
+		$data = empty( $data ) ? self::wps_direct_payment_link_verify_token() : $data;
+		if ( (bool) $data ) {
+			wps_orders_ctr::pay_quotation( $data['oid'] );
+			wpshop_tools::wpshop_safe_redirect( get_permalink( wpshop_tools::get_page_id( get_option( 'wpshop_checkout_page_id' ) ) ) . '?order_step=5' );
+		} else {
+			wpshop_tools::wpshop_safe_redirect( get_permalink( wpshop_tools::get_page_id( get_option( 'wpshop_myaccount_page_id' ) ) ) );
 		}
 	}
-
+	/**
+	 * Use wps_direct_payment_link and force connect.
+	 *
+	 * @method wps_direct_payment_link_nopriv
+	 * @param mixed $data Array or false.
+	 * @return void
+	 */
+	public static function wps_direct_payment_link_nopriv( $data = false ) {
+		$data = empty( $data ) ? self::wps_direct_payment_link_verify_token() : $data;
+		if ( (bool) $data ) {
+			wp_set_auth_cookie( $data['cid'], true, is_ssl() );
+		}
+		self::wps_direct_payment_link( $data );
+	}
+	/**
+	 * Verify token in request.
+	 *
+	 * @method wps_direct_payment_link_verify_token
+	 * @return mixed Customer id or false.
+	 */
+	public static function wps_direct_payment_link_verify_token() {
+		$token = ! empty( $_GET['token'] ) ? sanitize_text_field( $_GET['token'] ) : '';
+		$order_id = ! empty( $_GET['order_id'] ) ? (int) $_GET['order_id'] : '';
+		$order_metadata = get_post_meta( $order_id, '_order_postmeta', true );
+		$customer_id = ! empty( $order_metadata['customer_id'] ) ? (int) $order_metadata['customer_id'] : false;
+		return ( (bool) $customer_id && wps_orders_ctr::wps_token_order_customer( $order_id ) === $token ) ? array( 'oid' => $order_id, 'cid' => $customer_id ) : false;
+	}
+	/**
+	 * Get URL for wps_direct_link.
+	 *
+	 * @method wps_direct_payment_link_url
+	 * @param  int $order_id OrderID.
+	 * @return string Url or empty string.
+	 */
+	public static function wps_direct_payment_link_url( $order_id ) {
+		return ( (bool) ( $token = wps_orders_ctr::wps_token_order_customer( (int) $order_id ) ) ) ? admin_url( 'admin-post.php?action=wps_direct_payment_link&token=' . $token . '&amp;order_id=' . (int) $order_id ) : '';
+	}
 }

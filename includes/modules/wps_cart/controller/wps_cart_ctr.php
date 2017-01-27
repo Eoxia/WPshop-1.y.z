@@ -677,7 +677,7 @@ class wps_cart {
 		$cart_infos['order_total_ttc'] = $order_total_ttc;
 
 		// Calcul Shipping cost
-		if( !$from_admin ) {
+		if( !$from_admin && empty( $cart_infos['order_shipping_cost_fixe'] ) ) {
 			$wps_shipping = new wps_shipping();
 			$total_cart_ht_or_ttc_regarding_config = ( !empty($price_piloting) && $price_piloting == 'HT' ) ? $cart_infos['order_total_ht'] : $cart_infos['order_total_ttc'];
 			$cart_weight = $wps_shipping->calcul_cart_weight( $cart_infos['order_items'] );
@@ -768,7 +768,7 @@ class wps_cart {
 			else {
 				$cart_infos['order_grand_total'] -= number_format( $cart_infos['order_discount_amount_total_cart'], 2, '.', '');
 			}
-			$cart_infos['order_amount_to_pay_now'] = number_format( $cart_infos['order_grand_total'], 2, '.', '');
+			$cart_infos['order_amount_to_pay_now'] = number_format( $cart_infos['order_grand_total'] - $total_received, 2, '.', '');
 		}
 
 		// Apply Partial Payments
@@ -784,7 +784,8 @@ class wps_cart {
 			$cart_infos['order_partial_payment'] = number_format( str_replace( ',', '.', $partial_payment['amount_to_pay'] ), 2, '.', '');
 			$cart_infos['order_amount_to_pay_now'] = number_format( str_replace( ',', '.', $partial_payment['amount_to_pay'] ), 2, '.', '');
 		}
-		else if( !empty( $cart_has_special_product ) ) {
+		// Apply Partial Payments : Subscription part.
+		elseif ( ! empty( $cart_has_special_product ) ) {
 			$cart_infos['order_amount_to_pay_now'] = number_format( str_replace( ',', '.', $cart_infos['order_amount_to_pay_now'] ), 2, '.', '');
 			$cart_infos['order_product_partial_payment'] = 'subscription';
 		}

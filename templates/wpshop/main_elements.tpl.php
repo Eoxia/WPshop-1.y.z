@@ -547,7 +547,7 @@ ob_start();
 			<p itemprop="description" class="wpshop_liste_description">{WPSHOP_PRODUCT_EXCERPT}</p>
 		</a>
 		{WPSHOP_PRODUCT_BUTTONS}
-		
+
 	</span>
 </li><?php
 $tpl_element['product_mini_list'] = ob_get_contents();
@@ -1034,7 +1034,7 @@ ob_end_clean();
  * Checkout page
  *
  */
-ob_start();
+/*ob_start();
 ?><form method="post" name="checkoutForm" action="<?php echo get_permalink(wpshop_tools::get_page_id( get_option('wpshop_checkout_page_id'))); ?>" >
 	{WPSHOP_CHECKOUT_CUSTOMER_BILLING_ADDRESS}
 	<h2><?php _e('Shipping method choice', 'wpshop'); ?></h2>
@@ -1055,7 +1055,7 @@ ob_start();
 	</div>
 </form><?php
 $tpl_element['wpshop_checkout_page'] = ob_get_contents();
-ob_end_clean();
+ob_end_clean();*/
 
 /**
  * Checkout page validation button
@@ -1400,7 +1400,7 @@ ob_end_clean();
 /** New Modal Add to cart confirmation Footer **/
 ob_start();
 ?>
-<a class="wps-bton wps-bton-second wpsjq-closeModal"><?php _e( 'Continue shopping', 'wpshop'); ?></a>	<a href="<?php echo wpshop_tools::get_page_id( get_permalink( get_option('wpshop_cart_page_id') ) ); ?>" type="button" class="wps-bton wps-bton-first"><?php _e( 'Order', 'wpshop'); ?></a>
+<a class="wps-bton wps-bton-second wpsjq-closeModal"><?php _e( 'Continue shopping', 'wpshop'); ?></a>	<a href="{WPSHOP_LINK_CART_PAGE}" type="button" class="wps-bton wps-bton-first"><?php _e( 'Order', 'wpshop'); ?></a>
 <?php
 $tpl_element['wps_new_add_to_cart_confirmation_modal_footer'] = ob_get_contents();
 ob_end_clean();

@@ -23,6 +23,10 @@ class wps_media_manager_backend_ctr {
 	 * Add JAvascript and CSS files in Backend
 	 */
 	function add_scripts_backend() {
+		global $current_screen;
+		if ( ! in_array( $current_screen->post_type, array( WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT ), true ) )
+			return;
+
 		wp_enqueue_script( 'jquery');
 		wp_enqueue_script( 'jquery-ui');
 		wp_enqueue_script( 'jquery-ui-sortable');

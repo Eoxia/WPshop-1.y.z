@@ -21,7 +21,6 @@ class wps_pos_addon {
 	function __construct() {
 		/**	Declaration des sessions / Call session utilities on init	*/
 		add_action( 'init', array( $this, 'wps_pos_addon_session' ) );
-		add_action( 'init', array( $this, 'wps_pos_option_db' ) );
 
 		$page = ( !empty( $_GET['page'] ) ) ? sanitize_text_field( $_GET['page'] ) : '';
 		$tab = ( !empty( $_GET['tab'] ) ) ? sanitize_text_field( $_GET['tab'] ) : '';
@@ -91,7 +90,7 @@ class wps_pos_addon {
 			if( !empty( $tab ) && $tab == 'bank_deposit' ) {
 				wp_enqueue_script('wpspos-backend-bank-deposit-js',  WPSPOS_URL . 'assets/js/backend_bank_deposit.js', '', WPSPOS_VERSION);
 			} else {
-				wp_enqueue_script('wpspos-backend-js',  WPSPOS_URL . 'assets/js/backend.js', '', WPSPOS_VERSION);
+				wp_enqueue_script('wpspos-backend-js',  WPSPOS_URL . 'assets/js/backend.js', array( 'jquery-form' ), WPSPOS_VERSION);
 				wp_enqueue_script('wpshop_jquery_chosen',  WPSHOP_JS_URL . 'jquery-libs/chosen.jquery.min.js', '', WPSHOP_VERSION);
 			}
 		}
@@ -185,28 +184,9 @@ class wps_pos_addon {
 			unset( $_SESSION[ 'wps-pos-addon' ] );
 		}
 
-	}
-
-	/**
-	 * Add or update options in DB
-	 */
-	function wps_pos_option_db() {
-		$option = 'wps_pos_options';
-		$options = get_option( $option, false );
-		if( $options === false ) {
-			$values = array(
-				'only_barcode' => 'checked',
-				);
-			add_option( $option, $values );
-		} else {
-			/**
-			 * If want to treat options case by case */
-			/*
-			foreach( $options as $option ) {
-
-			}
-			*/
-		}
+		add_option( 'wps_pos_options',  array(
+			'only_barcode' => 'checked',
+		) );
 	}
 
 	/**
