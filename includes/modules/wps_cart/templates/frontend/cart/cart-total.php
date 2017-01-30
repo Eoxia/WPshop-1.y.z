@@ -94,7 +94,7 @@
 		<?php endif; ?>
 			<?php if( !empty($cart_content['order_discount_value']) || ( $cart_type == 'admin-panel' ) ) : ?>
 				<p>
-					<?php _e( 'Discount', 'wpshop'); ?>
+					<?php _e( 'Discount on order', 'wpshop'); ?>
 					<span class="wps-alignRight">
 						<?php if( ( $cart_type == 'admin-panel' ) && ( empty( $cart_content['order_status'] ) || $cart_content['order_status'] == 'awaiting_payment' || ( ( !empty( $cart_content['cart_type'] ) && $cart_content['cart_type'] == 'quotation' ) && $cart_content['order_status'] != 'completed' ) ) ) : ?>
 							<input type="text" id="wps-orders-discount-value" size="5" style="text-align : right" value="<?php echo ( !empty($cart_content['order_discount_value']) ) ? $cart_content['order_discount_value'] : number_format( 0, 2 ); ?>"/>
@@ -109,7 +109,7 @@
 				</p>
 				<?php if( ( $cart_type == 'admin-panel' ) && ( empty( $cart_content['order_status'] ) || $cart_content['order_status'] == 'awaiting_payment' || ( ( !empty( $cart_content['cart_type'] ) && $cart_content['cart_type'] == 'quotation' ) && $cart_content['order_status'] != 'completed' ) ) ) : ?>
 					<p>
-						<?php _e( 'Discount type', 'wpshop'); ?>
+						<?php _e( 'Type of discount on order', 'wpshop'); ?>
 						<span class="wps-alignRight">
 							<select id="wps-orders-discount-type">
 								<option value="percent" <?php echo ( !empty($cart_content) && !empty($cart_content['order_discount_type']) && $cart_content['order_discount_type'] == 'percent' ) ? 'selected="selected"' : ''; ?>>%</option>

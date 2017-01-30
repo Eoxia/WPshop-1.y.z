@@ -242,31 +242,30 @@ wpshop( document ).ready(function() {
 				/* Display a loader */
 				jQuery( '#wpshop_loader_input_group_unit' ).css( 'display', 'block' );
 				jQuery( '#wpshop_loader_input_group_unit' ).html( '<div class=\'wpshopCenterContainer\' >' + wpshop( '#wpshopLoadingPicture' ).html() + '</div>' );
-				jQuery('#wpshop_loader_input_unit').css("display", "block");
-				jQuery('#wpshop_loader_input_unit').html("<div class='wpshopCenterContainer' >" + wpshop("#wpshopLoadingPicture").html() + "</div>");
+				jQuery( '#wpshop_loader_input_unit' ).css( 'display', 'block' );
+				jQuery( '#wpshop_loader_input_unit' ).html( '<div class=\'wpshopCenterContainer\' >' + wpshop( '#wpshopLoadingPicture' ).html() + '</div>' );
 				var data = {
-						action: "load_attribute_unit_list",
-						wpshop_ajax_nonce: jQuery("#input_wpshop_load_attribute_unit_list").val(),
-						current_group: jQuery("#wpshop_attributes_edition_table_field_id__unit_group_id").val(),
-						selected_list:"group unit"
+						action: 'load_attribute_unit_list',
+						wpshop_ajax_nonce: jQuery( '#input_wpshop_load_attribute_unit_list' ).val(),
+						current_group: jQuery( '#wpshop_attributes_edition_table_field_id__unit_group_id' ).val(),
+						selected_list:'group unit'
 					};
 				//Response, update the combo box
-					jQuery.post(ajaxurl, data, function(response) {
+					jQuery.post( ajaxurl, data, function( response ) {
 						if ( response[0] ) {
-							jQuery("#wpshop_attributes_edition_table_field_id__unit_group_id").html(response[1]);
+							jQuery( '#wpshop_attributes_edition_table_field_id__unit_group_id' ).html( response[1] );
 							/* Hide the loader and display the combo box refreshed */
-							jQuery('#wpshop_loader_input_group_unit').css("display", "none");
-							jQuery('#wpshop_attributes_edition_table_field_id__unit_group_id').show();
-						}
-						else {
+							jQuery( '#wpshop_loader_input_group_unit' ).css( 'display', 'none' );
+							jQuery( '#wpshop_attributes_edition_table_field_id__unit_group_id' ).show();
+						} else {
 							alert( response[1] );
 						}
-					}, 'json');
+					}, 'json' );
 
 				/* UPDATE UNIT COMBO-BOX */
 				var data = {
-						action: "load_attribute_unit_list",
-						wpshop_ajax_nonce: jQuery("#input_wpshop_load_attribute_unit_list").val(),
+						action: 'load_attribute_unit_list',
+						wpshop_ajax_nonce: jQuery( '#input_wpshop_load_attribute_unit_list').val(),
 						current_group: jQuery("#wpshop_attributes_edition_table_field_id__unit_group_id").val(),
 						selected_list:"unit"
 					};
@@ -961,13 +960,17 @@ wpshop( document ).ready(function() {
 		jQuery(this).select();
 	} );
 	jQuery( document ).on( 'click', '*[data-copy-target]', function( e ) {
-		jQuery( jQuery(this).data('copy-target') ).select();
+		var trigger = jQuery( this );
+		var element = jQuery( trigger.data('copy-target') );
+		trigger.addClass( 'wps-bton-loading' );
+		element.select();
 		try{
 			document.execCommand("copy");
-			alert('Copié');
+			console.log( 'Copy success' );
 		} catch(e){
-			alert('Erreur');
+			console.log( 'Error copy' );
 		}
+		trigger.removeClass( 'wps-bton-loading' );
 	});
 
 	jQuery( '#wps_delete_pîcture_cat_loader').hide();

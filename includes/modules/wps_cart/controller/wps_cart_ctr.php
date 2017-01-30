@@ -677,7 +677,7 @@ class wps_cart {
 		$cart_infos['order_total_ttc'] = $order_total_ttc;
 
 		// Calcul Shipping cost
-		if( !$from_admin && empty( $cart_infos['order_shipping_cost_fixe'] ) ) {
+		if( !$from_admin && empty( $cart_infos['order_shipping_cost_fixe'] ) && !empty($_SESSION[ 'wps-pos-addon' ]) ) {
 			$wps_shipping = new wps_shipping();
 			$total_cart_ht_or_ttc_regarding_config = ( !empty($price_piloting) && $price_piloting == 'HT' ) ? $cart_infos['order_total_ht'] : $cart_infos['order_total_ttc'];
 			$cart_weight = $wps_shipping->calcul_cart_weight( $cart_infos['order_items'] );

@@ -764,7 +764,7 @@ class wpshop_display {
 					}
 				break;
 				case 'date':
-					$formated_value = mysql2date('d/F/Y', $value, true);;
+					$formated_value = mysql2date('d/F/Y', $value, true);
 				break;
 			}
 		}
