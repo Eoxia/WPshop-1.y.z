@@ -176,6 +176,10 @@ class wpshop_orders {
 			</div>';
 		}*/
 
+		if( ( ( !empty($order_postmeta['cart_type']) && $order_postmeta['cart_type'] == 'quotation' ) || !empty( $order_postmeta['order_temporary_key'] ) ) && in_array( $order_postmeta['order_status'], array( 'awaiting_payment', 'partially_paid' ) ) && (float) $order_postmeta['order_amount_to_pay_now'] != (float) 0 ) {
+			$tpl_component['ADMIN_ORDER_ACTIONS_LIST'] .= self::display_customer_pay_quotation( isset( $order_postmeta['pay_quotation'] ), $order->ID );
+		}
+
 		/**
 		 * Only for quotations
 		 */
@@ -185,9 +189,6 @@ class wpshop_orders {
 
 		/*Add the button regarding the order status**/
 		if ( !empty($order_postmeta['order_status']) ) {
-			if( in_array( $order_postmeta['order_status'], array( 'awaiting_payment', 'partially_paid' ) ) ) {
-				$tpl_component['ADMIN_ORDER_ACTIONS_LIST'] .= '<div class="wps-product-section"><input id="wps_direct_link_url" type="text" value="' . wpshop_checkout::wps_direct_payment_link_url( $order->ID ) . '"/><a class="wps-bton-second-mini-rounded" data-copy-target="#wps_direct_link_url" title="' . __( 'Copy', 'wpshop' ) . '"><span class="dashicons dashicons-editor-paste-text"></span></a><a data-nonce="' . wp_create_nonce( 'wps_send_direct_payment_link' ) . '" role="button" class="wps-bton-second-mini-rounded send_direct_payment_link" href="#" title="' . __( 'Send by mail', 'wpshop' ) . '"><span class="dashicons dashicons-email"></span></a><p>' . sprintf( __( 'Link is valid until %s', 'wpshop' ), mysql2date( get_option( 'date_format' ), date_format( date_create( date('Y-m') . ' + 1month - 1day' ), 'Y-m-d H:i:s' ), true ) ) . '</div>';
-			}
 			if( $order_postmeta['order_status'] == 'awaiting_payment' ) {
 				$tpl_component['ADMIN_ORDER_ACTIONS_LIST'] .= '<div class="wps-product-section"><button class="wps-bton-second-mini-rounded markAsCanceled order_'.$order->ID.'" >'.__('Cancel this order', 'wpshop').'</button><input type="hidden" id="markascanceled_order_hidden_indicator" name="markascanceled_order_hidden_indicator" /></div>';
 			}
@@ -662,5 +663,12 @@ class wpshop_orders {
 
 		return $output;
 	}
-
+	static function display_customer_pay_quotation( $state, $oid ) {
+		$btn = '<div class="wps-product-section"><a role="button" data-nonce="' . wp_create_nonce( 'wps_quotation_is_payable_by_customer' ) . '" class="wps-bton-' . ( ( $state ) ? 'third' : 'second' ) . '-mini-rounded quotation_is_payable_by_customer" href="#" >'.__('Customer can pay', 'wpshop').'</a>';
+		if( $state ) {
+			//$btn .= '<a target="_blank" href="' . admin_url( 'admin-ajax.php?action=wps_checkout_quotation&order_id=' . $oid . '&is_link=link' ) . '">' . __( 'Pay link', 'wpshop' ) . '</a>';
+			$btn .= '<input id="wps_direct_link_url" type="text" value="' . wpshop_checkout::wps_direct_payment_link_url( $oid ) . '"/><a class="wps-bton-second-mini-rounded" data-copy-target="#wps_direct_link_url" title="' . __( 'Copy', 'wpshop' ) . '"><span class="dashicons dashicons-editor-paste-text"></span></a><a data-nonce="' . wp_create_nonce( 'wps_send_direct_payment_link' ) . '" role="button" class="wps-bton-second-mini-rounded send_direct_payment_link" href="#" title="' . __( 'Send by mail', 'wpshop' ) . '"><span class="dashicons dashicons-email"></span></a><p>' . sprintf( __( 'Link is valid until %s', 'wpshop' ), mysql2date( get_option( 'date_format' ), date_format( date_create( date('Y-m') . ' + 2month - 1day' ), 'Y-m-d H:i:s' ), true ) ) . '</p>';
+		}
+		return $btn . '</div>';
+	}
 }

@@ -420,11 +420,26 @@ class wps_orders_ctr {
 	 * @param  int $order_id OrderID.
 	 * @return mixed sha1 or false.
 	 */
-	public static function wps_token_order_customer( $order_id ) {
+	public static function wps_token_order_customer( $order_id, $date = null ) {
+		$date = isset( $date ) ? $date : date( 'Ym' );
 		$order_metadata = get_post_meta( $order_id, '_order_postmeta', true );
 		if ( ! isset( $order_metadata['customer_id'] ) ) {
 			return false;
 		}
-		return sha1( site_url() . '_' . $order_id . '_' . $order_metadata['customer_id'] . '_' . date( 'ym' ) );
+		return sha1( site_url() . '_' . $order_id . '_' . $order_metadata['customer_id'] . '_' . $date );
+	}
+
+	/**
+	 * Verify hash from wps_token_order_customer for 2 months
+	 *
+	 * @method	wps_verify_token_order
+	 * @param	string $token		Entry token.
+	 * @param	int    $order_id	OrderID.
+	 * @return	boolean
+	 */
+	public static function wps_verify_token_order( $token, $order_id ) {
+		$current_month = self::wps_token_order_customer( $order_id );
+		$last_month = self::wps_token_order_customer( $order_id, date_format( date_create( date( 'Y-m' ) . ' - 1month' ), 'Ym' ) );
+		return (bool) ( (bool) $current_month && (bool) $last_month && ( $token === $current_month || $token === $last_month ) );
 	}
 }

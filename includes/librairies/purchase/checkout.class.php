@@ -313,7 +313,7 @@ class wpshop_checkout {
 		$order_id = ! empty( $_GET['order_id'] ) ? (int) $_GET['order_id'] : '';
 		$order_metadata = get_post_meta( $order_id, '_order_postmeta', true );
 		$customer_id = ! empty( $order_metadata['customer_id'] ) ? (int) $order_metadata['customer_id'] : false;
-		return ( (bool) $customer_id && wps_orders_ctr::wps_token_order_customer( $order_id ) === $token ) ? array( 'oid' => $order_id, 'cid' => $customer_id ) : false;
+		return ( (bool) $customer_id && wps_orders_ctr::wps_verify_token_order( $token, (int) $order_id ) ) ? array( 'oid' => $order_id, 'cid' => $customer_id ) : false;
 	}
 	/**
 	 * Get URL for wps_direct_link.
