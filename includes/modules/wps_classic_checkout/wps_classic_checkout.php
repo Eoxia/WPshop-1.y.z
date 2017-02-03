@@ -496,7 +496,9 @@ if ( !class_exists("wps_classic_checkout") ) {
 						}
 						$order_id = wpshop_checkout::process_checkout( $payment_method, $order_id, get_current_user_id(), $_SESSION['billing_address'], $_SESSION['shipping_address'] );
 						if( !empty($order_id) && !empty($customer_comment) ) {
-							wp_update_post( array('ID' => $order_id, 'post_excerpt' => $customer_comment) );
+							$wps_back_office_orders_mdl = new wps_back_office_orders_mdl();
+							$wps_back_office_orders_mdl->add_private_comment($order_id, $customer_comment);
+							//wp_update_post( array('ID' => $order_id, 'post_excerpt' => $customer_comment) );
 						}
 						$permalink_option = get_option( 'permalink_structure' );
 						$checkout_page_id = wpshop_tools::get_page_id( get_option( 'wpshop_checkout_page_id' ) );

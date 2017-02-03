@@ -55,7 +55,7 @@ class wpshop_orders {
 			'show_in_admin_bar'   	=> false,
 			'rewrite' 				=> false,
 			'query_var' 			=> true,
-			'supports' 				=> array('title'),
+			'supports' 				=> array(''),
 			'has_archive' 			=> false,
 			'menu_icon'				=> 'dashicons-cart'
 		));
@@ -144,10 +144,7 @@ class wpshop_orders {
 			}
 			if(!empty($order_postmeta['order_invoice_ref'])){
 				$sub_tpl_component = array();
-				$sub_tpl_component['ADMIN_ORDER_RECEIVED_PAYMENT_INVOICE_REF'] = $order_postmeta['order_invoice_ref'];
-				$sub_tpl_component['ADMIN_ORDER_PAYMENT_RECEIVED_LINE_CLASSES'] = '';
-				$sub_tpl_component['ADMIN_ORDER_INVOICE_DOWNLOAD_LINK'] = admin_url( 'admin-post.php?action=wps_invoice&order_id=' . $order->ID );
-				$order_invoice_download = wpshop_display::display_template_element('wpshop_admin_order_payment_received_invoice_download_links', $sub_tpl_component, array(), 'admin');
+				$order_invoice_download = '<a href="' . admin_url( 'admin-post.php?action=wps_invoice&order_id=' . $order->ID . '&invoice_ref=' . $order_postmeta['order_invoice_ref'] . '&mode=pdf' ) . '">' . __('Download invoice', 'wpshop') . '</a><br />';
 				$order_main_info .= '<span class="dashicons dashicons-arrow-right"></span> <strong>'. __('Invoice number','wpshop').': </strong>'.$order_postmeta['order_invoice_ref'].'<br/>' . $order_invoice_download . '';
 			}
 			else {
@@ -194,7 +191,14 @@ class wpshop_orders {
 			}
 			$credit_meta = get_post_meta( $order->ID, '_wps_order_credit', true );
 
-			if ( empty($credit_meta) ) {
+			$total_received = (float) 0;
+			if ( ! empty( $order_postmeta['order_payment'] ) && ! empty( $order_postmeta['order_payment']['received'] ) ) {
+				foreach( $order_postmeta['order_payment']['received'] as $received ) {
+					$total_received += (float) isset( $received['received_amount'] ) ? $received['received_amount'] : 0;
+				}
+			}
+
+			if ( empty($credit_meta) && (float) 0 !== $total_received ) {
 				if( $order_postmeta['order_status'] == 'refunded') {
 					$tpl_component['ADMIN_ORDER_ACTIONS_LIST'] .= '<div class="wps-product-section wps_markAsRefunded_container">' .__('Credit Slip number', 'wpshop'). ' : <strong>'. ( (!empty($order_postmeta) && !empty($order_postmeta['order_payment']) && !empty($order_postmeta['order_payment']['refunded_action']) && !empty($order_postmeta['order_payment']['refunded_action']['credit_slip_ref']) ) ? '<a href="' .admin_url( 'admin-post.php?action=wps_invoice&order_id=' .$order->ID. '&amp;invoice_ref=' .$order_postmeta['order_payment']['refunded_action']['credit_slip_ref'].'&credit_slip=ok' ). '" target="_blank">'.$order_postmeta['order_payment']['refunded_action']['credit_slip_ref'].'</a>' : '') .'</strong></div>';
 				}
@@ -203,7 +207,8 @@ class wpshop_orders {
 				}
 			}
 		}
-		echo wpshop_display::display_template_element('wpshop_admin_order_action_box', $tpl_component, array('type' => WPSHOP_NEWTYPE_IDENTIFIER_ORDER, 'id' => $order->ID), 'admin');
+		$tpl_component['ADMIN_ORDER_ACTIONS_LIST'] = strrev( preg_replace( strrev( '/wps-product-section/' ), '', strrev( $tpl_component['ADMIN_ORDER_ACTIONS_LIST'] ), 1 ) );
+		echo wpshop_display::display_template_element( 'wpshop_admin_order_action_box', $tpl_component, array( 'type' => WPSHOP_NEWTYPE_IDENTIFIER_ORDER, 'id' => $order->ID ), 'admin' );
 	}
 
 
@@ -404,10 +409,12 @@ class wpshop_orders {
 					}
 					if ( !empty($billing) ) {
 						echo (!empty($billing['civility']) ? __(wpshop_attributes::get_attribute_type_select_option_info($billing['civility'], 'label', 'custom'), 'wpshop') : null).' <strong>'.(!empty($billing['address_first_name']) ? $billing['address_first_name'] : null).' '.(!empty($billing['address_last_name']) ? $billing['address_last_name'] : null).'</strong>';
-						echo empty($billing['company'])?'<br />':', <i>'.$billing['company'].'</i><br />';
-						echo (!empty($billing['address']) ? $billing['address'] : null).'<br />';
-						echo (!empty($billing['postcode']) ? $billing['postcode'] : null).' '.(!empty($billing['city']) ? $billing['city'] : null).', '.(!empty($billing['country']) ? $billing['country'] : null);
-						echo (!empty($billing['phone']) ? '<br />' . $billing['phone'] : '');
+						echo empty($billing['company']) ?'<br />' : ', <i>'.$billing['company'].'</i><br />';
+						echo !empty($billing['address']) ? $billing['address'] : null;
+						echo !empty($billing['postcode']) ? '<br />' . $billing['postcode'] . ' ' : null;
+						echo !empty($billing['city']) ? $billing['city'] . ', ' : null;
+						echo !empty($billing['country']) ? $billing['country'] : null;
+						echo (!empty($billing['phone']) ? '<br /><b>' . $billing['phone'] . '</b>' : '');
 					}
 					else {
 						echo __('No information available for user billing', 'wpshop');
@@ -424,8 +431,10 @@ class wpshop_orders {
 					if ( !empty($shipping) ) {
 						echo '<strong>'.(!empty($shipping['address_first_name']) ? $shipping['address_first_name'] : null).' '.(!empty($shipping['address_last_name']) ? $shipping['address_last_name'] : null).'</strong>';
 						echo empty($shipping['company'])?'<br />':', <i>'.$shipping['company'].'</i><br />';
-						echo (!empty($shipping['address']) ? $shipping['address'] : null).'<br />';
-						echo (!empty($shipping['postcode']) ? $shipping['postcode'] : null).' '.(!empty($shipping['city']) ? $shipping['city'] : null).', '.(!empty($shipping['country']) ? $shipping['country'] : null);
+						echo (!empty($shipping['address']) ? $shipping['address'] : null);
+						echo !empty($billing['postcode']) ? '<br />' . $billing['postcode'] . ' ' : null;
+						echo !empty($billing['city']) ? $billing['city'] . ', ' : null;
+						echo !empty($billing['country']) ? $billing['country'] : null;
 					}
 					else{
 						echo __('No information available for user shipping', 'wpshop');
@@ -664,10 +673,10 @@ class wpshop_orders {
 		return $output;
 	}
 	static function display_customer_pay_quotation( $state, $oid ) {
-		$btn = '<div class="wps-product-section"><a role="button" data-nonce="' . wp_create_nonce( 'wps_quotation_is_payable_by_customer' ) . '" class="wps-bton-' . ( ( $state ) ? 'third' : 'second' ) . '-mini-rounded quotation_is_payable_by_customer" href="#" >'.__('Customer can pay', 'wpshop').'</a>';
+		$btn = '<div class="wps-product-section"><p><a role="button" data-nonce="' . wp_create_nonce( 'wps_quotation_is_payable_by_customer' ) . '" class="wps-bton-' . ( ( $state ) ? 'third' : 'second' ) . '-mini-rounded quotation_is_payable_by_customer" href="#" >'.__('Valid quotation', 'wpshop').'</a></p>';
 		if( $state ) {
 			//$btn .= '<a target="_blank" href="' . admin_url( 'admin-ajax.php?action=wps_checkout_quotation&order_id=' . $oid . '&is_link=link' ) . '">' . __( 'Pay link', 'wpshop' ) . '</a>';
-			$btn .= '<input id="wps_direct_link_url" type="text" value="' . wpshop_checkout::wps_direct_payment_link_url( $oid ) . '"/><a class="wps-bton-second-mini-rounded" data-copy-target="#wps_direct_link_url" title="' . __( 'Copy', 'wpshop' ) . '"><span class="dashicons dashicons-editor-paste-text"></span></a><a data-nonce="' . wp_create_nonce( 'wps_send_direct_payment_link' ) . '" role="button" class="wps-bton-second-mini-rounded send_direct_payment_link" href="#" title="' . __( 'Send by mail', 'wpshop' ) . '"><span class="dashicons dashicons-email"></span></a><p>' . sprintf( __( 'Link is valid until %s', 'wpshop' ), mysql2date( get_option( 'date_format' ), date_format( date_create( date('Y-m') . ' + 2month - 1day' ), 'Y-m-d H:i:s' ), true ) ) . '</p>';
+			$btn .= '<span><input id="wps_direct_link_url" type="text" value="' . wpshop_checkout::wps_direct_payment_link_url( $oid ) . '"/><a class="button" data-copy-target="#wps_direct_link_url" title="' . __( 'Copy', 'wpshop' ) . '"><span class="dashicons dashicons-clipboard"></span></a><a data-nonce="' . wp_create_nonce( 'wps_send_direct_payment_link' ) . '" role="button" class="button" href="#" title="' . __( 'Send by mail', 'wpshop' ) . '"><span class="dashicons dashicons-email"></span></a></span><span>' . sprintf( __( 'Link is valid until %s', 'wpshop' ), mysql2date( get_option( 'date_format' ), date_format( date_create( date('Y-m') . ' + 2month - 1day' ), 'Y-m-d H:i:s' ), true ) ) . '</span>';
 		}
 		return $btn . '</div>';
 	}

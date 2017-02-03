@@ -46,18 +46,19 @@ class wps_orders_in_back_office {
 	 */
 	function add_meta_boxes() {
 		global $post;
-		$order_post_meta = get_post_meta( $post->ID, '_wpshop_order_status', true );
-
 		/** Box  Order Payments **/
 		add_meta_box('wpshop_order_payment', '<span class="dashicons dashicons-money"></span> '.__('Order payment', 'wpshop'),array($this, 'display_order_payments_box'),WPSHOP_NEWTYPE_IDENTIFIER_ORDER, 'side', 'low');
 		/**	Box for customer order comment */
-		add_meta_box('wpshop_order_customer_comment', '<span class="dashicons dashicons-format-status"></span> '.__('Order customer comment', 'wpshop'),array( $this, 'order_customer_comment_box'),WPSHOP_NEWTYPE_IDENTIFIER_ORDER, 'side', 'low');
+		if ( ! empty( $post->post_excerpt ) ) {
+			add_meta_box('wpshop_order_customer_comment', '<span class="dashicons dashicons-format-status"></span> '.__('Order customer comment', 'wpshop'),array( $this, 'order_customer_comment_box'),WPSHOP_NEWTYPE_IDENTIFIER_ORDER, 'side', 'low');
+		}
 		/** Historic sales **/
 		add_meta_box('wpshop_product_order_historic', __('Sales informations', 'wpshop'), array( $this, 'meta_box_product_sale_informations'), WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT, 'normal', 'low');
 		/**	Box with the complete order content	*/
-		if ( 'completed' != $order_post_meta && 'pos' != $order_post_meta ) :
+		$order_meta = get_post_meta( $post->ID, '_order_postmeta', true );
+		if ( !empty( $order_meta ) && !in_array( $order_meta['order_status'], array( 'completed', 'pos', 'partially_paid', 'shipped' ), true ) ) {
 			add_meta_box('wpshop_product_list', '<span class="dashicons dashicons-archive"></span> ' . __('Product List', 'wpshop'),array($this, 'wps_products_listing_for_quotation'),WPSHOP_NEWTYPE_IDENTIFIER_ORDER, 'normal', 'low');
-		endif;
+		}
 		/**	Box with the complete order content	*/
 		add_meta_box( 'wpshop_order_content', '<span class="dashicons dashicons-cart"></span> '.__('Order content', 'wpshop'), array( $this, 'meta_box_order_content'), WPSHOP_NEWTYPE_IDENTIFIER_ORDER, 'normal', 'low');
 		/** Box Private order comments **/
@@ -71,11 +72,7 @@ class wps_orders_in_back_office {
 	 * @param object $order
 	 */
 	function order_customer_comment_box( $order ) {
-		global $wpdb;
-		$output = '';
 		if ( !empty($order) && !empty($order->ID) ) {
-			$query = $wpdb->prepare('SELECT post_excerpt FROM ' .$wpdb->posts. ' WHERE ID = %d', $order->ID);
-			$comment = $wpdb->get_var( $query );
 			require_once( wpshop_tools::get_template_part( WPS_ORDERS_DIR, $this->template_dir, "backend", "customer_comment_on_order_box") );
 		}
 	}

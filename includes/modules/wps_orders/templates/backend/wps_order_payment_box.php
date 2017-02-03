@@ -6,9 +6,16 @@ $waited_amount_sum = $received_amount_sum = $i = 0;
 	<?php $payment_modes = get_option( 'wps_payment_mode' ); ?>
 	<?php if( !empty( $order_postmeta['order_payment']['customer_choice'] ) && !empty( $order_postmeta['order_payment']['customer_choice']['method'] ) )?>
 		<div class="wps-alert-info"><strong><?php _e( 'Payment method customer select', 'wpshop'); ?> : </strong><br/>
-		<?php echo ( !empty( $order_postmeta ) &&  !empty(  $order_postmeta['order_payment']['customer_choice']['method'] ) && !empty( $payment_modes['mode'][ strtolower( (string)$order_postmeta['order_payment']['customer_choice']['method'] ) ][ 'name' ] ) ?  $payment_modes['mode'][ strtolower( (string)$order_postmeta['order_payment']['customer_choice']['method'] ) ]['name'] : sprintf( __( 'Unknow (%s)', 'wpshop'), strtolower( (string)$order_postmeta['order_payment']['customer_choice']['method'] ) ) ); ?></div>
-
-	<?php
+		<?php if( ! empty( $order_postmeta ) && ! empty(  $order_postmeta['order_payment']['customer_choice']['method'] ) && ! empty( $payment_modes['mode'][ strtolower( (string) $order_postmeta['order_payment']['customer_choice']['method'] ) ]['name'] ) ) {
+			echo $payment_modes['mode'][ strtolower( (string) $order_postmeta['order_payment']['customer_choice']['method'] ) ]['name'];
+		} else {
+			_e( 'Unknow', 'wpshop');
+			if( !empty( $order_postmeta['order_payment']['customer_choice']['method'] ) ) {
+				echo ' (' . strtolower( (string)$order_postmeta['order_payment']['customer_choice']['method'] ) . ')';
+			}
+		} ?>
+		</div>
+		<?php
 		$payment_method_filter = apply_filters( 'wps_administration_order_payment_informations', $order->ID );
 		if ( $order->ID != $payment_method_filter ) {
 			echo $payment_method_filter;
@@ -16,11 +23,16 @@ $waited_amount_sum = $received_amount_sum = $i = 0;
 	?>
 
 	<?php if( !empty( $order_postmeta['order_payment']['received'] ) ) : ?>
+		<?php ob_start();
+		foreach( $order_postmeta['order_payment']['received'] as $index_payment => $received_payment ) :
+			if ( empty( $received_payment['method'] ) || $received_payment['method'] == 'quotation' ) {
+				continue;
+			}
+			if ( $i == 0 ) : ?>
 		<div class="wps-boxed">
 			<div class="wps-h2"><?php _e( 'Received payments', 'wpshop'); ?></div>
-		<?php foreach( $order_postmeta['order_payment']['received'] as $index_payment => $received_payment ) :
-				if( !empty( $received_payment['method'] ) && $received_payment['method'] != 'quotation' ) :
-				$i++;
+			<?php endif;
+			$i++;
 		?>
 			<?php
 			if ( !empty($received_payment['waited_amount']) ) {
@@ -49,27 +61,20 @@ $waited_amount_sum = $received_amount_sum = $i = 0;
 					</div>
 				</div>
 				<?php if( !empty( $received_payment ) && !empty($received_payment['invoice_ref']) ) { ?>
-					<div>
 					<div class="wps-product-section"><a href="<?php echo admin_url( 'admin-post.php?action=wps_invoice&order_id='.$order->ID.'&invoice_ref='.$received_payment['invoice_ref'].'&mode=pdf' ); ?>" target="_blank" class="wps-bton-second-mini-rounded" role="button"><i class="dashicons dashicons-download"></i><?php _e( 'Download invoice', 'wpshop' ); ?></a></div>
 					<div class="wps-product-section"><a href="<?php echo admin_url( 'admin-post.php?action=wps_invoice&order_id='.$order->ID.'&invoice_ref='.$received_payment['invoice_ref'] ); ?>" target="_blank" class="wps-bton-fourth-mini-third" role="button"><i class="dashicons dashicons-welcome-view-site"></i><?php _e( 'Watch invoice', 'wpshop' ); ?></a></div>
-					</div>
 				<?php } elseif( !empty( $received_payment ) && empty( $received_payment['invoice_ref'] ) && $received_payment['status'] == 'payment_received' ) { ?>
-					<div>
 					<input type="hidden" name="order_id" class="wps-regerate-invoice-payment-input<?php $idregen = uniqid(); echo $idregen; ?>" value="<?php echo $order->ID; ?>">
 					<input type="hidden" name="index_payment" class="wps-regerate-invoice-payment-input<?php echo $idregen; ?>" value="<?php echo $index_payment; ?>">
 					<div class="wps-product-section"><button data-nonce="<?php echo wp_create_nonce( 'wps_reverify_payment_invoice_ref' ); ?>" id="wps-regerate-invoice-payment-btn" class="wps-bton-fourth-mini-third" data-class="<?php echo $idregen; ?>"><i class="dashicons dashicons-controls-repeat"></i><?php _e( 'Regerate invoice payment', 'wpshop' ); ?></button></div>
-					</div>
 				<?php } ?>
-				<br/>
 			</div>
-		<?php
-			endif;
-		endforeach;?>
-
+		</div>
+		<?php endforeach;
+		echo strrev( preg_replace( strrev( '/wps-product-section/' ), '', strrev( ob_get_clean() ), 1 ) ); ?>
 		<?php if( $i == 0 ) : ?>
 			<div class="wps-alert-info"><?php _e( 'No received payment for the moment', 'wpshop'); ?></div>
-		<?php endif;?>
-		</div>
+		<?php endif; ?>
 
 		<?php if ( ( ($total_amount - $received_amount_sum ) > 0) && ($order_postmeta['order_grand_total'] > 0) ) : ?>
 		<div class="wps-boxed">

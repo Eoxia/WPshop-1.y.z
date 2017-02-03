@@ -21,22 +21,24 @@ class wps_pos_addon_bank_deposit {
 				'meta_compare'		=> 'NOT LIKE',
 		);
 		$query = new WP_Query( $args );
-		
+
 		$orders = $query->posts;
 		$payments = array();
-		
+
 		foreach( $orders as $order ) {
 			$order->_order_postmeta = get_post_meta( $order->ID, '_order_postmeta', true );
-			foreach( $order->_order_postmeta['order_payment']['received'] as $payment_received ) {
-				if( isset( $payment_received['status'] ) && $payment_received['status'] == 'payment_received' ) {
-					$payments[] = '';
-					end( $payments );
-					$id = key( $payments );
-					$payments[$id] = $this->row_model( $id, isset( $order->_order_postmeta['order_key'] ) ?	$order->_order_postmeta['order_key'] : $order->_order_postmeta['order_temporary_key'], $payment_received['date'], isset( $order->_order_postmeta['cart']['order_items'] ) ? $order->_order_postmeta['cart']['order_items'] : ( isset( $order->_order_postmeta['order_items'] ) ? $order->_order_postmeta['order_items'] : array() ), $payment_received['received_amount'], $payment_received['method'] );
+			if( !empty( $order->_order_postmeta['order_payment']['received'] ) ) {
+				foreach( $order->_order_postmeta['order_payment']['received'] as $payment_received ) {
+					if( isset( $payment_received['status'] ) && $payment_received['status'] == 'payment_received' ) {
+						$payments[] = '';
+						end( $payments );
+						$id = key( $payments );
+						$payments[$id] = $this->row_model( $id, isset( $order->_order_postmeta['order_key'] ) ?	$order->_order_postmeta['order_key'] : $order->_order_postmeta['order_temporary_key'], $payment_received['date'], isset( $order->_order_postmeta['cart']['order_items'] ) ? $order->_order_postmeta['cart']['order_items'] : ( isset( $order->_order_postmeta['order_items'] ) ? $order->_order_postmeta['order_items'] : array() ), $payment_received['received_amount'], $payment_received['method'] );
+					}
 				}
 			}
 		}
-		
+
 		return $payments;
 	}
 	public function row_model( $id, $order_key, $date, $products, $amount, $method ) {
@@ -62,7 +64,7 @@ class wps_pos_addon_bank_deposit {
 				} else {
 					$products_simplified[] = $product['item_name'];
 				}
-			}			
+			}
 		}
 		return array( 'id' => $id, 'order_key' => $order_key, 'date' => $date, 'products' => $products_simplified, 'amount' => $amount, 'method' => $method );
 	}

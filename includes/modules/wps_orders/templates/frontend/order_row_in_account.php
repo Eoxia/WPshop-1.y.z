@@ -26,7 +26,7 @@
 		<div class="wps-table-cell wps-customer-order-list-actions">
 			<button data-nonce="<?php echo wp_create_nonce( 'wps_orders_load_details' ); ?>" class="wps-bton-third wps-orders-details-opener" id="wps-order-details-opener-<?php echo $order_id; ?>"><?php _e( 'Order details', 'wpshop' ); ?></button>
 
-			<?php if( !empty( $order_meta ) && $order_meta['order_status'] != 'canceled' && ( ( !empty($order_meta['cart_type']) && $order_meta['cart_type'] == 'quotation' ) || !empty( $order_meta['order_temporary_key'] ) ) && (float) $order_meta['order_amount_to_pay_now'] != (float) 0 ) : ?>
+			<?php if( !empty( $order_meta ) && isset( $order_meta['pay_quotation'] ) && $order_meta['order_status'] && $order_meta['order_status'] != 'canceled' && ( ( !empty($order_meta['cart_type']) && $order_meta['cart_type'] == 'quotation' ) || !empty( $order_meta['order_temporary_key'] ) ) && (float) $order_meta['order_amount_to_pay_now'] != (float) 0 ) : ?>
 				<a href="<?php echo wpshop_checkout::wps_direct_payment_link_url($order_id); ?>" target="_blank" class="wps-bton-third" role="button"><?php _e( 'Pay quotation', 'wpshop' ); ?></a>
 			<?php endif; ?>
 

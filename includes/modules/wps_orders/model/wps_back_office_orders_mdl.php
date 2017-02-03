@@ -5,7 +5,7 @@ class wps_back_office_orders_mdl {
 	}
 
 	/** Add a pricate comment to order **/
-	function add_private_comment($oid, $comment, $send_email = '', $send_sms, $copy_to_administrator = '') {
+	function add_private_comment($oid, $comment, $send_email = '', $send_sms = false, $copy_to_administrator = '') {
 		// Check informations
 		$order_private_comments = get_post_meta($oid, '_order_private_comments', true);
 		$order_private_comments = !empty($order_private_comments) ? $order_private_comments : array();
@@ -18,9 +18,9 @@ class wps_back_office_orders_mdl {
 
 			// Get order current content
 			$user = get_post_meta($oid, '_order_info', true);
-			
+
 			$email = isset($user['billing']['address']['address_user_email']) ? $user['billing']['address']['address_user_email'] :'';
-			
+
 			/** Si pas d'email trouvé, utilises l'adresse email par défault du client */
 			if(empty($email)) {
 				$customer_id = get_post_meta( $oid, '_wpshop_order_customer_id', true );

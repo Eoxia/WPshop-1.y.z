@@ -9,7 +9,6 @@
 	<span class="wps-h5"><?php _e( 'Shipping informations', 'wpshop');?></span>
 	<?php if ( !empty($order_postmeta['order_status']) && $order_postmeta['order_status'] != 'shipped' ) : ?>
 			<div><a data-id="<?php echo $order->ID; ?>" class="wps-bton-first-mini-rounded markAsShipped order_<?php echo $order->ID; ?>"><?php _e('Mark as shipped', 'wpshop'); ?></a></div>
-			<ul id="wps-order-shipping-informations"></ul>
 	<?php else : ?>
 		<div>
 			<ul id="wps-order-shipping-informations">

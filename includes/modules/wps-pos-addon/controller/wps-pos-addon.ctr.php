@@ -88,7 +88,7 @@ class wps_pos_addon {
 			$tab = ( !empty( $_GET['tab'] ) ) ? sanitize_text_field( $_GET['tab'] ) : '';
 
 			if( !empty( $tab ) && $tab == 'bank_deposit' ) {
-				wp_enqueue_script('wpspos-backend-bank-deposit-js',  WPSPOS_URL . 'assets/js/backend_bank_deposit.js', '', WPSPOS_VERSION);
+				wp_enqueue_script('wpspos-backend-bank-deposit-js',  WPSPOS_URL . 'assets/js/backend_bank_deposit.js', array( 'jquery-ui-datepicker' ), WPSPOS_VERSION);
 			} else {
 				wp_enqueue_script('wpspos-backend-js',  WPSPOS_URL . 'assets/js/backend.js', array( 'jquery-form' ), WPSPOS_VERSION);
 				wp_enqueue_script('wpshop_jquery_chosen',  WPSHOP_JS_URL . 'jquery-libs/chosen.jquery.min.js', '', WPSHOP_VERSION);

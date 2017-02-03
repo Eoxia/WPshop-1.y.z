@@ -42,7 +42,7 @@
 					<?php if( $cart_type != 'admin-panel' ) : ?>
 						<strong><?php echo wpshop_tools::formate_number( $shipping_cost_et ); ?></strong> <?php echo $currency; ?>
 					<?php else : ?>
-						<?php if( ( empty( $cart_content['order_status'] ) || ( $cart_content['order_status'] == 'awaiting_payment' ) || ( ( !empty( $cart_content['cart_type'] ) && $cart_content['cart_type'] == 'quotation' ) && $cart_content['order_status'] != 'completed' ) ) && $price_piloting == 'HT' ) : ?>
+						<?php if( ( empty( $cart_content['order_status'] ) || ( $cart_content['order_status'] == 'awaiting_payment' ) ) && $price_piloting == 'HT' ) : ?>
 							<input type="text" size="5" value="<?php echo number_format( $shipping_cost_et, 2 ); ?>" id="wps-orders-shipping-cost" class="wps-error" style="text-align : right" />
 						<?php else : ?>
 							<strong><?php echo wpshop_tools::formate_number( $shipping_cost_et ); ?> <?php echo wpshop_tools::wpshop_get_currency(); ?></strong>
@@ -68,7 +68,7 @@
 					<?php if( $cart_type != 'admin-panel' ) : ?>
 						<strong><?php echo wpshop_tools::formate_number( $shipping_cost_ati ); ?></strong> <?php echo $currency; ?>
 					<?php else : ?>
-						<?php if( ( empty( $cart_content['order_status'] ) || ( $cart_content['order_status'] == 'awaiting_payment' ) || ( ( !empty( $cart_content['cart_type'] ) && $cart_content['cart_type'] == 'quotation' ) && $cart_content['order_status'] != 'completed' ) ) && $price_piloting == 'TTC' ) : ?>
+						<?php if( ( empty( $cart_content['order_status'] ) || ( $cart_content['order_status'] == 'awaiting_payment' ) ) && $price_piloting == 'TTC' ) : ?>
 							<input type="text" size="5" value="<?php echo number_format( $shipping_cost_ati, 2 ); ?>" id="wps-orders-shipping-cost" class="wps-error" style="text-align : right" />
 						<?php else : ?>
 							<strong><?php echo wpshop_tools::formate_number( $shipping_cost_ati ); ?> <?php echo wpshop_tools::wpshop_get_currency(); ?></strong>
@@ -96,18 +96,24 @@
 				<p>
 					<?php _e( 'Discount on order', 'wpshop'); ?>
 					<span class="wps-alignRight">
-						<?php if( ( $cart_type == 'admin-panel' ) && ( empty( $cart_content['order_status'] ) || $cart_content['order_status'] == 'awaiting_payment' || ( ( !empty( $cart_content['cart_type'] ) && $cart_content['cart_type'] == 'quotation' ) && $cart_content['order_status'] != 'completed' ) ) ) : ?>
+						<?php if ( ( $cart_type == 'admin-panel' ) && ( empty( $cart_content['order_status'] ) || $cart_content['order_status'] == 'awaiting_payment' ) ) : ?>
 							<input type="text" id="wps-orders-discount-value" size="5" style="text-align : right" value="<?php echo ( !empty($cart_content['order_discount_value']) ) ? $cart_content['order_discount_value'] : number_format( 0, 2 ); ?>"/>
 						<?php else : ?>
 							<?php if( !empty($cart_content['order_discount_value']) ) : ?>
-								<strong><?php echo $cart_content['order_discount_value']; ?> <?php echo ( !empty($cart_content['order_discount_type']) && $cart_content['order_discount_type'] == 'percent' ) ? '%' : wpshop_tools::wpshop_get_currency(); ?></strong>
+								<?php echo '<strong>' . $cart_content['order_discount_value']; ?>
+									<?php if ( !empty($cart_content['order_discount_type']) && $cart_content['order_discount_type'] == 'percent' ) {
+										echo '%</strong></span></p>';
+										echo '<p>' . __( 'Amount reduction', 'wpshop' ) . '<span class="wps-alignRight">' . $cart_content['order_discount_amount_total_cart'] . ' ' . wpshop_tools::wpshop_get_currency();
+									} else {
+										echo wpshop_tools::wpshop_get_currency() . '</strong>';
+									} ?>
 							<?php else : ?>
 								0 <?php echo wpshop_tools::wpshop_get_currency(); ?>
 							<?php endif; ?>
 						<?php endif; ?>
 					</span>
 				</p>
-				<?php if( ( $cart_type == 'admin-panel' ) && ( empty( $cart_content['order_status'] ) || $cart_content['order_status'] == 'awaiting_payment' || ( ( !empty( $cart_content['cart_type'] ) && $cart_content['cart_type'] == 'quotation' ) && $cart_content['order_status'] != 'completed' ) ) ) : ?>
+				<?php if( ( $cart_type == 'admin-panel' ) && ( empty( $cart_content['order_status'] ) || $cart_content['order_status'] == 'awaiting_payment' ) ) : ?>
 					<p>
 						<?php _e( 'Type of discount on order', 'wpshop'); ?>
 						<span class="wps-alignRight">
@@ -117,6 +123,14 @@
 							</select>
 						</span>
 					</p>
+					<?php if( !empty($cart_content) && !empty($cart_content['order_discount_type']) && $cart_content['order_discount_type'] == 'percent' ) : ?>
+						<p>
+							<?php _e( 'Amount reduction', 'wpshop' ); ?>
+							<span class="wps-alignRight">
+								<?php echo $cart_content['order_discount_amount_total_cart'] . ' ' . wpshop_tools::wpshop_get_currency(); ?>
+							</span>
+						</p>
+					<?php endif; ?>
 				<?php endif; ?>
 			<?php endif; ?>
 
@@ -159,7 +173,7 @@
 	</div><!-- wps-cart-total -->
 </div><!-- wps-cart-cartouche -->
 
-<?php if ( empty($cart_type) || ( !empty($cart_type) && $cart_type != 'summary' && $cart_type != 'admin-panel')  ) : ?>
+<?php if ( empty($cart_type) || ( !empty($cart_type) && $cart_type != 'summary' && $cart_type != 'admin-panel' ) ) : ?>
 <div class="wps-checkout-actions">
 	<button data-nonce="<?php echo wp_create_nonce( 'wps_empty_cart' ); ?>" class="wps-bton-second emptyCart"><?php _e( 'Empty the cart', 'wpshop' ); ?></button>
 	<?php if( !empty( $_SESSION) && !empty($_SESSION['cart']) && !empty($_SESSION['cart']['cart_type']) && $_SESSION['cart']['cart_type'] == 'quotation' ) : ?>
@@ -175,7 +189,7 @@
 </div>
 <?php endif; ?>
 
-<?php if( !empty($cart_type) && $cart_type == 'admin-panel' && ( empty( $cart_content['order_status'] ) || $cart_content['order_status'] == 'awaiting_payment' || ( ( !empty( $cart_content['cart_type'] ) && $cart_content['cart_type'] == 'quotation' ) && $cart_content['order_status'] != 'completed' ) ) ) : ?>
+<?php if( !empty($cart_type) && $cart_type == 'admin-panel' && ( empty( $cart_content['order_status'] ) || $cart_content['order_status'] == 'awaiting_payment' ) ) : ?>
 	<button class="wps-bton-second-rounded alignRight" data-nonce="<?php echo wp_create_nonce( 'wps_orders_update_cart_informations' ); ?>" id="wps-orders-update-cart-informations"><i class="dashicons dashicons-update"></i><?php _e( 'Update order informations', 'wpshop'); ?></button>
 <?php endif; ?>
 <?php $wps_payment_mode = get_option('wps_payment_mode'); ?>

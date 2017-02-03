@@ -3,7 +3,7 @@
 <div class="wps-gridwrapper2-padded">
 
 	<div>
-		<?php if( empty($order_metadata) || ( !empty($order_metadata) && !empty($order_metadata['order_status']) && $order_metadata['order_status'] == 'awaiting_payment')  ) : ?>
+		<?php if( empty($order_metadata) || empty($order_metadata['customer_id']) || $order_metadata['order_status'] == 'awaiting_payment' ) : ?>
 		<div class="wps-boxed">
 			<div class="wps-h5"><?php _e( 'Customer Managment', 'wpshop'); ?><a href="<?php print wp_nonce_url( admin_url( 'admin-ajax.php?action=wps_load_customer_creation_form_in_admin&width=730&height=690' ), 'wps_load_customer_creation_form_in_admin', '_wpnonce' ); ?>" title="<?php _e( 'Create a customer', 'wpshop'); ?>" class="add-new-h2 alignright thickbox"><i class="wps-icon-plus"></i> <?php _e( 'Create a customer', 'wpshop'); ?></a></div>
 
@@ -24,7 +24,7 @@
 	</div>
 
 	<div id="wps_customer_account_informations" data-nonce="<?php echo wp_create_nonce( 'wps_order_refresh_customer_informations' ); ?>">
-		<?php if( !empty($order_metadata) ) : ?>
+		<?php if( !empty($customer_datas) ) : ?>
 		<div>
 			<?php echo $customer_datas; ?>
 		</div>

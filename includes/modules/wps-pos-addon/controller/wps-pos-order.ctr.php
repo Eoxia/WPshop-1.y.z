@@ -68,6 +68,7 @@ class wps_pos_addon_order {
 				$result = __( 'No customer selected for the order, please choose a customer from left hand side list for continue this order', 'wps-pos-i18n' );
 			}
 			else  */
+			ob_start();
 			if( isset( $order_id ) ) {
 				$order = get_post_meta( $order_id, '_order_postmeta', true );
 
@@ -86,8 +87,9 @@ class wps_pos_addon_order {
 				require( wpshop_tools::get_template_part( WPSPOS_DIR, WPSPOS_TEMPLATES_MAIN_DIR, 'backend/order', 'order', 'content' ) );
 			}
 			else {
-				$result = __( 'The order is currently empty', 'wps-pos-i18n' );
+				_e( 'The order is currently empty', 'wps-pos-i18n' );
 			}
+			$result = ob_get_clean();
 		}
 
 		return $result;
@@ -102,7 +104,9 @@ class wps_pos_addon_order {
 		if ( !wp_verify_nonce( $_wpnonce, 'wps_pos_order_content' ) )
 			wp_die();
 
-		wp_die( $this->display_wps_pos_order_content() );
+		echo $this->display_wps_pos_order_content();
+
+		wp_die();
 	}
 
 	/**

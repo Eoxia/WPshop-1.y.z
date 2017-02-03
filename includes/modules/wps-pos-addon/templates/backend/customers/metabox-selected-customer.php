@@ -32,7 +32,7 @@
 				foreach( $this->get_orders_customer( 3, $customer_id ) as $order ) {
 			?>
 			<div class="wps-form-group toggle-historic-group">
-				<a href="#" class="lnk_load_order" data-nonce="<?php echo wp_create_nonce( 'wps_pos_process_checkout' ); ?>" data-oid="<?php echo $order->ID; ?>" data-cid="<?php echo $customer_id; ?>">
+				<a href="#" class="lnk_load_order" data-display-nonce="<?php echo wp_create_nonce( 'wps_pos_order_content' ); ?>" data-finish-nonce="<?php echo wp_create_nonce( 'wps_pos_process_checkout' ); ?>" data-oid="<?php echo $order->ID; ?>" data-cid="<?php echo $customer_id; ?>">
 					<?php
 					if( $order->_order_postmeta['order_key'] ) {
 						if( $order->_order_postmeta['order_invoice_ref'] ) {

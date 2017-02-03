@@ -126,7 +126,11 @@
 		endforeach;
 	?>
 </ul>
-<?php require_once( wpshop_tools::get_template_part( WPS_CART_DIR, WPS_CART_TPL_DIR,"frontend", "cart/cart", "total") ); ?>
+<?php if( ! is_admin() ) {
+	require_once( wpshop_tools::get_template_part( WPS_CART_DIR, WPS_CART_TPL_DIR,"frontend", "cart/cart", "total") );
+} else {
+	require_once( WPS_CART_TPL_DIR . "frontend/cart/cart-total.php" );
+} ?>
 <?php if ( empty($cart_type) || ( !empty($cart_type) && $cart_type != 'summary' ) ) : ?>
 <?php echo apply_filters( 'wps_cart_footer_extra_content', ''); ?>
 <?php endif?>

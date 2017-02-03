@@ -43,7 +43,7 @@
  * Dashboard metaboxes display
  */
 .wpspos-current-step-1 #wpspos-dashboard-product-metabox .hndle span a, .wpspos-current-step-3 #wpspos-dashboard-product-metabox .hndle span a, .wpspos-current-step-3 #wpspos-dashboard-product-metabox .inside,
-	.wpspos-current-step-2 #wpspos-dashboard-order-customer-metabox .wpspos-customer-list, .wpspos-current-step-2 #wpspos-dashboard-order-customer-metabox .hndle span a, .wpspos-current-step-2 #wpspos-dashboard-order-customer-metabox .wpspos-continue-using-selected-customer, .wpspos-current-step-0 #wpspos-dashboard-order-customer-metabox .wpspos-continue-using-selected-customer, 
+	.wpspos-current-step-2 #wpspos-dashboard-order-customer-metabox .wpspos-customer-list, .wpspos-current-step-2 #wpspos-dashboard-order-customer-metabox .hndle span a, .wpspos-current-step-2 #wpspos-dashboard-order-customer-metabox .wpspos-continue-using-selected-customer, .wpspos-current-step-0 #wpspos-dashboard-order-customer-metabox .wpspos-continue-using-selected-customer,
 		.wpspos-current-step-0 #wps-pos-change-customer, .wpspos-current-step-1 #wps-pos-change-customer, .wpspos-current-step-3 #wps-pos-change-customer, .wpspos-current-step-3 .wps-pos-addon-choose-customer, .wpspos-current-step-3 #wpspos-dashboard-order-customer-metabox .inside, .wpspos-current-step-3 #wpspos-dashboard-order-customer-metabox .hndle span a, .wpspos-current-step-3 #wpspos-dashboard-order-customer-metabox .hndle span button,
 			.wpspos-current-step-3 .wps-pos-add-to-cart-button, .wpspos-current-step-3 #wpspos-finalize-order, .wpspos-current-step-3 #wpspos-neworder, .wpspos-current-step-1 #wpspos-finalize-order, .wpspos-current-step-3 #wps_cart_container button {
 	display: none;
@@ -306,6 +306,8 @@ li.cart-item .wps-cart-item-content {
 }
 .order_historic .toggle-historic-group {
 	display: none;
+	width: 100%;
+	padding: 0 !important;
 }
 /* Bank deposit */
 #wpspos-bank-deposit-left-sortables {

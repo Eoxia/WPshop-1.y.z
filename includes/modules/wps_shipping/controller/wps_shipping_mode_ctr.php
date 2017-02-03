@@ -41,7 +41,8 @@ class wps_shipping_mode_ctr {
 		global $post;
 		/**	Box for shipping information	*/
 		$shipping_option = get_option('wpshop_shipping_address_choice');
-		if (!empty($shipping_option['activate']) && $shipping_option['activate']) {
+		$order_meta = get_post_meta( $post->ID, '_order_postmeta', true );
+		if (!empty($shipping_option['activate']) && $shipping_option['activate'] && empty($order_meta['order_payment']['shipping_method'] ) || $order_meta['order_payment']['shipping_method'] != 'default_shipping_mode_for_pos') {
 			add_meta_box(
 			'wpshop_order_shipping',
 			'<span class="dashicons dashicons-palmtree"></span> '.__('Shipping', 'wpshop'),

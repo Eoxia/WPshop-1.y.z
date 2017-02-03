@@ -1,68 +1,68 @@
-jQuery( document ).ready( function(){
+jQuery( document ).ready( function() {
 	///////////////////////////////////////// Create UI /////////////////////////////////////////
-	jQuery('.sort_by_dates').datepicker({
-    	dateFormat : 'yy-mm-dd'
+	jQuery( '.sort_by_dates' ).datepicker({
+    	dateFormat: 'yy-mm-dd'
     });
 	var total_payments;
-	if(typeof payments == 'undefined') {
+	if ( typeof payments == 'undefined' ) {
 		payments = [];
 	}
-	if(typeof historics == 'undefined') {
+	if ( typeof historics == 'undefined' ) {
 		historics = [];
 	}
 	var payments_by_dates = payments;
 	var payments_method = payments_by_dates;
 	var payments_final = payments_method;
 	array_display( payments_final );
-	jQuery( "#this_day" ).click( function() {
+	jQuery( '#this_day' ).click( function() {
 		date = new Date();
-		jQuery( "input[name='fromdate']" ).val( date.getFullYear() + '-' + ( date.getMonth() + 1 ) + '-' + date.getDate() );
-		jQuery( "input[name='todate']" ).val( '' );
-		jQuery( ".sort_by_dates" ).change();
+		jQuery( 'input[name=\'fromdate\']' ).val( date.getFullYear() + '-' + ( date.getMonth() + 1 ) + '-' + date.getDate() );
+		jQuery( 'input[name=\'todate\']' ).val( '' );
+		jQuery( '.sort_by_dates' ).change();
 	});
-	jQuery( "#this_week" ).click( function() {
+	jQuery( '#this_week' ).click( function() {
 		from = new Date();
 		from.setDate( ( from.getDate() - 7 ) + ( 8 - from.getDay() ) );
 		to = new Date();
 		to.setDate( to.getDate() + ( 7 - to.getDay() ) );
-		jQuery( "input[name='fromdate']" ).val( from.getFullYear() + '-' + ( from.getMonth() + 1 ) + '-' + from.getDate() );
-		jQuery( "input[name='todate']" ).val( to.getFullYear() + '-' + ( to.getMonth() + 1 ) + '-' + to.getDate() );
-		jQuery( ".sort_by_dates" ).change();
+		jQuery( 'input[name=\'fromdate\']' ).val( from.getFullYear() + '-' + ( from.getMonth() + 1 ) + '-' + from.getDate() );
+		jQuery( 'input[name=\'todate\']' ).val( to.getFullYear() + '-' + ( to.getMonth() + 1 ) + '-' + to.getDate() );
+		jQuery( '.sort_by_dates' ).change();
 	});
-	jQuery( "#this_year" ).click( function() {
+	jQuery( '#this_year' ).click( function() {
 		date = new Date();
-		jQuery( "input[name='fromdate']" ).val( date.getFullYear() + '-01-01' );
-		jQuery( "input[name='todate']" ).val( date.getFullYear() + '-12-31' );
-		jQuery( ".sort_by_dates" ).change();
+		jQuery( 'input[name=\'fromdate\']' ).val( date.getFullYear() + '-01-01' );
+		jQuery( 'input[name=\'todate\']' ).val( date.getFullYear() + '-12-31' );
+		jQuery( '.sort_by_dates' ).change();
 	});
-	jQuery( ".method" ).click( function() {
+	jQuery( '.method' ).click( function() {
 		changes( this.dataset.value );
 	} );
-	jQuery( ".sort_by_dates" ).change( function() {
+	jQuery( '.sort_by_dates' ).change( function() {
 		changes();
 	} );
-	jQuery( "input[name='search']" ).change( function() {
+	jQuery( 'input[name=\'search\']' ).change( function() {
 		changes();
 	} );
 	function changes( method ) {
-		payments_by_dates = sort_by_dates( payments, jQuery( "input[name='fromdate']" ).val(), jQuery( "input[name='todate']" ).val() );
+		payments_by_dates = sort_by_dates( payments, jQuery( 'input[name=\'fromdate\']' ).val(), jQuery( 'input[name=\'todate\']' ).val() );
 		payments_method = filters_method( payments_by_dates, method );
-		payments_final = filters_search( payments_method, jQuery( "#search" ).val() );
+		payments_final = filters_search( payments_method, jQuery( '#search' ).val() );
 		array_display( payments_final );
 	}
-	jQuery( "#download" ).click( function( event ) {
+	jQuery( '#download' ).click( function( event ) {
 		event.preventDefault();
 		save_historics( total_payments, payments_final );
 	} );
 	function sort_by_dates( payments_dates, from, to ) {
 		var result = [];
-		if( from == "" && to == "" ) {
+		if ( from == '' && to == '' ) {
 			result = payments_dates;
 		} else {
-			if( from == "" && to != "" ) {
-				start = new Date('9999-01-01');
-				end = new Date(to);
-			} else if( from != "" && to == "" ) {
+			if ( from == '' && to != '' ) {
+				start = new Date( '9999-01-01' );
+				end = new Date( to );
+			} else if ( from != "" && to == "" ) {
 				start = new Date(from);
 				end = new Date('9999-12-31');
 			} else if( from != "" && to != "" ) {
@@ -140,6 +140,8 @@ jQuery( document ).ready( function(){
 		} );
 		if( count == 0 ) {
 			jQuery( '#model_no_results' ).show();
+		} else {
+			jQuery( '#model_no_results' ).hide();
 		}
 		jQuery( "#total_amount" ).html( total_payments.toFixed(2) + " " + jQuery( "#total_amount" ).data( "currency" ) );
 	}
@@ -191,6 +193,8 @@ jQuery( document ).ready( function(){
 		} );
 		if( count == 0 ) {
 			jQuery( '#model_histo_no_results' ).show();
+		} else {
+			jQuery( '#model_histo_no_results' ).hide();
 		}
 	}
 	function redirect_post(url, params) {
