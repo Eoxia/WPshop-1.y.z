@@ -4,7 +4,7 @@ Tags: boutique, catalog, catalogue, commerce, e-commerce, ecommerce, m-commerce,
 Donate link: http://www.wpshop.fr/documentations/presentation-wpshop/
 Requires at least: 3.4.0
 Tested up to: 4.7.2
-Stable tag: 1.4.3.1
+Stable tag: 1.4.3.2
 License: GPLv2 or later
 
 Simple and powerfull eCommerce plugin, with French Payment and Shipping systems : Paybox, Paypal, Atos, Cybermut, SystemPay, Paysite-cash, Colissimo
@@ -96,6 +96,29 @@ Il faut vérifier que le réglage des permaliens pour votre site est bien régl�
 
 
 == Changelog ==
+
+= Version 1.4.3.2 =
+
+Améliorations / Improvments
+
+* 6939 - Amélioration interface liste commandes - Improve orders list interface
+* 6936 - Boutons quantités commandes - Buttons quantities orders
+* 6928 - Télécharger la facture finale - Download final invoice
+* 6900 - Amélioration des termes sur la commande - Improve terms order
+* 6899 - Simplification des éléments des commandes - Simplification order elements
+* 6898 - Passage des commentaires commandes en commentaires privés - Migration order comments to privates comments
+* 6897 - Token commande 2 mois - Token order for 2 months
+* 6896 - Montant de la remise commande sur pourcentage - Price discount order when is percent
+
+Corrections / Fix
+
+* 7015 - Formulaire d'adresses admin - Form admin addresses
+* 7014 - Erreur mode de livraison - Fix shipping modes
+* 6973 - Interface de caisse debug - Point of sale debug
+* 6912 - Corrections diverses interface de caisse - Other fixes point of sales
+* 6907 - Style administration commandes - Orders back admin style
+* 6901 - Client peut payer le devis - Customer can pay quotation
+* 6895 - Correction d'états instables dans l'administration des commandes - Fix unknown states on back-admin
 
 = Version 1.4.3.1 =
 
