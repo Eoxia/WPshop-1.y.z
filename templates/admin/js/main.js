@@ -265,48 +265,46 @@ wpshop( document ).ready(function() {
 				/* UPDATE UNIT COMBO-BOX */
 				var data = {
 						action: 'load_attribute_unit_list',
-						wpshop_ajax_nonce: jQuery( '#input_wpshop_load_attribute_unit_list').val(),
-						current_group: jQuery("#wpshop_attributes_edition_table_field_id__unit_group_id").val(),
-						selected_list:"unit"
+						wpshop_ajax_nonce: jQuery( '#input_wpshop_load_attribute_unit_list' ).val(),
+						current_group: jQuery( '#wpshop_attributes_edition_table_field_id__unit_group_id' ).val(),
+						selected_list:'unit'
 					};
 				//Response, update the combo box
-					jQuery.post(ajaxurl, data, function(response) {
+					jQuery.post( ajaxurl, data, function( response ) {
 						if ( response[0] ) {
-							jQuery("#wpshop_attributes_edition_table_field_id__default_unit").html(response[1]);
+							jQuery( '#wpshop_attributes_edition_table_field_id__default_unit' ).html( response[1] );
 							/* Hide the loader and display the combo box refreshed */
-							jQuery('#wpshop_loader_input_unit').css("display", "none");
-							jQuery('#wpshop_attributes_edition_table_field_id__default_unit').show();
-						}
-						else {
+							jQuery( '#wpshop_loader_input_unit' ).css( 'display', 'none' );
+							jQuery( '#wpshop_attributes_edition_table_field_id__default_unit' ).show();
+						} else {
 							alert( response[1] );
 						}
-					}, 'json');
-
+					}, 'json' );
 
 			}
 		}
 	});
-	wpshop("#wpshop_attribute_unit_manager_opener").click(function(){
-		wpshop("#wpshop_attribute_unit_manager").html("<div class='wpshopCenterContainer' >" + wpshop("#wpshopLoadingPicture").html() + "</div>");
-		wpshop("#wpshop_attribute_unit_manager").load(ajaxurl,{
-			"action": "wps_attribute_unit_interface",
-			"_wpnonce" : jQuery("#wpshop_attribute_unit_manager_opener").data('nonce')
+	wpshop( '#wpshop_attribute_unit_manager_opener' ).click(function() {
+		wpshop( '#wpshop_attribute_unit_manager' ).html( '<div class=\'wpshopCenterContainer\' >' + wpshop( '#wpshopLoadingPicture' ).html() + '</div>' );
+		wpshop( '#wpshop_attribute_unit_manager' ).load( ajaxurl, {
+			'action': 'wps_attribute_unit_interface',
+			'_wpnonce': jQuery( '#wpshop_attribute_unit_manager_opener' ).data( 'nonce' )
 		});
-		wpshop("#wpshop_attribute_unit_manager").dialog("open");
+		wpshop( '#wpshop_attribute_unit_manager' ).dialog( 'open' );
 	});
 
-	wpshop("#wpshop_attribute_group_unit_manager_opener").click(function(){
-		wpshop("#wpshop_attribute_unit_manager").html("<div class='wpshopCenterContainer' >" + wpshop("#wpshopLoadingPicture").html() + "</div>");
-		wpshop("#wpshop_attribute_unit_manager").load(ajaxurl,{
-			"action": "wps_attribute_unit_interface",
-			"_wpnonce" : jQuery("#wpshop_attribute_unit_manager_opener").data('nonce')
+	wpshop( '#wpshop_attribute_group_unit_manager_opener' ).click(function() {
+		wpshop( '#wpshop_attribute_unit_manager' ).html( '<div class=\'wpshopCenterContainer\' >' + wpshop( '#wpshopLoadingPicture' ).html() + '</div>' );
+		wpshop( '#wpshop_attribute_unit_manager' ).load( ajaxurl, {
+			'action': 'wps_attribute_unit_interface',
+			'_wpnonce': jQuery( '#wpshop_attribute_unit_manager_opener' ).data( 'nonce' )
 		});
-		wpshop("#wpshop_attribute_unit_manager").dialog("open");
+		wpshop( '#wpshop_attribute_unit_manager' ).dialog( 'open' );
 	});
 
 	/*	Add support for option excluded domain deletion	*/
-	jQuery(".wpshop_attr_combo_option_delete").live('click', function(){
-		if(confirm(wpshopConvertAccentTojs(WPSHOP_SURE_TO_DELETE_ATTR_OPTION_FROM_LIST))){
+	jQuery( '.wpshop_attr_combo_option_delete' ).live( 'click', function() {
+		if ( confirm( wpshopConvertAccentTojs( WPSHOP_SURE_TO_DELETE_ATTR_OPTION_FROM_LIST))){
 			if(jQuery(this).closest("li").attr("id")) {
 				jQuery(".wpshop_attr_combo_option_delete_" + jQuery(this).closest("li").attr("id").replace("att_option_div_container_", "")).html(jQuery("#wpshopLoadingPicture").html());
 				var data = {
@@ -916,7 +914,7 @@ wpshop( document ).ready(function() {
 		e.preventDefault();
 		var order_id = jQuery( '#post_ID' ).val();
 		var btn = jQuery( this );
-		var btnBlock = btn.parent();
+		var btnBlock = btn.parent().parent();
 		btn.addClass( 'wps-bton-loading' );
 		var data = {
 				action: "wps_quotation_is_payable_by_customer",
@@ -925,7 +923,7 @@ wpshop( document ).ready(function() {
 			};
 			jQuery.post(ajaxurl, data, function(response) {
 				if ( response['status'] ) {
-					btnBlock.replaceWith( response['response'] );
+					btnBlock.html( response['response'] );
 				} else {
 					alert( response['response'] );
 					btn.addClass( 'wps-bton-loading' );

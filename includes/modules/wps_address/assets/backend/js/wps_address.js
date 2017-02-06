@@ -2,70 +2,67 @@ var jq_wpeogeoloc = jQuery.noConflict();
 
 jq_wpeogeoloc( document ).ready(function() {
 
-
 	jQuery( document ).on( 'click', '#wps_submit_address_form', function() {
-		jQuery('#wps_address_form_save').ajaxForm({
+		jQuery( '#wps_address_form_save' ).ajaxForm({
 			dataType:  'json',
-			beforeSubmit : function() {
+			beforeSubmit: function() {
 				jQuery( '#wps_submit_address_form' ).addClass( 'wps-bton-loading' );
 			},
 	        success: function( response ) {
 	        	if ( response[0] ) {
-	        		reload_administration_dashboard_address( response[2], jQuery( '#wps_customer_id').val() );
-	        		jQuery( '#TB_closeWindowButton').click();
+	        		reload_administration_dashboard_address( response[2], jQuery( '#wps_customer_id' ).val() );
+	        		jQuery( '#TB_closeWindowButton' ).click();
+	        		jQuery( '#wps_submit_address_form' ).removeClass( 'wps-bton-loading' );
+	        	} else {
+	        		jQuery( '#wps_address_error_container' ).html( response[1] );
 	        		jQuery( '#wps_submit_address_form' ).removeClass( 'wps-bton-loading' );
 	        	}
-	        	else {
-	        		jQuery('#wps_address_error_container').html( response[1] );
-	        		jQuery( '#wps_submit_address_form' ).removeClass( 'wps-bton-loading' );
-	        	}
-	        },
+	        }
 		});
 	});
 
 
 	/**	Listen actions on address title in order to open close choosen	*/
-	jQuery( document ).on( "click", ".wps-address-item-header > a", function( e ){
+	jQuery( document ).on( 'click', '.wps-address-item-header > a', function( e ) {
 		e.preventDefault();
-		if ( jQuery( this ).hasClass( "wps-address-arrow-right" ) ) {
-			jQuery( this ).closest( "li" ).children( ".wps-address-item-content" ).slideDown();
+		if ( jQuery( this ).hasClass( 'wps-address-arrow-right' ) ) {
+			jQuery( this ).closest( 'li' ).children( '.wps-address-item-content' ).slideDown();
+		} else {
+			jQuery( this ).closest( 'li' ).children( '.wps-address-item-content' ).slideUp();
 		}
-		else {
-			jQuery( this ).closest( "li" ).children( ".wps-address-item-content" ).slideUp();
-		}
-		jQuery( this ).toggleClass( "wps-address-arrow-right wps-address-arrow-down" );
+		jQuery( this ).toggleClass( 'wps-address-arrow-right wps-address-arrow-down' );
 	});
 
 	/**	Listen actions on address actions button	*/
-	jQuery( document ).on( "click", ".wps-address-actions-container a", function( e ){
+	jQuery( document ).on( 'click', '.wps-address-actions-container a', function( e ) {
 		e.preventDefault();
-		var action = jQuery( this ).attr( "id" ).replace( "wps-address-action-", "" ).split( "-for-" );
+		var action = jQuery( this ).attr( 'id' ).replace( 'wps-address-action-', '' ).split( '-for-' );
 		var address_id = action[ 1 ];
-		var element_id = jQuery( "#post_ID" ).val();
+		var element_id = jQuery( '#post_ID' ).val();
 
-		if ( action[ 0 ] == "edit" ) {
-			jQuery( this ).closest( "span" ).html( wps_address_loading_picture );
+		if ( action[ 0 ] == 'edit' ) {
+			jQuery( this ).closest( 'span' ).html( wps_address_loading_picture );
 			var data = {
-				action: "wps-address-edition-form-load",
+				action: 'wps-address-edition-form-load',
 				element_id: address_id,
-				post_id: element_id,
+				post_id: element_id
 			};
-			jQuery( "#wps-address-item-" + address_id + " .wps-address-item-content" ).load( ajaxurl, data, function() {
-				jQuery( "#wps-address-item-" + address_id + " .wps-address-item-header > a.wps-address-arrow-right" ).click();
-				jQuery( "#wps-address-item-" + address_id + " span.wps-address-actions-container" ).remove();
+			jQuery( '#wps-address-item-' + address_id + ' .wps-address-item-content' ).load( ajaxurl, data, function() {
+				jQuery( '#wps-address-item-' + address_id + ' .wps-address-item-header > a.wps-address-arrow-right' ).click();
+				jQuery( '#wps-address-item-' + address_id + ' span.wps-address-actions-container' ).remove();
 			} );
 		}
 	});
 
 	/**	Listen actions on address add button	*/
-	jQuery( "#wps_attached_addresses a.wps-address-icon-add" ).click( function( e ){
+	jQuery( '#wps_attached_addresses a.wps-address-icon-add' ).click( function( e ) {
 		e.preventDefault();
-		var element_id = jQuery( this ).attr( "id" ).replace( "wps-address-add-for-", "" );
+		var element_id = jQuery( this ).attr( 'id' ).replace( 'wps-address-add-for-', '' );
 		var data = {
-			action: "wps-address-add-new",
+			action: 'wps-address-add-new',
 			element_id: 0,
 			_wpnonce: jQuery( this ).data( 'nonce' ),
-			post_id: element_id,
+			post_id: element_id
 		};
 		jQuery( this ).closest( "div.inside" ).children( ".wps-address-list-container" ).append( '<div id="wps-overlay" class="wps-overlay-background" ></div><div id="wps-overlay-load" style="top: 45%;" ><img src="' + thickboxL10n.loadingAnimation + '" /></div>' ).css( "height", "100px" );
 		jQuery( this ).closest( "div.inside" ).children( ".wps-address-list-container" ).load( ajaxurl, data, function() {
@@ -80,11 +77,12 @@ jq_wpeogeoloc( document ).ready(function() {
 		jQuery( this ).parent().find( '.wps_address_li_content' ).hide();
 		jQuery( this ).addClass( 'wps-activ');
 		jQuery( this ).find( '.wps_select_address' ).prop('checked', true);
+		jQuery( this ).find( '.wps_select_address' ).trigger( 'change' );
 		jQuery( this ).next( '.wps_address_li_content' ).show();
 		var type = jQuery( this ).find( '.wps_select_address' ).attr( 'name' ).replace( '_address_id', '' );
 
 		// Update data
-		jQuery( '#wps_order_selected_address_' + type ).val( jQuery( this ) .val() );
+		//jQuery( '#wps_order_selected_address_' + type ).val( jQuery( this ) .val() );
 	});
 
 

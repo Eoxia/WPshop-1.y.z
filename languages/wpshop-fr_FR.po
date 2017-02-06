@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Wp Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-03 17:14+0100\n"
-"PO-Revision-Date: 2017-02-03 17:15+0100\n"
+"PO-Revision-Date: 2017-02-06 09:45+0100\n"
 "Last-Translator: Equipe de développement de digirisk <dev@digirisk.com>\n"
 "Language-Team: Développement Eoxia <dev@eoxia.com>\n"
 "Language: fr_FR\n"
@@ -8411,7 +8411,7 @@ msgstr "Rechercher dans les produits "
 #: includes/modules/wps_orders/templates/backend/product-listing/wps_orders_product_listing_table.php:12
 #: includes/modules/wps_orders/templates/backend/product-listing/wps_orders_product_listing_table.php:37
 msgid "Add to order"
-msgstr "Ajouter à la commande "
+msgstr "Ajouter à la commande"
 
 #: includes/modules/wps_orders/templates/backend/product-listing/wps_orders_product_listing_table.php:44
 #, php-format
