@@ -455,6 +455,12 @@ if ( !class_exists("wpshop_modules_billing") ) {
 								foreach ( $variation_attribute_ordered['attribute_list'] as $attribute_variation_to_output ) {
 									$detail_tpl_component['CART_PRODUCT_MORE_INFO'] .= $attribute_variation_to_output;
 								}
+								if( /*get_post_status( $item['item_id'] ) == 'free_product' &&*/ ! empty( get_post_field( 'post_content', $item['item_id'] ) ) ) {
+									if ( ! empty( $detail_tpl_component['CART_PRODUCT_MORE_INFO'] ) ) {
+										//$detail_tpl_component['CART_PRODUCT_MORE_INFO'] .= '<br>';
+									}
+									$detail_tpl_component['CART_PRODUCT_MORE_INFO'] .= '<span id="wpshop_cart_description_line">' . nl2br( get_post_field( 'post_content', $item['item_id'] ) ) . '</span>';
+								}
 								$sub_tpl_component['INVOICE_ROW_ITEM_DETAIL'] = !empty($detail_tpl_component['CART_PRODUCT_MORE_INFO']) ? wpshop_display::display_template_element('invoice_row_item_detail', $detail_tpl_component, array(), 'common') : '';
 								unset( $detail_tpl_component );
 

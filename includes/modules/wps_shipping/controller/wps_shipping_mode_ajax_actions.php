@@ -7,6 +7,7 @@ class wps_shipping_mode_ajax_actions {
 		add_action('wp_ajax_display_shipping_rules',array( $this, 'wpshop_ajax_display_shipping_rules'));
 		add_action('wp_ajax_delete_shipping_rule',array( $this, 'wpshop_ajax_delete_shipping_rule'));
 		add_action('wp_ajax_wps_add_new_shipping_mode',array( $this, 'wps_add_new_shipping_mode'));
+		add_action('wp_ajax_wps_delete_shipping_mode',array( $this, 'wps_delete_shipping_mode'));
 		add_action('wp_ajax_wps_reload_shipping_mode',array( $this, 'wps_reload_shipping_mode'));
 		add_action('wp_ajax_wps_calculate_shipping_cost',array( $this, 'wps_calculate_shipping_cost'));
 		add_action( 'wp_ajax_wps_load_shipping_methods', array(&$this, 'wps_load_shipping_methods') );
@@ -284,5 +285,19 @@ class wps_shipping_mode_ajax_actions {
 
 		echo json_encode( array( 'status' => $status, 'response' => $response) );
 		wp_die();
+	}
+
+	function wps_delete_shipping_mode() {
+		check_ajax_referer( 'wps_delete_shipping_mode' );
+		$shipping_mode = ! empty( $_POST['shipping_mode'] ) ? sanitize_text_field( $_POST['shipping_mode'] ) : null;
+		$wps_shipping_mode = get_option( 'wps_shipping_mode' );
+		if ( ! empty( $wps_shipping_mode['modes'] ) && array_key_exists( $shipping_mode, $wps_shipping_mode['modes'] ) ) {
+			unset( $wps_shipping_mode['modes'][ $shipping_mode ] );
+			if ( ! empty( $wps_shipping_mode['default_choice'] ) && $wps_shipping_mode['default_choice'] === $shipping_mode ) {
+				$wps_shipping_mode['default_choice'] = 'default_shipping_mode';
+			}
+		}
+		update_option( 'wps_shipping_mode', $wps_shipping_mode );
+		wp_send_json_success();
 	}
 }

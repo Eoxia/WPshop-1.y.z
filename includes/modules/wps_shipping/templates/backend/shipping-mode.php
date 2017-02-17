@@ -17,9 +17,12 @@
 		<div class="wps-table-cell"><input type="checkbox" id="wps_shipping_mode_<?php echo $k; ?>" class="wps_shipping_mode_active" name="wps_shipping_mode[modes][<?php echo $k; ?>][active]" <?php echo ( (!empty($shipping_mode) && !empty($shipping_mode['active']) ) ? 'checked="checked"' : '' ); ?> /></div>
 		<?php $shipping_mode_option = get_option( 'wps_shipping_mode' ); ?>
 		<div class="wps-table-cell"><input type="radio" id="wps_shipping_mode_<?php echo $k; ?>_radio_default" name="wps_shipping_mode[default_choice]" value="<?php echo $k; ?>" <?php echo ( !empty( $shipping_mode_option['default_choice'] ) && $shipping_mode_option['default_choice'] == $k ) ? 'checked="checked"' : ''; echo ( (!empty($shipping_mode) && !empty($shipping_mode['active']) ) ? '' : 'disabled="disabled"' ); ?> /></div>
+		<div class="wps-table-cell"><?php if( !is_bool( strpos( $k, 'wps_custom_shipping_mode_' ) ) ) : ?>
+			<a href="" class="wps_delete_shipping_mode" data-nonce="<?php echo wp_create_nonce( 'wps_delete_shipping_mode' ); ?>"><span class="dashicons dashicons-trash"></span></a>
+		<?php endif; ?></div>
 		<!-- Configuration interface -->
-		<div id="<?php echo $k; ?>_shipping_configuration_interface" style="display : none">	
-			<?php 
+		<div id="<?php echo $k; ?>_shipping_configuration_interface" style="display : none">
+			<?php
 			$wps_shipping_mode_ctr = new wps_shipping_mode_ctr();
 			echo $wps_shipping_mode_ctr->generate_shipping_mode_interface( $k, $shipping_mode ); ?>
 		</div>

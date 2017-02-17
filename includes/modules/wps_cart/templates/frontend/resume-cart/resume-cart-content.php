@@ -5,6 +5,31 @@
 	<?php foreach( $cart_items as $item_id => $item ) :
 			$product_key = $item_id;
 			$item_post_type = get_post_type( $item_id );
+
+			$variations_indicator = '';
+			$product_attribute_order_detail = wpshop_attributes_set::getAttributeSetDetails( get_post_meta($item['item_id'], WPSHOP_PRODUCT_ATTRIBUTE_SET_ID_META_KEY, true)  ) ;
+			$output_order = array();
+			if ( count($product_attribute_order_detail) > 0  && is_array($product_attribute_order_detail) ) {
+				foreach ( $product_attribute_order_detail as $product_attr_group_id => $product_attr_group_detail) {
+					foreach ( $product_attr_group_detail['attribut'] as $position => $attribute_def) {
+						if ( !empty($attribute_def->code) )
+							$output_order[$attribute_def->code] = $position;
+					}
+				}
+			}
+			$variation_attribute_ordered = wpshop_products::get_selected_variation_display( $item['item_meta'], $output_order, 'cart' );
+			ksort($variation_attribute_ordered['attribute_list']);
+			if( !empty($variation_attribute_ordered['attribute_list']) ) {
+				$variations_indicator .= '<ul class="wps-cart-item-variations" >';
+				foreach ( $variation_attribute_ordered['attribute_list'] as $attribute_variation_to_output ) {
+					if ( !empty($attribute_variation_to_output) ) {
+						$variations_indicator .= $attribute_variation_to_output;
+					}
+				}
+				$variations_indicator = apply_filters( 'wps_cart_item_variation_list', $variations_indicator, $variation_attribute_ordered, $item, 0 );
+				$variations_indicator .= '</ul>';
+			}
+
 			if ( $item_post_type == WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION ) {
 				$parent_def = wpshop_products::get_parent_variation( $item_id );
 				$parent_post = $parent_def['parent_post'];
@@ -24,7 +49,7 @@
 					<a class="wps-cart-item-title" href="<?php echo get_permalink( $item_id ); ?>" title="<?php echo $item_title; ?>">
 						<?php echo $item_title; ?>
 					</a>
-					<?php //echo $variations_indicator; ?>
+					<?php echo $variations_indicator; ?>
 					<div class="wps-productQtyForm ">
 						<a href="" class="wps-cart-reduce-product-qty"><i class="wps-icon-minus"></i></a>
 						<input type="text" name="french-hens" id="wps-cart-product-qty-<?php echo $product_key; ?>" data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_set_qty_for_product_into_cart' ); ?>" value="<?php echo $item['item_qty']; ?>" class="wps-circlerounded wps-cart-product-qty">

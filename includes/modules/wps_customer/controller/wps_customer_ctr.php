@@ -108,6 +108,7 @@ class wps_customer_ctr {
 	 * @return string
 	 */
 	function custom_user_list($customer_list_params = array('name'=>'user[customer_id]', 'id'=>'user_customer_id'), $selected_user = "", $multiple = false, $disabled = false) {
+		global $wpdb;
 		$content_output = '';
 
 		// USERS
@@ -119,7 +120,16 @@ class wps_customer_ctr {
 				if ($user->ID != 1) {
 					$lastname = get_user_meta( $user->ID, 'last_name', true );
 					$firstname = get_user_meta( $user->ID, 'first_name', true );
-					$select_users .= '<option value="'.$user->ID.'"' . ( ( !$multiple ) && ( $selected_user == $user->ID ) ? ' selected="selected"' : '') . ' >'.$lastname. ' ' .$firstname.' ('.$user->user_email.')</option>';
+					if ( ! empty( $customer_entity_id = wpshop_entities::get_entity_identifier_from_code( WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ) ) && ! empty( $company_attr = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' .WPSHOP_DBT_ATTRIBUTE. ' WHERE entity_id = %s AND code = %s AND status = %s', $customer_entity_id, 'company_customer', 'valid' ) ) ) ) {
+						$query = $wpdb->prepare( 'SELECT value  FROM '.WPSHOP_DBT_ATTRIBUTE_VALUES_PREFIX.strtolower($company_attr->data_type). ' WHERE entity_type_id = %d AND attribute_id = %d AND entity_id = %d ', $customer_entity_id, $company_attr->id, wps_customer_ctr::get_customer_id_by_author_id( $user->ID ) );
+						$company_value = $wpdb->get_var( $query );
+					}
+					ob_start(); ?>
+					<option value="<?php echo $user->ID; ?>" <?php echo ( ( !$multiple ) && ( $selected_user == $user->ID ) ) ? ' selected="selected"' : ''; ?>>
+						<?php echo $lastname; ?> <?php echo $firstname; ?> (<?php echo $user->user_email; ?>)<?php echo isset( $company_value ) ? ' : ' . $company_value : ''; ?>
+					</option>
+					<?php
+					$select_users .= ob_get_clean();
 				}
 			}
 			$content_output = '

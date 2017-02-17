@@ -68,9 +68,9 @@ class wps_shipping_mode_ctr {
 	/**
 	 * Add JS and CSS files in back-office
 	 */
-	function add_scripts_in_admin() {
+	function add_scripts_in_admin( $hook ) {
 		global $current_screen;
-		if( ! in_array( $current_screen->post_type, array( WPSHOP_NEWTYPE_IDENTIFIER_ORDER ), true ) )
+		if ( ! in_array( $current_screen->post_type, array( WPSHOP_NEWTYPE_IDENTIFIER_ORDER ), true ) && $hook !== 'settings_page_wpshop_option' )
 			return;
 
 		add_thickbox();

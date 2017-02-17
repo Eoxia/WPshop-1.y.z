@@ -7,6 +7,40 @@ jQuery( document ).ready( function() {
 		jQuery( 'body' ).removeClass( 'folded' );
 	}*/
 
+	//--------------------------------------------------------------------------------
+
+	function updater( element ) {
+		element = (typeof element == 'undefined') ? jQuery( this ).closest( "tr" ).data( "id" ) : element;
+		jQuery( '#trPid_' + element ).children( "td.wps-mass-interface-line-selector" ).children( '.wps-form-group' ).children( '.wps-form').children( 'center' ).children( "input[type=checkbox]" ).prop( "checked", true );
+	}
+
+	jQuery( document ).on( 'change', '.concurs select, .concurs input', updater );
+
+	jQuery( document ).on( "click", ".add_concur", function() {
+		var cloner = jQuery( this ).closest( "tr" ).prev();
+		var id_p = cloner.data( "id" );
+		var clone_string = cloner.clone().get( 0 ).outerHTML;
+		clone_string = clone_string.replace( /%ID%/gi, jQuery(".concurs[data-id='" + id_p + "']").length - 1 )
+		var clone = jQuery( clone_string );
+		clone.find( ".is_row" ).val( 1 );
+		clone.removeClass("cloner");
+		cloner.before(clone);
+		clone.show();
+		clone.on( 'change', 'select, input', updater );
+		updater( id_p );
+		clone.find('.chosen_select_concur').chosen( WPSHOP_CHOSEN_ATTRS );
+	} );
+
+	jQuery( document ).on( "click", ".del_concur", function() {
+		jQuery( this ).closest( "tr" ).remove();
+	} );
+
+	jQuery( document ).on( "click", ".datepicker_concur", function() {
+		jQuery( this ).datepicker({dateFormat: 'yy-mm-dd'});
+		jQuery( this ).datepicker('show');
+	} );
+
+	//--------------------------------------------------------------------------------
 
 	/**	Trigger event on mass update pagination	*/
 	jQuery( document ).on( "click", ".wps-mass-product-pagination li a", function( event ){

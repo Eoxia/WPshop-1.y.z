@@ -15,6 +15,7 @@ class wps_product_variation_interface
      */
     public function __construct()
     {
+		add_action('init', array($this, 'init'));
         add_action('add_meta_boxes', array($this, 'add_meta_boxes'), 11, 2);
         add_action('save_post', array($this, 'save_post'), 10, 2);
         add_filter('wpshop_attribute_output_def', array($this, 'wpshop_attribute_output_def'), 10, 2);
@@ -34,6 +35,13 @@ class wps_product_variation_interface
             }
         }
     }
+	public function init() {
+		$_wpnonce = !empty($_REQUEST['_wpnonce']) ? sanitize_text_field(wp_unslash($_REQUEST['_wpnonce'])) : ''; // Input var okay.
+		$wps_variation_interface = !empty($_GET['wps_variation_interface']) ? filter_var(wp_unslash($_GET['wps_variation_interface']), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : null; // Input var okay.
+		if (wp_verify_nonce($_wpnonce, 'wps_remove_variation_interface') && null !== $wps_variation_interface) {
+			$this->is_activate($wps_variation_interface);
+		}
+	}
     /**
      * Get if module is active.
      *
@@ -73,11 +81,6 @@ class wps_product_variation_interface
     public function add_meta_boxes($post_status, $post)
     {
         global $pagenow;
-        $_wpnonce = !empty($_REQUEST['_wpnonce']) ? sanitize_text_field(wp_unslash($_REQUEST['_wpnonce'])) : ''; // Input var okay.
-        $wps_variation_interface = !empty($_GET['wps_variation_interface']) ? filter_var(wp_unslash($_GET['wps_variation_interface']), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : null; // Input var okay.
-        if (wp_verify_nonce($_wpnonce, 'wps_remove_variation_interface') && null !== $wps_variation_interface) {
-            $this->is_activate($wps_variation_interface);
-        }
         if ($this->is_activate()) {
             $this->get_variations($post->ID);
             remove_meta_box('wpshop_wpshop_variations', WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT, 'normal');
