@@ -3,7 +3,7 @@
  * Plugin Name: WP-Shop
  * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/
  * Description: With this plugin you will be able to manage the products you want to sell and user would be able to buy this products
- * Version: 1.4.3.3
+ * Version: 1.4.3.4
  * Author: Eoxia
  * Author URI: http://eoxia.com/
  */
@@ -19,99 +19,100 @@
 
 ini_set('memory_limit', '512M');
 
-/**	Check if file is include. No direct access possible with file url	*/
-if ( !defined( 'ABSPATH' ) ) {
-	die( 'Access is not allowed by this way' );
+/**    Check if file is include. No direct access possible with file url    */
+if (!defined('ABSPATH')) {
+    die('Access is not allowed by this way');
 }
 
-/**	Allows to refresh css and js file in final user browser	*/
-DEFINE('WPSHOP_VERSION', '1.4.3.3');
+/**    Allows to refresh css and js file in final user browser    */
+DEFINE('WPSHOP_VERSION', '1.4.3.4');
 
-/**	Allows to avoid problem with theme not supporting thumbnail for post	*/
-add_theme_support( 'post-thumbnails' );
-add_image_size( 'wpshop-product-galery', 270, 270, true );
-add_image_size( 'wps-categorie-mini-display', 80, 80, true );
-add_image_size( 'wps-categorie-display', 480, 340, true );
+/**    Allows to avoid problem with theme not supporting thumbnail for post    */
+add_theme_support('post-thumbnails');
+add_image_size('wpshop-product-galery', 270, 270, true);
+add_image_size('wps-categorie-mini-display', 80, 80, true);
+add_image_size('wps-categorie-display', 480, 340, true);
 
-/**	First thing we define the main directory for our plugin in a super global var	*/
+/**    First thing we define the main directory for our plugin in a super global var    */
 DEFINE('WPSHOP_PLUGIN_DIR', basename(dirname(__FILE__)));
 
-/**	Get the current language to translate the different text in plugin	*/
+/**    Get the current language to translate the different text in plugin    */
 $locale = get_locale();
 global $wpdb;
-if ( defined("ICL_LANGUAGE_CODE") ) {
-	$query = $wpdb->prepare("SELECT locale FROM " . $wpdb->prefix . "icl_locale_map WHERE code = %s", ICL_LANGUAGE_CODE);
-	$local = $wpdb->get_var($query);
-	$locale = !empty($local) ? $local : $locale;
+if (defined("ICL_LANGUAGE_CODE")) {
+    $query = $wpdb->prepare("SELECT locale FROM " . $wpdb->prefix . "icl_locale_map WHERE code = %s", ICL_LANGUAGE_CODE);
+    $local = $wpdb->get_var($query);
+    $locale = !empty($local) ? $local : $locale;
 }
 DEFINE('WPSHOP_CURRENT_LOCALE', $locale);
-/**	Load plugin translation	*/
-load_plugin_textdomain( 'wpshop', false,  dirname( plugin_basename( __FILE__ ) ) . '/languages/');
+/**    Load plugin translation    */
+load_plugin_textdomain('wpshop', false, dirname(plugin_basename(__FILE__)) . '/languages/');
 
-/**	Include the config file	*/
-require(WP_PLUGIN_DIR . '/' . WPSHOP_PLUGIN_DIR . '/includes/config.php');
+/**    Include the config file    */
+require WP_PLUGIN_DIR . '/' . WPSHOP_PLUGIN_DIR . '/includes/config.php';
 
-/** Allow to get errors back when debug mode is set to true	*/
-if ( WPSHOP_DEBUG_MODE && (in_array(long2ip(ip2long($_SERVER['REMOTE_ADDR'])), unserialize(WPSHOP_DEBUG_MODE_ALLOWED_IP)) ) ) {
-	ini_set('display_errors', true);
-	error_reporting(E_ALL);
+/** Allow to get errors back when debug mode is set to true    */
+if (WPSHOP_DEBUG_MODE && (in_array(long2ip(ip2long($_SERVER['REMOTE_ADDR'])), unserialize(WPSHOP_DEBUG_MODE_ALLOWED_IP)))) {
+    ini_set('display_errors', true);
+    error_reporting(E_ALL);
 }
 
-include_once(WPSHOP_LIBRAIRIES_DIR . 'init.class.php');
-$current_installation_step = get_option( 'wps-installation-current-step', 1 );
+include_once WPSHOP_LIBRAIRIES_DIR . 'init.class.php';
+$current_installation_step = get_option('wps-installation-current-step', 1);
 
-/**	Get current plugin version	*/
+/**    Get current plugin version    */
 $current_db_version = get_option('wpshop_db_options', 0);
 
-/**	Call main initialisation function	*/
+/**    Call main initialisation function    */
 add_action('init', array('wpshop_init', 'load'));
 
-/**	Include the main including file	*/
-require(WP_PLUGIN_DIR . '/' . WPSHOP_PLUGIN_DIR . '/includes/include.php');
+/**    Include the main including file    */
+require WP_PLUGIN_DIR . '/' . WPSHOP_PLUGIN_DIR . '/includes/include.php';
 
-/**	Check and set (if needed) administrator(s) permissions' each time the plugin is launched. Admin role has all right	*/
+/**    Check and set (if needed) administrator(s) permissions' each time the plugin is launched. Admin role has all right    */
 $wpshop_permissions = new wpshop_permissions();
 $wpshop_permissions->set_administrator_role_permission();
 $wpshop_permissions->wpshop_init_roles();
 
-/**	Call function to create the main left menu	*/
+/**    Call function to create the main left menu    */
 //if ( ( WPSINSTALLER_STEPS_COUNT <= $current_installation_step ) || ( !empty( $current_db_version ) && !empty( $current_db_version[ 'db_version' ] ) && ( 51 < $current_db_version[ 'db_version' ] ) ) || ( !empty( $_GET ) && !empty( $_GET[ 'installation_state' ] ) && ( "ignored" == $_GET[ 'installation_state' ] ) ) ) {
-	add_action('admin_menu', array( 'wpshop_init', 'admin_menu' ) );
-	add_action( 'menu_order', array( 'wpshop_init', 'admin_menu_order' ) );
-	add_action( 'custom_menu_order', array( 'wpshop_init', 'admin_custom_menu_order' ) );
+add_action('admin_menu', array('wpshop_init', 'admin_menu'));
+add_action('menu_order', array('wpshop_init', 'admin_menu_order'));
+add_action('custom_menu_order', array('wpshop_init', 'admin_custom_menu_order'));
 
-	/*	Call function for new wordpress element creating [term (product_category) / post (product)]	*/
-	add_action( 'init', array( 'wpshop_init', 'add_new_wp_type' ) );
+/*    Call function for new wordpress element creating [term (product_category) / post (product)]    */
+add_action('init', array('wpshop_init', 'add_new_wp_type'));
 
-	/*	Call function allowing to change element front output	*/
-	add_action( 'the_content', array( 'wpshop_display', 'products_page' ), 1 );
-	// add_action('archive_template', array('wpshop_categories', 'category_template_switcher'));
+/*    Call function allowing to change element front output    */
+add_action('the_content', array('wpshop_display', 'products_page'), 1);
+// add_action('archive_template', array('wpshop_categories', 'category_template_switcher'));
 //}
 
-/**	On plugin activation create the default parameters to use the ecommerce	*/
-register_activation_hook( __FILE__ , array('wpshop_install', 'install_on_activation') );
+/**    On plugin activation create the default parameters to use the ecommerce    */
+register_activation_hook(__FILE__, array('wpshop_install', 'install_on_activation'));
 
-/**	On plugin deactivation call the function to clean the wordpress installation	*/
-register_deactivation_hook( __FILE__ , array('wpshop_install', 'uninstall_wpshop') );
+/**    On plugin deactivation call the function to clean the wordpress installation    */
+register_deactivation_hook(__FILE__, array('wpshop_install', 'uninstall_wpshop'));
 
-/**	Get current plugin version	*/
+/**    Get current plugin version    */
 $current_db_version = get_option('wpshop_db_options', 0);
 
-/**	Add the database content	*/
+/**    Add the database content    */
 add_action('admin_init', array('wpshop_install', 'update_wpshop'));
-if ( ( defined( 'WPSINSTALLER_STEPS_COUNT' ) && ( WPSINSTALLER_STEPS_COUNT <= $current_installation_step ) ) || ( !empty( $current_db_version ) && !empty( $current_db_version[ 'db_version' ] ) && ( 51 < $current_db_version[ 'db_version' ] ) ) || ( !empty( $current_db_version ) && !empty( $current_db_version[ 'installation_state' ] ) && ( "ignore" == $current_db_version[ 'installation_state' ] ) ) ) {
-	if ( in_array( long2ip( ip2long($_SERVER['REMOTE_ADDR'] ) ), unserialize( WPSHOP_DEBUG_MODE_ALLOWED_IP ) ) ) {
-		add_action( 'admin_init', array( 'wpshop_install', 'update_wpshop_dev' ) );
-	}
+if ((defined('WPSINSTALLER_STEPS_COUNT') && (WPSINSTALLER_STEPS_COUNT <= $current_installation_step)) || (!empty($current_db_version) && !empty($current_db_version['db_version']) && (51 < $current_db_version['db_version'])) || (!empty($current_db_version) && !empty($current_db_version['installation_state']) && ("ignore" == $current_db_version['installation_state']))) {
+    if (in_array(long2ip(ip2long($_SERVER['REMOTE_ADDR'])), unserialize(WPSHOP_DEBUG_MODE_ALLOWED_IP))) {
+        add_action('admin_init', array('wpshop_install', 'update_wpshop_dev'));
+    }
 }
 // Start session
 @session_start();
 
 // WP-Shop class instanciation
-function classes_init() {
-	global $wpshop_cart, $wpshop, $wpshop_account, $wpshop_payment;
-	$wpshop = new wpshop_form_management();
-	$wpshop_payment = new wpshop_payment();
+function classes_init()
+{
+    global $wpshop_cart, $wpshop, $wpshop_account, $wpshop_payment;
+    $wpshop = new wpshop_form_management();
+    $wpshop_payment = new wpshop_payment();
 }
 add_action('init', 'classes_init');
 
@@ -135,28 +136,27 @@ add_shortcode('wpshop_variations', array('wpshop_products', 'wpshop_variation'))
 add_shortcode('wpshop_entities', array('wpshop_entities', 'wpshop_entities_shortcode'));
 add_shortcode('wpshop_attributes', array('wpshop_attributes', 'wpshop_attributes_shortcode'));
 
-/** Add specific messages for wpshop elements management	*/
+/** Add specific messages for wpshop elements management    */
 // add_filter('post_updated_messages', array('wpshop_messages', 'update_wp_message_list'));
 
-$file   = basename( __FILE__ );
-$folder = basename( dirname( __FILE__ ) );
+$file = basename(__FILE__);
+$folder = basename(dirname(__FILE__));
 $hook = "in_plugin_update_message-{$folder}/{$file}";
-add_action( $hook, 'wps_update_message', 10, 2 ); // 10:priority, 2:arguments #
-function wps_update_message( $currentPluginMetadata, $newPluginMetadata){
-	$message = '';
+add_action($hook, 'wps_update_message', 10, 2); // 10:priority, 2:arguments #
+function wps_update_message($currentPluginMetadata, $newPluginMetadata)
+{
+    $message = '';
 
-	if ( '1.4.1.6' == $currentPluginMetadata[ 'Version' ] ) {
-		$message = sprintf( __( 'For security reason %splease read this post%s', 'wpshop' ), '<a href="" >', '</a>');
-	}
+    if ('1.4.1.6' == $currentPluginMetadata['Version']) {
+        $message = sprintf(__('For security reason %splease read this post%s', 'wpshop'), '<a href="" >', '</a>');
+    }
 
-	// check "upgrade_notice"
-  if (isset( $newPluginMetadata->upgrade_notice) && strlen(trim($newPluginMetadata->upgrade_notice)) > 0 ) {
-  	$message = esc_html( $newPluginMetadata->upgrade_notice );
-	}
+    // check "upgrade_notice"
+    if (isset($newPluginMetadata->upgrade_notice) && strlen(trim($newPluginMetadata->upgrade_notice)) > 0) {
+        $message = esc_html($newPluginMetadata->upgrade_notice);
+    }
 
-	if ( !empty( $message ) ) {
-  	echo '<p style="background-color: #d54e21; padding: 10px; color: #f9f9f9; margin-top: 10px"><strong>' . __( 'Important upgrade notice', 'wpshop' ) . ': </strong>' . $message . '</p>';
-	}
+    if (!empty($message)) {
+        echo '<p style="background-color: #d54e21; padding: 10px; color: #f9f9f9; margin-top: 10px"><strong>' . __('Important upgrade notice', 'wpshop') . ': </strong>' . $message . '</p>';
+    }
 }
-
-?>
