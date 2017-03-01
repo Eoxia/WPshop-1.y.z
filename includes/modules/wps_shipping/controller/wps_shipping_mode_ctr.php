@@ -37,21 +37,21 @@ class wps_shipping_mode_ctr {
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_box') );
 	}
 
-	function add_meta_box() {
-		global $post;
-		/**	Box for shipping information	*/
-		$shipping_option = get_option('wpshop_shipping_address_choice');
-		$order_meta = get_post_meta( $post->ID, '_order_postmeta', true );
-		if (!in_array( $post->post_status, array( 'auto-draft' ) ) && ( !empty($shipping_option['activate']) && $shipping_option['activate'] && ( is_array( $order_meta ) && empty($order_meta['order_payment']['shipping_method'] ) || $order_meta['order_payment']['shipping_method'] != 'default_shipping_mode_for_pos' ) ) ) {
-			add_meta_box(
-			'wpshop_order_shipping',
-			'<span class="dashicons dashicons-palmtree"></span> '.__('Shipping', 'wpshop'),
-			array($this, 'order_shipping_box'),
-			WPSHOP_NEWTYPE_IDENTIFIER_ORDER, 'side', 'low'
-					);
+	function add_meta_box( $post_type, $post ) {
+		if ( WPSHOP_NEWTYPE_IDENTIFIER_ORDER == $post_type ) {
+			/**	Box for shipping information	*/
+			$shipping_option = get_option('wpshop_shipping_address_choice');
+			$order_meta = get_post_meta( $post->ID, '_order_postmeta', true );
+			if (!in_array( $post->post_status, array( 'auto-draft' ) ) && ( !empty($shipping_option['activate']) && $shipping_option['activate'] && ( is_array( $order_meta ) && empty($order_meta['order_payment']['shipping_method'] ) || $order_meta['order_payment']['shipping_method'] != 'default_shipping_mode_for_pos' ) ) ) {
+				add_meta_box(
+				'wpshop_order_shipping',
+				'<span class="dashicons dashicons-palmtree"></span> '.__('Shipping', 'wpshop'),
+				array($this, 'order_shipping_box'),
+				WPSHOP_NEWTYPE_IDENTIFIER_ORDER, 'side', 'low'
+						);
+			}
 		}
 	}
-
 
 	/**
 	 * Add CSS and JS files in front-office
