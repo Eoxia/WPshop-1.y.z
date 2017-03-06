@@ -34,7 +34,7 @@ class wps_shipping_mode_ctr {
 		add_shortcode( 'wps_shipping_method', array( &$this, 'display_shipping_methods') );
 		add_shortcode( 'wps_shipping_summary', array( &$this, 'display_shipping_summary') );
 
-		add_action( 'add_meta_boxes', array( $this, 'add_meta_box') );
+		add_action( 'add_meta_boxes', array( $this, 'add_meta_box'), 10, 2 );
 	}
 
 	function add_meta_box( $post_type, $post ) {

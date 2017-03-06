@@ -106,7 +106,7 @@ class wps_product_variation_interface
             $ids = array_merge($ids, array_keys($available['possible_value']));
         }
         $query = $wpdb->prepare('SELECT * FROM ' . WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS . " WHERE id IN ('" . implode("', '", $ids) . "') AND status = %s", 'valid');
-        $product = wpshop_products::get_product_data($post->ID, false, '"publish"');
+        $product = wpshop_products::get_product_data($post->ID, false, '"publish","draft","future"');
         $is_used_in_variation = wpshop_attributes::getElement('yes', "'valid', 'notused'", 'is_used_in_variation', true);
         $attribute_list = array();
         foreach ($is_used_in_variation as $attribute) {
