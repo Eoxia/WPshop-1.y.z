@@ -2103,7 +2103,7 @@ class wpshop_products
             }
 
             $template_part = ($variations_list && ($output_type == 'mini')) ? 'configure_product_button' : (!empty($productStock) ? 'add_to_cart_button' : 'unavailable_product_button');
-						$template_part = apply_filters( 'wps_custom_add_to_cart_button', $template_part );
+						$template_part = apply_filters( 'wps_custom_add_to_cart_button', $template_part, $product_id );
 
             $tpl_component = array();
             $tpl_component['PRODUCT_ID'] = $product_id;
