@@ -34,24 +34,24 @@ class wps_shipping_mode_ctr {
 		add_shortcode( 'wps_shipping_method', array( &$this, 'display_shipping_methods') );
 		add_shortcode( 'wps_shipping_summary', array( &$this, 'display_shipping_summary') );
 
-		add_action( 'add_meta_boxes', array( $this, 'add_meta_box') );
+		add_action( 'add_meta_boxes', array( $this, 'add_meta_box'), 10, 2 );
 	}
 
-	function add_meta_box() {
-		global $post;
-		/**	Box for shipping information	*/
-		$shipping_option = get_option('wpshop_shipping_address_choice');
-		$order_meta = get_post_meta( $post->ID, '_order_postmeta', true );
-		if (!in_array( $post->post_status, array( 'auto-draft' ) ) && ( !empty($shipping_option['activate']) && $shipping_option['activate'] && empty($order_meta['order_payment']['shipping_method'] ) || $order_meta['order_payment']['shipping_method'] != 'default_shipping_mode_for_pos' )) {
-			add_meta_box(
-			'wpshop_order_shipping',
-			'<span class="dashicons dashicons-palmtree"></span> '.__('Shipping', 'wpshop'),
-			array($this, 'order_shipping_box'),
-			WPSHOP_NEWTYPE_IDENTIFIER_ORDER, 'side', 'low'
-					);
+	function add_meta_box( $post_type, $post ) {
+		if ( WPSHOP_NEWTYPE_IDENTIFIER_ORDER == $post_type ) {
+			/**	Box for shipping information	*/
+			$shipping_option = get_option('wpshop_shipping_address_choice');
+			$order_meta = get_post_meta( $post->ID, '_order_postmeta', true );
+			if (!in_array( $post->post_status, array( 'auto-draft' ) ) && ( !empty($shipping_option['activate']) && $shipping_option['activate'] && ( is_array( $order_meta ) && empty($order_meta['order_payment']['shipping_method'] ) || $order_meta['order_payment']['shipping_method'] != 'default_shipping_mode_for_pos' ) ) ) {
+				add_meta_box(
+				'wpshop_order_shipping',
+				'<span class="dashicons dashicons-palmtree"></span> '.__('Shipping', 'wpshop'),
+				array($this, 'order_shipping_box'),
+				WPSHOP_NEWTYPE_IDENTIFIER_ORDER, 'side', 'low'
+						);
+			}
 		}
 	}
-
 
 	/**
 	 * Add CSS and JS files in front-office
@@ -68,9 +68,9 @@ class wps_shipping_mode_ctr {
 	/**
 	 * Add JS and CSS files in back-office
 	 */
-	function add_scripts_in_admin() {
+	function add_scripts_in_admin( $hook ) {
 		global $current_screen;
-		if( ! in_array( $current_screen->post_type, array( WPSHOP_NEWTYPE_IDENTIFIER_ORDER ), true ) )
+		if ( ! in_array( $current_screen->post_type, array( WPSHOP_NEWTYPE_IDENTIFIER_ORDER ), true ) && $hook !== 'settings_page_wpshop_option' )
 			return;
 
 		add_thickbox();

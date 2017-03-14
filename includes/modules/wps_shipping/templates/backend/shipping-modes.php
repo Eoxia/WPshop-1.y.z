@@ -10,6 +10,7 @@
 			<div class="wps-table-cell"><?php _e( 'Configure', 'wpshop'); ?></div>
 			<div class="wps-table-cell"><?php _e( 'Activate', 'wpshop'); ?></div>
 			<div class="wps-table-cell"><?php _e( 'Default shipping mode', 'wpshop'); ?></div>
+			<div class="wps-table-cell"><?php _e( 'Delete', 'wpshop'); ?></div>
 	</div>
 	<?php foreach( $shipping_mode_option['modes'] as $k => $shipping_mode ) :
 		if( $k != 'default_choice' ) :

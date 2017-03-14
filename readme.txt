@@ -4,7 +4,7 @@ Tags: boutique, catalog, catalogue, commerce, e-commerce, ecommerce, m-commerce,
 Donate link: http://www.wpshop.fr/documentations/presentation-wpshop/
 Requires at least: 3.4.0
 Tested up to: 4.7.2
-Stable tag: 1.4.3.2
+Stable tag: 1.4.3.5
 License: GPLv2 or later
 
 Simple and powerfull eCommerce plugin, with French Payment and Shipping systems : Paybox, Paypal, Atos, Cybermut, SystemPay, Paysite-cash, Colissimo
@@ -96,6 +96,40 @@ Il faut vérifier que le réglage des permaliens pour votre site est bien régl�
 
 
 == Changelog ==
+
+= Version 1.4.3.5 =
+
+Corrections / Fix
+
+* 7384 - Erreur php lors de l'édition d'un post type selon la configuration de la boutique
+
+= Version 1.4.3.4 =
+
+Améliorations / Improvments
+
+* 7313 - Lien de paiement dans le compte client - Pay link customer account
+* 7312 - Lien de paiement dans les commandes - Pay link in orders
+
+Corrections / Fix
+
+* 7314 - Affichage des paiements - Payments display
+* 7315 - Compatibilité serveurs - Compatibility server
+
+= Version 1.4.3.3 =
+
+Améliorations / Improvments
+
+* 7121 - Filtre fichier nouvelle interface options - Apply_filters file variation new interface
+* 7054 - Affichage des attributs liste dans la fiche produit - Display attribute list in product sheet
+* 6200 - Noms des société dans recherche client devis - Search socity name in customer order
+* 3632 - Supprimer un mode de livraison, ajouté manuellement - Delete shipping mode, manually add
+
+Corrections / Fix
+
+* 7185 - Correctifs coupons - Fixes coupons
+* 7123 - Inversion nouvelle interface - Fix new variation interface
+* 7078 - Ajout de mode de livraison - Add shipping mode
+* 3404 - Déclinaisons dans le mini panier - Resume variations in mini cart
 
 = Version 1.4.3.2 =
 

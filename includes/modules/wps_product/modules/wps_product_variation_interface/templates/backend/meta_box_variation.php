@@ -55,8 +55,12 @@
 		<li class="wps_variations_price_vat_col">%vat%%currency%</li>
 		<li class="wps_variations_price_stock_col"><input type="text" pattern="[0-9]*" onchange="wps_variations_price_option_raw.control.stock(this)" name="wps_pdt_variations[%ID%][attribute][decimal][product_stock]" align="right" value="%stock%"></li>
 		<li class="wps_variations_price_weight_col"><input type="text" pattern="[0-9]+(\.[0-9][0-9]?)?" onchange="wps_variations_price_option_raw.control.weight(this)" name="wps_pdt_variations[%ID%][attribute][decimal][product_weight]" align="right" value="%weight%"></li>
+<<<<<<< HEAD
 		<li class="wps_variations_price_reference_col"><input type="text" onchange="wps_variations_price_option_raw.control.reference(this)" name="wps_pdt_variations[%ID%][attribute][varchar][product_reference]" align="right" value="%reference%"></li>
 		<li class="wps_variations_price_file_col" data-view-model="wps_variations_price_option_file_%ID%"><span class="wps_variations_price_option_price_file" onclick="wps_variations_price_option_raw.control.file(this)">%link%</span><input style="display: none;" type="file" name="wpshop_file" id="wpshop_file" onchange="wps_variations_price_option_raw.control.link(event, this)"><?php wp_nonce_field('ajax_wpshop_upload_downloadable_file_action', 'wpshop_file_nonce');?><a class="wps_variations_price_option_price_download_file" href="%path%" target="_blank" download="" style="display: %download%"><span class="dashicons dashicons-download"></span></a></li>
+=======
+		<li class="wps_variations_price_file_col" data-view-model="wps_variations_price_option_file_%ID%"><?php echo apply_filters('wpshop_new_interface_variation_download_file_dialog', '<span class="wps_variations_price_option_price_file" onclick="wps_variations_price_option_raw.control.file(this)">%link%</span><input style="display: none;" type="file" name="wpshop_file" id="wpshop_file" onchange="wps_variations_price_option_raw.control.link(event, this)">' . wp_nonce_field('ajax_wpshop_upload_downloadable_file_action', 'wpshop_file_nonce') . '<a class="wps_variations_price_option_price_download_file" href="%path%" target="_blank" download="" style="display: %download%"><span class="dashicons dashicons-download"></span></a>' ); ?></li>
+>>>>>>> origin/master
 		<li class="wps_variations_price_active_col"><input name="wps_pdt_variations[%ID%][status]" onclick="wps_variations_price_option_raw.control.activate(this)" type="checkbox" %price_option_activate%></li>
 	</ul>
 </div>

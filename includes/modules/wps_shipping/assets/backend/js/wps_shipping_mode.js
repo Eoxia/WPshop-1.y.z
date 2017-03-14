@@ -1,79 +1,71 @@
-jQuery(document).ready(function() {
+jQuery( document ).ready(function() {
 
-   jQuery( "#shipping_mode_list_container" ).sortable();
+   jQuery( '#shipping_mode_list_container' ).sortable();
 
 
    // Save payment configuration
 	jQuery( document ).on( 'click', '.wps_save_payment_mode_configuration', function() {
-		jQuery( this ).addClass( 'wps-bton-loading');
-		jQuery( '#TB_closeWindowButton').click();
-		jQuery( '#wps_shipping_config_save_message').fadeIn( 'slow' );
+		jQuery( this ).addClass( 'wps-bton-loading' );
+		jQuery( '#TB_closeWindowButton' ).click();
+		jQuery( '#wps_shipping_config_save_message' ).fadeIn( 'slow' );
 		setTimeout( function() {
-			jQuery( 'input[name="Submit"]').click();
-		},500);
+			jQuery( 'input[name="Submit"]' ).click();
+		}, 500 );
 	});
 
-
-
-   jQuery('.wps_shipping_mode_configuation_min_max').each(function() {
-	   var id = jQuery(this).attr('id');
-		id = id.replace('_min_max_activate', '');
-		if ( jQuery(this).is(':checked') ) {
-			jQuery('#'+ id + '_min_max_shipping_rules_configuration').slideDown('slow');
-		}
-		else {
-			jQuery('#'+ id + '_min_max_shipping_rules_configuration').slideUp('slow');
+   jQuery( '.wps_shipping_mode_configuation_min_max' ).each(function() {
+	   var id = jQuery( this ).attr( 'id' );
+		id = id.replace( '_min_max_activate', '' );
+		if ( jQuery( this ).is( ':checked' ) ) {
+			jQuery( '#' + id + '_min_max_shipping_rules_configuration' ).slideDown( 'slow' );
+		} else {
+			jQuery( '#' + id + '_min_max_shipping_rules_configuration' ).slideUp( 'slow' );
 		}
    });
 
-
-	jQuery(document).on('click', '.wps_shipping_mode_configuation_min_max', function() {
-		var id = jQuery(this).attr('id');
-		id = id.replace('_min_max_activate', '');
-		if ( jQuery(this).is(':checked') ) {
-			jQuery('#'+ id + '_min_max_shipping_rules_configuration').slideDown('slow');
-		}
-		else {
-			jQuery('#'+ id + '_min_max_shipping_rules_configuration').slideUp('slow');
+	jQuery( document ).on( 'click', '.wps_shipping_mode_configuation_min_max', function() {
+		var id = jQuery( this ).attr( 'id' );
+		id = id.replace( '_min_max_activate', '' );
+		if ( jQuery( this ).is( ':checked' ) ) {
+			jQuery( '#' + id + '_min_max_shipping_rules_configuration' ).slideDown( 'slow' );
+		} else {
+			jQuery( '#' + id + '_min_max_shipping_rules_configuration' ).slideUp( 'slow' );
 		}
 	});
 
-	 jQuery('.activate_free_shipping_cost_from').each(function() {
-		   var id = jQuery(this).attr('id');
-			id = id.replace('_free_shipping', '');
-			if ( jQuery(this).is(':checked') ) {
-				jQuery('#'+ id + '_activate_free_shipping').slideDown('slow');
-			}
-			else {
-				jQuery('#'+ id + '_activate_free_shipping').slideUp('slow');
+	 jQuery( '.activate_free_shipping_cost_from' ).each(function() {
+		   var id = jQuery( this ).attr( 'id' );
+			id = id.replace( '_free_shipping', '' );
+			if ( jQuery( this ).is( ':checked' ) ) {
+				jQuery( '#' + id + '_activate_free_shipping' ).slideDown( 'slow' );
+			} else {
+				jQuery( '#' + id + '_activate_free_shipping' ).slideUp( 'slow' );
 			}
 	   });
 
-
-		jQuery(document).on('click', '.activate_free_shipping_cost_from', function() {
-			var id = jQuery(this).attr('id');
-			id = id.replace('_free_shipping', '');
-			if ( jQuery(this).is(':checked') ) {
-				jQuery('#'+ id + '_activate_free_shipping').slideDown('slow');
-			}
-			else {
-				jQuery('#'+ id + '_activate_free_shipping').slideUp('slow');
+		jQuery( document ).on( 'click', '.activate_free_shipping_cost_from', function() {
+			var id = jQuery( this ).attr( 'id' );
+			id = id.replace( '_free_shipping', '' );
+			if ( jQuery( this ).is( ':checked' ) ) {
+				jQuery( '#' + id + '_activate_free_shipping' ).slideDown( 'slow' );
+			} else {
+				jQuery( '#' + id + '_activate_free_shipping' ).slideUp( 'slow' );
 			}
 		});
 
 
 	/** Hide Notice Message **/
-	jQuery( document ).on("click", ".wps_hide_notice_message", function() {
+	jQuery( document ).on( 'click', '.wps_hide_notice_message', function() {
 		var data = {
-				action: "wps_hide_notice_messages",
+				action: 'wps_hide_notice_messages',
         _wpnonce: jQuery( this ).data( 'nonce' ),
-				indicator : jQuery("#hide_messages_indicator").val()
+				indicator: jQuery( '#hide_messages_indicator' ).val()
 			};
-			jQuery.post(ajaxurl, data, function(response){
-				if ( response["status"] )  {
-					jQuery("#wpshop_shop_sale_type_notice").hide();
+			jQuery.post( ajaxurl, data, function( response ) {
+				if ( response['status'] )  {
+					jQuery( '#wpshop_shop_sale_type_notice' ).hide();
 				}
-			}, "json");
+			}, 'json' );
 	});
 
 
@@ -81,15 +73,15 @@ jQuery(document).ready(function() {
 	/**
 	 * Add a logo to shipping mode
 	 */
-	jQuery( document ).on( 'click', '.add_logo_to_shipping_mode', function(e) {
+	jQuery( document ).on( 'click', '.add_logo_to_shipping_mode', function( e ) {
 		e.preventDefault();
 		var id = jQuery( this ).attr( 'id' );
 		id = id.replace( 'add_logo_to_shipping_mode_', '' );
 		jQuery( this ).addClass( 'wps-bton-loading' );
 		// Open media gallery
 		var uploader_category = wp.media({
-					multiple : false
-				}).on('select', function() {
+					multiple: false
+				}).on( 'select', function() {
 					var selected_picture = uploader_category.state().get( 'selection' );
 					var attachment = selected_picture.first().toJSON();
 
@@ -100,14 +92,13 @@ jQuery(document).ready(function() {
 		jQuery( '.add_logo_to_shipping_mode' ).removeClass( 'wps-bton-loading' );
 	});
 
-	jQuery( document ).on( 'change', '.wps_shipping_mode_active', function(e) {
-		radio = '#' + jQuery(this).attr('id') + '_radio_default';
-        if (!jQuery(this).is(':checked')) {
-        	jQuery( radio ).attr('disabled','disabled');
-        	jQuery( radio ).removeAttr('checked');
-        }
-        else {
-        	jQuery( radio ).removeAttr('disabled');
+	jQuery( document ).on( 'change', '.wps_shipping_mode_active', function( e ) {
+		radio = '#' + jQuery( this ).attr( 'id' ) + '_radio_default';
+        if ( ! jQuery( this ).is( ':checked' ) ) {
+        	jQuery( radio ).attr( 'disabled', 'disabled' );
+        	jQuery( radio ).removeAttr( 'checked' );
+        } else {
+        	jQuery( radio ).removeAttr( 'disabled' );
         }
 	});
 
@@ -119,54 +110,73 @@ jQuery(document).ready(function() {
 		e.preventDefault;
 		jQuery( this ).addClass( 'wps-bton-loading' );
 		jQuery( this ).attr( 'disabled', true );
-		jQuery("#wps_shipping_mode_list_container").addClass( 'wps-bloc-loading' );
+		jQuery( '#wps_shipping_mode_list_container' ).addClass( 'wps-bloc-loading' );
 		var data = {
-			action: "wps_add_new_shipping_mode",
-	        _wpnonce: jQuery( this ).data( 'nonce' ),
+			action: 'wps_add_new_shipping_mode',
+	        _wpnonce: jQuery( this ).data( 'nonce' )
 		};
-		jQuery.post(ajaxurl, data, function(response){
-			if ( response["status"] )  {
-				jQuery("#wps_shipping_mode_list_container").append( response['response'] );
+		jQuery.post( ajaxurl, data, function( response ) {
+			if ( response['status'] )  {
+				jQuery( '#wps_shipping_mode_list_container > script' ).remove();
+				jQuery( '#wps_shipping_mode_list_container' ).append( response['response'] );
 				jQuery( '.wps_create_new_shipping_mode' ).addClass( 'wps-bton-loading' );
 				jQuery( '.wps_create_new_shipping_mode' ).attr( 'disabled', false );
-				jQuery("#wps_shipping_mode_list_container").removeClass( 'wps-bloc-loading' );
-			}
-			else {
+				jQuery( '#wps_shipping_mode_list_container' ).removeClass( 'wps-bloc-loading' );
+			} else {
 				alert( wps_an_error_occured );
 				jQuery( '.wps_create_new_shipping_mode' ).addClass( 'wps-bton-loading' );
 				jQuery( '.wps_create_new_shipping_mode' ).attr( 'disabled', false );
-				jQuery("#wps_shipping_mode_list_container").removeClass( 'wps-bloc-loading' );
+				jQuery( '#wps_shipping_mode_list_container' ).removeClass( 'wps-bloc-loading' );
 			}
-		}, "json");
+		}, 'json' );
 	});
 
+	/**
+	 * Delete shipping mode
+	 */
+	jQuery( document ).on( 'click', '.wps_delete_shipping_mode', function( e ) {
+		e.preventDefault();
+		var btn = jQuery( this );
+		var parent = btn.closest( '.wps_shipping_mode_container' );
+		//Btn.addClass( 'wps-bton-loading' );
+		var data = {
+			action: 'wps_delete_shipping_mode',
+			_wpnonce: btn.data( 'nonce' ),
+			shipping_mode: parent.find( '[id^=\'wps_custom_shipping_mode_\']' ).attr( 'id' ).replace( '_shipping_configuration_interface', '' )
+		};
+		jQuery.post( ajaxurl, data, function( response ) {
+			if ( response['success'] ) {
+				parent.fadeOut(function() {
+					parent.remove();
+				});
+			} else {
+				alert( wps_an_error_occured );
+			}
+		}, 'json' );
+	} );
 
 	/* Save rule Action */
 	jQuery( document ).on( 'click', '.save_rules_button', function() {
-		var id_shipping_method = jQuery(this).attr('id');
-		id_shipping_method = id_shipping_method.replace( '_save_rule', '');
+		var id_shipping_method = jQuery( this ).attr( 'id' );
+		id_shipping_method = id_shipping_method.replace( '_save_rule', '' );
 		jQuery( this ).addClass( 'wps-bton-loading' );
 		var _wpnonce = jQuery( this ).data( 'nonce' );
 
 		var selected_country = '';
-		if ( jQuery("#" + id_shipping_method + "_main_rule").is(':checked') && jQuery("#" + id_shipping_method + "_custom_shipping_active_cp").is(':checked')) {
-			if ( jQuery("#country_list").val() != 0 ) {
-				selected_country = jQuery("#" + id_shipping_method + "_country_list").val()+'-'+jQuery("#" + id_shipping_method + "_main_rule").val();
-			}
-			else {
+		if ( jQuery( '#' + id_shipping_method + '_main_rule' ).is( ':checked' ) && jQuery( '#' + id_shipping_method + '_custom_shipping_active_cp' ).is( ':checked' ) ) {
+			if ( jQuery( '#country_list' ).val() != 0 ) {
+				selected_country = jQuery( '#' + id_shipping_method + '_country_list' ).val() + '-' + jQuery( '#' + id_shipping_method + '_main_rule' ).val();
+			} else {
 				alert( wps_options_country_choose_for_custom_fees );
 			}
-		}
-		else if( jQuery("#" + id_shipping_method + "_custom_shipping_active_cp").is(':checked')) {
-			if ( (jQuery("#" + id_shipping_method + "_country_list").val() != 0) && (jQuery('#' + id_shipping_method + '_postcode_rule').val() != null)) {
-				selected_country = jQuery("#" + id_shipping_method + "_country_list").val()+'-'+jQuery('#' + id_shipping_method + '_postcode_rule').val();
-			}
-			else {
+		} else if ( jQuery( '#' + id_shipping_method + '_custom_shipping_active_cp' ).is( ':checked' ) ) {
+			if ( ( jQuery( '#' + id_shipping_method + '_country_list' ).val() != 0 ) && ( jQuery( '#' + id_shipping_method + '_postcode_rule' ).val() != null ) ) {
+				selected_country = jQuery( '#' + id_shipping_method + '_country_list' ).val() + '-' + jQuery( '#' + id_shipping_method + '_postcode_rule' ).val();
+			} else {
 				alert( wps_options_country_postcode_choose_for_custom_fees );
 			}
-		}
-		else if( jQuery("#" + id_shipping_method + "_custom_shipping_active_department").is(':checked') && (jQuery("#" + id_shipping_method + "_department_rule").val() != '') ) {
-			selected_country = jQuery("#" + id_shipping_method + "_country_list").val()+'-'+jQuery('#' + id_shipping_method + '_department_rule').val();
+		} else if ( jQuery( '#' + id_shipping_method + '_custom_shipping_active_department' ).is( ':checked' ) && ( jQuery( '#' + id_shipping_method + '_department_rule' ).val() != '' ) ) {
+			selected_country = jQuery( '#' + id_shipping_method + '_country_list' ).val() + '-'+jQuery('#' + id_shipping_method + '_department_rule').val();
 		}
 		else if( jQuery("#" + id_shipping_method + "_main_rule").is(':checked') ) {
 			selected_country = jQuery("#" + id_shipping_method + "_main_rule").val();

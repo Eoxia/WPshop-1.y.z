@@ -89,12 +89,12 @@ class wpshop_general_options {
 	/**
 	 * Define if the price is piloted by the ATI or TAX FREE
 	 */
+	public static $wpshop_price_piloting_types = array('HT', 'TTC');
 	public static function wpshop_shop_price_piloting_field() {
-		$wpshop_price_piloting_types = array('HT', 'TTC');
 		$current_piloting = get_option('wpshop_shop_price_piloting', WPSHOP_PRODUCT_PRICE_PILOT);
 
 		$piloting_options = '';
-		foreach($wpshop_price_piloting_types as $price_type) {
+		foreach(self::$wpshop_price_piloting_types as $price_type) {
 			$piloting_options .= '<option value="'.$price_type.'"'.(($price_type==$current_piloting) ? ' selected="selected"' : null).'>'.$price_type.'</option>';
 		}
 		echo '<select name="wpshop_shop_price_piloting">'.$piloting_options.'</select>
