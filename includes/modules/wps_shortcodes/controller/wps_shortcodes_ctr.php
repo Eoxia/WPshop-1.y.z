@@ -234,8 +234,8 @@ class wps_shortcodes_ctr
 	public static function wysiwyg_button() {
 		if ( ! current_user_can('edit_posts') && ! current_user_can('edit_pages') ) return;
 		//if ( get_user_option('rich_editing') == 'true') :
-		add_filter('mce_external_plugins', array('wps_shortcodes_ctr', 'add_button_to_wysiwyg'));
-		add_filter('mce_buttons', array('wps_shortcodes_ctr', 'register_wysiwyg_button'));
+		/*add_filter('mce_external_plugins', array('wps_shortcodes_ctr', 'add_button_to_wysiwyg'));
+		add_filter('mce_buttons', array('wps_shortcodes_ctr', 'register_wysiwyg_button'));*/
 		//endif;
 	}
 	function refresh_wysiwyg() {
@@ -269,7 +269,7 @@ class wps_shortcodes_ctr
 
 
 	public function __construct() {
-		//add_action('init', array($this, 'help_tab_shortcodes'));
+		add_action('init', array($this, 'help_tab_shortcodes'));
 		add_action( "admin_head", array( $this, 'shortcode_text_localization' ) );
 	}
 
@@ -342,13 +342,46 @@ class wps_shortcodes_ctr
 	}
 
 	public function help_tab_shortcodes() {
-		$shortcodes = $this->shortcode_xmlloader();
+		if( current_user_can('edit_posts') &&  current_user_can('edit_pages') && get_user_option('rich_editing') == 'true' ) {
+			add_filter( 'mce_external_plugins', array( $this, 'wpshop_add_buttons' ) );
+			add_filter( 'mce_buttons', array( $this, 'wpshop_register_buttons' ) );
+			add_action( 'admin_footer', array( $this, 'wpshop_get_shortcodes' ) );
+		}
+		/*$shortcodes = $this->shortcode_xmlloader();
 		ob_start();
 		require( wpshop_tools::get_template_part( WPS_SHORTCODES_DIR, WPS_SHORTCODES_TEMPLATES_MAIN_DIR, "backend", 'shortcode_help_tab' ) );
 		$content = ob_get_contents();
 		ob_end_clean();
 		global $wps_help_tabs;
-		$wps_help_tabs->set_help_tab( 'shortcodes', __( 'Shortcodes', 'wpshop' ), $content, array('edit-post', 'post', 'edit-page', 'page', 'edit-comments', 'comments', 'edit-wpshop_product', 'wpshop_product', 'edit-wpshop_product_category') );
+		$wps_help_tabs->set_help_tab( 'shortcodes', __( 'Shortcodes', 'wpshop' ), $content, array('edit-post', 'post', 'edit-page', 'page', 'edit-comments', 'comments', 'edit-wpshop_product', 'wpshop_product', 'edit-wpshop_product_category') );*/
+	}
+
+	public function wpshop_register_buttons( $buttons ) {
+		array_push( $buttons, 'separator', 'pushortcodes' );
+		return $buttons;
+	}
+
+	public function wpshop_add_buttons( $plugin_array ) {
+		$plugin_array['pushortcodes'] = WPSHOP_JS_URL . 'pages/shortcode-tinymce-button.js';
+		return $plugin_array;
+	}
+
+	public function wpshop_get_shortcodes() {
+		echo '<script type="text/javascript">var shortcodes_button = new Array();';
+		$count = 0;
+		foreach( $this->shortcode_xmlloader() as $category ) {
+			foreach( $category['items'] as $shortcode => $shortcode_args ) {
+				echo "shortcodes_button[{$count}] = '[$shortcode";
+				if( isset( $shortcode_args['args'] ) ) {
+					foreach( $shortcode_args['args'] as $argument => $parameter ) {
+						echo ' ' . $argument . '="' . urlencode( $parameter ) . '"';
+					}
+				}
+				echo "]';";
+				$count++;
+			}
+		}
+		echo '</script>';
 	}
 
 	public static function wps_shortcodes_wysiwyg_dialog(){

@@ -663,7 +663,8 @@ class wpshop_orders {
 		return $output;
 	}
 	static function display_customer_pay_quotation( $state, $oid ) {
-		$btn = '<p><a role="button" data-nonce="' . wp_create_nonce( 'wps_quotation_is_payable_by_customer' ) . '" class="wps-bton-' . ( ( $state ) ? 'third' : 'second' ) . '-mini-rounded quotation_is_payable_by_customer" href="#" >'.__('Valid quotation', 'wpshop').'</a></p>';
+		$label = ( ( $state ) ? __('Invalid quotation', 'wpshop') : __('Valid quotation', 'wpshop') );
+		$btn = '<p><a role="button" data-nonce="' . wp_create_nonce( 'wps_quotation_is_payable_by_customer' ) . '" class="wps-bton-' . ( ( $state ) ? 'third' : 'second' ) . '-mini-rounded quotation_is_payable_by_customer" href="#" >'.$label.'</a></p>';
 		if( $state ) {
 			//$btn .= '<a target="_blank" href="' . admin_url( 'admin-ajax.php?action=wps_checkout_quotation&order_id=' . $oid . '&is_link=link' ) . '">' . __( 'Pay link', 'wpshop' ) . '</a>';
 			$btn .= '<span><input id="wps_direct_link_url" type="text" value="' . wpshop_checkout::wps_direct_payment_link_url( $oid ) . '"/><a class="button" data-copy-target="#wps_direct_link_url" title="' . __( 'Copy', 'wpshop' ) . '"><span class="dashicons dashicons-clipboard"></span></a><a data-nonce="' . wp_create_nonce( 'wps_send_direct_payment_link' ) . '" role="button" class="button" href="#" title="' . __( 'Send by mail', 'wpshop' ) . '"><span class="dashicons dashicons-email"></span></a></span><span>' . sprintf( __( 'Link is valid until %s', 'wpshop' ), mysql2date( get_option( 'date_format' ), date_format( date_create( date('Y-m') . ' + 2month - 1day' ), 'Y-m-d H:i:s' ), true ) ) . '</span>';

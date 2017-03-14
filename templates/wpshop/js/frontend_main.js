@@ -2,9 +2,9 @@
 var wpshop = jQuery.noConflict();
 
 //Centre un �l�ment sur la page
-jQuery.fn.center = function () {
-	this.css("top", ( jQuery(window).height() - this.height() ) / 2 + "px");
-	this.css("left", ( jQuery(window).width() - this.width() ) / 2 + "px");
+jQuery.fn.center = function() {
+	this.css( 'top', ( jQuery( window ).height() - this.height() ) / 2 + 'px' );
+	this.css( 'left', ( jQuery( window ).width() - this.width() ) / 2 + 'px' );
 	return this;
 };
 
@@ -12,21 +12,21 @@ jQuery.fn.center = function () {
 
 
 /*	Check all event on page load	*/
-wpshop(document).ready(function(){
-	jQuery('.wpshop_product_container').address(function(event) {
+wpshop( document ).ready(function() {
+	jQuery( '.wpshop_product_container' ).address(function( event ) {
 
-	}).bind('change', function(event) {
-		jQuery('.page-numbers').address(function() {
+	}).bind( 'change', function( event ) {
+		jQuery( '.page-numbers' ).address(function() {
 
-			return jQuery(this).attr('href').replace(location.pathname, '');
+			return jQuery( this ).attr( 'href' ).replace( location.pathname, '' );
 		});
 
 		var id = jQuery.address.queryString();
 		if ( id != null ) {
-			var page_number = id.replace('page_product=', '');
-			if ( page_number != '' ){
-				page_number = parseInt(page_number);
-				if( isNaN( page_number ) ) {
+			var page_number = id.replace( 'page_product=', '' );
+			if ( page_number != '' ) {
+				page_number = parseInt( page_number );
+				if ( isNaN( page_number ) ) {
 					wpshop_get_product_by_criteria_on_load( 1 );
 				} else {
 					wpshop_get_product_by_criteria_on_load( page_number );
@@ -36,89 +36,88 @@ wpshop(document).ready(function(){
 	});
 
 /*
-	jQuery(".main_cat_tree_widget").treeview({
+	JQuery(".main_cat_tree_widget").treeview({
 		collapsed: true,
 		animated: "medium",
 		control:"#sidetreecontrol",
 		persist: "location"
 	});
 */
-	//jQuery( ".main_cat_tree_widget" ).menu();
+	//JQuery( ".main_cat_tree_widget" ).menu();
 	/*	Add support for zoom on product thumbnail 	*/
-	//wpshop('.wpshop_picture_zoom_in').jqzoom({zoomType: 'reverse'});
+	//Wpshop('.wpshop_picture_zoom_in').jqzoom({zoomType: 'reverse'});
 
-	function back2Element(element) {
+	function back2Element( element ) {
 		// On remonte en haut de page
 		var offset = element.offset();
-		jQuery('html, body').animate({ scrollTop: offset.top }, 800);
+		jQuery( 'html, body' ).animate({ scrollTop: offset.top }, 800 );
 	}
 
 	var options_login = {
 		dataType:  'json',
-		beforeSubmit: validate_login, // pre-submit callback
-		success: showResponse // post-submit callback
+		beforeSubmit: validate_login, // Pre-submit callback
+		success: showResponse // Post-submit callback
 	};
-	// bind form using 'ajaxForm'
-	if(wpshop("#login_form").length>0) {
-		wpshop('#login_form').ajaxForm(options_login);
+	// Bind form using 'ajaxForm'
+	if ( wpshop( '#login_form' ).length > 0 ) {
+		wpshop( '#login_form' ).ajaxForm( options_login );
 	}
 
 
 	/** Manage form in frontend for adding new product	*/
-	if ( jQuery("#new_entity_quick_form").length > 0 ) {
-		jQuery('#new_entity_quick_form').ajaxForm({
+	if ( jQuery( '#new_entity_quick_form' ).length > 0 ) {
+		jQuery( '#new_entity_quick_form' ).ajaxForm({
 			dataType:  'json',
-	        beforeSubmit: function(a,f,o) {
-	        	animate_container('#new_entity_quick_form', jQuery("#new_entity_quick_form_container"));
+	        beforeSubmit: function( a, f, o ) {
+	        	animate_container( '#new_entity_quick_form', jQuery( '#new_entity_quick_form_container' ) );
 	        },
 	        success: function( response ) {
-	        	desanimate_container(jQuery("#new_entity_quick_form_container"));
+	        	desanimate_container( jQuery( '#new_entity_quick_form_container' ) );
 	        	if ( response[0] ) {
-		            jQuery('#wpshop_quick_add_entity_result').addClass("success");
-		            jQuery('#new_entity_quick_form')[0].reset();
+		            jQuery( '#wpshop_quick_add_entity_result' ).addClass( 'success' );
+		            jQuery( '#new_entity_quick_form' )[0].reset();
+	        	} else {
+		            jQuery( '#wpshop_quick_add_entity_result' ).addClass( 'error' );
 	        	}
-	        	else {
-		            jQuery('#wpshop_quick_add_entity_result').addClass("error");
-	        	}
-	        	jQuery('#wpshop_quick_add_entity_result').html(response[1]);
-	        	jQuery('#wpshop_quick_add_entity_result').show();
-	            setTimeout(function(){
-	            	jQuery('#wpshop_quick_add_entity_result').html("");
-		            jQuery('#wpshop_quick_add_entity_result').slideUp();
-		            jQuery('#wpshop_quick_add_entity_result').removeClass("success");
-		            jQuery('#wpshop_quick_add_entity_result').removeClass("error");
-	            }, 3500);
-	        },
+	        	jQuery( '#wpshop_quick_add_entity_result' ).html( response[1] );
+	        	jQuery( '#wpshop_quick_add_entity_result' ).show();
+	            setTimeout(function() {
+	            	jQuery( '#wpshop_quick_add_entity_result' ).html( '' );
+		            jQuery( '#wpshop_quick_add_entity_result' ).slideUp();
+		            jQuery( '#wpshop_quick_add_entity_result' ).removeClass( 'success' );
+		            jQuery( '#wpshop_quick_add_entity_result' ).removeClass( 'error' );
+	            }, 3500 );
+	        }
 		});
 	}
 
 	var options_register = {
 		dataType:  'json',
-    // beforeSubmit: validate_register, // pre-submit callback
-     success: showResponse // post-submit callback
+    // BeforeSubmit: validate_register, // pre-submit callback
+     success: showResponse // Post-submit callback
  };
- // bind form using 'ajaxForm'
-	if(wpshop("#register_form").length>0) {
-		wpshop('#register_form').ajaxForm(options_register);
+ // Bind form using 'ajaxForm'
+	if ( wpshop( '#register_form' ).length > 0 ) {
+		wpshop( '#register_form' ).ajaxForm( options_register );
 	}
 
-	function validate_login(formData, jqForm, options) {
-		for (var i=0; i < formData.length; i++) {
-			if (!formData[i].value) {
-				jQuery('#reponseBox').hide().html('<div class="error_bloc">Please enter a value for both Username/Email and Password</div>').fadeIn(500);
+	function validate_login( formData, jqForm, options ) {
+		for ( var i = 0; i < formData.length; i++ ) {
+			if ( ! formData[i].value ) {
+				jQuery( '#reponseBox' ).hide().html( '<div class="error_bloc">Please enter a value for both Username/Email and Password</div>' ).fadeIn( 500 );
 				return false;
 			}
 		}
 		return true;
 	}
 
-	function validate_register(formData, jqForm, options) {
-		var required_fields = ['account_first_name','account_last_name','account_email','account_password_1','account_password_2','billing_address','billing_city','billing_postcode','billing_country'];
-		var required_fields_shipping = ['shipping_first_name','shipping_last_name','shipping_address','shipping_city','shipping_postcode','shipping_country'];
+	function validate_register( formData, jqForm, options ) {
+		var required_fields = ['account_first_name', 'account_last_name', 'account_email', 'account_password_1', 'account_password_2', 'billing_address', 'billing_city', 'billing_postcode', 'billing_country'];
+		var required_fields_shipping = ['shipping_first_name', 'shipping_last_name', 'shipping_address', 'shipping_city', 'shipping_postcode', 'shipping_country'];
 
 		// Verif
-		for (var i=0; i < required_fields.length; i++) {
-			if(jQuery('input[name='+required_fields[i]+']',jqForm).val() == '') {
+		for ( var i = 0; i < required_fields.length; i++ ) {
+			if ( jQuery( 'input[name=' + required_fields[i] + ']', jqForm).val() == '') {
 				jQuery('#reponseBox').hide().html('<div class="error_bloc">'+WPSHOP_REQUIRED_FIELD_ERROR_MESSAGE+'</div>').fadeIn(500);
 				back2Element(jQuery('#reponseBox'));
 				return false;
@@ -1002,7 +1001,7 @@ function function_before_add_to_cart_form_submit(formData, jqForm, options) {
 	});
 
 	for (var i=0; i < formData.length; i++) {
-		if( required_fields.indexOf( formData[i].name ) && ( !formData[i].value ) || ( formData[i].value == 0 ) ) {
+		if( required_fields.indexOf( formData[i].name ) > -1 && ( ( !formData[i].value ) || ( formData[i].value == 0 ) ) ) {
 			highlight_fields.push( {element: jQuery('*[name="'+formData[i].name+'"]'), border: jQuery('*[name="'+formData[i].name+'"]').css('border')} );
 			form_is_complete = false;
 		}

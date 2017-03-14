@@ -40,9 +40,9 @@ class wps_barcode_metabox {
 					)" , $post->ID, 'barcode' );
 				$result = $wpdb->get_results( $query, ARRAY_A );
 
-				add_meta_box('wps_barcode_product', __('Barcode Manager', 'wps_barcode' ),
+				/*add_meta_box('wps_barcode_product', __('Barcode Manager', 'wps_barcode' ),
 				array( $this, 'meta_box_product' ), WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT,
-				'side','default');
+				'side','default');*/
 		}
 
 		if ($conf['type'] === 'internal') {

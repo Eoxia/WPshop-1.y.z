@@ -6,7 +6,7 @@ echo wpshop_display::displayPageHeader(__('Outils pour WP-Shop', 'wpshop'), '', 
 ?><div id="wpshop_configurations_container" class="wpshop_cls" >
 	<div id="tools_tabs" class="wpshop_tabs wpshop_full_page_tabs wpshop_tools_tabs" >
 		<ul>
-			<li class="loading_pic_on_select" ><a href="<?php echo admin_url('admin-ajax.php'); ?>?action=wpshop_tool_db_check" title="wpshop_tools_tab_container" ><?php _e('Database structure check', 'wpshop'); ?></a></li>
+			<li class="loading_pic_on_select" ><a href="<?php print wp_nonce_url( admin_url( 'admin-ajax.php?action=wpshop_tool_db_check' ), 'wpshop_ajax_db_check_tool', '_wpnonce' ); ?>" href="<?php echo admin_url('admin-ajax.php'); ?>?action=wpshop_tool_db_check" title="wpshop_tools_tab_container" ><?php _e('Database structure check', 'wpshop'); ?></a></li>
 			<li class="loading_pic_on_select" ><a href="<?php print wp_nonce_url( admin_url( 'admin-ajax.php?action=wpshop_tool_default_datas_check' ), 'wpshop_tool_default_datas_check', '_wpnonce' ); ?>" title="wpshop_tools_tab_container" ><?php _e('Default data check', 'wpshop'); ?></a></li>
 			<li class="loading_pic_on_select" ><a href="<?php print wp_nonce_url( admin_url( 'admin-ajax.php?action=wps_mass_action' ), 'wps_mass_action_main_interface', '_wpnonce' ); ?>" title="wpshop_tools_tab_container" class="wps_mass_action" ><?php _e('Mass action', 'wpshop'); ?></a></li>
 			<li class="loading_pic_on_select" ><a href="<?php print wp_nonce_url( admin_url( 'admin-ajax.php?action=checking_products_values' ), 'ajax_render_inconsistent_product_price', '_wpnonce' ); ?>" title="wpshop_tools_tab_container" class="checking_products_values" ><?php _e('Checking product values', 'wpshop'); ?></a></li>
@@ -22,83 +22,12 @@ echo wpshop_display::displayPageHeader(__('Outils pour WP-Shop', 'wpshop'), '', 
 				if( ui.panel.attr('id') == 'ui-id-8' && wps_product ) {
 					wps_product.product_check_data();
 				}
+				jQuery("#wpshop_tools_tab_container").hide();
+			},
+			beforeLoad: function() {
+				jQuery("#wpshop_tools_tab_container").show();
 			}
 		} );
-		jQuery(".loading_pic_on_select a").click(function(){
-			jQuery("#wpshop_tools_tab_container").html(jQuery("#wpshopLoadingPicture").html());
-		});
-
-		jQuery(".wpshop_repair_db_version").live("click", function(){
-			jQuery(this).after(jQuery("#wpshopLoadingPicture").html());
-			var data = {
-				action: "wpshop_ajax_db_repair_tool",
-				_wpnonce: jQuery( this ).data( 'nonce' ),
-				version_id: jQuery(this).attr("id").replace("wpshop_repair_db_version_", ""),
-			};
-			jQuery.post(ajaxurl, data, function(response){
-				if (response) {
-					jQuery("#wpshop_tools_tab_container").load("<?php echo admin_url('admin-ajax.php') ?>", {
-						"action": "wpshop_tool_db_check",
-						"_wpnonce": jQuery( '#wpshop_tools_tab_container' ).data( 'nonce'),
-					});
-				}
-				else {
-					alert(wpshopConvertAccentTojs("<?php _e('An error occured while attempting to repair database', 'wpshop'); ?>"));
-				}
-			}, 'json');
-		});
-
-		jQuery(".wpshop_repair_default_data_cpt").live("click", function(){
-			jQuery(this).after(jQuery("#wpshopLoadingPicture").html());
-			var data = {
-				action: "wpshop_ajax_repair_default_datas",
-				_wpnonce: jQuery( this ).data( 'nonce' ),
-				type: "<?php echo WPSHOP_NEWTYPE_IDENTIFIER_ENTITIES; ?>",
-				identifier: jQuery(this).attr("id").replace("wpshop_repair_default_data_wpshop_cpt_", ""),
-			};
-			jQuery.post(ajaxurl, data, function(response){
-				if (response[0]) {
-					jQuery("#" + response[1]).html(response[2]);
-				}
-				else {
-					alert(wpshopConvertAccentTojs("<?php _e('An error occured while attempting to repair default custom post type', 'wpshop'); ?>"));
-				}
-			}, 'json');
-		});
-		jQuery(".wpshop_repair_default_data_attributes").live("click", function(){
-			jQuery(this).after(jQuery("#wpshopLoadingPicture").html());
-			var data = {
-				action: "wpshop_ajax_repair_default_datas",
-				_wpnonce: jquery( this ).data( 'nonce' ),
-				type: "<?php echo WPSHOP_DBT_ATTRIBUTE; ?>",
-				identifier: jQuery(this).attr("id").replace("wpshop_repair_default_data_wpshop_cpt_", ""),
-			};
-			jQuery.post(ajaxurl, data, function(response){
-				if (response[0]) {
-					jQuery("#" + response[1]).html(response[2]);
-				}
-				else {
-					alert(wpshopConvertAccentTojs("<?php _e('An error occured while attempting to repair default attributes', 'wpshop'); ?>"));
-				}
-			}, 'json');
-		});
-		jQuery(".wpshop_translate_default_data_attributes").live("click", function(){
-			jQuery(this).after(jQuery("#wpshopLoadingPicture").html());
-			var data = {
-				action: "wpshop_ajax_translate_default_datas",
-				_wpnonce: jQuery( this ).data( 'nonce' ),
-				type: "<?php echo WPSHOP_DBT_ATTRIBUTE; ?>",
-				identifier: jQuery(this).attr("id").replace("wpshop_translate_default_data_wpshop_cpt_", ""),
-			};
-			jQuery.post(ajaxurl, data, function(response){
-				if (response['status']) {
-					alert(wpshopConvertAccentTojs("<?php _e('Default attributes translation has been updated', 'wpshop'); ?>"));
-				}
-				else {
-					alert(wpshopConvertAccentTojs("<?php _e('An error occured while attempting to repair default attributes', 'wpshop'); ?>"));
-				}
-			}, 'json');
-		});
 	});
 </script><?php
 echo wpshop_display::displayPageFooter(false);

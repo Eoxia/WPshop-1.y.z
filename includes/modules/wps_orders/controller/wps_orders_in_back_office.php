@@ -93,35 +93,35 @@ class wps_orders_in_back_office {
 	 * METABOX CONTENT - Display an order historic of product in administration product panel
 	 */
 	function meta_box_product_sale_informations () {
-		global $post;
-		$product_id = $post->ID;
-		$variations = wpshop_products::get_variation( $product_id );
-		$order_status = unserialize( WPSHOP_ORDER_STATUS );
-		$color_label = array( 'awaiting_payment' => 'jaune', 'canceled' => 'rouge', 'partially_paid' => 'orange', 'incorrect_amount' => 'orange', 'denied' => 'rouge', 'shipped' => 'bleu', 'payment_refused' => 'rouge', 'completed' => 'vert', 'refunded' => 'rouge', 'pos' => 'bleu');
-		// Get datas
-		$sales_informations = array();
-		/** Query **/
-		$data_to_compare = '"item_id";s:' .strlen($product_id). ':"' .$product_id. '";';
-		$query_args = array( 'posts_per_page' => -1, 'post_type' => WPSHOP_NEWTYPE_IDENTIFIER_ORDER, 'meta_query' => array( array('key' => '_order_postmeta', 'value' => $data_to_compare, 'compare' => 'LIKE') ) );
-		$orders = new WP_Query( $query_args );
-		if ( !empty($orders) && !empty($orders->posts) ) {
-			foreach( $orders->posts as $order ) {
-				$order_meta = get_post_meta( $order->ID, '_order_postmeta', true );
-				$order_info = get_post_meta( $order->ID, '_order_info', true );
-				$sales_informations[] = array(
-						'order_key' => ( !empty($order_meta) && !empty($order_meta['order_key']) ) ? $order_meta['order_key'] : '',
-						'order_date' => ( !empty($order_meta) && !empty($order_meta['order_date']) ) ? $order_meta['order_date'] : '',
-						'customer_firstname' => ( !empty($order_info) && !empty($order_info['billing']) && !empty($order_info['billing']['address']) && !empty($order_info['billing']['address']['address_first_name']) ) ? $order_info['billing']['address']['address_first_name'] : '',
-						'customer_name' => ( !empty($order_info) && !empty($order_info['billing']) && !empty($order_info['billing']['address']) && !empty($order_info['billing']['address']['address_last_name']) ) ? $order_info['billing']['address']['address_last_name'] : '',
-						'customer_email' => ( !empty($order_info) && !empty($order_info['billing']) && !empty($order_info['billing']['address']) && !empty($order_info['billing']['address']['address_user_email']) ) ? $order_info['billing']['address']['address_user_email'] : '',
-						'order_id' => $order->ID,
-						'order_status' => $order_meta['order_status']
-				);
-			}
-		}
-		// Display results
-		require_once( wpshop_tools::get_template_part( WPS_ORDERS_DIR, $this->template_dir, "backend", "product_order_historic") );
-	}
+ 		global $post;
+ 		$product_id = $post->ID;
+ 		$variations = wpshop_products::get_variation( $product_id );
+ 		$order_status = unserialize( WPSHOP_ORDER_STATUS );
+ 		$color_label = array( 'awaiting_payment' => 'jaune', 'canceled' => 'rouge', 'partially_paid' => 'orange', 'incorrect_amount' => 'orange', 'denied' => 'rouge', 'shipped' => 'bleu', 'payment_refused' => 'rouge', 'completed' => 'vert', 'refunded' => 'rouge', 'pos' => 'bleu');
+ 		// Get datas
+ 		$sales_informations = array();
+ 		/** Query **/
+ 		$data_to_compare = '"item_id";s:' .strlen($product_id). ':"' .$product_id. '";';
+ 		$query_args = array( 'posts_per_page' => 10, 'paged' => absint( isset( $_GET['paged_sales'] ) ? $_GET['paged_sales'] : 1 ), 'post_type' => WPSHOP_NEWTYPE_IDENTIFIER_ORDER, 'meta_query' => array( array('key' => '_order_postmeta', 'value' => $data_to_compare, 'compare' => 'LIKE') ) );
+ 		$orders = new WP_Query( $query_args );
+ 		if ( !empty($orders) && !empty($orders->posts) ) {
+ 			foreach( $orders->posts as $order ) {
+ 				$order_meta = get_post_meta( $order->ID, '_order_postmeta', true );
+ 				$order_info = get_post_meta( $order->ID, '_order_info', true );
+ 				$sales_informations[] = array(
+ 						'order_key' => ( !empty($order_meta) && !empty($order_meta['order_key']) ) ? $order_meta['order_key'] : '',
+ 						'order_date' => ( !empty($order_meta) && !empty($order_meta['order_date']) ) ? $order_meta['order_date'] : '',
+ 						'customer_firstname' => ( !empty($order_info) && !empty($order_info['billing']) && !empty($order_info['billing']['address']) && !empty($order_info['billing']['address']['address_first_name']) ) ? $order_info['billing']['address']['address_first_name'] : '',
+ 						'customer_name' => ( !empty($order_info) && !empty($order_info['billing']) && !empty($order_info['billing']['address']) && !empty($order_info['billing']['address']['address_last_name']) ) ? $order_info['billing']['address']['address_last_name'] : '',
+ 						'customer_email' => ( !empty($order_info) && !empty($order_info['billing']) && !empty($order_info['billing']['address']) && !empty($order_info['billing']['address']['address_user_email']) ) ? $order_info['billing']['address']['address_user_email'] : '',
+ 						'order_id' => $order->ID,
+ 						'order_status' => $order_meta['order_status']
+ 				);
+ 			}
+ 		}
+ 		// Display results
+ 		require_once( wpshop_tools::get_template_part( WPS_ORDERS_DIR, $this->template_dir, "backend", "product_order_historic") );
+ 	}
 
 	/**
 	 * METABOX CONTENT - Payments Box in Orders panel

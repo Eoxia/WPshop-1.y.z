@@ -142,7 +142,7 @@ class wps_coupon_ctr {
 				'coupon_code' => !empty( $_POST['coupon_code'] ) ? sanitize_text_field( $_POST['coupon_code'] ) : '',
 				'coupon_discount_amount' => !empty( $_POST['coupon_discount_amount'] ) ? sanitize_text_field( $_POST['coupon_discount_amount'] ) : '',
 				'wpshop_coupon_discount_type' => !empty( $_POST['coupon_type'] ) ? sanitize_text_field( $_POST['coupon_type'] ) : '',
-				'coupon_receiver' => !empty( $_POST['coupon_receiver'] ) ? sanitize_text_field( $_POST['coupon_receiver'] ) : '',
+				'coupon_receiver' => !empty( $_POST['coupon_receiver'] ) ? (array) $_POST['coupon_receiver'] : '',
 				'coupon_usage_limit' => !empty( $_POST['coupon_usage_limit'] ) ? sanitize_text_field( $_POST['coupon_usage_limit'] ) : '',
 				'post_ID' => $post_id,
 			);

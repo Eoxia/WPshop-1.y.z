@@ -14,6 +14,8 @@
  */
 class wps_product_mass_interface_ctr {
 
+	public $submenu = null;
+
 	/**
 	 * Instanciate the module: declare scripts, styles, hook wordpress
 	 */
@@ -31,25 +33,25 @@ class wps_product_mass_interface_ctr {
 	}
 
 	function register_mass_products_edit_submenu() {
-		add_submenu_page( 'edit.php?post_type=wpshop_product', __('Mass product edit', 'wpshop' ), __('Mass product edit', 'wpshop'), 'manage_options', 'mass_edit_interface', array($this, 'wps_display_mass_edit_interface'));
+		$this->submenu = add_submenu_page( 'edit.php?post_type=wpshop_product', __( 'Mass product edit', 'wpshop' ), __( 'Mass product edit', 'wpshop' ), 'manage_options', 'mass_edit_interface', array($this, 'wps_display_mass_edit_interface' ) );
+		// Declare Styles and JS Files.
+		add_action( 'admin_print_styles-' . $this->submenu, array( $this, 'admin_print_styles' ) );
+		add_action( 'admin_print_scripts-' . $this->submenu, array( $this, 'admin_print_scripts' ) );
 	}
 
 	/**
-	 * Define the aministration pat styles
+	 * Add css to administration
 	 */
-	function admin_css() {
-		wp_enqueue_style( 'wps-mass-product-update', WPS_PDCT_MASS_URL.'/assets/css/backend.css', '', WPS_PDCT_MASS_VERSION);
+	function admin_print_styles() {
+		wp_enqueue_style( 'wps-mass-product-update', WPS_PDCT_MASS_URL . '/assets/css/backend.css' );
 	}
 
 	/**
 	 * Add javascript to administration
 	 */
-	function add_admin_scripts() {
-		wp_enqueue_script( 'admin_product_js', WPS_PDCT_MASS_URL.'/assets/js/backend.js', '', WPS_PDCT_MASS_VERSION, true);
-		wp_enqueue_media();
-	}
-
 	function admin_print_scripts() {
+		wp_enqueue_media();
+		wp_enqueue_script( 'admin_product_js', WPS_PDCT_MASS_URL . '/assets/js/backend.js', '', WPS_PDCT_MASS_VERSION, true );
 		$output = '<script type="text/javascript">';
 		$output .= 'var WPS_MASS_ERROR_INIT = "' .__( 'An error has occured, the page cannot be initialized', 'wpshop' ). '";';
 		$output .= 'var WPS_MASS_ERROR_PRODUCT_CREATION = "' .__( 'An error was occured, the new product cannot be created', 'wpshop' ). '";';
@@ -123,11 +125,6 @@ class wps_product_mass_interface_ctr {
 	 * Display interafce
 	 */
 	function wps_display_mass_edit_interface() {
-		// Declare Styles and JS Files
-		add_action( 'admin_enqueue_scripts', array( $this, 'add_admin_scripts') );
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_css' ) );
-		add_action( 'admin_print_scripts', array( $this, 'admin_print_scripts' ) );
-		
 		global $wpdb;
 
 		$wps_product_mass_interface_mdl = new wps_product_mass_interface_mdl();

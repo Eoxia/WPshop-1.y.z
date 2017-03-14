@@ -83,3 +83,9 @@ table.wps-product-mass-interface-table td .wpshop_product_attribute_HRP, table.w
 	color: #0073aa;
 	text-decoration: underline;
 }
+
+.wps_mass_interface_line .wps-form-group {
+	padding: 0 !important;
+	float: none;
+	width: 100%;
+}

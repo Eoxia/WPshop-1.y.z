@@ -1,5 +1,4 @@
 (function() {
-	console.log( tinymce );
 	tinymce.create( 'tinymce.plugins.wpshop_wysiwyg_shortcodes', {
 
 		/**

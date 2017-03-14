@@ -1,6 +1,5 @@
-console.log( wps_product_variation_interface );
-var attributes_generated = jQuery.extend({}, wps_product_variation_interface.variation);
-for( x in attributes_generated ) {
+var attributes_generated = jQuery.extend({}, wps_product_variation_interface.variation );
+for ( x in attributes_generated ) {
 	attributes_generated[x] = false;
 }
 
@@ -13,9 +12,9 @@ var wps_variations_price_option_raw = {
 				name: {
 					model: (function() {
 						var result_name = [];
-						var options_names = (typeof saved_element.variation_def !== 'undefined' ) ? saved_element.variation_def : saved_element.variation_dif;
-						for( option_name in options_names ) {
-							if( typeof wps_product_variation_interface.variation[option_name] !== 'undefined' ) {
+						var options_names = ( typeof saved_element.variation_def !== 'undefined' ) ? saved_element.variation_def : saved_element.variation_dif;
+						for ( option_name in options_names ) {
+							if ( typeof wps_product_variation_interface.variation[option_name] !== 'undefined' ) {
 								attributes_generated[option_name] = true;
 								result_name.push( {
 									option_code: wps_product_variation_interface.variation[option_name].attribute_complete_def.code,
@@ -23,8 +22,8 @@ var wps_variations_price_option_raw = {
 									option_name: wps_product_variation_interface.variation[option_name].label,
 									option_value: options_names[option_name],
 									option_label: ( function() {
-										for( var i = 0; wps_product_variation_interface.variation_value.length > i; i++ ) {
-											if( options_names[option_name] == wps_product_variation_interface.variation_value[i].id ) {
+										for ( var i = 0; wps_product_variation_interface.variation_value.length > i; i++ ) {
+											if ( options_names[option_name] == wps_product_variation_interface.variation_value[i].id ) {
 												return wps_product_variation_interface.variation_value[i].label;
 											}
 										}
@@ -32,15 +31,15 @@ var wps_variations_price_option_raw = {
 								} );
 							}
 						}
-						if( result_name.length > 1 ) {
-							jQuery( 'input[name=question_combine_options][value=combine]' ).prop( "checked", true );
+						if ( result_name.length > 1 ) {
+							jQuery( 'input[name=question_combine_options][value=combine]' ).prop( 'checked', true );
 						}
 						return result_name;
 					})()
 				},
 				price_config: (function() {
-					if( typeof saved_element.variation_dif !== 'undefined' && typeof saved_element.variation_dif.price_behaviour !== 'undefined' ) {
-						if( typeof wps_product_variation_interface.attribute_in_variation !== 'undefined' && typeof wps_product_variation_interface.attribute_in_variation.price_behaviour !== 'undefined' && typeof wps_product_variation_interface.attribute_in_variation.price_behaviour.possible_value !== 'undefined' && typeof wps_product_variation_interface.attribute_in_variation.price_behaviour.possible_value[saved_element.variation_dif.price_behaviour] !== 'undefined' ) {
+					if ( typeof saved_element.variation_dif !== 'undefined' && typeof saved_element.variation_dif.price_behaviour !== 'undefined' ) {
+						if ( typeof wps_product_variation_interface.attribute_in_variation !== 'undefined' && typeof wps_product_variation_interface.attribute_in_variation.price_behaviour !== 'undefined' && typeof wps_product_variation_interface.attribute_in_variation.price_behaviour.possible_value !== 'undefined' && typeof wps_product_variation_interface.attribute_in_variation.price_behaviour.possible_value[saved_element.variation_dif.price_behaviour] !== 'undefined' ) {
 							result = wps_product_variation_interface.attribute_in_variation.price_behaviour.possible_value[saved_element.variation_dif.price_behaviour];
 						}
 					} else {
@@ -63,6 +62,7 @@ var wps_variations_price_option_raw = {
 				tx_tva: parseFloat( wps_product_variation_interface.tx_tva ),
 				stock: fix_number( ( typeof saved_element.variation_dif !== 'undefined' && typeof saved_element.variation_dif.product_stock !== 'undefined' ) ? saved_element.variation_dif.product_stock : '0', 0 ),
 				weight: fix_number( ( typeof saved_element.variation_dif !== 'undefined' && typeof saved_element.variation_dif.product_weight !== 'undefined' ) ? saved_element.variation_dif.product_weight : '0', 2 ),
+				reference: ( typeof saved_element.variation_dif !== 'undefined' && typeof saved_element.variation_dif.product_reference !== 'undefined' ) ? saved_element.variation_dif.product_reference : '',
 				file: {
 					model: {
 						link: ( ( typeof saved_element.file !== 'undefined' ) ? saved_element.file.name : wps_product_variation_interface.label_file ),
@@ -403,12 +403,14 @@ jQuery(document).ready( function() {
 		parameter.name.control.refresh();
 		parameter.file.control.refresh();
 	};
+	wps_variations_price_option_raw.control.reference = function( element ) {
+	};
 	wps_variations_price_option_raw.control.file = function( element ) {
 		wps_variations_price_option_raw.model[jQuery( element ).closest( "ul[data-view-model='wps_variations_price_option_raw']" ).data('identifier')].file.control.file( element );
-	}
+	};
 	wps_variations_price_option_raw.control.link = function( event, input ) {
 		wps_variations_price_option_raw.model[jQuery( input ).closest( "ul[data-view-model='wps_variations_price_option_raw']" ).data('identifier')].file.control.link( event, input );
-	}
+	};
 	wps_variations_price_option_raw.control.activate = function( element ) {
 		var id = jQuery( element ).closest( "ul[data-view-model='wps_variations_price_option_raw']" ).data('identifier');
 		var parameter = jQuery.extend({}, wps_variations_price_option_raw.model[id]);
@@ -511,6 +513,7 @@ jQuery(document).ready( function() {
 									vat: fix_number( wps_product_variation_interface.product_price - ( wps_product_variation_interface.product_price / ( 1 + ( wps_product_variation_interface.tx_tva / 100 ) ) ) ),
 									stock: '0',
 									weight: '0.00',
+									reference: '',
 									file: {
 										model: {
 											link: wps_product_variation_interface.label_file,
@@ -562,6 +565,7 @@ jQuery(document).ready( function() {
 								vat: fix_number( wps_product_variation_interface.product_price - ( wps_product_variation_interface.product_price / ( 1 + ( wps_product_variation_interface.tx_tva / 100 ) ) ) ),
 								stock: '0',
 								weight: '0.00',
+								reference: '',
 								file: {
 									model: {
 										link: wps_product_variation_interface.label_file,

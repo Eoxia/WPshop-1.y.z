@@ -18,7 +18,13 @@
 		</div>
 	<?php endforeach; ?>
 </div>
+<?php $big = 999999999; // need an unlikely integer
+echo paginate_links( array(
+	'base' => '%_%',
+	'format' => '?paged_sales=%#%',
+	'current' => absint( isset( $_GET['paged_sales'] ) ? $_GET['paged_sales'] : 1 ),
+	'total' => $orders->max_num_pages
+) ); ?>
 <?php else : ?>
 	<div class="wps-alert-info"><?php _e( 'This product has never been ordered', 'wpshop'); ?></div>
 <?php endif; ?>
-

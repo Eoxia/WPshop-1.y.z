@@ -487,6 +487,7 @@ class wpshop_init{
 		wpshop_products::create_wpshop_products_type();
 		add_filter('hidden_meta_boxes', array('wpshop_products', 'hidden_meta_boxes'), 10, 3);
 		add_action('add_meta_boxes', array('wpshop_products', 'add_meta_boxes'));
+		//add_action('admin_menu', array('wpshop_products', 'admin_menu'), 10);
 		add_filter('post_link', array('wpshop_products', 'set_product_permalink'), 10, 3);
 		add_filter('post_type_link', array('wpshop_products', 'set_product_permalink'), 10, 3);
 		add_action('pre_get_posts', array('wpshop_products', 'set_product_request_by_name'));

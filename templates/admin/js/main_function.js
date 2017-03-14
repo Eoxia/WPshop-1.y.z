@@ -1,10 +1,10 @@
 // START RICH TEXT EDIT
 function kwsTriggerSave() {
-	var rich = (typeof tinyMCE != "undefined") && tinyMCE.activeEditor && !tinyMCE.activeEditor.isHidden();
-	if (rich) {
+	var rich = ( typeof tinyMCE != 'undefined' ) && tinyMCE.activeEditor && ! tinyMCE.activeEditor.isHidden();
+	if ( rich ) {
 		ed = tinyMCE.activeEditor;
-		if ( ('mce_fullscreen' == ed.id) || ('wp_mce_fullscreen' == ed.id) ) {
-			tinyMCE.get(0).setContent(ed.getContent({format : 'raw'}), {format : 'raw'});
+		if ( ( 'mce_fullscreen' == ed.id ) || ( 'wp_mce_fullscreen' == ed.id ) ) {
+			tinyMCE.get( 0 ).setContent( ed.getContent({ format: 'raw' }), { format: 'raw' });
 		}
 		tinyMCE.triggerSave();
 	}
@@ -12,84 +12,83 @@ function kwsTriggerSave() {
 
 
 //Return the basename like php function
-function basename(path) {
-	return path.replace(/\\/g,'/').replace( /.*\//, '' );
+function basename( path ) {
+	return path.replace( /\\/g, '/' ).replace( /.*\//, '' );
 }
 
 /*	Function allowing to set order as completed	*/
-function mark_order_as_completed(element, oid){
+function mark_order_as_completed( element, oid ) {
 	// Display loading...
-	element.addClass('loading');
+	element.addClass( 'loading' );
 
 	var data = {
-		action: "change_order_state",
-		wpshop_ajax_nonce: jQuery("#input_wpshop_change_order_state").val(),
+		action: 'change_order_state',
+		wpshop_ajax_nonce: jQuery( '#input_wpshop_change_order_state' ).val(),
 		order_id: oid,
 		order_state: 'completed'
 	};
-	jQuery.post(ajaxurl, data, function(response) {
+	jQuery.post( ajaxurl, data, function( response ) {
 		if ( response[0] ) {
-			jQuery('mark#order_status_'+oid).hide().html(data[2]).fadeIn(500);
-			jQuery('mark#order_status_'+oid).attr('class', data[1]);
+			jQuery( 'mark#order_status_' + oid ).hide().html( data[2] ).fadeIn( 500 );
+			jQuery( 'mark#order_status_' + oid ).attr( 'class', data[1] );
 			// Hide loading and replace button!
-			element.attr('class', 'button markAsShipped order_'+oid).html(data['new_button_title']);
-			window.top.location.href = WPSHOP_ADMIN_URL + "post.php?post=" + oid + "&action=edit";
-		}
-		else {
+			element.attr( 'class', 'button markAsShipped order_' + oid ).html( data['new_button_title'] );
+			window.top.location.href = WPSHOP_ADMIN_URL + 'post.php?post=' + oid + '&action=edit';
+		} else {
 			alert( response[1] );
 		}
-	}, 'json');
+	}, 'json' );
 }
 
 /*	Function allowing to display form for customer address into admin order interface	*/
 function display_customer_address_form ( customer_id ) {
 	var data = {
-		action: "order_customer_adress_load",
-		wpshop_ajax_nonce: jQuery("#input_wpshop_order_customer_adress_load").val(),
-		customer_id : customer_id,
-		order_id: jQuery("#post_ID").val(),
+		action: 'order_customer_adress_load',
+		wpshop_ajax_nonce: jQuery( '#input_wpshop_order_customer_adress_load' ).val(),
+		customer_id: customer_id,
+		order_id: jQuery( '#post_ID' ).val()
 
 	};
-	jQuery.post(ajaxurl, data, function(response) {
+	jQuery.post( ajaxurl, data, function( response ) {
 		if ( response[0] ) {
-			jQuery("#wpshop_customer_id").val(response[3]);
-			jQuery("#customer_address_form").empty();
-			jQuery("#customer_address_form").html(response[1]);
-			jQuery("#shipping_infos_bloc").empty();
-			jQuery("#shipping_infos_bloc").html(response[2]);
+			jQuery( '#wpshop_customer_id' ).val( response[3] );
+			jQuery( '#customer_address_form' ).empty();
+			jQuery( '#customer_address_form' ).html( response[1] );
+			jQuery( '#shipping_infos_bloc' ).empty();
+			jQuery( '#shipping_infos_bloc' ).html( response[2] );
 		}
-	}, "json");
+	}, 'json' );
 }
 
 /*	Function allowing to scroll a page automatically	*/
-function wpshop_go_to(ancre){
+function wpshop_go_to( ancre ) {
 	var speed = 1000;
-	jQuery("html,body").animate({scrollTop:jQuery(ancre).offset().top},speed,"swing",function(){
-		if(ancre != "body")
+	jQuery( 'html,body' ).animate({ scrollTop:jQuery( ancre ).offset().top }, speed, 'swing', function() {
+		if ( ancre != 'body' )
 				window.location.hash = ancre;
 		else
-				window.location.hash = "#";
-		jQuery(ancre).attr("tabindex","-1");
-		jQuery(ancre).focus();
-		jQuery(ancre).removeAttr("tabindex");
+				window.location.hash = '#';
+		jQuery( ancre ).attr( 'tabindex', '-1' );
+		jQuery( ancre ).focus();
+		jQuery( ancre ).removeAttr( 'tabindex' );
 	});
 }
 
-function calcul_price_from_ET(){
-	var ht_amount = parseFloat(jQuery(".wpshop_form_input_element .wpshop_product_attribute_" + WPSHOP_PRODUCT_PRICE_HT).val().replace(",", "."));
-	var value_tx = parseFloat( jQuery( '.wpshop_product_attribute_tx_tva>option:selected').text() );
-	if ( jQuery(".wpshop_form_input_element .wpshop_product_attribute_" + WPSHOP_PRODUCT_SPECIAL_PRICE).val() != 'undefined') {
-		//ht_amount = jQuery(".wpshop_form_input_element .wpshop_product_attribute_" + WPSHOP_PRODUCT_SPECIAL_PRICE).val().replace(",", ".");
+function calcul_price_from_ET() {
+	var ht_amount = parseFloat( jQuery( '.wpshop_form_input_element .wpshop_product_attribute_' + WPSHOP_PRODUCT_PRICE_HT ).val().replace( ',', '.' ) );
+	var value_tx = parseFloat( jQuery( '.wpshop_product_attribute_tx_tva>option:selected' ).text() );
+	if ( jQuery('.wpshop_form_input_element .wpshop_product_attribute_' + WPSHOP_PRODUCT_SPECIAL_PRICE ).val() != 'undefined' ) {
+		//Ht_amount = jQuery(".wpshop_form_input_element .wpshop_product_attribute_" + WPSHOP_PRODUCT_SPECIAL_PRICE).val().replace(",", ".");
 	}
 
-	//var value_tx = parseFloat(jQuery("#wpshop_product_attribute_" + WPSHOP_PRODUCT_PRICE_TAX + "_value_" + jQuery(".wpshop_form_input_element .wpshop_product_attribute_" + WPSHOP_PRODUCT_PRICE_TAX).val()).val());
+	//Var value_tx = parseFloat(jQuery("#wpshop_product_attribute_" + WPSHOP_PRODUCT_PRICE_TAX + "_value_" + jQuery(".wpshop_form_input_element .wpshop_product_attribute_" + WPSHOP_PRODUCT_PRICE_TAX).val()).val());
 
-	var tax_rate = 1 + (value_tx / 100);
+	var tax_rate = 1 + ( value_tx / 100 );
 
 	var ttc_amount = ht_amount * tax_rate;
-	jQuery(".wpshop_form_input_element .wpshop_product_attribute_" + WPSHOP_PRODUCT_PRICE_TTC).val(ttc_amount.toFixed(5));
+	jQuery( '.wpshop_form_input_element .wpshop_product_attribute_' + WPSHOP_PRODUCT_PRICE_TTC ).val( ttc_amount.toFixed( 5 ) );
 	var tva_amount = ttc_amount - ht_amount;
-	jQuery(".wpshop_form_input_element .wpshop_product_attribute_" + WPSHOP_PRODUCT_PRICE_TAX_AMOUNT).val(tva_amount.toFixed(5));
+	jQuery( ".wpshop_form_input_element .wpshop_product_attribute_" + WPSHOP_PRODUCT_PRICE_TAX_AMOUNT).val(tva_amount.toFixed(5));
 }
 
 function calcul_price_from_ATI(){
@@ -412,9 +411,11 @@ function wpshop_variation_delete( variation_to_delete, nonce, callback ) {
 		wpshop_ajax_nonce: nonce
 	};
 	jQuery.post(ajaxurl, data, function(response){
-		for( responseis in response ) {
-			jQuery("#wpshop_variation_metabox_" + response[responseis]).remove();
-		};
+		if( response.length != 0 ) {
+			for( responseis in response) {
+				jQuery("#wpshop_variation_metabox_" + response[responseis]).remove();
+			};
+		}
 		jQuery(".wpshop_variation_metabox_col_close").removeClass('wpshop_variation_metabox_col_close_current');
 		if ( jQuery(".variation_existing_main_container div.wpshop_variation_metabox").length <= 0 ) {
 			jQuery(".wpshop_variation_controller").hide();

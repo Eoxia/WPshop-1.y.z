@@ -1506,13 +1506,13 @@ div.popupAlert h1 {
 	font-style:italic;
 }
 
-#related_products_list_chzn, #related_products_list_chzn .chzn-drop, #related_products_list_chzn .chzn-results {
+#related_products_list_chzn, #related_products_list_chzn .chzn-drop, #related_products_list_chzn .chzn-results, #provider_list_chzn, #provider_list_chzn .chzn-drop, #provider_list_chzn .chzn-results {
 	width: 100% !important;
 }
-#related_products_list_chzn, #related_products_list_chzn .chzn-choices {
+#related_products_list_chzn, #related_products_list_chzn .chzn-choices, #provider_list_chzn, #provider_list_chzn .chzn-choices {
 	height: 150px !important;
 }
-#related_products_list_chzn .chzn-drop {
+#related_products_list_chzn .chzn-drop, #provider_list_chzn .chzn-drop {
 	border-top: 1px solid #CCCCCC;
 }
 
