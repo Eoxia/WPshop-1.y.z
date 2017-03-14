@@ -23,6 +23,65 @@
 			<title>All Shortcodes WPShop</title>
 			<description>Display all Shortcodes of plugin WPShop</description>
 			<item>
+				<identifier>wpshop_products</identifier>
+				<args>
+					<identifier>type</identifier>
+					<params>grid|list</params>
+				</args>
+				<args>
+					<identifier>pagination</identifier>
+					<params>integer</params>
+				</args>
+				<args>
+					<identifier>sorting</identifier>
+					<params>DESC|ASC</params>
+				</args>
+				<args>
+					<identifier>pid</identifier>
+					<params>Product_ID</params>
+				</args>
+				<args>
+					<identifier>cid</identifier>
+					<params>Category_ID</params>
+				</args>
+				<args>
+					<identifier>limit</identifier>
+					<params>integer</params>
+				</args>
+				<args>
+					<identifier>grid_element_nb_per_line</identifier>
+					<params>integer</params>
+				</args>
+				<args>
+					<identifier>display_pagination</identifier>
+					<params>yes|no</params>
+				</args>
+				<args>
+					<identifier>product_type</identifier>
+					<params>related</params>
+				</args>
+				<args>
+					<identifier>order</identifier>
+					<params>creator|author|none|ID|title|date|modified|relevance|post__in|rand</params>
+				</args>
+				<args>
+					<identifier>creator</identifier>
+					<params>integer</params>
+				</args>
+				<args>
+					<identifier>sorting</identifier>
+					<params>related</params>
+				</args>
+				<args>
+					<identifier>container</identifier>
+					<params>yes|no</params>
+				</args>
+				<args>
+					<identifier>no_result_message</identifier>
+					<params>yes|no</params>
+				</args>
+			</item>
+			<item>
 				<identifier>wpshop_breadcrumb</identifier>
 			</item>
 			<item>
@@ -205,13 +264,6 @@
 			</item>
 			<!--<item>
 				<identifier>wpshop_att_val</identifier>
-				<args>
-					<identifier>atts</identifier>
-					<params>RESEARCH</params>
-				</args>
-			</item>-->
-			<!--<item>
-				<identifier>wpshop_products</identifier>
 				<args>
 					<identifier>atts</identifier>
 					<params>RESEARCH</params>
