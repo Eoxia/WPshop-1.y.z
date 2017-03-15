@@ -155,6 +155,35 @@ jQuery( document ).ready(function() {
 		}, 'json' );
 	} );
 
+	jQuery( 'div[id*=_shipping_rules_container]' ).sortable( {
+		items: '.wps-table-content',
+		stop: function( event, ui ) {
+			var element = ui.item.data( 'element' ).split('|');
+			reg = new RegExp(/{[^{]+}/g);
+			var result;
+			while((result = reg.exec(ui.item.closest( '.wps-boxed' ).find( 'textarea[id*=_wpshop_custom_shipping]' ).val())) !== null) {
+				reg2 = new RegExp(/([a-z]+) ?: ?"(.+)"/g);
+				var result2;
+				var newVars = '';
+				var matchDestination = false;
+				while((result2 = reg2.exec(result)) !== null) {
+					if( result2[1] == 'destination' && result2[2] == element[0] ) {
+						jQuery( '.wps-table-content[data-element*=' + element[0] + ']' ).each( function( index, node ) {
+							var result3 = jQuery( node ).data( 'element' ).split('|');
+							newVars += ((matchDestination) ? ', ' : '') + result3[1] + ':' + result3[2];
+							matchDestination = true;
+						} );
+					}
+					if( matchDestination && result2[1] == 'fees' ) {
+						ui.item.closest( '.wps-boxed' ).find( 'textarea[id*=_wpshop_custom_shipping]' ).text(
+							ui.item.closest( '.wps-boxed' ).find( 'textarea[id*=_wpshop_custom_shipping]' ).val().replace( result2[2], newVars )
+						);
+					}
+				}
+			}
+		}
+	} );
+
 	/* Save rule Action */
 	jQuery( document ).on( 'click', '.save_rules_button', function() {
 		var id_shipping_method = jQuery( this ).attr( 'id' );
@@ -226,13 +255,13 @@ jQuery( document ).ready(function() {
 		jQuery("#" + id + "_shipping_rules_container").addClass( 'wps-bloc-loading' );
 		var data = {
 				action: "delete_shipping_rule",
-        _wpnonce: jQuery( this ).data( 'nonce' ),
+				_wpnonce: jQuery( this ).data( 'nonce' ),
 				country_and_weight: jQuery(this).attr('id'),
 				fees_data : jQuery("#" + id + "_wpshop_custom_shipping").val()
 			};
 			jQuery.post(ajaxurl, data, function(response) {
 				if ( response['status'] ) {
-					jQuery("#" + id + "_wpshop_custom_shipping").text( response['reponse'] );
+					jQuery("#" + id + "_wpshop_custom_shipping").val( response['reponse'] );
 					refresh_shipping_rules_display( id );
 					jQuery("#" + id + "_shipping_rules_container").removeClass( 'wps-bloc-loading' );
 				}

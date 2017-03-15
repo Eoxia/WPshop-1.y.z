@@ -617,6 +617,11 @@ class wpshop_display {
 		if(!is_file(get_stylesheet_directory() . '/taxonomy-wpshop_product_category.php') || ($force_replacement)){
 			@copy(WPSHOP_TEMPLATES_DIR . 'taxonomy-wpshop_product_category.php', get_stylesheet_directory() . '/taxonomy-wpshop_product_category.php');
 		}
+
+		/*	Add the product template	*/
+		if(!is_file(get_stylesheet_directory() . '/single-wpshop_product.php') || ($force_replacement)){
+			@copy(WPSHOP_TEMPLATES_DIR . 'single-wpshop_product.php', get_stylesheet_directory() . '/single-wpshop_product.php');
+		}
 	}
 
 

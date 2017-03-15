@@ -371,13 +371,13 @@ class wps_shortcodes_ctr
 		$count = 0;
 		foreach( $this->shortcode_xmlloader() as $category ) {
 			foreach( $category['items'] as $shortcode => $shortcode_args ) {
-				echo "shortcodes_button[{$count}] = '[$shortcode";
+				echo "shortcodes_button[{$count}] = { text: '[$shortcode]', content: '[$shortcode";
 				if( isset( $shortcode_args['args'] ) ) {
 					foreach( $shortcode_args['args'] as $argument => $parameter ) {
 						echo ' ' . $argument . '="' . urlencode( $parameter ) . '"';
 					}
 				}
-				echo "]';";
+				echo "]' };";
 				$count++;
 			}
 		}

@@ -22,7 +22,7 @@ if( !empty($shipping_rules) ) : ?>
 			endforeach;
 			if ( !empty($shipping_rule['fees']) ) :
 				foreach( $shipping_rule['fees'] as $p => $fee ) : ?>
-				<div class="wps-table-content wps-table-row">
+				<div class="wps-table-content wps-table-row" data-element="<?php echo $shipping_rule['destination']; ?>|<?php echo $p; ?>|<?php echo $fee; ?>">
 					<div class="wps-table-cell"><?php echo $country_name; ?> (<?php echo $shipping_rule['destination']; ?>)</div>
 					<div class="wps-table-cell"><?php echo ($unity == 'kg') ? $p / 1000 : $p; ?> <?php _e( $unity, 'wpshop')?></div>
 					<div class="wps-table-cell"><?php echo $fee; ?> <?php echo wpshop_tools::wpshop_get_currency(); ?></div>

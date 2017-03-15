@@ -124,7 +124,7 @@ class wps_shipping_mode_ajax_actions {
 
 		$status = false;
 		$fees_data = ( !empty($_POST['fees_data']) ) ? ( $_POST['fees_data'] ) : null;
-		$shipping_mode_id = ( !empty($_POST['shipping_mode_id']) ) ? (int) $_POST['shipping_mode_id'] : null;
+		$shipping_mode_id = ( !empty($_POST['shipping_mode_id']) ) ? sanitize_title($_POST['shipping_mode_id']) : null;
 		$result = '';
 		if( !empty($fees_data) ) {
 			$wps_shipping_mode_ctr = new wps_shipping_mode_ctr();

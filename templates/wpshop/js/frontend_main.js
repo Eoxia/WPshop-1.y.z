@@ -8,8 +8,7 @@ jQuery.fn.center = function() {
 	return this;
 };
 
-
-
+jQuery('.single-wpshop_product .single-featured-image-header:has(.attachment-twentyseventeen-featured-image)').css("display","none");
 
 /*	Check all event on page load	*/
 wpshop( document ).ready(function() {

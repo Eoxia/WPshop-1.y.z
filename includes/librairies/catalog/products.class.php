@@ -3483,8 +3483,14 @@ class wpshop_products
     {
 		$variation_post_meta = get_post_meta($current_post_id, '_wpshop_variation_defining', true);
         $variation_post_meta['options'] = $options;
-        //unset($variation_post_meta['follow_general_config']);
 		$variation_post_meta['follow_general_config'] = true;
+		$variations = wpshop_attributes::get_variation_available_attribute($current_post_id);
+		if( !empty( $variations['available'] ) ) {
+			foreach( $variations['available'] as $key => $value ) {
+				echo '<pre>'; print_r( $value ); echo '</pre>';
+			}
+		}
+		//$variations = (array) array_merge((isset($variations['available']) ? $variations['available'] : array()), (isset($variations['unavailable']) ? $variations['unavailable'] : array()));exit();
         update_post_meta($current_post_id, '_wpshop_variation_defining', $variation_post_meta);
     }
 }

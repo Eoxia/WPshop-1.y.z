@@ -23,11 +23,6 @@ class wps_product_mass_interface_ctr {
 		// Add submenu
 		add_action('admin_menu', array( $this, 'register_mass_products_edit_submenu' ), 350 );
 
-		// Declare Styles and JS Files
-		add_action( 'admin_enqueue_scripts', array( $this, 'add_admin_scripts') );
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_css' ) );
-		add_action( 'admin_print_scripts', array( $this, 'admin_print_scripts' ) );
-
 		// Trigger ajax action
 		add_action( 'wp_ajax_wps_mass_edit_change_page', array( $this, 'wps_mass_edit_change_page') );
 		add_action( 'wp_ajax_wps_mass_edit_product_save_action', array( $this, 'wps_save_product_quick_interface') );
@@ -332,7 +327,7 @@ class wps_product_mass_interface_ctr {
 				// Update post
 				$updated_post = wp_update_post( array( 'ID' => $product_to_save,
 						'post_title' => sanitize_text_field( $wps_mass_interface[$product_to_save]['post_title'] ),
-						'post_content' => sanitize_text_field( $wps_mass_interface[$product_to_save]['post_content'] ),
+						'post_content' => wp_kses_post( $wps_mass_interface[$product_to_save]['post_content'] ),
 						)
 				);
 				// Update attributes
