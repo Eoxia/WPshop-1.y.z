@@ -3487,10 +3487,11 @@ class wpshop_products
 		$variations = wpshop_attributes::get_variation_available_attribute($current_post_id);
 		if( !empty( $variations['available'] ) ) {
 			foreach( $variations['available'] as $key => $value ) {
-				echo '<pre>'; print_r( $value ); echo '</pre>';
+				if( !in_array( $value['attribute_complete_def']->code, $variation_post_meta['attributes'] ) ) {
+					$variation_post_meta['attributes'][] = $value['attribute_complete_def']->code;
+				}
 			}
 		}
-		//$variations = (array) array_merge((isset($variations['available']) ? $variations['available'] : array()), (isset($variations['unavailable']) ? $variations['unavailable'] : array()));exit();
         update_post_meta($current_post_id, '_wpshop_variation_defining', $variation_post_meta);
     }
 }
