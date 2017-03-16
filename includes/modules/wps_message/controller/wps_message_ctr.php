@@ -275,6 +275,7 @@ class wps_message_ctr {
 			endforeach;
 		endforeach;
 		ksort( $messages_histo );
+		$messages_histo = array_reverse( $messages_histo );
 		ob_start();
 		require( wpshop_tools::get_template_part( WPS_MESSAGE_DIR, $this->template_dir, "frontend", "customer", "messages") );
 		$output = ob_get_contents();

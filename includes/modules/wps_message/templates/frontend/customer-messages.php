@@ -7,11 +7,11 @@
 		</div>
 		<?php $page_message_histo = isset( $_GET['page_message_histo'] ) ? (int) $_GET['page_message_histo'] : 1;
 		$nb_pages_messages_histo = ceil( count( $messages_histo ) / wps_message_ctr::$mails_display );
-		$messages_histo = array_slice( $messages_histo, ( count( $messages_histo ) - 1 ) - ( ( $page_message_histo - 1 ) * wps_message_ctr::$mails_display ), ( -1 ) * wps_message_ctr::$mails_display );
-		end( $messages_histo );
+		$messages_histo = array_slice( $messages_histo, ( $page_message_histo - 1 ) * wps_message_ctr::$mails_display, wps_message_ctr::$mails_display );
+		reset( $messages_histo );
 		while( $messages = current( $messages_histo ) ) :
 			$first_send_date = key( $messages_histo );
-			end( $messages );
+			reset( $messages );
 			while( $message = current( $messages ) ) :
 				$key = key( $messages ); ?>
 		<div class="wps-table-content wps-table-row" data-date="<?php echo substr($first_send_date, 0, 7); ?>" >
@@ -30,9 +30,9 @@
 			<?php endif; ?>
 			</div>
 		</div>
-		<?php	prev( $messages );
+		<?php	next( $messages );
 			endwhile;
-			prev( $messages_histo );
+			next( $messages_histo );
 		endwhile; ?>
 	</div>
 	<?php if( $nb_pages_messages_histo != 1 ) {
