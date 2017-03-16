@@ -172,7 +172,7 @@ class wps_shipping {
 				}
 				$country = ( !empty($address_infos['country']) ) ? $address_infos['country'] : '';
 				/** Check Active Postcode option **/
-				if ( !empty($selected_shipping_mode_config['active_cp']) ) {
+				if ( !empty($selected_shipping_mode_config['custom_shipping_rules']['active_cp']) ) {
 					$postcode = $address_infos['postcode'];
 					if ( array_key_exists($country.'-'.$postcode, $selected_shipping_mode_config['custom_shipping_rules']['fees']) ) {
 						$country = $country.'-'.$postcode;
