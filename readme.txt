@@ -1,10 +1,10 @@
-=== WPshop - eCommerce ===
+﻿=== WPshop - eCommerce ===
 Contributors: Eoxia
 Tags: boutique, catalog, catalogue, commerce, e-commerce, ecommerce, m-commerce, mcommerce, produits, responsive, shop, shopping cart, wp shop, wordpress ecommerce, wordpress shop, WPshop, wp-shop, french payment gateway, passerelle de paiement française
 Donate link: http://www.wpshop.fr/documentations/presentation-wpshop/
 Requires at least: 3.4.0
 Tested up to: 4.7.2
-Stable tag: 1.4.3.5
+Stable tag: 1.4.3.7
 License: GPLv2 or later
 
 Simple and powerfull eCommerce plugin, with French Payment and Shipping systems : Paybox, Paypal, Atos, Cybermut, SystemPay, Paysite-cash, Colissimo
@@ -96,6 +96,37 @@ Il faut vérifier que le réglage des permaliens pour votre site est bien régl�
 
 
 == Changelog ==
+
+= Version 1.4.3.7 =
+
+Améliorations / Improvments
+
+* 7763 - Correction JS nouvelle interface - Fix JS script variations new interface
+* 7757 - Ajout "référence" interface d'options - New column ref. product variations new interface
+* 7754 - Invalider au lieu de valider - Invalid label in quotations
+* 7622 - Garder l'ordre des IDs dans wpshop_products - Keep order by IDs shortcode wpshop_products (order=post__in)
+* 7140 - Liens vers shop.eoxia.com réparés - Links shop.eoxia.com fixed
+* 2701 - Liste des shortcodes WPShop dans TinyMCE - List shortcodes WPShop on TinyMCE
+
+Corrections / Fix
+
+* 7931 - Messages fiches client pagination - Messages customer page
+* 7927 - Affichage des attributs des options en front - Display attributes front fix
+* 7903 - Organisable + corrections livraisons - Fix shipping + sortable
+* 7902 - Interface en masse contenu validation - Escape mass interface
+* 7855 - Ajout du prix de base à l'option - Add price variation to head product
+* 7755 - Coupons clients - Coupons customers
+* 7644 - "A partir de" nouvelle interface - "Price from" varitions new interface
+* 7627 - Pagination historique de vente du produit - Pagination history sell product
+* 7341 - Une seule image à la une dans les produits - Only one post thumbnail in product sheet
+* 7178 - Page outil WPShop erreur 403 - WPShop tools page 403 error
+* 7056 - Correction attribut texte obligatoire dans tout les cas - Fix attribute text requiered in all cases
+
+= Version 1.4.3.6 =
+
+Corrections / Fix
+
+* Erreur php lors de l'édition d'un post type
 
 = Version 1.4.3.5 =
 
