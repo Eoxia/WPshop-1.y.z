@@ -74,7 +74,7 @@ class wpshop_dashboard {
 													case 'awaiting_payment': $order_awaiting_payment++; break;
 													case 'denied': $order_denied++; break;
 													case 'canceled': $order_canceled++; break;
-													case 'refunded' : $order_refunded++; break; 
+													case 'refunded' : $order_refunded++; break;
 												}
 											}
 										}
@@ -233,14 +233,14 @@ class wpshop_dashboard {
 						}
 						***/
 						?>
-						<!--  
+						<!--
 						<span class="alignright"><?php echo $result; ?></span>
 						<label><?php _e('Number of products sold the last 7 days', 'wpshop'); ?></label>
 						-->
 					</div>
 				</div><!-- postbox end -->
 
-				
+
 				<!--  BOX ORDERS -->
 				<div class="postbox">
 					<h3 class="hndle"><span><?php _e('Recent Orders', 'wpshop') ?></span></h3>
@@ -468,7 +468,7 @@ class wpshop_dashboard {
 					</div>
 				</div><!-- postbox end -->
 
-				<!--  
+				<!--
 				<div class="postbox">
 					<h3 class="hndle"><span><?php _e('Orders stats', 'wpshop') ?></span></h3>
 					<div class="inside">
@@ -522,7 +522,7 @@ class wpshop_dashboard {
 					</div>
 				</div>
 				-->
-				
+
 				<div class="postbox">
 					<h3 class="hndle"><span>WPShop : Wordpress e-commerce</span></h3>
 					<div class="inside">
@@ -532,28 +532,28 @@ class wpshop_dashboard {
 								<td valign="top" cellpadding="20" ><h2 class="wps_dashboard"><?php _e('Need help with WPShop', 'wpshop' ); ?> ?</h2>
 									<p><?php _e( 'You need help with WPShop ? You some questions ?', 'wpshop' ); ?></p>
 									<p><h3 class="wps_dashboard"><?php _e( 'Two solutions', 'wpshop'); ?></h3></p>
-									<p><center><br/><a href="http://shop.eoxia.com/ecommerce/modules-wpshop/assistance/" title="<?php _e('WPShop Assistance', 'wpshop'); ?>" target="_blank"><img src="<?php echo WPSHOP_MEDIAS_IMAGES_URL; ?>assistance_wpshop.jpg" alt="<?php _e('WPShop Assistance', 'wpshop'); ?>" /></a><br/>
+									<p><center><br/><a href="https://shop.eoxia.com/ecommerce/assistance-personnalisee-wordpress/" title="<?php _e('WPShop Assistance', 'wpshop'); ?>" target="_blank"><img src="<?php echo WPSHOP_MEDIAS_IMAGES_URL; ?>assistance_wpshop.jpg" alt="<?php _e('WPShop Assistance', 'wpshop'); ?>" /></a><br/>
 									<a href="http://forums.eoxia.com/" title="<?php _e('WPShop Forum', 'wpshop'); ?>" target="_blank"><img src="<?php echo WPSHOP_MEDIAS_IMAGES_URL; ?>forum_wpshop.jpg" alt="<?php _e('WPShop Forum', 'wpshop'); ?>" /></a></center></p>
 								</td>
 							</tr>
 						</table>
 					</div>
 				</div>
-				
-				
-				
+
+
+
 				<div class="postbox">
 					<h3 class="hndle"><span><?php _e('WPShop news', 'wpshop') ?></span></h3>
 					<div class="inside">
-						<?php 
+						<?php
 						self::wpshop_rss_feed();
 						?>
 					</div>
 				</div><!-- postbox end -->
-				
-				
-				
-				<!--  
+
+
+
+				<!--
 				<div class="postbox">
 					<h3 class="hndle"><span><?php _e('Quick product add', 'wpshop') ?></span></h3>
 					<div class="inside">
@@ -571,14 +571,14 @@ class wpshop_dashboard {
 		ob_end_clean();
 		return $content;
 	}
-	
-	
+
+
 	function wpshop_dashboard_orders() {
 		$output = '';
-		$orders = get_posts( array( 'posts_per_page' => 10, 'post_type' => WPSHOP_NEWTYPE_IDENTIFIER_ORDER, 'post_status' => 'publish', 'orderby' => 'post_date', 'order' => 'DESC') );		
+		$orders = get_posts( array( 'posts_per_page' => 10, 'post_type' => WPSHOP_NEWTYPE_IDENTIFIER_ORDER, 'post_status' => 'publish', 'orderby' => 'post_date', 'order' => 'DESC') );
 		if ( !empty($orders) ) {
-			$payment_status = unserialize( WPSHOP_ORDER_STATUS );	
-			
+			$payment_status = unserialize( WPSHOP_ORDER_STATUS );
+
 			$output .= '<table id="wps_dashboard_orders_summary">';
 			$output .= '<tr><th class="wps_dashboard_order_date">' .__('Date', 'wpshop'). '</th><th class="wps_dashboard_order_customer_name">' .__('Customer', 'wpshop'). '</th><th class="wps_dashboard_order_amount">' .__('Amount', 'wpshop'). '</th><th class="wps_dashboard_order_status">' .__('Status', 'wpshop'). '</th><th class="wps_dashboard_order_actions"></th></tr>';
 			$stried = false;
@@ -588,7 +588,7 @@ class wpshop_dashboard {
 				$output .= '<tr class="' .$additionnal_class. '">';
 				$order_meta = get_post_meta( $order->ID, '_order_postmeta', true );
 				$order_info = get_post_meta( $order->ID, '_order_info', true );
-				
+
 				if ( !empty($order_meta) ) {
 					$output .= '<td>' .( (!empty($order_meta) && !empty($order_meta['order_date']) ) ? date( 'd-m-Y', strtotime($order_meta['order_date']) ): '' ). '</td>';
 					$output .= '<td>' .( (!empty($order_info) && !empty($order_info['billing']) && !empty($order_info['billing']['address']) && !empty($order_info['billing']['address']['address_last_name']) && !empty($order_info['billing']['address']['address_first_name']) ) ? strtoupper($order_info['billing']['address']['address_last_name']).' '.$order_info['billing']['address']['address_first_name']: '' ). '</td>';
@@ -597,7 +597,7 @@ class wpshop_dashboard {
 					$output .= '<td><span class="wps_dashboard_' .$order_meta['order_status']. '">' .__($payment_status[ $order_meta['order_status'] ], 'wpshop' ). '</span></td>';
 					$output .= '<td>';
 					$output .= '<a href="' .admin_url('/post.php?post=' .$order->ID. '&action=edit'). '"><img src="' .WPSHOP_MEDIAS_ICON_URL. 'icon_loupe.png" alt="' .__('See', 'wpshop'). '" /></a>';
-					
+
 					$invoice_ref = '';
 					if ( !empty($order_meta['order_invoice_ref']) ) {
 						$invoice_ref = $order_meta['order_invoice_ref'];
@@ -607,7 +607,7 @@ class wpshop_dashboard {
 							$invoice_ref = $order_meta['order_payment']['received'][ count($order_meta['order_payment']['received']) - 1 ]['invoice_ref'];
 						}
 					}
-					
+
 					if ( ( $order_meta['order_status'] == 'partially_paid' || $order_meta['order_status'] == 'completed' || $order_meta['order_status'] == 'shipped' ) && !empty($invoice_ref) ) {
 						$output .= ' <a href="' .admin_url( 'admin-post.php?action=wps_invoice&order_id=' .$order->ID. '&invoice_ref&=' .$invoice_ref. '&mode=pdf' ). '"><img src="' .WPSHOP_MEDIAS_ICON_URL. 'icon_invoice.png" alt="' .__('Invoice', 'wpshop'). '" /></a>';
 					}
@@ -621,22 +621,22 @@ class wpshop_dashboard {
 			$output .= '</table>';
 		}
 
-		return $output;	
-	}	
-	
+		return $output;
+	}
+
 	function wpshop_rss_feed() {
 		$output = '';
 		include_once( ABSPATH . WPINC . '/feed.php' );
-	
+
 		$rss = fetch_feed( 'http://www.wpshop.fr/feed/' );
-		if( ! is_wp_error( $rss ) ){ 
+		if( ! is_wp_error( $rss ) ){
 			$maxitems = $rss->get_item_quantity( 4 );
 			$rss_items = $rss->get_items( 0, $maxitems );
 		}
 		else {
 			$output .= '<p>' . __('WPShop News cannot be loaded', 'wpshop') . '</p>';
 		}
-	
+
 		if ( $maxitems == 0 ) {
 			$output .= '<p>' . __('No WPShop new has been found', 'wpshop') . '</p>';
 		}
@@ -651,8 +651,8 @@ class wpshop_dashboard {
 		}
 		echo $output;
 	}
-	
-	
+
+
 	function wpshop_rss_tutorial_videos() {
 		$ini_get_checking = ini_get( 'allow_url_fopen' );
 		if ( $ini_get_checking != 0 ) {
@@ -669,7 +669,7 @@ class wpshop_dashboard {
 				$output .= '<div class="wps_dashboard_video"><iframe width="400" height="290" src="' .$videos_items[ $rand_element ]->embed_link. '" frameborder="0" allowfullscreen></iframe></div>';
 				$output .= '<div class="wps_dashboard_video_description">' .$videos_items[ $rand_element ]->description. '</div>';
 				$output .= '</div>';
-				
+
 			}
 			else {
 				$output =__('No tutorial videos can be loaded', 'wpshop' );
@@ -680,7 +680,7 @@ class wpshop_dashboard {
 		}
 		echo $output;
 	}
-	
+
 	function wpshop_dashboard_get_changelog() {
 		$readme_file = fopen( WPSHOP_DIR.'/readme.txt', 'r' );
 		if ( $readme_file ) {
