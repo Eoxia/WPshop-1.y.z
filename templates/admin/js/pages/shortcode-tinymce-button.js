@@ -12,8 +12,7 @@
             type: 'listbox',
             text: 'WPShop',
             onselect: function(e) {
-				console.log( e.control.settings );
-                var v = e.control.settings.text;
+                var v = e.control.settings.content;
                 tinyMCE.activeEditor.selection.setContent( unescape( v ) );
             },
             values: shortcodeValues
