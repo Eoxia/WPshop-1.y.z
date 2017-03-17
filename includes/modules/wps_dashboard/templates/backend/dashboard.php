@@ -46,7 +46,7 @@
 								</tr>
 								<tr>
 									<?php
-									$query = $wpdb->prepare( "SELECT COUNT( DISTINCT us.ID ) FROM {$wpdb->users} us JOIN {$wpdb->posts} ON us.ID = post_author AND post_type = %s", 'wpshop_shop_order' );
+									$query = $wpdb->prepare( "SELECT COUNT( DISTINCT us.ID ) FROM {$wpdb->users} us JOIN {$wpdb->posts} ON us.ID = post_author AND post_type = %s", WPSHOP_NEWTYPE_IDENTIFIER_ORDER );
 									$result = $wpdb->get_var($query);
 									?>
 									<td class="first b"><a href="users.php"><?php echo $result; ?></a></td>
@@ -137,7 +137,7 @@
 				<div class="inside">
 					<div class="wps-gridwrapper5-padded wpshop-gridwrapper-quick-link">
 						<div><div class="wps_quick_link_icon"><a href="<?php echo admin_url( 'post-new.php?post_type=wpshop_product' ); ?>"><span class="dashicons dashicons-archive"></span></a></div><center><a href="<?php echo admin_url( 'post-new.php?post_type=wpshop_product' ); ?>"><?php _e( 'Create a new product', 'wpshop'); ?></a></center></div>
-						<div><div class="wps_quick_link_icon"><a href="<?php echo admin_url( 'post-new.php?post_type=wpshop_shop_order' ); ?>"><span class="dashicons dashicons-cart"></span></a></div><center><a href="<?php echo admin_url( 'post-new.php?post_type=wpshop_shop_order' ); ?>"><?php _e( 'Create order', 'wpshop'); ?></a></center></div>
+						<div><div class="wps_quick_link_icon"><a href="<?php echo admin_url( 'post-new.php?post_type=' . WPSHOP_NEWTYPE_IDENTIFIER_ORDER ); ?>"><span class="dashicons dashicons-cart"></span></a></div><center><a href="<?php echo admin_url( 'post-new.php?post_type=' . WPSHOP_NEWTYPE_IDENTIFIER_ORDER ); ?>"><?php _e( 'Create order', 'wpshop'); ?></a></center></div>
 						<div><div class="wps_quick_link_icon"><a href="<?php echo admin_url( 'post-new.php?post_type=' . WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ); ?>"><span class="dashicons dashicons-businessman"></span></a></div><center><a href="<?php echo admin_url( 'post-new.php?post_type=' . WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ); ?>"><?php _e( 'Create a customer', 'wpshop'); ?></a></center></div>
 						<div><div class="wps_quick_link_icon"><a href="<?php echo admin_url( 'admin.php?page=wpshop_statistics' ); ?>"><span class="dashicons dashicons-chart-line"></span></a></div><center><a href="<?php echo admin_url( 'admin.php?page=wpshop_statistics' ); ?>"><?php _e( 'Statistics', 'wpshop'); ?></a></center></div>
 						<div><div class="wps_quick_link_icon"><a href="<?php echo admin_url( 'options-general.php?page=wpshop_option#wpshop_display_option' ); ?>"><span class="dashicons dashicons-admin-appearance"></span></a></div><center><a href="<?php echo admin_url( 'options-general.php?page=wpshop_option' ); ?>"><?php _e( 'Customize your shop', 'wpshop'); ?></a></center></div>
@@ -162,7 +162,7 @@
 
 						<div class="wps-table-header wps-table-row">
 							<?php
-							$query = $wpdb->prepare( "SELECT COUNT( DISTINCT user_id ) FROM {$wpdb->usermeta} JOIN {$wpdb->posts} ON post_author = user_id AND post_type = %s WHERE meta_key = %s AND ( meta_value LIKE ('%%%s%%') || meta_value LIKE ('%%%s%%') )", 'wpshop_shop_order', 'user_preferences', 's:16:"newsletters_site";i:1;', 's:16:"newsletters_site";b:1;' );
+							$query = $wpdb->prepare( "SELECT COUNT( DISTINCT user_id ) FROM {$wpdb->usermeta} JOIN {$wpdb->posts} ON post_author = user_id AND post_type = %s WHERE meta_key = %s AND ( meta_value LIKE ('%%%s%%') || meta_value LIKE ('%%%s%%') )", WPSHOP_NEWTYPE_IDENTIFIER_ORDER, 'user_preferences', 's:16:"newsletters_site";i:1;', 's:16:"newsletters_site";b:1;' );
 							$nbcustomers_site = $wpdb->get_var($query);
 							?>
 							<div class="wps-table-cell"><?php _e('Number of customers who wants to receive shop newsletters', 'wpshop'); ?></div>
@@ -172,7 +172,7 @@
 
 						<div class="wps-table-header wps-table-row">
 							<?php
-							$query = $wpdb->prepare( "SELECT COUNT( DISTINCT user_id ) FROM {$wpdb->usermeta} JOIN {$wpdb->posts} ON post_author = user_id AND post_type = %s WHERE meta_key = %s AND ( meta_value LIKE ('%%%s%%') || meta_value LIKE ('%%%s%%') )", 'wpshop_shop_order', 'user_preferences', 's:25:"newsletters_site_partners";i:1;', 's:25:"newsletters_site_partners";b:1;' );
+							$query = $wpdb->prepare( "SELECT COUNT( DISTINCT user_id ) FROM {$wpdb->usermeta} JOIN {$wpdb->posts} ON post_author = user_id AND post_type = %s WHERE meta_key = %s AND ( meta_value LIKE ('%%%s%%') || meta_value LIKE ('%%%s%%') )", WPSHOP_NEWTYPE_IDENTIFIER_ORDER, 'user_preferences', 's:25:"newsletters_site_partners";i:1;', 's:25:"newsletters_site_partners";b:1;' );
 							$nbcustomers_site_partners = $wpdb->get_var($query);
 							?>
 							<div class="wps-table-cell"><?php _e('Number of customers who wants to receive partners newsletters', 'wpshop'); ?></div>

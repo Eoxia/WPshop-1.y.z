@@ -370,6 +370,7 @@ class wps_orders_in_back_office {
 	function refresh_product_list() {
 		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
 		$letter = ( !empty($_POST['letter']) ) ? sanitize_title( $_POST['letter'] ) : '';
+		$research = !empty( $_POST['research'] ) ? sanitize_text_field( $_POST['research'] ) : '';
 
 		if ( !wp_verify_nonce( $_wpnonce, 'refresh_product_list_'.strtolower($letter) ) )
 			wp_die();
@@ -383,7 +384,11 @@ class wps_orders_in_back_office {
 		if( !empty($letter) ) {
 			$current_letter = $letter;
 			$wps_product_mdl = new wps_product_mdl();
-			$products = $wps_product_mdl->get_products_by_letter( $letter );
+			if( !empty( $research ) ) {
+				$products = $wps_product_mdl->get_products_by_title_or_barcode( $research, strlen( $research ) >= 8 && ctype_digit( $research ) );
+			} else {
+				$products = $wps_product_mdl->get_products_by_letter( $letter );
+			}
 			ob_start();
 			require( wpshop_tools::get_template_part( WPS_ORDERS_DIR, $this->template_dir, "backend", "product-listing/wps_orders_product_listing_table") );
 			$response = ob_get_contents();

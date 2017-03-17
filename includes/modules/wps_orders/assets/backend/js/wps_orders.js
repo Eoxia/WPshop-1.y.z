@@ -39,6 +39,37 @@ jQuery( document ).ready( function() {
 
 	});
 
+	jQuery( '#search_product_by_title_or_barcode' ).on('keyup keypress', function(e) {
+		var keyCode = e.keyCode || e.which;
+		if (keyCode === 13) {
+			e.preventDefault();
+			jQuery(this).siblings('.search_product_by_title_or_barcode').click();
+			return false;
+		}
+	});
+
+	/**
+	 * Search a product by text
+	 */
+	 jQuery( document ).on( 'click', '.search_product_by_title_or_barcode', function( e ) {
+ 		e.preventDefault();
+		var current = jQuery( this );
+ 		current.addClass( 'wps-bton-loading' );
+ 		var letter = 'ALL';
+ 		var data = {
+ 				action: 'wps_order_refresh_product_listing',
+ 				_wpnonce: jQuery( this ).data( 'nonce' ),
+ 				letter: letter,
+				research: jQuery( '#search_product_by_title_or_barcode' ).val(),
+ 				oid: jQuery( '#post_ID' ).val()
+ 			};
+ 		response_search_products(letter, data, function( status ) {
+			jQuery( '.search_product_by_letter' ).removeClass( 'third' );
+			current.removeClass( 'wps-bton-loading' );
+			jQuery( '#search_product_by_title_or_barcode' ).val( '' );
+		});
+ 	});
+
 	/**
 	 * Search a product by letter action
 	 */
@@ -52,21 +83,28 @@ jQuery( document ).ready( function() {
 				letter: letter,
 				oid: jQuery( '#post_ID' ).val()
 			};
+		response_search_products(letter, data, function(status) {
+			if( status ) {
+				jQuery( '#' + letter ).removeClass( 'wps-bton-loading' );
+				jQuery( '.search_product_by_letter' ).removeClass( 'third' );
+				jQuery( '#' + letter ).addClass( 'third' );
+			} else {
+				jQuery( '#' + letter ).removeClass( 'wps-bton-loading' );
+			}
+		});
+	});
+
+	function response_search_products(letter, data, callback) {
 		jQuery.post( ajaxurl, data, function( response ) {
 				if ( response['status'] ) {
 					jQuery( '#wps_orders_product_listing_table' ).animate( { 'opacity': 0.2 }, 300, function() {
 						jQuery( '#wps_orders_product_listing_table' ).html( response['response'] );
 						jQuery( '#wps_orders_product_listing_table' ).animate( { 'opacity': 1 }, 500 );
-						jQuery( '#' + letter ).removeClass( 'wps-bton-loading' );
-						jQuery( '.search_product_by_letter' ).removeClass( 'third' );
-						jQuery( '#' + letter ).addClass( 'third' );
 					});
-
-				} else {
-					jQuery( '#' + letter ).removeClass( 'wps-bton-loading' );
 				}
+				callback( response['status'] );
 		}, 'json' );
-	});
+	}
 
 	/**
 	 * Add qty in Product listing

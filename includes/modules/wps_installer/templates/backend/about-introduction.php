@@ -28,7 +28,7 @@
 			<img src="<?php echo WPS_INSTALLER_URL . WPS_INSTALLER_DIR . '/assets/medias/commande.jpg'; ?>" alt="<?php _e( 'Manage orders', 'wpshop'); ?>" title="<?php _e( 'Manage orders', 'wpshop'); ?>" />
 			<h3><?php _e( 'Manage orders', 'wpshop'); ?></h3>
 			<p><?php _e( 'You can manage all your orders and stay in touch with your customers. The dashboard controls will allow you to quickly view your most visited pages , static of your orders ...', 'wpshop'); ?></p>
-			<a href="<?php echo admin_url( 'edit.php?post_type=wpshop_shop_order' ); ?>" class="button button-large button-primary"><?php _e( 'Manage orders', 'wpshop'); ?></a>
+			<a href="<?php echo admin_url( 'edit.php?post_type=' . WPSHOP_NEWTYPE_IDENTIFIER_ORDER ); ?>" class="button button-large button-primary"><?php _e( 'Manage orders', 'wpshop'); ?></a>
 		</div>
 		<div class="col">
 			<img src="<?php echo WPS_INSTALLER_URL . WPS_INSTALLER_DIR . '/assets/medias/reglage-boutique.jpg'; ?>" alt="<?php _e( 'Configure my shop', 'wpshop'); ?>" title="<?php _e( 'Configure my shop', 'wpshop'); ?>" />

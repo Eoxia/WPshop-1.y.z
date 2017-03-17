@@ -130,9 +130,9 @@ class wps_pos_addon {
 
 		/**	Read the current existing menu order for rearrange it	*/
 		foreach ( $current_menu_order as $menu_item ) {
-			if ( 'edit.php?post_type=wpshop_shop_order' == $menu_item ) {
+			if ( 'edit.php?post_type=' . WPSHOP_NEWTYPE_IDENTIFIER_ORDER == $menu_item ) {
 				$wps_pos_menu_ordered[] = 'wps-pos';
-				$wps_pos_menu_ordered[] = 'edit.php?post_type=wpshop_shop_order';
+				$wps_pos_menu_ordered[] = 'edit.php?post_type=' . WPSHOP_NEWTYPE_IDENTIFIER_ORDER;
 
 				unset( $current_menu_order[ array_search( 'wps-pos', $current_menu_order ) ] );
 			}

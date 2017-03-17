@@ -58,4 +58,27 @@ class wps_product_mdl {
 		$products = $wpdb->get_results( $query );
 		return $products;
 	}
+
+	/**
+	 * Return Products by a search
+	 */
+	function get_products_by_title_or_barcode( $search, $only_barcode = false ) {
+		global $wpdb;
+		$more_query = "";
+		$query_args = array();
+		$query_args[] = WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT;
+		$query_args[] = $search;
+		if ( !( (bool) $only_barcode ) ) {
+			$more_query = " OR P.post_title LIKE %s";
+			$query_args[] = '%' . $search . '%';
+		}
+		$query = $wpdb->prepare( "
+			SELECT *
+			FROM {$wpdb->posts} AS P
+				LEFT JOIN {$wpdb->postmeta} AS PM ON ( PM.post_id = P.ID )
+			WHERE P.post_type = %s
+				AND ( ( PM.meta_key = '_barcode' AND PM.meta_value = %s ) " . $more_query . " )
+			GROUP BY P.ID", $query_args );
+		return $wpdb->get_results( $query );
+	}
 }

@@ -17,23 +17,23 @@ class wps_export_mdl {
 				$list_users = $wpdb->get_results($query, OBJECT);
 				break;
 			case 'customers_all':
-				$query = $wpdb->prepare( "SELECT us.ID AS USER_ID, GROUP_CONCAT( ps.ID ) AS POST_ID FROM {$wpdb->users} us JOIN {$wpdb->posts} ps ON us.ID = ps.post_author AND ps.post_type = %s GROUP BY USER_ID", 'wpshop_shop_order' );
+				$query = $wpdb->prepare( "SELECT us.ID AS USER_ID, GROUP_CONCAT( ps.ID ) AS POST_ID FROM {$wpdb->users} us JOIN {$wpdb->posts} ps ON us.ID = ps.post_author AND ps.post_type = %s GROUP BY USER_ID", WPSHOP_NEWTYPE_IDENTIFIER_ORDER );
 				$list_users = $wpdb->get_results($query, OBJECT);
 				break;
 			case 'newsletters_site':
-				$query = $wpdb->prepare( "SELECT user_id AS USER_ID, GROUP_CONCAT( ID ) AS POST_ID FROM {$wpdb->usermeta} JOIN {$wpdb->posts} ON post_author = user_id AND post_type = %s WHERE meta_key = %s AND ( meta_value LIKE ('%%%s%%') || meta_value LIKE ('%%%s%%') ) GROUP BY USER_ID", 'wpshop_shop_order', 'user_preferences', 's:16:"newsletters_site";i:1;', 's:16:"newsletters_site";b:1;' );
+				$query = $wpdb->prepare( "SELECT user_id AS USER_ID, GROUP_CONCAT( ID ) AS POST_ID FROM {$wpdb->usermeta} JOIN {$wpdb->posts} ON post_author = user_id AND post_type = %s WHERE meta_key = %s AND ( meta_value LIKE ('%%%s%%') || meta_value LIKE ('%%%s%%') ) GROUP BY USER_ID", WPSHOP_NEWTYPE_IDENTIFIER_ORDER, 'user_preferences', 's:16:"newsletters_site";i:1;', 's:16:"newsletters_site";b:1;' );
 				$list_users = $wpdb->get_results($query, OBJECT);
 				break;
 			case 'newsletters_site_partners':
-				$query = $wpdb->prepare( "SELECT user_id AS USER_ID, GROUP_CONCAT( ID ) AS POST_ID FROM {$wpdb->usermeta} JOIN {$wpdb->posts} ON post_author = user_id AND post_type = %s WHERE meta_key = %s AND ( meta_value LIKE ('%%%s%%') || meta_value LIKE ('%%%s%%') ) GROUP BY USER_ID", 'wpshop_shop_order', 'user_preferences', 's:25:"newsletters_site_partners";i:1;', 's:25:"newsletters_site_partners";b:1;' );
+				$query = $wpdb->prepare( "SELECT user_id AS USER_ID, GROUP_CONCAT( ID ) AS POST_ID FROM {$wpdb->usermeta} JOIN {$wpdb->posts} ON post_author = user_id AND post_type = %s WHERE meta_key = %s AND ( meta_value LIKE ('%%%s%%') || meta_value LIKE ('%%%s%%') ) GROUP BY USER_ID", WPSHOP_NEWTYPE_IDENTIFIER_ORDER, 'user_preferences', 's:25:"newsletters_site_partners";i:1;', 's:25:"newsletters_site_partners";b:1;' );
 				$list_users = $wpdb->get_results($query, OBJECT);
 				break;
 			case 'date':
-				$query = $wpdb->prepare( "SELECT us.`ID` AS USER_ID, GROUP_CONCAT( ps.`ID` ) AS POST_ID FROM {$wpdb->users} us JOIN {$wpdb->posts} ps ON `post_author` = us.`ID` AND `post_type` = %s WHERE `user_registered` >= %s AND `user_registered` <= %s GROUP BY USER_ID", 'wpshop_shop_order', date("Y-m-j", strtotime($dt1)), date("Y-m-j", strtotime("+1 day", strtotime($dt2))) );
+				$query = $wpdb->prepare( "SELECT us.`ID` AS USER_ID, GROUP_CONCAT( ps.`ID` ) AS POST_ID FROM {$wpdb->users} us JOIN {$wpdb->posts} ps ON `post_author` = us.`ID` AND `post_type` = %s WHERE `user_registered` >= %s AND `user_registered` <= %s GROUP BY USER_ID", WPSHOP_NEWTYPE_IDENTIFIER_ORDER, date("Y-m-j", strtotime($dt1)), date("Y-m-j", strtotime("+1 day", strtotime($dt2))) );
 				$list_users = $wpdb->get_results($query, OBJECT);
 				break;
 			case 'orders':
-				$query = $wpdb->prepare( "SELECT us.ID AS USER_ID, GROUP_CONCAT( ps.ID ) AS POST_ID FROM {$wpdb->users} us JOIN {$wpdb->posts} ps ON us.ID = ps.post_author AND ps.post_type = %s GROUP BY USER_ID", 'wpshop_shop_order' );
+				$query = $wpdb->prepare( "SELECT us.ID AS USER_ID, GROUP_CONCAT( ps.ID ) AS POST_ID FROM {$wpdb->users} us JOIN {$wpdb->posts} ps ON us.ID = ps.post_author AND ps.post_type = %s GROUP BY USER_ID", WPSHOP_NEWTYPE_IDENTIFIER_ORDER );
 				$list_users = $wpdb->get_results($query, OBJECT);
 				break;
 		}
@@ -76,7 +76,7 @@ class wps_export_mdl {
 				$posts_id = explode(',', $user_post->POST_ID);
 				$orders = get_posts( array(
 						'include'			=>	$posts_id,
-						'post_type'			=>	'wpshop_shop_order',
+						'post_type'			=>	WPSHOP_NEWTYPE_IDENTIFIER_ORDER,
 						'posts_per_page'	=>	-1
 					));
 				foreach( $orders as $order ) {
@@ -121,7 +121,7 @@ class wps_export_mdl {
 				'order_grand_total' => __( 'Order ATI', 'wps_export' )
 				);
 		$orders = get_posts( array(
-			'post_type' => 'wpshop_shop_order',
+			'post_type' => WPSHOP_NEWTYPE_IDENTIFIER_ORDER,
 			'posts_per_page' => -1
 		) );
 		if ( !empty( $orders ) ) {

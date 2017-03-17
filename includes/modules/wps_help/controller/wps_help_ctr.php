@@ -97,7 +97,7 @@ class wps_help_ctr {
 				$help_cases[ 'category_picture' ] 					= array( 'edge' => 'bottom', 'at' => '', 'my' => 'bottom', 'pointer_id' => '.category_new_picture_upload' );
 			break;
 
-			case 'wpshop_shop_order':
+			case WPSHOP_NEWTYPE_IDENTIFIER_ORDER:
 				$help_cases[ 'order_customer_comment' ] 			= array( 'edge' => 'right', 'at' => '', 'my' => '', 'pointer_id' => '#wpshop_order_customer_comment' );
 				$help_cases[ 'order_notification_message' ] 		= array( 'edge' => 'bottom', 'at' => '', 'my' => '', 'pointer_id' => '#wpshop_order_private_comments' );
 				$help_cases[ 'order_shipping_box' ] 				= array( 'edge' => 'right', 'at' => '', 'my' => '', 'pointer_id' => '#wpshop_order_shipping' );

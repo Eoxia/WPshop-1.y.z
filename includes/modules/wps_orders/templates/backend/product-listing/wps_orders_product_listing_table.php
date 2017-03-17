@@ -40,7 +40,11 @@
 	</div>
 	<?php endforeach; ?>
 	<?php else :
-	$letter_display = ( strtoupper( $current_letter ) != 'ALL' ) ? $current_letter : __('ALL', 'wpshop' ); ?>
-	<div class="wps-alert-info"><?php printf( __( 'No products corresponds to the letter <strong>"%s"</strong> search', 'wpshop'), strtoupper( $letter_display ) ); ?></div>
-	<?php endif; ?>
+		if( !empty( $research ) ) : ?>
+		<div class="wps-alert-info"><?php printf( __( 'No products corresponds to the search <strong>"%s"</strong>', 'wpshop'), $research ); ?></div>
+	<?php else :
+			$letter_display = ( strtoupper( $current_letter ) != 'ALL' ) ? $current_letter : __('ALL', 'wpshop' ); ?>
+			<div class="wps-alert-info"><?php printf( __( 'No products corresponds to the letter <strong>"%s"</strong> search', 'wpshop'), strtoupper( $letter_display ) ); ?></div>
+	<?php endif;
+		endif; ?>
 </div>

@@ -62,15 +62,6 @@ jQuery( document ).ready( function() {
 			jQuery( '#wps_order_selected_address_billing' ).val( '' );
 			jQuery( '#wps_order_selected_address_shipping' ).val( '' );
 		}
-		jQuery( document ).find( '.wps_select_address' ).each( function() {
-			jQuery( this ).on( 'change', function() {
-				if ( jQuery( this ).is( ':checked' ) ) {
-					// Update data
-					var type = jQuery( this ).attr( 'name' ).replace( '_address_id', '' );
-					jQuery( '#wps_order_selected_address_' + type ).val( jQuery( this ).val() );
-				}
-			});
-		});
 	}
 
 	/**
