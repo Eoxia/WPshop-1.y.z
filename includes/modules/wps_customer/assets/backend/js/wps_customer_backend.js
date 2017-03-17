@@ -58,10 +58,15 @@ jQuery( document ).ready( function() {
 
 	/** Update Selected addresses ids **/
 	function update_selected_address_ids() {
-		if ( jQuery( '.wps_select_address' ).length == 0 ) {
+		/*if ( jQuery( '.wps_select_address' ).length == 0 ) {
 			jQuery( '#wps_order_selected_address_billing' ).val( '' );
 			jQuery( '#wps_order_selected_address_shipping' ).val( '' );
-		}
+		}*/
+		jQuery( '.wps_select_address' ).each( function(index, element) {
+			if( jQuery( element ).prop( 'checked' ) ) {
+				jQuery( '*[name="wps_order_selected_address[' + jQuery( element ).attr( 'name' ).substr( 0, jQuery( element ).attr( 'name' ).indexOf( '_address_id' ) ) + ']"]' ).val( jQuery( element ).val() );
+			}
+		} );
 	}
 
 	/**
