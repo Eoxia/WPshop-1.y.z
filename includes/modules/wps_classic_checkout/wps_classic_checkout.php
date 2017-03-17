@@ -367,43 +367,47 @@ if ( !class_exists("wps_classic_checkout") ) {
 				$checkout_page_id = wpshop_tools::get_page_id( get_option( 'wpshop_checkout_page_id' ) );
 				/** Checking if no shipping method is required and it is a quotation or a free order **/
 				$shipping_option = get_option( 'wps_shipping_mode' );
-				$available_shipping_method = false;
-				if( !empty($shipping_option) && !empty($shipping_option['modes']) && !$cart_is_downloadable ) {
-					foreach( $shipping_option['modes'] as $shipping_mode_id => $shipping_mode ) {
-						if( !empty($shipping_mode['active']) && $shipping_mode['active'] == 'on' ) {
-							$available_shipping_method = true;
+
+				/** Quotation, no shipping, no payment */
+				if ( !empty($_SESSION) && !empty( $_SESSION['cart'] ) && !empty($_SESSION['cart']['cart_type']) && $_SESSION['cart']['cart_type'] == 'quotation') {
+					$status = true;
+					$_SESSION['shipping_method'] = 'No Shipping method required';
+					$payment_method = $_SESSION['payment_method'] = 'quotation';
+					$order_id = wpshop_checkout::process_checkout( $payment_method, ( !empty($_SESSION['cart']['order_id']) ) ? wpshop_tools::varSanitizer($_SESSION['cart']['order_id']) : 0, get_current_user_id(), $_SESSION['billing_address'], $_SESSION['shipping_address'] );
+					$response = get_permalink( wpshop_tools::get_page_id( $checkout_page_id )  ).( ( !empty($permalink_option) ) ? '?' : '&').'order_step=6';
+				} else {
+					$available_shipping_method = false;
+					if( !empty($shipping_option) && !empty($shipping_option['modes']) && !$cart_is_downloadable ) {
+						foreach( $shipping_option['modes'] as $shipping_mode_id => $shipping_mode ) {
+							if( !empty($shipping_mode['active']) && $shipping_mode['active'] == 'on' ) {
+								$available_shipping_method = true;
+							}
 						}
 					}
-				}
 
-				if( !$available_shipping_method ) {
-					$_SESSION['shipping_method'] = 'No Shipping method required';
-					$order_id = ( !empty($_SESSION['cart']['order_id']) ) ? wpshop_tools::varSanitizer($_SESSION['cart']['order_id']) : 0;
+					if( !$available_shipping_method ) {
+						$_SESSION['shipping_method'] = 'No Shipping method required';
+						$order_id = ( !empty($_SESSION['cart']['order_id']) ) ? wpshop_tools::varSanitizer($_SESSION['cart']['order_id']) : 0;
 
-					if ( !empty($_SESSION) && !empty( $_SESSION['cart'] ) && !empty($_SESSION['cart']['cart_type']) && $_SESSION['cart']['cart_type'] == 'quotation') {
-						$status = true;
-						$payment_method = $_SESSION['payment_method'] = 'quotation';
-						$order_id = wpshop_checkout::process_checkout( $payment_method, $order_id, get_current_user_id(), $_SESSION['billing_address'], $_SESSION['shipping_address'] );
-						$response = get_permalink( wpshop_tools::get_page_id( $checkout_page_id )  ).( ( !empty($permalink_option) ) ? '?' : '&').'order_step=6';
-					}
-					elseif( !empty($_SESSION) && !empty( $_SESSION['cart'] ) && isset($_SESSION['cart']['order_amount_to_pay_now']) && number_format( $_SESSION['cart']['order_amount_to_pay_now'], 2, '.', '' ) == '0.00' ) {
-						$status = true;
-						$payment_method = $_SESSION['payment_method'] = 'free';
-						$order_id = wpshop_checkout::process_checkout( $payment_method, $order_id, get_current_user_id(), $_SESSION['billing_address'], $_SESSION['shipping_address'] );
-						$permalink_option = get_option( 'permalink_structure' );
-						$checkout_page_id = wpshop_tools::get_page_id( get_option( 'wpshop_checkout_page_id' ) );
-						$url = get_permalink( $checkout_page_id  ).( ( !empty($permalink_option) ) ? '?' : '&').'order_step=6';
-// 						wpshop_tools::wpshop_safe_redirect( $url );
-						$response = $url;
+						if( !empty($_SESSION) && !empty( $_SESSION['cart'] ) && isset($_SESSION['cart']['order_amount_to_pay_now']) && number_format( $_SESSION['cart']['order_amount_to_pay_now'], 2, '.', '' ) == '0.00' ) {
+							$status = true;
+							$payment_method = $_SESSION['payment_method'] = 'free';
+							$order_id = wpshop_checkout::process_checkout( $payment_method, $order_id, get_current_user_id(), $_SESSION['billing_address'], $_SESSION['shipping_address'] );
+							$permalink_option = get_option( 'permalink_structure' );
+							$checkout_page_id = wpshop_tools::get_page_id( get_option( 'wpshop_checkout_page_id' ) );
+							$url = get_permalink( $checkout_page_id  ).( ( !empty($permalink_option) ) ? '?' : '&').'order_step=6';
+	// 						wpshop_tools::wpshop_safe_redirect( $url );
+							$response = $url;
+						}
+						else {
+							$status = true;
+							$response = get_permalink( wpshop_tools::get_page_id( $checkout_page_id )  ).( ( !empty($permalink_option) ) ? '?' : '&').'order_step=5';
+						}
 					}
 					else {
 						$status = true;
-						$response = get_permalink( wpshop_tools::get_page_id( $checkout_page_id )  ).( ( !empty($permalink_option) ) ? '?' : '&').'order_step=5';
+						$response = get_permalink( $checkout_page_id  ).( ( !empty($permalink_option) ) ? '?' : '&').'order_step=4';
 					}
-				}
-				else {
-					$status = true;
-					$response = get_permalink( $checkout_page_id  ).( ( !empty($permalink_option) ) ? '?' : '&').'order_step=4';
 				}
 			}
 			//Stock checking verification
