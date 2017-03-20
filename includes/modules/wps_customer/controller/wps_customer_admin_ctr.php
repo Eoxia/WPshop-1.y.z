@@ -105,7 +105,15 @@ class wps_customer_admin {
 			}
 		}
 		else {
-			$customer_lists = $wps_customer->custom_user_list( array( 'name'=>'user[customer_id]', 'id' => 'user_customer_id' ) );
+			// Create order & set customer id if is in request
+			$customer_id = !empty($_REQUEST['customer_id']) ? (int) $_REQUEST['customer_id'] : '';
+			$customer_lists = $wps_customer->custom_user_list( array( 'name'=>'user[customer_id]', 'id' => 'user_customer_id' ), $customer_id );
+			if( !empty( $customer_id ) ) {
+				$wps_account = new wps_account_ctr();
+				$customer_datas = $wps_account->display_account_informations($customer_id, false, true);
+				$wps_address = new wps_address();
+				$addresses = $wps_address->display_addresses_interface( $customer_id, true );
+			}
 		}
 		require( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, $this->template_dir, "backend", "customer-informations/wps_order_customer_informations") );
 	}

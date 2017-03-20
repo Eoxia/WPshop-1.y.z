@@ -438,15 +438,15 @@ class wpshop_orders {
 						$buttons .= '<a class="button button-small" href="'.admin_url('post.php?post='.$post_id.'&action=edit').'">'.__('View', 'wpshop').'</a>';
 						// Marquer comme envoy�
 						if (!empty($order_postmeta['order_status']) && ($order_postmeta['order_status'] == 'completed')) {
-							$buttons .= '<a data-id="' . $post_id . '" class="wps-bton-second-mini-rounded markAsShipped order_'.$post_id.' wps-bton-loader">'.__('Mark as shipped', 'wpshop').'</a> ';
+							$buttons .= '<a data-id="' . $post_id . '" class="wps-bton-second-mini-rounded markAsShipped order_'.$post_id.' wps-bton-loader" data-nonce="' . wp_create_nonce("wpshop_dialog_inform_shipping_number") . '">'.__('Mark as shipped', 'wpshop').'</a> ';
 						}
 						else if (!empty($order_postmeta['order_status']) && ($order_postmeta['order_status'] == 'awaiting_payment' )) {
 							//		$buttons .= '<a class="button markAsCompleted order_'.$post_id.' alignleft" >'.__('Payment received', 'wpshop').'</a>' . wpshop_payment::display_payment_receiver_interface($post_id) . ' ';
 						}
 						$buttons .= '</p>';
-						$buttons .= '<input type="hidden" name="input_wpshop_change_order_state" id="input_wpshop_change_order_state" value="' . wp_create_nonce("wpshop_change_order_state") . '" />';
+						/*$buttons .= '<input type="hidden" name="input_wpshop_change_order_state" id="input_wpshop_change_order_state" value="' . wp_create_nonce("wpshop_change_order_state") . '" />';
 						$buttons .= '<input type="hidden" name="input_wpshop_dialog_inform_shipping_number" id="input_wpshop_dialog_inform_shipping_number" value="' . wp_create_nonce("wpshop_dialog_inform_shipping_number") . '" />';
-						$buttons .= '<input type="hidden" name="input_wpshop_validate_payment_method" id="input_wpshop_validate_payment_method" value="' . wp_create_nonce("wpshop_validate_payment_method") . '" />';
+						$buttons .= '<input type="hidden" name="input_wpshop_validate_payment_method" id="input_wpshop_validate_payment_method" value="' . wp_create_nonce("wpshop_validate_payment_method") . '" />';*/
 
 						echo $buttons;
 					break;
