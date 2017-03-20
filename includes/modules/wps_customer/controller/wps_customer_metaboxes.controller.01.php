@@ -45,8 +45,9 @@ class wps_customer_metaboxe_controller_01 extends wps_customer_ctr {
 	 */
 	function wps_customer_orders_list( $post ) {
 		$output = '';
+		$output .= '<p><a class="button" href="' . admin_url( 'post-new.php?post_type=' . WPSHOP_NEWTYPE_IDENTIFIER_ORDER ) . '&customer_id=' . $post->post_author . '">' . __('Add quotation', 'wpshop') . '</a></p>';
 		$wps_orders = new wps_orders_ctr();
-		$output = $wps_orders->display_orders_in_account( $post->post_author);
+		$output .= $wps_orders->display_orders_in_account( $post->post_author);
 		echo $output;
 	}
 

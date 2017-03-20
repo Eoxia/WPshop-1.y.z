@@ -553,7 +553,7 @@ wpshop( document ).ready(function() {
 		//Open a dialog box to inform a shipping tracking number
 		var data = {
 			action: "dialog_inform_shipping_number",
-			wpshop_ajax_nonce: jQuery("#input_wpshop_dialog_inform_shipping_number").val(),
+			wpshop_ajax_nonce: _this.data('nonce'),
 			order_id: oid,
 		};
 		//Response, display the dialog box
