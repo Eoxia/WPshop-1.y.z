@@ -89,8 +89,9 @@ class wps_customer_metaboxe_controller_01 extends wps_customer_ctr {
 		echo $output;
 	}
 
-	function wps_customer_informations_save() {
+	function wps_customer_informations_save( $post ) {
 		echo '<div class="wps-boxed"><button class="wps-bton-first-rounded" id="wps_signup_button">' . __('Save') . '</button></div>';
+		apply_filters( 'wps_filter_customer_action_metabox', $post->ID, wps_customer_ctr::get_author_id_by_customer_id( $post->ID ) );
 	}
 
 }
