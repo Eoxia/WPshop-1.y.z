@@ -285,7 +285,7 @@ wpshop( document ).ready(function() {
 	jQuery(".wpshop_variation_selector_input, .wpshop_currency_field").live('blur', function(){
 		load_variation_summary( jQuery( this ).data( 'nonce' ) );
 	});
-	load_variation_summary( jQuery( '#_wpnonce' ).val() );
+	// load_variation_summary( jQuery( '#_wpnonce' ).val() );
 
 
 	/*
