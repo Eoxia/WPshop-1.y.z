@@ -67,6 +67,7 @@ jQuery( document ).ready( function() {
 			jQuery( '.search_product_by_letter' ).removeClass( 'third' );
 			current.removeClass( 'wps-bton-loading' );
 			jQuery( '#search_product_by_title_or_barcode' ).val( '' );
+			jQuery( '#' + letter ).addClass( 'third' );
 		});
  	});
 
@@ -91,6 +92,28 @@ jQuery( document ).ready( function() {
 			} else {
 				jQuery( '#' + letter ).removeClass( 'wps-bton-loading' );
 			}
+		});
+	});
+
+	/**
+	 * Paginate
+	 */
+	jQuery( document ).on( 'click', '#wps_orders_product_listing_table a.page-numbers', function( e ) {
+		e.preventDefault();
+		var res = jQuery( this ).attr( 'href' ).replace('?paged_order=', '');
+		if( res == '' || typeof res == 'undefined' ) {
+			res = 1;
+		}
+		last_query = {
+			action: 'wps_order_refresh_product_listing',
+			paged_order: res
+		};
+		jQuery( 'input[name^=last_query]' ).each(function() {
+			last_query[jQuery(this).attr('name').replace('last_query[', '').slice(0, -1)] = jQuery(this).val();
+		});
+		jQuery( '#' + last_query.letter ).addClass( 'wps-bton-loading' );
+		response_search_products(last_query.letter, last_query, function(status) {
+			jQuery( '#' + last_query.letter ).removeClass( 'wps-bton-loading' );
 		});
 	});
 

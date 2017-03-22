@@ -12,9 +12,26 @@
 			<div class="wps-table-cell"><?php _e( 'Add to order', 'wpshop'); ?></div>
 		<?php endif; ?>
 	</div>
-	<?php if( !empty($products) ) : ?>
-	<?php foreach ( $products as $product ) :
-	$pid = $product->ID;
+	<?php if( !empty($products) ) :
+		$total_products = count( $products );
+		$i = 0;
+		$elements_per_page = 20;
+		$paged = absint( isset( $_REQUEST['paged_order'] ) ? $_REQUEST['paged_order'] : 1 );
+		$paginate_links = paginate_links( array(
+			'base' => '%_%',
+			'format' => '?paged_order=%#%',
+			'current' => $paged,
+			'total' => ceil( $total_products / $elements_per_page )
+		) );
+		foreach ( $products as $product ) :
+			if( ( $elements_per_page * ( $paged - 1 ) ) > $i ) {
+				$i++;
+				continue;
+			} elseif ( ( $elements_per_page * $paged ) <= $i ) {
+				break;
+			}
+			$i++;
+			$pid = $product->ID;
 	?>
 	<?php $product_metadata = get_post_meta( $product->ID, '_wpshop_product_metadata', true ); ?>
 	<div class="wps-table-content wps-table-row">
@@ -38,8 +55,8 @@
 			</div>
 		<?php endif; ?>
 	</div>
-	<?php endforeach; ?>
-	<?php else :
+	<?php endforeach;
+	else :
 		if( !empty( $research ) ) : ?>
 		<div class="wps-alert-info"><?php printf( __( 'No products corresponds to the search <strong>"%s"</strong>', 'wpshop'), $research ); ?></div>
 	<?php else :
@@ -48,3 +65,14 @@
 	<?php endif;
 		endif; ?>
 </div>
+<?php
+if( $total_products > $elements_per_page ) :
+	echo $paginate_links;
+	?>
+	<input type="hidden" name="last_query[oid]" value="<?php echo $post->ID; ?>">
+	<input type="hidden" name="last_query[letter]" value="<?php echo strtoupper( $current_letter ); ?>">
+	<input type="hidden" name="last_query[research]" value="<?php echo $research; ?>">
+	<input type="hidden" name="last_query[_wpnonce]" value="<?php echo wp_create_nonce( 'refresh_product_list_'.strtolower($current_letter) ); ?>">
+	<?php
+endif;
+?>
