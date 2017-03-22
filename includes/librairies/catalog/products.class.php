@@ -555,7 +555,7 @@ class wpshop_products
     {
         global $wpdb;
 
-        $data = array(array('code' => 'title', 'frontend_label' => __('Product name', 'wpshop')), array('code' => 'date', 'frontend_label' => __('Date added', 'wpshop')), array('code' => 'modified', 'frontend_label' => __('Date modified', 'wpshop')));
+        $data = array(array('code' => 'title', 'frontend_label' => __('Product name', 'wpshop')), array('code' => 'date', 'frontend_label' => __('Date added', 'wpshop')), array('code' => 'modified', 'frontend_label' => __('Date modified', 'wpshop')), array('code' => 'rand', 'frontend_label' => __('Random', 'wpshop')));
 
         $query = $wpdb->prepare("SELECT code, frontend_label FROM " . WPSHOP_DBT_ATTRIBUTE . " WHERE is_used_for_sort_by = %s", 'yes');
         $results = $wpdb->get_results($query, ARRAY_A);
@@ -800,7 +800,7 @@ class wpshop_products
                     $sub_tpl_component = array();
                     $criteria = '';
                     foreach ($sorting_criteria as $c):
-                        $criteria .= '<option value="' . $c['code'] . '">' . __($c['frontend_label'], 'wpshop') . '</option>';
+                        $criteria .= '<option value="' . $c['code'] . '" ' . selected( $atts['order'], $c['code'], false ) . '>' . __($c['frontend_label'], 'wpshop') . '</option>';
                     endforeach;
                     $sub_tpl_component['SORTING_CRITERIA_LIST'] = $criteria;
                     $tpl_component['SORTING_CRITERIA'] = wpshop_display::display_template_element($sub_template_part, $sub_tpl_component);
@@ -969,7 +969,7 @@ class wpshop_products
             // --------------------- //
             // Pagination management //
             // --------------------- //
-            if ($display_pagination) {
+            if ( $display_pagination ) {
                 if ($nb_of_product_limit == 0) {
 
                     $paginate = paginate_links(array(
