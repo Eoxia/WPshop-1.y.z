@@ -71,6 +71,7 @@ jq_wpeogeoloc( document ).ready(function() {
 		jQuery( this ).hide();
 	});
 
+	update();
 
 	jQuery( document ).on( 'click', '.wps_address_li', function() {
 		jQuery( this ).closest( 'ul' ).children( 'li' ).removeClass( 'wps-activ' );
@@ -112,6 +113,15 @@ jq_wpeogeoloc( document ).ready(function() {
 });
 
 
+function update() {
+	jQuery( '.wps_select_address' ).on( 'change', function() {
+		if ( jQuery( this ).is( ':checked' ) ) {
+			// Update data
+			var type = jQuery( this ).attr( 'name' ).replace( '_address_id', '' );
+			jQuery( '#wps_order_selected_address_' + type ).val( jQuery( this ).val() );
+		}
+	});
+}
 
 function reload_administration_dashboard_address( address_type_id, customer_id ) {
 	jQuery( '#wps_customer_addresses' ).animate( {'opacity' : 0.15}, 350);
@@ -133,6 +143,7 @@ function reload_administration_dashboard_address( address_type_id, customer_id )
 								jQuery( '#wps_order_selected_address_' + type ).val( jQuery( this ) .val() );
 							}
 						});
+						update();
 					});
 				}
 				else {

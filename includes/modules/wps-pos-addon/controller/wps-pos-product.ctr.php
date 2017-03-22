@@ -187,35 +187,16 @@ class wps_pos_addon_product {
 		if ( !wp_verify_nonce( $_wpnonce, 'ajax_pos_product_search' ) )
 			wp_die();
 
-		global $wpdb;
-
 		$term = !empty( $_POST ) && !empty( $_POST[ 'term' ] ) ? sanitize_text_field( $_POST[ 'term' ] ) : null;
 		$response = array(
 			'status' => false,
 			'action' => '',
 		);
 		if ( !empty( $term ) ) {
-
-			$more_query = "";
-			$query_args = array();
-
-			$query_args[] = WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT;
-			$query_args[] = $term;
-
 			$search_in = !empty( $_POST[ 'search_in' ] ) ? sanitize_text_field( $_POST[ 'search_in' ] ) : '';
 
-			if ( empty( $search_in ) || ( 'only_barcode' != $search_in ) ) {
-				$more_query = " OR P.post_title LIKE %s";
-				$query_args[] = '%' . $term . '%';
-			}
-			$query = $wpdb->prepare( "
-				SELECT *
-				FROM {$wpdb->posts} AS P
-					LEFT JOIN {$wpdb->postmeta} AS PM ON ( PM.post_id = P.ID )
-				WHERE P.post_type = %s
-					AND ( ( PM.meta_key = '_barcode' AND PM.meta_value = %s ) " . $more_query . " )
-				GROUP BY P.ID", $query_args );
-			$results = $wpdb->get_results( $query );
+			$wps_product_mdl = new wps_product_mdl();
+			$results = $wps_product_mdl->get_products_by_title_or_barcode( $term, !empty( $search_in ) && 'only_barcode' == $search_in );
 
 			if ( !empty( $results ) ) {
 				if ( 1 < count( $results ) ) {

@@ -172,7 +172,7 @@ class wpshop_dashboard {
 					<div class="inside">
 						<ul id="wps_dashboard_quick_links">
 							<li><a href="<?php echo admin_url( 'post-new.php?post_type=wpshop_product' ); ?>"><img src="<?php echo WPSHOP_MEDIAS_IMAGES_URL; ?>icon_create_product.jpg" alt="<?php _e( 'Create a new product', 'wpshop'); ?>" /><br/><?php _e('Create a product', 'wpshop'); ?></a></li>
-							<li><a href="<?php echo admin_url( 'post-new.php?post_type=wpshop_shop_order' ); ?>"><img src="<?php echo WPSHOP_MEDIAS_IMAGES_URL; ?>icon_create_order.jpg" alt="<?php _e( 'Create order', 'wpshop'); ?>" /><br/><?php _e('Create an order', 'wpshop'); ?></a></li>
+							<li><a href="<?php echo admin_url( 'post-new.php?post_type=' . WPSHOP_NEWTYPE_IDENTIFIER_ORDER ); ?>"><img src="<?php echo WPSHOP_MEDIAS_IMAGES_URL; ?>icon_create_order.jpg" alt="<?php _e( 'Create order', 'wpshop'); ?>" /><br/><?php _e('Create an order', 'wpshop'); ?></a></li>
 							<li><a href="<?php echo admin_url( 'post-new.php?post_type=wpshop_shop_coupon' ); ?>"><img src="<?php echo WPSHOP_MEDIAS_IMAGES_URL; ?>icon_create_coupon.jpg" alt="<?php _e( 'Create a coupon', 'wpshop'); ?>" /><br/><?php _e('Create a coupon', 'wpshop'); ?></a></li>
 							<li><a href="<?php echo admin_url( 'admin.php?page=wpshop_statistics' ); ?>"><img src="<?php echo WPSHOP_MEDIAS_IMAGES_URL; ?>icon_statistics.jpg" alt="<?php _e( 'Statistics', 'wpshop'); ?>" /><br/><?php _e('Statistics', 'wpshop'); ?></a></li>
 						</ul>

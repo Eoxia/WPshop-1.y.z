@@ -553,7 +553,7 @@ wpshop( document ).ready(function() {
 		//Open a dialog box to inform a shipping tracking number
 		var data = {
 			action: "dialog_inform_shipping_number",
-			wpshop_ajax_nonce: jQuery("#input_wpshop_dialog_inform_shipping_number").val(),
+			wpshop_ajax_nonce: _this.data('nonce'),
 			order_id: oid,
 		};
 		//Response, display the dialog box
@@ -890,7 +890,7 @@ wpshop( document ).ready(function() {
 	}
 
 	/** Search on order **/
-	if ( (jQuery('.post_type_page').length > 0) && (jQuery('.post_type_page').val() == 'wpshop_shop_order') && (jQuery('.search-box').length > 0) ) {
+	if ( (jQuery('.post_type_page').length > 0) && (jQuery('.post_type_page').val() == WPSHOP_NEWTYPE_IDENTIFIER_ORDER) && (jQuery('.search-box').length > 0) ) {
 
 		var content = '<p>' + WPSHOP_SEARCH_IN_ORDER_EXPLAIN_MESSAGE + ' : ';
 		content += '<input type="radio" value="customer" name="entity_to_search" id="customer_search_choice"';

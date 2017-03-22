@@ -591,7 +591,7 @@ if (!class_exists("wpshop_modules_billing")) {
 
                                     unset($sub_tpl_component);
                                     $total_partial_payment += (!empty($received_payment['received_amount'])) ? $received_payment['received_amount'] : 0;
-                                } else if ('payment_received' == $received_payment['status']) {
+                                } else if ( !empty( $received_payment['status'] ) && 'payment_received' == $received_payment['status'] ) {
                                     $last_payment += (!empty($received_payment['received_amount'])) ? $received_payment['received_amount'] : 0;
                                 }
 

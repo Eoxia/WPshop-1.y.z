@@ -45,8 +45,9 @@ class wps_customer_metaboxe_controller_01 extends wps_customer_ctr {
 	 */
 	function wps_customer_orders_list( $post ) {
 		$output = '';
+		$output .= '<p><a class="button" href="' . admin_url( 'post-new.php?post_type=' . WPSHOP_NEWTYPE_IDENTIFIER_ORDER ) . '&customer_id=' . $post->post_author . '">' . __('Add quotation', 'wpshop') . '</a></p>';
 		$wps_orders = new wps_orders_ctr();
-		$output = $wps_orders->display_orders_in_account( $post->post_author);
+		$output .= $wps_orders->display_orders_in_account( $post->post_author);
 		echo $output;
 	}
 
@@ -89,8 +90,9 @@ class wps_customer_metaboxe_controller_01 extends wps_customer_ctr {
 		echo $output;
 	}
 
-	function wps_customer_informations_save() {
+	function wps_customer_informations_save( $post ) {
 		echo '<div class="wps-boxed"><button class="wps-bton-first-rounded" id="wps_signup_button">' . __('Save') . '</button></div>';
+		apply_filters( 'wps_filter_customer_action_metabox', $post->ID, wps_customer_ctr::get_author_id_by_customer_id( $post->ID ) );
 	}
 
 }
