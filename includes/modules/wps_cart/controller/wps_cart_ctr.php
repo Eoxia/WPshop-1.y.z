@@ -176,7 +176,7 @@ class wps_cart {
 			$mini_cart_body = self::mini_cart_content( $type );
 		}
 		else {
-			$mini_cart_body = __( 'Your cart is empty', 'wpshop' );
+			$mini_cart_body = self::mini_cart_content();
 		}
 		ob_start();
 		if( !empty($type) && $type == 'fixed' ) {

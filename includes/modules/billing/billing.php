@@ -815,16 +815,16 @@ if (!class_exists("wpshop_modules_billing")) {
                 global $wpdb;
                 switch ($quotation_options['time_type']) {
                     case 'day':
-                        $query = $wpdb->prepare("SELECT DATE_ADD('" . $quotation_date . "', INTERVAL " . $quotation_options['number'] . " DAY) ");
+                        $query = $wpdb->prepare("SELECT DATE_ADD(%s, INTERVAL %s DAY)", $quotation_date, $quotation_options['number']);
                         break;
                     case 'month':
-                        $query = $wpdb->prepare("SELECT DATE_ADD('" . $quotation_date . "', INTERVAL " . $quotation_options['number'] . " MONTH) ");
+                        $query = $wpdb->prepare("SELECT DATE_ADD(%s, INTERVAL %s MONTH)", $quotation_date, $quotation_options['number']);
                         break;
                     case 'year':
-                        $query = $wpdb->prepare("SELECT DATE_ADD('" . $quotation_date . "', INTERVAL " . $quotation_options['number'] . " YEAR) ");
+                        $query = $wpdb->prepare("SELECT DATE_ADD(%s, INTERVAL %s YEAR)", $quotation_date, $quotation_options['number']);
                         break;
                     default:
-                        $query = $wpdb->prepare("SELECT DATE_ADD('" . $quotation_date . "', INTERVAL 15 DAY) ");
+                        $query = $wpdb->prepare("SELECT DATE_ADD(%s, INTERVAL '15' DAY)", $quotation_date);
                         break;
                 }
                 if ($query != null) {

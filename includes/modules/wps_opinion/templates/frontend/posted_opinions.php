@@ -4,17 +4,18 @@
 <div class="wps-table">
 	<div class="wps-table-header wps-table-row">
 		<div class="wps-table-cell"><?php _e( 'Date', 'wps_opinion'); ?></div>
+		<div class="wps-table-cell"><?php _e( 'Picture', 'wps_opinion'); ?></div>
 		<div class="wps-table-cell"><?php _e( 'Product', 'wps_opinion'); ?></div>
 		<div class="wps-table-cell"><?php _e( 'Opinion', 'wps_opinion'); ?></div>
 		<div class="wps-table-cell"><?php _e( 'Rate', 'wps_opinion'); ?></div>
 	</div>
 
-	<?php 
-	if( !empty($posted_opinions) ) : 
-		foreach( $posted_opinions as $posted_opinion ) : 
+	<?php
+	if( !empty($posted_opinions) ) :
+		foreach( $posted_opinions as $posted_opinion ) :
 			require( wpshop_tools::get_template_part( WPS_OPINION_DIR, $this->template_dir,"frontend", "posted_opinion") );
 		endforeach;
-	endif; 
+	endif;
 	?>
 </div>
 <?php else : ?>

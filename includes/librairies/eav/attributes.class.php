@@ -1370,6 +1370,7 @@ ob_end_clean();
 										$attribute_histo_content['attribute_id'] = $attribute_histo[0]->attribute_id;
 										$attribute_histo_content['entity_id'] = $attribute_histo[0]->entity_id;
 										$attribute_histo_content['unit_id'] = $attribute_histo[0]->unit_id;
+										$attribute_histo_content['user_id'] = $attribute_histo[0]->user_id;
 										$attribute_histo_content['language'] = $attribute_histo[0]->language;
 										$attribute_histo_content['value'] = $attribute_histo[0]->value;
 										$attribute_histo_content['value_type'] = WPSHOP_DBT_ATTRIBUTE_VALUES_PREFIX . $attributeType;

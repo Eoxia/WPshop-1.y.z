@@ -278,6 +278,36 @@ class wpshop_products
 
                 /**    Product option    */
                 add_meta_box('wpshop_product_options', __('Options', 'wpshop'), array('wpshop_products', 'product_options_meta_box_content'), WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT, 'side', 'default');
+					global $wpdb;
+					$limit = 40;
+					$count_rows = $wpdb->prepare('SELECT COUNT(value_id) FROM ' . WPSHOP_DBT_ATTRIBUTE_VALUES_HISTO . ' WHERE entity_id = %d', $post->ID );
+					$max_page = ceil( $wpdb->get_var($count_rows) / $limit );
+					$current_page = absint( isset( $_GET['paged_historic'] ) ? $_GET['paged_historic'] : 1 );
+					$query = $wpdb->prepare('SELECT *, histo.value as brut_value FROM ' . WPSHOP_DBT_ATTRIBUTE_VALUES_HISTO . ' AS histo
+					LEFT JOIN ' . WPSHOP_DBT_ATTRIBUTE . ' AS attr ON histo.attribute_id = attr.id
+					LEFT JOIN wp_wpshop__attribute_value_options AS opt ON histo.attribute_id = opt.attribute_id AND histo.value = opt.id
+					WHERE histo.entity_id = %d ORDER BY histo.creation_date DESC LIMIT %d OFFSET %d', $post->ID, $limit, ( ( $current_page - 1 ) * $limit ) );
+					$histo = $wpdb->get_results( $query );
+					$histo_array = array();
+					foreach( $histo as $row ) {
+						$histo_array[$row->creation_date_value][] = $row;
+					}
+					foreach( $histo_array as $date => $values ) {
+						?>
+						<fieldset style="border:1px solid #eee; margin-bottom: 20px">
+						    <legend style="margin-left: 10px; font-weight: bold"><?php printf( __( '%s ago' ), human_time_diff( strtotime( $date ), current_time( 'timestamp' ) ) ); ?> :</legend>
+							<?php foreach( $values as $value ) { ?>
+							    <div style="margin-left: 10px; margin-bottom: 8px"><?php echo $value->frontend_label; ?>: <br><input type="text" value="<?php echo isset( $value->value ) ? $value->value : $value->brut_value; ?>" disabled></div>
+							<?php } ?>
+						</fieldset>
+						<?php
+					}
+					echo paginate_links( array(
+						'base' => '%_%',
+						'format' => '?paged_historic=%#%',
+						'current' => $current_page,
+						'total' => $max_page
+					) );
             } else if (count($attributeEntitySetList) > 1) {
                 $input_def['id'] = 'product_attribute_set_id';
                 $input_def['name'] = 'product_attribute_set_id';
@@ -2386,7 +2416,7 @@ class wpshop_products
      * @param integer $head_product The product identifier to get the variation for
      * @return object The variation list
      */
-    public static function get_variation($head_product)
+    public static function get_variation($head_product, $type = 'any')
     {
         global $wpdb;
         $variations_output = null;
@@ -2396,7 +2426,7 @@ class wpshop_products
             'orderby' => 'ID',
             'order' => 'ASC',
             'posts_per_page' => -1,
-            'post_status' => 'any',
+            'post_status' => $type,
         );
         $variations = get_posts($args);
 
@@ -3484,6 +3514,12 @@ class wpshop_products
 		$variation_post_meta = get_post_meta($current_post_id, '_wpshop_variation_defining', true);
         $variation_post_meta['options'] = $options;
 		$variation_post_meta['follow_general_config'] = true;
+		if( $variation_post_meta['follow_general_config'] ) {
+			$shop_option = get_option('wpshop_catalog_product_option', array());
+			if( isset( $shop_option ) ) {
+				$variation_post_meta['options']['price_display'] = $shop_option['price_display'];
+			}
+		}
 		$variations = wpshop_attributes::get_variation_available_attribute($current_post_id);
 		if( !empty( $variations['available'] ) ) {
 			foreach( $variations['available'] as $key => $value ) {

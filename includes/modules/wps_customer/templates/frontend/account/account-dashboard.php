@@ -28,25 +28,25 @@ $account_dashboard_part = !empty( $_GET['account_dashboard_part'] ) ? sanitize_t
 			<li class="<?php echo ( ( empty($account_dashboard_part) || ( !empty($account_dashboard_part) && $account_dashboard_part == 'account' ) ) ? 'wps-activ' : '' ); ?>">
 				<a data-target="menu1" href="<?php echo get_permalink($account_page_id).( (!empty($permalink_option) ? '?' : '&' ).'account_dashboard_part=account' ); ?>" title="" class="">
 					<i class="wps-icon-user"></i>
-					<span><?php _e( 'My account', 'wpshop'); ?></span>
+					<span><?php _e( 'Account', 'wpshop'); ?></span>
 				</a>
 			</li>
 			<li class="<?php echo ( ( !empty($account_dashboard_part) && $account_dashboard_part == 'address') ? 'wps-activ' : '' ); ?>">
 				<a href="<?php echo get_permalink($account_page_id).( (!empty($permalink_option) ? '?' : '&' ).'account_dashboard_part=address' ); ?>" title="" class="">
 					<i class="wps-icon-address"></i>
-					<span><?php _e( 'My addresses', 'wpshop'); ?></span>
+					<span><?php _e( 'Addresses', 'wpshop'); ?></span>
 				</a>
 			</li>
 			<li class="<?php echo ( ( !empty($account_dashboard_part) && $account_dashboard_part == 'order') ? 'wps-activ' : '' ); ?>">
 				<a href="<?php echo get_permalink($account_page_id).( (!empty($permalink_option) ? '?' : '&' ).'account_dashboard_part=order' ); ?>" title="" class="">
 					<i class="wps-icon-truck"></i>
-					<span><?php _e( 'My orders', 'wpshop'); ?></span>
+					<span><?php _e( 'Orders', 'wpshop'); ?></span>
 				</a>
 			</li>
 			<li class="<?php echo ( ( !empty($account_dashboard_part) && $account_dashboard_part == 'coupon') ? 'wps-activ' : '' ); ?>">
 				<a href="<?php echo get_permalink($account_page_id).( (!empty($permalink_option) ? '?' : '&' ).'account_dashboard_part=coupon' ); ?>" title="" class="">
 					<i class="wps-icon-promo"></i>
-					<span><?php _e( 'My coupons', 'wpshop'); ?></span>
+					<span><?php _e( 'Coupons', 'wpshop'); ?></span>
 				</a>
 			</li>
 			<?php $opinion_option = get_option( 'wps_opinion' );
@@ -54,14 +54,14 @@ $account_dashboard_part = !empty( $_GET['account_dashboard_part'] ) ? sanitize_t
 			<li class="<?php echo ( ( !empty($account_dashboard_part) && $account_dashboard_part == 'opinion') ? 'wps-activ' : '' ); ?>">
 				<a href="<?php echo get_permalink($account_page_id).( (!empty($permalink_option) ? '?' : '&' ).'account_dashboard_part=opinion' ); ?>" title="" class="">
 					<i class="wps-icon-chat"></i>
-					<span><?php _e( 'My opinions', 'wpshop'); ?></span>
+					<span><?php _e( 'Opinions', 'wpshop'); ?></span>
 				</a>
 			</li>
 			<?php endif; ?>
 			<li class="<?php echo ( ( !empty($account_dashboard_part) && $account_dashboard_part == 'messages') ? 'wps-activ' : '' ); ?>">
 				<a href="<?php echo get_permalink($account_page_id).( (!empty($permalink_option) ? '?' : '&' ).'account_dashboard_part=messages' ); ?>" title="" class="">
 					<i class="wps-icon-email"></i>
-					<span><?php _e( 'My messages', 'wpshop' ); ?></span>
+					<span><?php _e( 'Messages', 'wpshop' ); ?></span>
 				</a>
 			</li>
 			<?php echo apply_filters('wps_my_account_extra_part_menu', ''); ?>

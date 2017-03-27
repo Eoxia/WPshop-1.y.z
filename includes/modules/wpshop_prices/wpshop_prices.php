@@ -176,7 +176,7 @@ if ( !class_exists("wpshop_prices") ) {
 				$variation_option_checking = get_post_meta( $product['product_id'], '_wpshop_variation_defining', true );
 
 				if( !empty($variation_option_checking) ) {
-					$variations_exists = wpshop_products::get_variation( $product['product_id'] );
+					$variations_exists = wpshop_products::get_variation( $product['product_id'], 'publish' );
 				}
 
 				if( !empty($variation_option_checking) && !empty($variations_exists) ) {
@@ -487,7 +487,7 @@ if ( !class_exists("wpshop_prices") ) {
 			global $wpdb;
 			$price_piloting_option = get_option( 'wpshop_shop_price_piloting' );
 			$lower_price_product = $min_price = 0;
-			$variations = wpshop_products::get_variation( $product_id );
+			$variations = wpshop_products::get_variation( $product_id, 'publish' );
 			$single_variations = $lower_price_product_combinaison = array();
 			$first = true;
 
