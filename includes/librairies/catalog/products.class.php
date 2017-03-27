@@ -278,6 +278,7 @@ class wpshop_products
 
                 /**    Product option    */
                 add_meta_box('wpshop_product_options', __('Options', 'wpshop'), array('wpshop_products', 'product_options_meta_box_content'), WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT, 'side', 'default');
+				/*add_meta_box('wpshop_histo_attrs', __('Historic attributes', 'wpshop'), function($post) {
 					global $wpdb;
 					$limit = 40;
 					$count_rows = $wpdb->prepare('SELECT COUNT(value_id) FROM ' . WPSHOP_DBT_ATTRIBUTE_VALUES_HISTO . ' WHERE entity_id = %d', $post->ID );
@@ -308,6 +309,7 @@ class wpshop_products
 						'current' => $current_page,
 						'total' => $max_page
 					) );
+				}, WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT, 'side', 'default');*/
             } else if (count($attributeEntitySetList) > 1) {
                 $input_def['id'] = 'product_attribute_set_id';
                 $input_def['name'] = 'product_attribute_set_id';
