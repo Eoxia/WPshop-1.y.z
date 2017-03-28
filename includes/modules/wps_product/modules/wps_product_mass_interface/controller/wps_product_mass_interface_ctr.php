@@ -93,7 +93,7 @@ class wps_product_mass_interface_ctr {
 	 * @param integer $page
 	 * @return string
 	 */
-	function display_products_list( $default = 1, $page = 0  ) {
+	function display_products_list( $default = 1, $page = 0, $order_by = 'date', $order = 'ASC' ) {
 		global $wpdb;
 		// Product entity
 		$product_entity_id = wpshop_entities::get_entity_identifier_from_code( WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT );
@@ -144,7 +144,9 @@ class wps_product_mass_interface_ctr {
 		// Check page
 		$page = ( !empty( $_GET[ 'page' ] ) && is_int( (int)$_GET[ 'page' ] ) && $_GET[ 'page' ] > 0 ) ? (int)($_GET[ 'page' ] - 1) : 0;
 		// Display product tab
-		$product_list_interface = $this->display_products_list( $default, $page );
+		$order_by = !empty( $_GET[ 'order_by' ] ) ? sanitize_title( $_GET[ 'order_by' ] ) : 'date';
+		$order = !empty( $_GET[ 'order' ] ) ? sanitize_title( $_GET[ 'order' ] ) : 'ASC';
+		$product_list_interface = $this->display_products_list( $default, $page, $order_by, $order );
 
 		// Get pagination
 		$pagination = $this->get_products_pagination( $page, $default );

@@ -343,6 +343,9 @@ $select_users .= ob_get_clean();
         return;
     }
 
+	public static function prevent_send_mail_from_wordpress() {
+		return false;
+	}
     public static function save_customer_synchronize($customer_post_ID, $user_id, $user_info)
     {
         global $wpdb;
@@ -373,6 +376,7 @@ $select_users .= ob_get_clean();
             }
         }
         $user_info = array_merge($attributes_default, $user_info);
+		add_filter( 'send_password_change_email', array( get_class(), 'prevent_send_mail_from_wordpress' ) );
         foreach ($user_info as $user_meta => $user_meta_value) {
             $attribute_def = wpshop_attributes::getElement($user_meta, "'valid'", 'code');
             if (!empty($attribute_def)) {
@@ -418,6 +422,7 @@ $select_users .= ob_get_clean();
                 }
             }
         }
+		remove_filter( 'send_password_change_email', array( get_class(), 'prevent_send_mail_from_wordpress' ) );
     }
 
     /**
