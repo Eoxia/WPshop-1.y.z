@@ -27,10 +27,15 @@ if ( class_exists( 'user_switching' ) ) {
 	 *
 	 * @param  integer $customer_id The WPShop customer id (equals to post id).
 	 * @param  integer $wp_user_id  Corresponding user id.
+	 * @param  boolean $need_separator  Add an automatic separator to output.
 	 */
 	function wps_display_user_switching_link( $customer_id, $wp_user_id, $need_separator = true ) {
+		$output = '';
+
 		$user = get_user_by( 'id', $wp_user_id );
-		$output = '<a href="' . esc_url( user_switching::switch_to_url( $user ) ) . '" >' . esc_html( 'Switch to user', 'wpshop' ) . '</a>';
+		if ( false !== $user ) {
+			$output = '<a href="' . esc_url( user_switching::switch_to_url( $user ) ) . '" >' . esc_html( 'Switch to user', 'wpshop' ) . '</a>';
+		}
 
 		echo $output;
 	}
