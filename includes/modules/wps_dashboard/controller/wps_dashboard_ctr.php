@@ -26,7 +26,7 @@ class wps_dashboard_ctr {
 	function add_scripts() {
 		add_action( 'admin_print_scripts', array($this, 'admin_print_script') );
 	}
-	
+
 	function admin_print_script() {
 		echo "<div id=\"fb-root\"></div>
 			<script type=\"text/javascript\">(function(d, s, id) {
@@ -37,16 +37,16 @@ class wps_dashboard_ctr {
 			  fjs.parentNode.insertBefore(js, fjs);
 			}(document, 'script', 'facebook-jssdk'));</script>'";
 	}
-	
+
 	/**
 	 * DISPLAY - Display wpshop dashboard
 	 */
 	function display_dashboard() {
 		global $order_status, $wpdb;
 
+		$this->add_dashboard_metaboxes();
 		require_once( wpshop_tools::get_template_part( WPS_DASHBOARD_DIR, WPSDASHBOARD_TPL_DIR, "backend", "dashboard" ) );
 	}
-
 
 	function wpshop_dashboard_orders() {
 		$output = '';
@@ -56,11 +56,10 @@ class wps_dashboard_ctr {
 		require_once( wpshop_tools::get_template_part( WPS_DASHBOARD_DIR, WPSDASHBOARD_TPL_DIR, "backend", "wps_orders_on_dashboard" ) );
 		$output = ob_get_contents();
 		ob_end_clean();
-		
+
 
 		return $output;
 	}
-
 
 	function wpshop_rss_feed() {
 		$output = '';
@@ -89,7 +88,6 @@ class wps_dashboard_ctr {
 		}
 		echo $output;
 	}
-
 
 	function wpshop_rss_tutorial_videos() {
 		$ini_get_checking = ini_get( 'allow_url_fopen' );
@@ -130,6 +128,133 @@ class wps_dashboard_ctr {
 			echo $versions[1];
 		}
 	}
-}
 
-?>
+	/**
+	 * Add custom metaboxes to WPShop dashboard
+	 */
+	function add_dashboard_metaboxes() {
+		add_meta_box( 'wps-right-now', '<i class="dashicons dashicons-info"></i>' . esc_html( 'Right Now', 'wpshop' ), array( $this, 'wps_dashboard_right_now' ), 'wpshop_dashboard', 'left_column' );
+		add_meta_box( 'wps-dashboard-quick-links', '<i class="dashicons dashicons-performance"></i>' . esc_html( 'Quick Links', 'wpshop' ), array( $this, 'wps_dashboard_quick_links' ), 'wpshop_dashboard', 'left_column' );
+		// add_meta_box( 'wps-dashboard-customer-stats', '<i class="dashicons dashicons-chart-pie"></i>' . esc_html( 'Customers stats', 'wpshop' ), array( $this, 'wps_dashboard_customer_stats' ), 'wpshop_dashboard', 'left_column' );
+		add_meta_box( 'wps-dashboard-export', '<i class="dashicons dashicons-download"></i>' . esc_html( 'CSV export', 'wpshop' ), array( $this, 'wps_dashboard_export' ), 'wpshop_dashboard', 'left_column' );
+		add_meta_box( 'wps-dashboard-orders', '<i class="dashicons dashicons-cart"></i>' . esc_html( 'Recent Orders', 'wpshop' ), array( $this, 'wps_dashboard_orders' ), 'wpshop_dashboard', 'left_column' );
+
+		add_meta_box( 'wps-dashboard-statistics', '<i class="dashicons dashicons-chart-area"></i>' . esc_html( 'Statistics', 'wpshop' ), array( $this, 'wps_dashboard_statistics' ), 'wpshop_dashboard', 'right_column' );
+
+		add_meta_box( 'wps-dashboard-infos', '<i class="dashicons dashicons-heart"></i>' . esc_html( 'WPShop : WordPress e-commerce', 'wpshop' ), array( $this, 'wps_dashboard_infos' ), 'wpshop_dashboard', 'right_column' );
+		add_meta_box( 'wps-dashboard-feed', '<i class="dashicons dashicons-format-status"></i>' . esc_html( 'WPShop News', 'wpshop' ), array( $this, 'wps_dashboard_feed' ), 'wpshop_dashboard', 'right_column' );
+	}
+
+	/**
+	 * Display metabox with main shop summary
+	 */
+	function wps_dashboard_right_now() {
+		global $wpdb;
+		require_once( wpshop_tools::get_template_part( WPS_DASHBOARD_DIR, WPSDASHBOARD_TPL_DIR, 'backend', 'metabox', 'right_now' ) );
+	}
+
+	/**
+	 * Display metabox with quick links
+	 */
+	function wps_dashboard_quick_links() {
+		require_once( wpshop_tools::get_template_part( WPS_DASHBOARD_DIR, WPSDASHBOARD_TPL_DIR, 'backend', 'metabox', 'quicklinks' ) );
+	}
+
+	/**
+	 * Display metabox with quick links
+	 */
+	function wps_dashboard_customer_stats() {
+		global $wpdb;
+	}
+
+	/**
+	 * Display metabox with shop main statistics
+	 */
+	function wps_dashboard_statistics() {
+		global $wpdb, $current_month_offset;
+
+		$current_month_offset = (int) current_time( 'm' );
+		$current_month_offset = isset( $_GET['month'] ) ? (int) $_GET['month'] : $current_month_offset;
+
+		$current_month_start = date( 'Y-m-d 00:00:00', strtotime( 'first day of this month', time() ) );
+		$current_month_end = date( 'Y-m-d 23:59:59', strtotime( 'last day of this month', time() ) );
+
+		$last_month_start = date( 'Y-m-d 00:00:00', strtotime( 'first day of last month', time() ) );
+		$last_month_end = date( 'Y-m-d 23:59:59', strtotime( 'last day of last month', time() ) );
+		$one_month_ago = date( 'Y-m-d 23:59:59', strtotime( '-1 month', time() ) );
+
+		$dates = array(
+			__( 'Current month', 'wpshop' ) => array(
+				'after'			=> $current_month_start,
+				'before'		=> $current_month_end,
+				'inclusive'	=> true,
+			),
+			sprintf( __( 'One month ago (%s)', 'wpshop' ), mysql2date( get_option( 'date_format' ), $one_month_ago, true ) ) => array(
+				'after'			=> $last_month_start,
+				'before'		=> $one_month_ago,
+				'inclusive'	=> true,
+			),
+			__( 'Last month', 'wpshop' ) => array(
+				'after'			=> $last_month_start,
+				'before'		=> $last_month_end,
+				'inclusive'	=> true,
+			),
+		);
+
+		$orders_default_args = array(
+			'posts_per_page'	=> -1,
+			'orderby'					=> 'post_date',
+			'order'						=> 'DESC',
+			'post_type'				=> WPSHOP_NEWTYPE_IDENTIFIER_ORDER,
+			'post_status'			=> 'publish',
+			'meta_query'			=> array(
+				'relation'	=> 'OR',
+				array(
+					'key'			=> '_order_postmeta',
+					'value'		=> 's:12:"order_status";s:9:"completed";',
+					'compare'	=> 'LIKE',
+				),
+				array(
+					'key'			=> '_order_postmeta',
+					'value'		=> 's:12:"order_status";s:7:"shipped";',
+					'compare'	=> 'LIKE',
+				),
+			),
+		);
+
+		require_once( wpshop_tools::get_template_part( WPS_DASHBOARD_DIR, WPSDASHBOARD_TPL_DIR, 'backend', 'metabox', 'statistics' ) );
+	}
+
+	/**
+	 * Display metabox with shop main statistics
+	 */
+	function wps_dashboard_infos() {
+		global $wpdb;
+		require_once( wpshop_tools::get_template_part( WPS_DASHBOARD_DIR, WPSDASHBOARD_TPL_DIR, 'backend', 'metabox', 'infos' ) );
+	}
+
+	/**
+	 * Display metabox with shop main statistics
+	 */
+	function wps_dashboard_feed() {
+		require_once( wpshop_tools::get_template_part( WPS_DASHBOARD_DIR, WPSDASHBOARD_TPL_DIR, 'backend', 'metabox', 'feed' ) );
+	}
+
+	/**
+	 * Display metabox with recent orders list
+	 */
+	function wps_dashboard_orders() {
+		require_once( wpshop_tools::get_template_part( WPS_DASHBOARD_DIR, WPSDASHBOARD_TPL_DIR, 'backend', 'metabox', 'orders' ) );
+	}
+
+	/**
+	 * Display metabox for export
+	 */
+	function wps_dashboard_export() {
+		if ( class_exists( 'wps_export_ctr' ) ) {
+			$wps_export = new wps_export_ctr();
+			$wps_export->wps_export_tpl();
+		}
+	}
+
+}

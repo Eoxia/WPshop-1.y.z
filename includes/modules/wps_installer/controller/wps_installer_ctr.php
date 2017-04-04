@@ -74,7 +74,7 @@ class wps_installer_ctr {
 		}
 
 		/**	Hook wpshop dashboard in order to display the notice banner with quick links - wordpress like	*/
-		add_filter( 'wps-dashboard-notice', array( $this, 'wps_dashboard_notice' ), 10, 1 );
+		add_filter( 'wps_dashboard_notice', array( $this, 'wps_dashboard_notice' ), 10, 1 );
 
 		/**	Hook ajax action when clicking on hide welcome banner on wpshop dashboard	*/
 		add_action( 'wp_ajax_wps-hide-welcome-panel', array( $this, 'wps_hide_welcome_panel' ) );
