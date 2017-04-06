@@ -171,56 +171,7 @@ class wps_dashboard_ctr {
 	 * Display metabox with shop main statistics
 	 */
 	function wps_dashboard_statistics() {
-		global $wpdb, $current_month_offset;
-
-		$current_month_offset = (int) current_time( 'm' );
-		$current_month_offset = isset( $_GET['month'] ) ? (int) $_GET['month'] : $current_month_offset;
-
-		$current_month_start = date( 'Y-m-d 00:00:00', strtotime( 'first day of this month', time() ) );
-		$current_month_end = date( 'Y-m-d 23:59:59', strtotime( 'last day of this month', time() ) );
-
-		$last_month_start = date( 'Y-m-d 00:00:00', strtotime( 'first day of last month', time() ) );
-		$last_month_end = date( 'Y-m-d 23:59:59', strtotime( 'last day of last month', time() ) );
-		$one_month_ago = date( 'Y-m-d 23:59:59', strtotime( '-1 month', time() ) );
-
-		$dates = array(
-			__( 'Current month', 'wpshop' ) => array(
-				'after'			=> $current_month_start,
-				'before'		=> $current_month_end,
-				'inclusive'	=> true,
-			),
-			sprintf( __( 'One month ago (%s)', 'wpshop' ), mysql2date( get_option( 'date_format' ), $one_month_ago, true ) ) => array(
-				'after'			=> $last_month_start,
-				'before'		=> $one_month_ago,
-				'inclusive'	=> true,
-			),
-			__( 'Last month', 'wpshop' ) => array(
-				'after'			=> $last_month_start,
-				'before'		=> $last_month_end,
-				'inclusive'	=> true,
-			),
-		);
-
-		$orders_default_args = array(
-			'posts_per_page'	=> -1,
-			'orderby'					=> 'post_date',
-			'order'						=> 'DESC',
-			'post_type'				=> WPSHOP_NEWTYPE_IDENTIFIER_ORDER,
-			'post_status'			=> 'publish',
-			'meta_query'			=> array(
-				'relation'	=> 'OR',
-				array(
-					'key'			=> '_order_postmeta',
-					'value'		=> 's:12:"order_status";s:9:"completed";',
-					'compare'	=> 'LIKE',
-				),
-				array(
-					'key'			=> '_order_postmeta',
-					'value'		=> 's:12:"order_status";s:7:"shipped";',
-					'compare'	=> 'LIKE',
-				),
-			),
-		);
+		global $wpdb;
 
 		require_once( wpshop_tools::get_template_part( WPS_DASHBOARD_DIR, WPSDASHBOARD_TPL_DIR, 'backend', 'metabox', 'statistics' ) );
 	}

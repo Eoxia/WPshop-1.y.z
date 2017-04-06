@@ -47,10 +47,10 @@
 				'post_type'       => WPSHOP_NEWTYPE_IDENTIFIER_ORDER,
 				'post_status'     => 'publish'
 			);
-			$orders = get_posts($args);
+			$orders = get_posts( $args );
 			$order_completed = $order_shipped = $order_awaiting_payment = $order_denied = $order_canceled = $order_refunded = 0;
-			if ($orders) {
-				foreach ($orders as $o) {
+			if ( $orders ) {
+				foreach ( $orders as $o ) {
 					$order = get_post_meta($o->ID, '_order_postmeta', true);
 					if(!empty($order['order_status'])){
 						switch($order['order_status']) {

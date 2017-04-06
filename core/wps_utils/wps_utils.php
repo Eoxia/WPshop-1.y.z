@@ -485,6 +485,12 @@ class wpshop_tools {
 		return $page_id;
 	}
 
+	public static function minutes_to_time( $minutes, $format = '%hh %imin' ) {
+		$dtF = new \DateTime( '@0' );
+		$dtT = new \DateTime( '@' . ( $minutes * 60 ) );
+		return $dtF->diff($dtT)->format( $format );
+	}
+
 	public static function number_format_hack($n) {
 		return number_format($n, 5, '.', '');
 	}

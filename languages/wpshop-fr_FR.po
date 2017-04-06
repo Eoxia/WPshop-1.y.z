@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Wp Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-27 10:13+0200\n"
-"PO-Revision-Date: 2017-03-27 10:14+0200\n"
+"POT-Creation-Date: 2017-04-06 09:09+0200\n"
+"PO-Revision-Date: 2017-04-06 09:10+0200\n"
 "Last-Translator: Equipe de développement de digirisk <dev@digirisk.com>\n"
 "Language-Team: Développement Eoxia <dev@eoxia.com>\n"
 "Language: fr_FR\n"
@@ -13,7 +13,7 @@ msgstr ""
 "X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_e;_x;esc_html__;"
 "esc_html_e\n"
 "X-Poedit-Basepath: ..\n"
-"X-Generator: Poedit 1.8.12\n"
+"X-Generator: Poedit 2.0\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: includes/modules/wps_barcode\n"
@@ -527,7 +527,7 @@ msgid "Awaiting treatment"
 msgstr "En attente de traitement"
 
 #: includes/config.php:371 includes/librairies/dashboard.class.php:96
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:105
+#: includes/modules/wps_dashboard/templates/backend/metabox-right_now.php:81
 msgid "Awaiting payment"
 msgstr "Paiement en attente"
 
@@ -542,13 +542,13 @@ msgid "Paid"
 msgstr "Payé"
 
 #: includes/config.php:374 includes/librairies/dashboard.class.php:91
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:100
+#: includes/modules/wps_dashboard/templates/backend/metabox-right_now.php:76
 #: includes/wpshop_ajax.php:523
 msgid "Shipped"
 msgstr "Expédié"
 
 #: includes/config.php:375 includes/librairies/dashboard.class.php:101
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:110
+#: includes/modules/wps_dashboard/templates/backend/metabox-right_now.php:86
 msgid "Denied"
 msgstr "Refusé"
 
@@ -558,7 +558,7 @@ msgid "Incorrect amount"
 msgstr "Montant incorrect"
 
 #: includes/config.php:377 includes/librairies/dashboard.class.php:105
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:114
+#: includes/modules/wps_dashboard/templates/backend/metabox-right_now.php:90
 msgid "Canceled"
 msgstr "Annulé"
 
@@ -567,7 +567,7 @@ msgid "Refused payment"
 msgstr "Paiement refusée"
 
 #: includes/config.php:379 includes/librairies/dashboard.class.php:109
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:118
+#: includes/modules/wps_dashboard/templates/backend/metabox-right_now.php:94
 msgid "Refunded"
 msgstr "Remboursé"
 
@@ -738,7 +738,7 @@ msgstr "Pas de miniature pour le post"
 #: includes/librairies/options/options.class.php:179
 #: includes/modules/wps-pos-addon/templates/backend/bank_deposit/bank_deposit.php:39
 #: includes/modules/wps-pos-addon/templates/backend/bank_deposit/metabox-bank_deposit.php:40
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:36
+#: includes/modules/wps_dashboard/templates/backend/metabox-right_now.php:12
 #: includes/modules/wps_message/templates/backend/mails/order_content_mail_template.php:6
 #: includes/modules/wps_shortcodes/templates/backend/list-shortcode.php:5
 #: templates/admin/tools_elements.tpl.php:47
@@ -767,7 +767,7 @@ msgstr "éditer un produit"
 
 #: includes/librairies/catalog/products.class.php:104
 #: includes/modules/wps_customer/controller/wps_provider_ctr.php:135
-#: includes/modules/wps_product/modules/wps_product_mass_interface/controller/wps_product_mass_interface_ctr.php:256
+#: includes/modules/wps_product/modules/wps_product_mass_interface/controller/wps_product_mass_interface_ctr.php:258
 msgid "New product"
 msgstr "Nouveau produit"
 
@@ -862,15 +862,6 @@ msgstr "Produit avec option"
 msgid "Options"
 msgstr "Options"
 
-#: includes/librairies/catalog/products.class.php:281
-msgid "Historic attributes"
-msgstr "Historique d'attributs"
-
-#: includes/librairies/catalog/products.class.php:299
-#, php-format
-msgid "%s ago"
-msgstr "Il y a %s"
-
 #: includes/librairies/catalog/products.class.php:329
 msgid "Choose a title for your product"
 msgstr "Saisissez un nom pour le produit"
@@ -962,6 +953,10 @@ msgstr "Date d'ajout"
 #: includes/librairies/catalog/products.class.php:590
 msgid "Date modified"
 msgstr "Dernière modification"
+
+#: includes/librairies/catalog/products.class.php:590
+msgid "Random"
+msgstr "Aléatoire"
 
 #: includes/librairies/catalog/products.class.php:639
 #: includes/librairies/catalog/products.class.php:654
@@ -1108,17 +1103,16 @@ msgid "This product has never been ordered"
 msgstr "Ce produit n'a jamais été commandé"
 
 #: includes/librairies/dashboard.class.php:21
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:22
 msgid "Right Now"
 msgstr "Maintenant"
 
 #: includes/librairies/dashboard.class.php:25
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:26
+#: includes/modules/wps_dashboard/templates/backend/metabox-right_now.php:2
 msgid "Shop Content"
 msgstr "Votre boutique"
 
 #: includes/librairies/dashboard.class.php:39
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:40
+#: includes/modules/wps_dashboard/templates/backend/metabox-right_now.php:16
 msgid "Product Categories"
 msgstr "Catégories"
 
@@ -1126,30 +1120,28 @@ msgstr "Catégories"
 #: includes/librairies/dashboard.class.php:54
 #: includes/librairies/purchase/orders.class.php:32
 #: includes/modules/wps_customer/templates/frontend/account/account-dashboard.php:43
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:45
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:63
-#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:53
+#: includes/modules/wps_dashboard/templates/backend/metabox-right_now.php:21
+#: includes/modules/wps_dashboard/templates/backend/metabox-right_now.php:39
 msgid "Orders"
 msgstr "Commandes"
 
 #: includes/librairies/dashboard.class.php:48
 #: includes/modules/wps_customer/controller/wps_customer_ctr.php:178
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:53
+#: includes/modules/wps_dashboard/templates/backend/metabox-right_now.php:29
 msgid "Customers"
 msgstr "Clients"
 
 #: includes/librairies/dashboard.class.php:86
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:95
+#: includes/modules/wps_dashboard/templates/backend/metabox-right_now.php:71
 msgid "Completed"
 msgstr "Payé"
 
 #: includes/librairies/dashboard.class.php:115
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:124
+#: includes/modules/wps_dashboard/templates/backend/metabox-right_now.php:100
 msgid "You are using"
 msgstr "Vous utilisez"
 
 #: includes/librairies/dashboard.class.php:123
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:152
 msgid "Customers stats"
 msgstr "Statistiques utilisateur"
 
@@ -1166,7 +1158,7 @@ msgid "Number of customers who ordered"
 msgstr "Nombre de client ayant commandé"
 
 #: includes/librairies/dashboard.class.php:162
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:168
+#: includes/modules/wps_dashboard/templates/backend/metabox-customerStats.php:13
 msgid "Number of customers who wants to receive shop newsletters"
 msgstr ""
 "Nombre de clients acceptant de recevoir vos offres commerciales par email"
@@ -1177,23 +1169,22 @@ msgstr ""
 #: includes/modules/wps-pos-addon/templates/backend/order/order-complete.php:19
 #: includes/modules/wps_dashboard/templates/backend/wps_orders_on_dashboard.php:38
 #: includes/modules/wps_dashboard/templates/backend/wps_orders_on_dashboard.php:43
-#: includes/modules/wps_export/templates/backend/wps_export_tpl.php:46
+#: includes/modules/wps_export/templates/backend/wps_export_tpl.php:43
 msgid "Download"
 msgstr "Télécharger"
 
 #: includes/librairies/dashboard.class.php:165
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:178
+#: includes/modules/wps_dashboard/templates/backend/metabox-customerStats.php:23
 msgid "Number of customers who wants to receive partners newsletters"
 msgstr ""
 "Nombre de clients acceptant de recevoir les offres des partenaires par email"
 
 #: includes/librairies/dashboard.class.php:171
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:136
 msgid "Quick Links"
 msgstr "Liens rapides"
 
 #: includes/librairies/dashboard.class.php:174
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:139
+#: includes/modules/wps_dashboard/templates/backend/metabox-quicklinks.php:2
 #: includes/modules/wps_product/modules/wps_product_mass_interface/templates/backend/quick_add_interface.php:4
 msgid "Create a new product"
 msgstr "Créer un produit"
@@ -1205,7 +1196,7 @@ msgid "Create a product"
 msgstr "Créer un produit"
 
 #: includes/librairies/dashboard.class.php:175
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:140
+#: includes/modules/wps_dashboard/templates/backend/metabox-quicklinks.php:3
 msgid "Create order"
 msgstr "Créer une commande"
 
@@ -1218,9 +1209,9 @@ msgid "Create a coupon"
 msgstr "Créer un coupon"
 
 #: includes/librairies/dashboard.class.php:177
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:142
-#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:44
-#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:93
+#: includes/modules/wps_dashboard/templates/backend/metabox-quicklinks.php:5
+#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:43
+#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:80
 msgid "Statistics"
 msgstr "Statistiques"
 
@@ -1229,39 +1220,34 @@ msgid "Number of products sold the last 7 days"
 msgstr "Nombre de produit vendu durant les 7 derniers jours"
 
 #: includes/librairies/dashboard.class.php:246
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:196
 msgid "Recent Orders"
 msgstr "Commande récentes"
 
 #: includes/librairies/dashboard.class.php:266
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:215
 msgid "Next Month"
 msgstr "Mois suivant"
 
 #: includes/librairies/dashboard.class.php:268
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:217
 msgid "Previous Month"
 msgstr "Mois précèdent"
 
 #: includes/librairies/dashboard.class.php:269
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:218
 msgid "Monthly Sales"
 msgstr "Ventes mensuelles"
 
 #: includes/librairies/dashboard.class.php:397
 #: includes/librairies/dashboard.class.php:444
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:346
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:393
+#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:221
 msgid "Number of sales"
 msgstr "Nombre de ventes"
 
 #: includes/librairies/dashboard.class.php:397
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:346
+#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:223
 msgid "Sales amount"
 msgstr "Montant des ventes"
 
 #: includes/librairies/dashboard.class.php:447
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:396
+#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:222
 msgid "sales"
 msgstr "Ventes"
 
@@ -1302,7 +1288,6 @@ msgid "WPShop Forum"
 msgstr "Forum WPShop"
 
 #: includes/librairies/dashboard.class.php:546
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:458
 msgid "WPShop news"
 msgstr "Les actualités de WPShop"
 
@@ -1385,22 +1370,22 @@ msgid "Shipping Slip"
 msgstr "Bon de colisage"
 
 #: includes/librairies/dashboard.class.php:637
-#: includes/modules/wps_dashboard/controller/wps_dashboard_ctr.php:75
+#: includes/modules/wps_dashboard/controller/wps_dashboard_ctr.php:74
 msgid "WPShop News cannot be loaded"
 msgstr "Les actualités de WPShop n'ont pas pu être chargés"
 
 #: includes/librairies/dashboard.class.php:641
-#: includes/modules/wps_dashboard/controller/wps_dashboard_ctr.php:79
+#: includes/modules/wps_dashboard/controller/wps_dashboard_ctr.php:78
 msgid "No WPShop new has been found"
 msgstr "Aucune actualité WPShop n'a été trouvé"
 
 #: includes/librairies/dashboard.class.php:675
-#: includes/modules/wps_dashboard/controller/wps_dashboard_ctr.php:113
+#: includes/modules/wps_dashboard/controller/wps_dashboard_ctr.php:111
 msgid "No tutorial videos can be loaded"
 msgstr "Aucun tutoriel n'a pu être chargé"
 
 #: includes/librairies/dashboard.class.php:679
-#: includes/modules/wps_dashboard/controller/wps_dashboard_ctr.php:117
+#: includes/modules/wps_dashboard/controller/wps_dashboard_ctr.php:115
 msgid "Your servor doesn't allow to open external files"
 msgstr "Votre serveur n'autorise pas l'ouverture de fichiers externes."
 
@@ -1467,7 +1452,7 @@ msgstr "Divers"
 #: includes/modules/billing/billing.php:1070
 #: includes/modules/wps-pos-addon/modules/wps_product_quick_add/templates/backend/product_creation.php:7
 #: includes/modules/wps_opinion/templates/frontend/opinions.php:7
-#: includes/modules/wps_opinion/templates/frontend/posted_opinions.php:7
+#: includes/modules/wps_opinion/templates/frontend/posted_opinions.php:8
 #: includes/modules/wps_opinion/templates/frontend/waited_opinions.php:7
 #: includes/modules/wps_product/modules/wps_product_quick_add/templates/backend/product_creation.php:7
 #: includes/modules/wps_quotation/templates/backend/add_free_product_form_page_tpl.php:8
@@ -2577,6 +2562,7 @@ msgid "An error occured while duplicating element"
 msgstr "Une erreur est survenue lors de la duplication de ce produit"
 
 #: includes/librairies/eav/entities.class.php:645
+#: includes/modules/wps_opinion/templates/frontend/posted_opinions.php:7
 #: includes/modules/wps_opinion/templates/frontend/waited_opinions.php:6
 #: includes/modules/wps_orders/templates/backend/product-listing/wps_orders_product_listing_table.php:5
 #: includes/modules/wps_product/modules/wps_product_mass_interface/templates/backend/quick_add_interface-product_list.php:19
@@ -3040,7 +3026,7 @@ msgstr "Voulez-vous vraiment supprimer cette adresse ?"
 
 #: includes/librairies/init.class.php:532
 #: includes/modules/wps_customer/controller/wps_customer_group.php:342
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:57
+#: includes/modules/wps_dashboard/templates/backend/metabox-right_now.php:33
 msgid "Users"
 msgstr "Utilisateurs"
 
@@ -5124,6 +5110,7 @@ msgstr "Commande"
 #: includes/modules/wps-pos-addon/templates/backend/order/order-complete.php:20
 #: includes/modules/wps_customer/controller/wp_list_custom_entities_customers.php:166
 #: includes/modules/wps_customer/templates/backend/customer_listtable/customer_name.php:23
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_custom.php:25
 msgid "View"
 msgstr "Voir"
 
@@ -5133,7 +5120,7 @@ msgid "Mark as shipped"
 msgstr "Marquer comme expédié"
 
 #: includes/librairies/purchase/orders.class.php:492
-#: includes/modules/wps_customer/controller/wps_customer_ctr.php:531
+#: includes/modules/wps_customer/controller/wps_customer_ctr.php:536
 #: includes/modules/wps_search/controller/wpshop_entity_filter.php:22
 msgid "-- Select Filter --"
 msgstr "-- Sélectionner un filtre --"
@@ -5711,16 +5698,16 @@ msgid "Sort by dates"
 msgstr "Trier par date"
 
 #: includes/modules/wps-pos-addon/templates/backend/bank_deposit/metabox-bank_deposit.php:9
-#: includes/modules/wps_export/templates/backend/wps_export_tpl.php:34
+#: includes/modules/wps_export/templates/backend/wps_export_tpl.php:31
 #: includes/modules/wps_statistics/templates/backend/main_elements.tpl.php:13
-#: includes/modules/wps_statistics/templates/backend/wps-statistics.php:11
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_custom.php:21
 msgid "Begin date"
 msgstr "Date de début"
 
 #: includes/modules/wps-pos-addon/templates/backend/bank_deposit/metabox-bank_deposit.php:10
-#: includes/modules/wps_export/templates/backend/wps_export_tpl.php:40
+#: includes/modules/wps_export/templates/backend/wps_export_tpl.php:37
 #: includes/modules/wps_statistics/templates/backend/main_elements.tpl.php:14
-#: includes/modules/wps_statistics/templates/backend/wps-statistics.php:18
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_custom.php:23
 msgid "End date"
 msgstr "Date de fin"
 
@@ -5784,14 +5771,14 @@ msgstr "Création d'un nouveau client"
 #: includes/modules/wps-pos-addon/templates/backend/customers/metabox_title-list.php:18
 #: includes/modules/wps-pos-addon/templates/backend/customers/metabox_title-selected.php:18
 #: includes/modules/wps_customer/templates/backend/customer-informations/wps_order_customer_informations.php:8
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:141
+#: includes/modules/wps_dashboard/templates/backend/metabox-quicklinks.php:4
 #: includes/modules/wps_orders/templates/backend/main_elements.tpl.php:8
 #: includes/modules/wps_orders/templates/backend/wps_order_choose_customer_inferface.php:13
 msgid "Create a customer"
 msgstr "Créer un client"
 
 #: includes/modules/wps-pos-addon/templates/backend/customers/customer.php:6
-#: includes/modules/wps_customer/controller/wps_customer_ctr.php:453
+#: includes/modules/wps_customer/controller/wps_customer_ctr.php:458
 #: templates/wpshop/main_elements.tpl.php:885
 msgid "E-mail"
 msgstr "Adresse e-mail"
@@ -6114,22 +6101,17 @@ msgstr "Aucune adresse n'est attaché à ce type d'élément %s"
 msgid "Some errors have been detected"
 msgstr "Des erreurs ont été détectées"
 
-#: includes/modules/wps_address/templates/backend/address-container.php:7
-#, php-format
-msgid "Create a %s"
-msgstr "Créer une %s"
-
-#: includes/modules/wps_address/templates/backend/address-container.php:14
+#: includes/modules/wps_address/templates/backend/address-container.php:34
 #, php-format
 msgid "You do not have create a %s"
 msgstr "Vous n'avez pas créé d'%s"
 
-#: includes/modules/wps_address/templates/backend/address-content.php:46
+#: includes/modules/wps_address/templates/backend/address-content.php:50
 #: includes/modules/wps_address/templates/frontend/address-content.php:37
 msgid "Edit this address"
 msgstr "Editer votre adresse"
 
-#: includes/modules/wps_address/templates/backend/address-content.php:47
+#: includes/modules/wps_address/templates/backend/address-content.php:51
 #: includes/modules/wps_address/templates/frontend/address-content.php:38
 msgid "Delete this address"
 msgstr "Supprimer cette adresse"
@@ -6200,7 +6182,6 @@ msgstr "Panier complet"
 
 #: includes/modules/wps_cart/controller/wps_cart_ctr.php:156
 #: includes/modules/wps_cart/controller/wps_cart_ctr.php:160
-#: includes/modules/wps_cart/controller/wps_cart_ctr.php:179
 #: includes/modules/wps_cart/controller/wps_cart_ctr.php:221
 #: includes/modules/wps_cart/controller/wps_cart_ctr.php:225
 #: includes/modules/wps_cart/controller/wps_cart_ctr.php:261
@@ -6896,40 +6877,40 @@ msgstr "Aucun client trouvé"
 msgid "No customer founded in trash"
 msgstr "Aucun client trouvé dans la corbeille"
 
-#: includes/modules/wps_customer/controller/wps_customer_ctr.php:451
+#: includes/modules/wps_customer/controller/wps_customer_ctr.php:456
 msgid "Customer ID"
 msgstr "ID Client"
 
-#: includes/modules/wps_customer/controller/wps_customer_ctr.php:452
+#: includes/modules/wps_customer/controller/wps_customer_ctr.php:457
 msgid "Last-name"
 msgstr "Nom "
 
-#: includes/modules/wps_customer/controller/wps_customer_ctr.php:452
+#: includes/modules/wps_customer/controller/wps_customer_ctr.php:457
 msgid "First-name"
 msgstr "Prénom "
 
-#: includes/modules/wps_customer/controller/wps_customer_ctr.php:454
+#: includes/modules/wps_customer/controller/wps_customer_ctr.php:459
 #: includes/modules/wps_customer/controller/wps_customer_metaboxes.controller.01.php:35
 msgid "Customer's orders"
 msgstr "Commandes du client"
 
-#: includes/modules/wps_customer/controller/wps_customer_ctr.php:455
+#: includes/modules/wps_customer/controller/wps_customer_ctr.php:460
 msgid "Subscription"
 msgstr "Date d'inscription "
 
-#: includes/modules/wps_customer/controller/wps_customer_ctr.php:456
+#: includes/modules/wps_customer/controller/wps_customer_ctr.php:461
 msgid "Last login date"
 msgstr "Dernière date de connexion"
 
-#: includes/modules/wps_customer/controller/wps_customer_ctr.php:495
+#: includes/modules/wps_customer/controller/wps_customer_ctr.php:500
 msgid "Never logged in"
 msgstr "Jamais connecté"
 
-#: includes/modules/wps_customer/controller/wps_customer_ctr.php:532
+#: includes/modules/wps_customer/controller/wps_customer_ctr.php:537
 msgid "List customers with orders"
 msgstr "Liste des clients ayant commandé"
 
-#: includes/modules/wps_customer/controller/wps_customer_ctr.php:533
+#: includes/modules/wps_customer/controller/wps_customer_ctr.php:538
 msgid "List customers without orders"
 msgstr "Liste des clients n'ayant pas commandé"
 
@@ -7121,67 +7102,71 @@ msgstr ""
 "Je souhaite recevoir des informations promotionnelles de la part de sociétés "
 "partenaires"
 
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:8
+#: includes/modules/wps_dashboard/templates/backend/dashboard.php:11
 msgid "Shop dashboard"
 msgstr "Tableau de bord de la boutique"
 
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:143
-msgid "Customize your shop"
-msgstr "Personnaliser votre boutique "
-
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:156
+#: includes/modules/wps_dashboard/templates/backend/metabox-customerStats.php:3
 msgid "Number of users"
 msgstr "Nombre de clients "
 
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:158
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:170
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:180
+#: includes/modules/wps_dashboard/templates/backend/metabox-customerStats.php:5
+#: includes/modules/wps_dashboard/templates/backend/metabox-customerStats.php:15
+#: includes/modules/wps_dashboard/templates/backend/metabox-customerStats.php:25
 msgid "Download the list"
 msgstr "Télécharger la liste"
 
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:427
+#: includes/modules/wps_dashboard/templates/backend/metabox-infos.php:14
 msgid "WPShop is also..."
 msgstr "WPShop c'est aussi..."
 
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:429
+#: includes/modules/wps_dashboard/templates/backend/metabox-infos.php:16
 msgid "Assistance"
 msgstr "Assistance WPShop"
 
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:429
+#: includes/modules/wps_dashboard/templates/backend/metabox-infos.php:16
 msgid "To assist you in your WPShop Experience"
 msgstr "Pour vous assister dans votre expérience WPShop"
 
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:430
+#: includes/modules/wps_dashboard/templates/backend/metabox-infos.php:17
 msgid "WPSHOP Themes"
 msgstr "Thèmes WPShop"
 
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:430
+#: includes/modules/wps_dashboard/templates/backend/metabox-infos.php:17
 msgid "To offer to your customer all WPShop's powerful experience"
 msgstr "Pour offrir à vos clients toute la puissance de WPShop"
 
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:431
+#: includes/modules/wps_dashboard/templates/backend/metabox-infos.php:18
 msgid "WPSHOP's add-ons"
 msgstr "Modules WPShop"
 
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:431
+#: includes/modules/wps_dashboard/templates/backend/metabox-infos.php:18
 msgid "To boost your shop with new functions"
 msgstr "Pour booster votre boutique avec de nouvelles fonctionnalités"
 
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:432
+#: includes/modules/wps_dashboard/templates/backend/metabox-infos.php:19
 msgid "WPSHOP's Forum"
 msgstr "Forum WPShop"
 
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:432
+#: includes/modules/wps_dashboard/templates/backend/metabox-infos.php:19
 msgid "To respond at your questions"
 msgstr "Pour répondre à toutes vos questions"
 
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:435
+#: includes/modules/wps_dashboard/templates/backend/metabox-infos.php:22
 msgid "Be connected"
 msgstr "Restons connectés !"
 
-#: includes/modules/wps_dashboard/templates/backend/dashboard.php:448
+#: includes/modules/wps_dashboard/templates/backend/metabox-infos.php:35
 msgid "WPShop's Video Tutorials"
 msgstr "Tutoriels vidéos WPShop"
+
+#: includes/modules/wps_dashboard/templates/backend/metabox-quicklinks.php:6
+msgid "Customize your shop"
+msgstr "Personnaliser votre boutique "
+
+#: includes/modules/wps_dashboard/templates/backend/metabox-statistics.php:4
+msgid "View all statistics"
+msgstr "Toutes les statistiques"
 
 #: includes/modules/wps_dashboard/templates/backend/wps_orders_on_dashboard.php:11
 msgid "Details"
@@ -7232,35 +7217,31 @@ msgstr "Montant des remises"
 msgid "Order ATI"
 msgstr "Total TTC"
 
-#: includes/modules/wps_export/templates/backend/wps_export_tpl.php:5
-msgid "Exports CSV"
-msgstr "Exports CSV"
-
-#: includes/modules/wps_export/templates/backend/wps_export_tpl.php:9
+#: includes/modules/wps_export/templates/backend/wps_export_tpl.php:6
 msgid "Select file to download"
 msgstr "Sélectionnez un fichier à télécharger"
 
-#: includes/modules/wps_export/templates/backend/wps_export_tpl.php:12
+#: includes/modules/wps_export/templates/backend/wps_export_tpl.php:9
 msgid "Select file"
 msgstr "Fichier sélectionné"
 
-#: includes/modules/wps_export/templates/backend/wps_export_tpl.php:13
+#: includes/modules/wps_export/templates/backend/wps_export_tpl.php:10
 msgid "List of customers registered between 2 dates"
 msgstr "Liste des clients enregistré entre 2 dates"
 
-#: includes/modules/wps_export/templates/backend/wps_export_tpl.php:14
+#: includes/modules/wps_export/templates/backend/wps_export_tpl.php:11
 msgid "List of customers who ordered to at least"
 msgstr "Clients ayant commandé au moins pour"
 
-#: includes/modules/wps_export/templates/backend/wps_export_tpl.php:15
+#: includes/modules/wps_export/templates/backend/wps_export_tpl.php:12
 msgid "List of orders between 2 dates"
 msgstr "Les commandes entre 2 dates"
 
-#: includes/modules/wps_export/templates/backend/wps_export_tpl.php:22
+#: includes/modules/wps_export/templates/backend/wps_export_tpl.php:19
 msgid "Price minimum"
 msgstr "Prix minimum"
 
-#: includes/modules/wps_export/templates/backend/wps_export_tpl.php:26
+#: includes/modules/wps_export/templates/backend/wps_export_tpl.php:23
 msgid "Free orders"
 msgstr "Commandes gratuites"
 
@@ -8063,12 +8044,12 @@ msgid "My opinions"
 msgstr "Mes avis"
 
 #: includes/modules/wps_opinion/templates/frontend/opinions.php:8
-#: includes/modules/wps_opinion/templates/frontend/posted_opinions.php:8
+#: includes/modules/wps_opinion/templates/frontend/posted_opinions.php:9
 msgid "Opinion"
 msgstr "Avis"
 
 #: includes/modules/wps_opinion/templates/frontend/opinions.php:9
-#: includes/modules/wps_opinion/templates/frontend/posted_opinions.php:9
+#: includes/modules/wps_opinion/templates/frontend/posted_opinions.php:10
 msgid "Rate"
 msgstr "Note"
 
@@ -8076,7 +8057,7 @@ msgstr "Note"
 msgid "You have never post opinion"
 msgstr "Vous n'avez jamais posté d'avis"
 
-#: includes/modules/wps_opinion/templates/frontend/posted_opinions.php:21
+#: includes/modules/wps_opinion/templates/frontend/posted_opinions.php:22
 msgid "You never posted an opinion on a product"
 msgstr "Vous n'avez jamais posté d'avis sur un produit"
 
@@ -8544,7 +8525,7 @@ msgstr "Logo"
 
 #: includes/modules/wps_payment_mode/templates/backend/main_elements.tpl.php:31
 #: includes/modules/wps_payment_mode/templates/backend/payment-modes.php:12
-#: includes/modules/wps_product/modules/wps_product_variation_interface/templates/backend/meta_box_variation.php:48
+#: includes/modules/wps_product/modules/wps_product_variation_interface/templates/backend/meta_box_variation.php:49
 #: includes/modules/wps_shipping/templates/backend/main_elements.tpl.php:37
 #: includes/modules/wps_shipping/templates/backend/shipping-modes.php:11
 msgid "Activate"
@@ -8663,12 +8644,12 @@ msgstr ""
 "Vous allez sauvegarder les produits sélectionnés, êtes vous sur de vouloir "
 "continuer ?"
 
-#: includes/modules/wps_product/modules/wps_product_mass_interface/controller/wps_product_mass_interface_ctr.php:389
+#: includes/modules/wps_product/modules/wps_product_mass_interface/controller/wps_product_mass_interface_ctr.php:391
 #, php-format
 msgid "%d products have been successfully updated"
 msgstr "%d produits ont bien été mis à jour"
 
-#: includes/modules/wps_product/modules/wps_product_mass_interface/controller/wps_product_mass_interface_ctr.php:393
+#: includes/modules/wps_product/modules/wps_product_mass_interface/controller/wps_product_mass_interface_ctr.php:395
 #, php-format
 msgid ""
 "All selected products do not be updated. %d on %d products have been "
@@ -8677,7 +8658,7 @@ msgstr ""
 "Tous les produits sélectionnés n'ont pas été mis à jour. %d sur %d produits "
 "ont bien été mis à jour"
 
-#: includes/modules/wps_product/modules/wps_product_mass_interface/controller/wps_product_mass_interface_ctr.php:396
+#: includes/modules/wps_product/modules/wps_product_mass_interface/controller/wps_product_mass_interface_ctr.php:398
 msgid "No product have been updated"
 msgstr "Aucun produit n'a été mis à jour"
 
@@ -8722,7 +8703,7 @@ msgstr "Groupes d'attributs des produits"
 msgid "Save selected products"
 msgstr "Enregistrer les produits sélectionnés"
 
-#: includes/modules/wps_product/modules/wps_product_variation_interface/controller/wps_product_variation_interface.ctr.php:137
+#: includes/modules/wps_product/modules/wps_product_variation_interface/controller/wps_product_variation_interface.ctr.php:148
 msgid "Click to add file"
 msgstr "Ajouter un fichier"
 
@@ -9431,97 +9412,28 @@ msgstr "Voici le code généré qui sera inséré"
 msgid "You are not allowed to continue here"
 msgstr "Vous n'avez pas les droits nécessaire pour effectuer cette action."
 
-#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:51
-msgid "Best sales"
-msgstr "Meilleures ventes"
-
-#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:52
-msgid "Most viewed products"
-msgstr "Les produits les plus consultés"
-
-#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:54
-msgid "Orders status"
-msgstr "Status des commandes"
-
 #: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:55
-msgid "Orders Hours"
-msgstr "Heures de commande"
-
-#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:56
-msgid "Best customers"
-msgstr "Meilleurs clients"
-
-#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:68
 msgid "Exclude this customer from WPShop Statistics"
 msgstr "Exclure ce client des statistiques WPShop"
 
-#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:227
-msgid "Monthly customers"
-msgstr "Clients du mois"
+#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:183
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_custom.php:13
+msgid "Current month"
+msgstr "Ce mois ci"
 
-#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:234
-#: includes/modules/wps_statistics/templates/backend/wps_statistics_orders_by_month.php:14
-msgid "January"
-msgstr "Janvier"
+#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:188
+#, php-format
+msgid "One month ago (%s)"
+msgstr "Un mois plus tôt (%s)"
 
-#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:234
-#: includes/modules/wps_statistics/templates/backend/wps_statistics_orders_by_month.php:14
-msgid "February"
-msgstr "Février"
+#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:193
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_custom.php:12
+msgid "Last month"
+msgstr "Le mois dernier"
 
-#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:234
-#: includes/modules/wps_statistics/templates/backend/wps_statistics_orders_by_month.php:14
-msgid "March"
-msgstr "Mars"
-
-#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:234
-#: includes/modules/wps_statistics/templates/backend/wps_statistics_orders_by_month.php:14
-msgid "April"
-msgstr "Avril"
-
-#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:234
-#: includes/modules/wps_statistics/templates/backend/wps_statistics_orders_by_month.php:14
-msgid "May"
-msgstr "Mai"
-
-#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:234
-#: includes/modules/wps_statistics/templates/backend/wps_statistics_orders_by_month.php:14
-msgid "June"
-msgstr "Juin"
-
-#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:234
-#: includes/modules/wps_statistics/templates/backend/wps_statistics_orders_by_month.php:14
-msgid "July"
-msgstr "Juillet"
-
-#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:234
-#: includes/modules/wps_statistics/templates/backend/wps_statistics_orders_by_month.php:14
-msgid "August"
-msgstr "Août"
-
-#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:234
-#: includes/modules/wps_statistics/templates/backend/wps_statistics_orders_by_month.php:14
-msgid "September"
-msgstr "Septembre"
-
-#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:234
-#: includes/modules/wps_statistics/templates/backend/wps_statistics_orders_by_month.php:14
-msgid "October"
-msgstr "Octobre"
-
-#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:234
-#: includes/modules/wps_statistics/templates/backend/wps_statistics_orders_by_month.php:14
-msgid "November"
-msgstr "Novembre"
-
-#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:234
-#: includes/modules/wps_statistics/templates/backend/wps_statistics_orders_by_month.php:14
-msgid "December"
-msgstr "Décembre"
-
-#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:275
-msgid "No customer account has been created on your shop"
-msgstr "Aucun compte client n'a été créé sur votre boutique"
+#: includes/modules/wps_statistics/controller/wps_statistics_ctr.php:198
+msgid "From the beginning"
+msgstr "Depuis le début"
 
 #: includes/modules/wps_statistics/templates/backend/main_elements.tpl.php:10
 #: includes/modules/wps_statistics/templates/backend/wps-statistics.php:4
@@ -9529,62 +9441,117 @@ msgid "WPShop Statistics"
 msgstr "Statistiques WPShop"
 
 #: includes/modules/wps_statistics/templates/backend/main_elements.tpl.php:15
-#: includes/modules/wps_statistics/templates/backend/wps-statistics.php:27
-#: includes/modules/wps_statistics/templates/backend/wps-statistics.php:28
 msgid "Reload statistics"
 msgstr "Recharger les statistiques"
 
-#: includes/modules/wps_statistics/templates/backend/wps-statistics.php:7
-msgid "Configure your date statistics results"
-msgstr ""
-"Configurer les dates pour connaitre les données statistiques entre elles"
+#: includes/modules/wps_statistics/templates/backend/wps-statistics.php:11
+msgid "Sales statistics"
+msgstr "Statistiques des ventes"
 
-#: includes/modules/wps_statistics/templates/backend/wps_statistics_best_customers.php:36
-msgid "There is no best customer for the moment"
-msgstr "Il n'y a pas de meilleur client pour le moment"
+#: includes/modules/wps_statistics/templates/backend/wps-statistics.php:17
+msgid "Orders infos"
+msgstr "Informations sur les commandes"
 
-#: includes/modules/wps_statistics/templates/backend/wps_statistics_best_sales.php:52
-msgid "Deleted product"
-msgstr "Produit supprimé"
+#: includes/modules/wps_statistics/templates/backend/wps-statistics.php:24
+msgid "Custom statistics"
+msgstr "Statistiques personnélisées"
 
-#: includes/modules/wps_statistics/templates/backend/wps_statistics_best_sales.php:52
+#: includes/modules/wps_statistics/templates/backend/wps-statistics.php:34
+msgid "Last orders"
+msgstr "Dernières commandes"
+
+#: includes/modules/wps_statistics/templates/backend/wps-statistics.php:38
+msgid "Most buyed products"
+msgstr "Produits les plus vendus"
+
+#: includes/modules/wps_statistics/templates/backend/wps-statistics.php:42
+msgid "Most viewed products"
+msgstr "Les produits les plus consultés"
+
+#: includes/modules/wps_statistics/templates/backend/wps-statistics.php:48
+msgid "Best customers per amount"
+msgstr "Meilleurs clients par montant"
+
+#: includes/modules/wps_statistics/templates/backend/wps-statistics.php:52
+msgid "Best customers per count"
+msgstr "Meilleurs clients par nombre de commande"
+
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_average.php:58
+msgid "Orders average amount"
+msgstr "Montant moyen d'une commande"
+
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_average.php:62
+msgid "Average time between orders"
+msgstr "Temps moyen entre deux commandes"
+
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_average.php:81
 #, php-format
-msgid "%s items"
-msgstr "%s articles"
+msgid "Last order date %1$s - Time since: %2$s"
+msgstr "Dernière commande le %1$s - Temps écoulé: %2$s"
 
-#: includes/modules/wps_statistics/templates/backend/wps_statistics_best_sales.php:61
-#: includes/modules/wps_statistics/templates/backend/wps_statistics_orders_status.php:20
-msgid "No order have been created"
-msgstr "Aucune commande n'a été créé"
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_average.php:85
+msgid "Average product number into an order"
+msgstr "Nombre de produit en moyenne par commande"
 
-#: includes/modules/wps_statistics/templates/backend/wps_statistics_most_viewed_products.php:39
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_best_customers_amount.php:20
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_best_customers_count.php:20
+msgid "Customer name"
+msgstr "Nom du client"
+
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_best_customers_amount.php:21
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_best_customers_count.php:21
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_custom.php:33
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_main.php:16
+msgid "Order count"
+msgstr "Nombre de commande"
+
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_best_customers_amount.php:22
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_best_customers_count.php:22
+msgid "Order average amount"
+msgstr "Montant moyen des commandes"
+
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_best_customers_amount.php:23
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_best_customers_count.php:23
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_custom.php:34
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_main.php:17
+msgid "Order total amount"
+msgstr "Chiffre d'affaire"
+
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_best_customers_amount.php:35
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_best_customers_count.php:35
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_best_sales.php:38
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_custom.php:44
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_last_orders.php:28
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_main.php:52
+msgid "No orders have been placed for the moment"
+msgstr "Aucune commande passée pour le moment"
+
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_best_sales.php:33
+#, php-format
+msgid "%s sales"
+msgstr "%s sales"
+
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_custom.php:14
+msgid "Today"
+msgstr "Aujourd'hui"
+
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_custom.php:35
+msgid "Shipping amount"
+msgstr "Montant des livraisons"
+
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_custom.php:36
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_main.php:18
+msgid "Customer subscription"
+msgstr "Inscription client"
+
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_most_viewed_products.php:21
 #, php-format
 msgid "%s views"
 msgstr "%s vues"
 
-#: includes/modules/wps_statistics/templates/backend/wps_statistics_most_viewed_products.php:48
+#: includes/modules/wps_statistics/templates/backend/wps_statistics_most_viewed_products.php:26
 msgid "No product have been seen"
 msgstr "Aucun produit n'a été vu"
-
-#: includes/modules/wps_statistics/templates/backend/wps_statistics_orders_by_month.php:41
-msgid "No order has been made on your shop"
-msgstr "Aucune commande n'a été faite sur votre boutique"
-
-#: includes/modules/wps_statistics/templates/backend/wps_statistics_orders_moment.php:37
-msgid "Datas"
-msgstr "Données"
-
-#: includes/modules/wps_statistics/templates/backend/wps_statistics_orders_moment.php:60
-msgid "No orders have been created"
-msgstr "Aucune commande n'a été créé"
-
-#: includes/modules/wps_statistics/templates/backend/wps_statistics_orders_moment.php:63
-msgid "Choose the day"
-msgstr "Choisissez un jour"
-
-#: includes/modules/wps_statistics/templates/backend/wps_statistics_orders_moment.php:66
-msgid "All days"
-msgstr "Tous les jours"
 
 #: includes/modules/wps_wishlist/controller/wps_wishlist_ctr.php:53
 #: includes/modules/wps_wishlist/templates/frontend/menu/wishlist-render.tpl.php:5
@@ -11588,6 +11555,103 @@ msgstr "Pour des raisons de sécurité %sveuillez lire cet article%s"
 #: wpshop.php:160
 msgid "Important upgrade notice"
 msgstr "Message important pour la mise à jour"
+
+#~ msgid "Historic attributes"
+#~ msgstr "Historique d'attributs"
+
+#~ msgid "%s ago"
+#~ msgstr "Il y a %s"
+
+#~ msgid "Create a %s"
+#~ msgstr "Créer une %s"
+
+#~ msgid "Exports CSV"
+#~ msgstr "Exports CSV"
+
+#~ msgid "Best sales"
+#~ msgstr "Meilleures ventes"
+
+#~ msgid "Orders status"
+#~ msgstr "Status des commandes"
+
+#~ msgid "Orders Hours"
+#~ msgstr "Heures de commande"
+
+#~ msgid "Best customers"
+#~ msgstr "Meilleurs clients"
+
+#~ msgid "Monthly customers"
+#~ msgstr "Clients du mois"
+
+#~ msgid "January"
+#~ msgstr "Janvier"
+
+#~ msgid "February"
+#~ msgstr "Février"
+
+#~ msgid "March"
+#~ msgstr "Mars"
+
+#~ msgid "April"
+#~ msgstr "Avril"
+
+#~ msgid "May"
+#~ msgstr "Mai"
+
+#~ msgid "June"
+#~ msgstr "Juin"
+
+#~ msgid "July"
+#~ msgstr "Juillet"
+
+#~ msgid "August"
+#~ msgstr "Août"
+
+#~ msgid "September"
+#~ msgstr "Septembre"
+
+#~ msgid "October"
+#~ msgstr "Octobre"
+
+#~ msgid "November"
+#~ msgstr "Novembre"
+
+#~ msgid "December"
+#~ msgstr "Décembre"
+
+#~ msgid "No customer account has been created on your shop"
+#~ msgstr "Aucun compte client n'a été créé sur votre boutique"
+
+#~ msgid "Configure your date statistics results"
+#~ msgstr ""
+#~ "Configurer les dates pour connaitre les données statistiques entre elles"
+
+#~ msgid "There is no best customer for the moment"
+#~ msgstr "Il n'y a pas de meilleur client pour le moment"
+
+#~ msgid "Deleted product"
+#~ msgstr "Produit supprimé"
+
+#~ msgid "%s items"
+#~ msgstr "%s articles"
+
+#~ msgid "No order have been created"
+#~ msgstr "Aucune commande n'a été créé"
+
+#~ msgid "No order has been made on your shop"
+#~ msgstr "Aucune commande n'a été faite sur votre boutique"
+
+#~ msgid "Datas"
+#~ msgstr "Données"
+
+#~ msgid "No orders have been created"
+#~ msgstr "Aucune commande n'a été créé"
+
+#~ msgid "Choose the day"
+#~ msgstr "Choisissez un jour"
+
+#~ msgid "All days"
+#~ msgstr "Tous les jours"
 
 #~ msgid "My addresses"
 #~ msgstr "Mes adresses"

@@ -2298,6 +2298,9 @@ h3.wps_dashboard {
 	display : inline-block;
 	list-style : none;
 }
+.wps_statistics div.wps-table-cell.textleft {
+	text-align: left !important;
+}
 /*
 [class*="wps-"][class*="label"] {
 	background : none!important;
