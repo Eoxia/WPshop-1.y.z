@@ -53,67 +53,78 @@ ul.recent-orders li .processing { color: #21759B; }
 ul.recent-orders li .awaiting_payment { color: #E66F00; }
 ul.recent-orders li .refunded, ul.recent-orders li .cancelled { color: #999; }
 
-.wpshop_right_now p.sub,
-.wpshop_right_now .table, .wpshop_right_now .versions {
+#wpshop_dashboard div.meta-box-sortables {
+	float: left;
+	width: 50%;
+	margin: 0px !important;
+}
+#dashboard-widgets .handlediv {
+	display: none;
+}
+#dashboard-widgets .hndle {
+	cursor: auto !important;
+}
+#wps-right-now p.sub,
+#wps-right-now .table, #wps-right-now .versions {
 	margin: -12px;
 }
-.wpshop_right_now .inside {
+#wps-right-now .inside {
 	font-size: 12px;
 	padding-top: 20px;
 }
-.wpshop_right_now p.sub {
+#wps-right-now p.sub {
 	font-style: italic;
 	font-family: Georgia, "Times New Roman", "Bitstream Charter", Times, serif;
 	padding: 5px 10px 15px;
 	color: #777;
 	font-size: 13px;
 }
-.wpshop_right_now .table {
+#wps-right-now .table {
 	margin: 0 -9px;
 	padding: 0 10px;
 	position: relative;
 }
-.wpshop_right_now .table_content {
+#wps-right-now .table_content {
 	float: left;
 	width: 45%;
 }
-.wpshop_right_now .table_discussion {
+#wps-right-now .table_discussion {
 	float: right;
 	width: 45%;
 }
-.wpshop_right_now table td {
+#wps-right-now table td {
 	padding: 3px 0;
 	white-space: nowrap;
 }
-.wpshop_right_now table tr.first td {
+#wps-right-now table tr.first td {
 	border-top: none;
 }
-.wpshop_right_now td.b {
+#wps-right-now td.b {
 	padding-right: 6px;
 	text-align: right;
 	font-family: Georgia, "Times New Roman", "Bitstream Charter", Times, serif;
 	font-size: 14px;
 	width: 1%;
 }
-.wpshop_right_now td.b a {
+#wps-right-now td.b a {
 	font-size: 18px;
 }
-.wpshop_right_now td.b a:hover {
+#wps-right-now td.b a:hover {
 	color: #d54e21;
 }
-.wpshop_right_now .t {
+#wps-right-now .t {
 	font-size: 12px;
 	padding-right: 12px;
 	padding-top: 6px;
 	color: #777;
 }
-.wpshop_right_now .t a { white-space: nowrap; }
-.wpshop_right_now .denied { color: red;}
-.wpshop_right_now .pending { color: #e66f00; }
-.wpshop_right_now .completed { color: green; }
-.wpshop_right_now .canceled { color: black; }
-.wpshop_right_now .refunded { color: #B40404; }
-.wpshop_right_now .versions {
+#wps-right-now .t a { white-space: nowrap; }
+#wps-right-now .denied { color: red;}
+#wps-right-now .pending { color: #e66f00; }
+#wps-right-now .completed { color: green; }
+#wps-right-now .canceled { color: black; }
+#wps-right-now .refunded { color: #B40404; }
+#wps-right-now .versions {
 	padding: 4px 15px 12px;
 	clear: both;
 }
@@ -2286,6 +2297,9 @@ h3.wps_dashboard {
 	width : 49%;
 	display : inline-block;
 	list-style : none;
+}
+.wps_statistics div.wps-table-cell.textleft {
+	text-align: left !important;
 }
 /*
 [class*="wps-"][class*="label"] {

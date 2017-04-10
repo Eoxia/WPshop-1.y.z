@@ -1,41 +1,58 @@
 <?php if ( !defined( 'ABSPATH' ) ) exit;
 ?>
-<div class="wrap">
+<div class="wrap wps_statistics">
 	<h2><span class="dashicons dashicons-chart-area" style="font-size : 30px; width : 30px; height : 30px"></span> <?php _e( 'WPShop Statistics', 'wpshop' )?></h2>
+
 	<div class="wps-boxed">
-		<form method="post" action="">
-		<span class="wps-h5"><?php _e( 'Configure your date statistics results', 'wpshop'); ?></span>
-		<div class="wps-gridwrapper3-padded">
+		<div class="wps-gridwrapper2-padded">
 			<div>
-				<div class="wps-form_group">
-					<label><?php _e( 'Begin date', 'wpshop'); ?></label>
-					<div class="wps-form"><input type="text" id="wps_statistics_begin_date" name="begin_date" class="date" value="<?php echo ( ( !empty($_POST['begin_date']) )  ? sanitize_text_field( $_POST['begin_date'] ) : date( 'Y-m-d', strtotime( '1 months ago') ) ); ?>"/></div>
+				<div>
+					<div>
+						<span class="wps-h5"><?php _e( 'Sales statistics', 'wpshop'); ?></span>
+						<?php $this->wps_display_main_statistics(); ?>
+					</div>
 				</div>
-			</div>
-
-			<div>
-				<div class="wps-form_group">
-					<label><?php _e( 'End date', 'wpshop'); ?></label>
-					<div class="wps-form"><input type="text" id="wps_statistics_end_date" name="end_date" class="date" value="<?php echo ( ( !empty($_POST['end_date']) )  ? sanitize_text_field( $_POST['end_date'] ) : date( 'Y-m-d') ); ?>"/></div>
-				</div>
-			</div>
-
-			<div>
-				<div class="wps-form_group">
-					<label><br/></label>
-					<div class="wps-form">
-						<!--  <button class="wps-bton-mini-first-rounded" id="wps_change_statistics_date"><?php _e( 'Reload statistics', 'wpshop'); ?></button> -->
-						<input type="submit" class="wps-bton-mini-first-rounded" value="<?php _e( 'Reload statistics', 'wpshop'); ?>" />
+				<div>
+					<div>
+						<span class="wps-h5"><?php _e( 'Orders infos', 'wpshop'); ?></span>
+						<?php require( wpshop_tools::get_template_part( WPS_STATISTICS_DIR, WPS_STATISTICS_TEMPLATES_MAIN_DIR, 'backend', 'wps_statistics_average') ); ?>
 					</div>
 				</div>
 			</div>
+			<div>
+				<div>
+					<span class="wps-h5"><?php _e( 'Custom statistics', 'wpshop'); ?></span>
+					<div id="wps_statistics_custom_container" class="wps-bloc-loader" ><?php $this->wps_display_custom_statistics(); ?></div>
+				</div>
+			</div>
 		</div>
-		</form>
 	</div>
 
-	<div class="wps-gridwrapper2-padded metabox-holder wps-statistics-container" >
-		<div><?php do_meta_boxes('wpshop_statistics','left_column', ''); ?></div>
-		<div><?php do_meta_boxes('wpshop_statistics','right_column', ''); ?></div>
+	<div class="wps-boxed">
+		<div class="wps-gridwrapper3-padded">
+			<div>
+				<span class="wps-h5"><?php _e( 'Last orders', 'wpshop'); ?></span>
+				<?php require( wpshop_tools::get_template_part( WPS_STATISTICS_DIR, WPS_STATISTICS_TEMPLATES_MAIN_DIR, 'backend', 'wps_statistics_last_orders') ); ?>
+			</div>
+			<div>
+				<span class="wps-h5"><?php _e( 'Most buyed products', 'wpshop'); ?></span>
+				<?php require( wpshop_tools::get_template_part( WPS_STATISTICS_DIR, WPS_STATISTICS_TEMPLATES_MAIN_DIR, 'backend', 'wps_statistics_best_sales') ); ?>
+			</div>
+			<div>
+				<span class="wps-h5"><?php _e( 'Most viewed products', 'wpshop'); ?></span>
+				<?php require( wpshop_tools::get_template_part( WPS_STATISTICS_DIR, WPS_STATISTICS_TEMPLATES_MAIN_DIR, 'backend', 'wps_statistics_most_viewed_products') ); ?>
+			</div>
+		</div>
+		<div class="wps-gridwrapper3-padded">
+			<div>
+				<span class="wps-h5"><?php _e( 'Best customers per amount', 'wpshop'); ?></span>
+				<?php require( wpshop_tools::get_template_part( WPS_STATISTICS_DIR, WPS_STATISTICS_TEMPLATES_MAIN_DIR, 'backend', 'wps_statistics_best_customers_amount') ); ?>
+			</div>
+			<div>
+				<span class="wps-h5"><?php _e( 'Best customers per count', 'wpshop'); ?></span>
+				<?php require( wpshop_tools::get_template_part( WPS_STATISTICS_DIR, WPS_STATISTICS_TEMPLATES_MAIN_DIR, 'backend', 'wps_statistics_best_customers_count') ); ?>
+			</div>
+		</div>
 	</div>
 
 </div>
