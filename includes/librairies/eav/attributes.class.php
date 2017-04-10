@@ -43,6 +43,8 @@ class wpshop_attributes{
 	/*	Define the message to output after an action	*/
 	public $pageMessage = '';
 
+	public static $select_option_info_cache = array();
+
 	/**
 	 *	Get the url listing slug of the current class
 	 *
@@ -2724,8 +2726,11 @@ GROUP BY ATT.id, chosen_val", $element_id, $attribute_code);
 				break;
 
 			default:
-				$query = $wpdb->prepare("SELECT " . $field . " FROM ".WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS." WHERE id=%d LIMIT 1", $option_id);
-				$info = $wpdb->get_var($query);
+				if( ! array_key_exists( $option_id, self::$select_option_info_cache ) ) {
+					$query = $wpdb->prepare("SELECT " . $field . " FROM ".WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS." WHERE id=%d LIMIT 1", $option_id);
+					self::$select_option_info_cache[$option_id] = $wpdb->get_var($query);
+				}
+				$info = self::$select_option_info_cache[$option_id];
 			break;
 		}
 

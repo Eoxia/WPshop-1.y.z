@@ -66,6 +66,11 @@ class wpshop_attributes_unit
 	public $pageMessage = '';
 
 	/**
+	 * Currencies cache
+	 */
+	public static $currencies_cache;
+
+	/**
 	*	Get the url listing slug of the current class
 	*
 	*	@return string The table of the class
@@ -831,16 +836,22 @@ class wpshop_attributes_unit
 
 	/*	Default currecy for the entire shop	*/
 	public static function wpshop_shop_currency_list_field() {
-		global $wpdb;
+		if( is_null( self::$currencies_cache ) ) {
+			$currency_group = get_option('wpshop_shop_currency_group');
+			if( !empty ( $currency_group ) ) {
+				global $wpdb;
+				$query = $wpdb->prepare('SELECT * FROM ' .WPSHOP_DBT_ATTRIBUTE_UNIT. ' WHERE group_id = %d', $currency_group);
+				self::$currencies_cache = $wpdb->get_results($query);
+			} else {
+				self::$currencies_cache = '';
+			}
+		}
 		$wpshop_shop_currencies = unserialize(WPSHOP_SHOP_CURRENCIES);
-		$currency_group = get_option('wpshop_shop_currency_group');
 		$current_currency = get_option('wpshop_shop_default_currency');
 
 		$currencies_options = '';
-		if ( !empty ($currency_group) ) {
-			$query = $wpdb->prepare('SELECT * FROM ' .WPSHOP_DBT_ATTRIBUTE_UNIT. ' WHERE group_id = %d', $currency_group);
-			$currencies = $wpdb->get_results($query);
-			foreach ( $currencies as $currency) {
+		if ( !empty (self::$currencies_cache) ) {
+			foreach ( self::$currencies_cache as $currency) {
 				$currencies_options .= '<option value="'.$currency->id.'"'.(($currency->id == $current_currency) ? ' selected="selected"' : null).'>'.$currency->name.' ('.$currency->unit.')</option>';
 			}
 		}

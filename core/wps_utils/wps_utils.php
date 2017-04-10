@@ -14,6 +14,8 @@
  */
 class wpshop_tools {
 
+	public static $currency_cache = null;
+
 	/**
 	 * INTERNAL LIB - Check and get the template file path to use for a given display part
 	 *
@@ -206,12 +208,14 @@ class wpshop_tools {
 	 */
 	public static function wpshop_get_currency($code=false) {
 		// Currency
-		global $wpdb;
-		$current_currency = get_option('wpshop_shop_default_currency');
-		$query = $wpdb->prepare('SELECT * FROM ' .WPSHOP_DBT_ATTRIBUTE_UNIT. ' WHERE id =%d ', $current_currency );
-		$currency_infos = $wpdb->get_row( $query );
-		if ( !empty($currency_infos) ) {
-			$code = ($code) ?  $currency_infos->name : $currency_infos->unit;
+		if( is_null( self::$currency_cache ) ) {
+			global $wpdb;
+			$current_currency = get_option('wpshop_shop_default_currency');
+			$query = $wpdb->prepare('SELECT * FROM ' .WPSHOP_DBT_ATTRIBUTE_UNIT. ' WHERE id =%d ', $current_currency );
+			self::$currency_cache = $wpdb->get_row( $query );
+		}
+		if ( !empty(self::$currency_cache) ) {
+			$code = ($code) ?  self::$currency_cache->name : self::$currency_cache->unit;
 			return $code;
 		}
 		else {

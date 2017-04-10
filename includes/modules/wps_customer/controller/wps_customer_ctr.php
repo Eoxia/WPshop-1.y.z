@@ -10,6 +10,8 @@
 class wps_customer_ctr
 {
 
+	public static $customer_user_identifier_cache = array();
+
     public function __construct()
     {
         /**    Create customer entity type on wordpress initilisation*/
@@ -624,12 +626,13 @@ $select_users .= ob_get_clean();
      */
     public static function get_customer_id_by_author_id($author_id)
     {
-        global $wpdb;
+		if( !isset( self::$customer_user_identifier_cache[$author_id] ) ) {
+	        global $wpdb;
+	        $query = $wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE post_author = %d AND post_type = %s", $author_id, WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS);
+	        self::$customer_user_identifier_cache[$author_id] = $wpdb->get_var($query);
+		}
 
-        $query = $wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE post_author = %d AND post_type = %s", $author_id, WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS);
-        $customer_id = $wpdb->get_var($query);
-
-        return $customer_id;
+        return self::$customer_user_identifier_cache[$author_id];
     }
 
     /**
@@ -641,11 +644,15 @@ $select_users .= ob_get_clean();
      */
     public static function get_author_id_by_customer_id($customer_id)
     {
-        global $wpdb;
+		$flipped = array_flip(self::$customer_user_identifier_cache);
+		if( !isset( $flipped[$customer_id] ) ) {
+	        global $wpdb;
+			$author_id = $wpdb->get_var($wpdb->prepare("SELECT post_author FROM {$wpdb->posts} WHERE ID = %d", $customer_id));
+	        self::$customer_user_identifier_cache[$author_id] = $customer_id;
+			$flipped[$customer_id] = $author_id;
+		}
 
-        $author_id = $wpdb->get_var($wpdb->prepare("SELECT post_author FROM {$wpdb->posts} WHERE ID = %d", $customer_id));
-
-        return $author_id;
+        return $flipped[$customer_id];
     }
 
     /**

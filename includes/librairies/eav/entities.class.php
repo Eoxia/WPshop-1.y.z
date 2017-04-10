@@ -25,6 +25,8 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
  */
 class wpshop_entities {
 
+	public static $entities_cache = array();
+
 	/**
 	 * Define the custom post type for entities into wpshop
 	 */
@@ -542,13 +544,14 @@ class wpshop_entities {
 	 * @return integer The entity identifier that match to given parameters
 	 */
 	public static function get_entity_identifier_from_code($code, $post_status = 'publish', $entity_code = WPSHOP_NEWTYPE_IDENTIFIER_ENTITIES) {
-		global $wpdb;
-		$entity_id = null;
+		if ( ! isset( self::$entities_cache[$entity_code][$code][$post_status] ) ) {
+			global $wpdb;
+			self::$entities_cache[$entity_code][$code][$post_status] = null;
+			$query = $wpdb->prepare("SELECT ID FROM " . $wpdb->posts . " WHERE post_type=%s AND post_status=%s AND post_name=%s ORDER BY menu_order ASC", $entity_code, $post_status, $code);
+			self::$entities_cache[$entity_code][$code][$post_status] = $wpdb->get_var($query);
+		}
 
-		$query = $wpdb->prepare("SELECT ID FROM " . $wpdb->posts . " WHERE post_type=%s AND post_status=%s AND post_name=%s ORDER BY menu_order ASC", $entity_code, $post_status, $code);
-		$entity_id = $wpdb->get_var($query);
-
-		return $entity_id;
+		return self::$entities_cache[$entity_code][$code][$post_status];
 	}
 
 	/**
