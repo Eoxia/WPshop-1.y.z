@@ -66,7 +66,7 @@
 		endif; ?>
 </div>
 <?php
-if( $total_products > $elements_per_page ) :
+if( !empty($products) && $total_products > $elements_per_page ) :
 	echo $paginate_links;
 	?>
 	<input type="hidden" name="last_query[oid]" value="<?php echo $post->ID; ?>">
