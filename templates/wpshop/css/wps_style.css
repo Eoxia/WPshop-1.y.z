@@ -3365,6 +3365,19 @@ a:hover .wps-icodoc:after {
   -webkit-transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
   transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
 }
+.wps-fixed-cart-container .wps-cart-item-variations li {
+  margin: 3px 5px 0 0;
+  list-style: none;
+  display: inline-block;
+  width: auto;
+  line-height: 1em;
+}
+.wps-fixed-cart-container .wps-cart-item-variations li:nth-child(even) {
+  background: rgba(132, 132, 132, 0.5);
+}
+.wps-fixed-cart-container .wps-cart-item-variations li:nth-child(odd) {
+  background: rgba(132, 132, 132, 0.5);
+}
 .wps-header-mini-cart {
   position: relative;
   z-index: 1999;
