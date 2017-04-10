@@ -461,6 +461,7 @@ class wps_cart {
 				if ( $product_stock !== true ) {
 					return $product_stock;
 				}
+				$count_items += (int) $product_more_content['product_qty'];
 			}
 
 			$order_items[$pid]['product_id'] = $product_more_content['id'];
@@ -478,6 +479,17 @@ class wps_cart {
 		}
 
 		$current_cart = ( !empty( $order_meta )) ? $order_meta : array();
+
+		foreach( $current_cart['order_items'] as $item_id => $item ) {
+			if( !array_key_exists( $item_id, $order_items ) ) {
+				$count_items += $item['item_qty'];
+			}
+		}
+		$wpshop_cart_option = get_option( 'wpshop_cart_option' );
+		if( !empty( $wpshop_cart_option ) && !empty( $wpshop_cart_option[ 'total_nb_of_item_allowed' ] ) && (int) $count_items > (int) $wpshop_cart_option[ 'total_nb_of_item_allowed' ][0] ) {
+			return __('No more products can be added to your cart.', 'wpshop');
+		}
+
 		$order = $this->calcul_cart_information($order_items, $extra_params, $current_cart );
 
 		if( empty($from_admin) ) {

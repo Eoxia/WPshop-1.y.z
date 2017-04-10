@@ -203,7 +203,7 @@ class wpshop_options {
 			add_settings_section('wpshop_cart_info', '<span class="dashicons dashicons-cart"></span>'.__('Cart', 'wpshop'), array('wpshop_options', 'plugin_section_text'), 'wpshop_cart_info');
 			add_settings_field('wpshop_cart_product_added_behaviour', __('Action when produt is added succesfully into cart', 'wpshop'), array('wpshop_options', 'wpshop_cart_product_added_behaviour_field'), 'wpshop_cart_info', 'wpshop_cart_info');
 			add_settings_field('wpshop_cart_product_added_to_quotation_behaviour', __('Action when produt is added succesfully into a quotation', 'wpshop'), array('wpshop_options', 'wpshop_cart_product_added_to_quotation_behaviour_field'), 'wpshop_cart_info', 'wpshop_cart_info');
-			add_settings_field('wpshop_cart_total_item_nb', __('Allow only one product into cart', 'wpshop'), array('wpshop_options', 'wpshop_cart_total_item_nb_field'), 'wpshop_cart_info', 'wpshop_cart_info');
+			add_settings_field('wpshop_cart_total_item_nb', __('Only a limited number of products in cart', 'wpshop'), array('wpshop_options', 'wpshop_cart_total_item_nb_field'), 'wpshop_cart_info', 'wpshop_cart_info');
 			//add_settings_field('wpshop_cart_same_item_nb', __('Number of same item allowed into cart', 'wpshop'), array('wpshop_options', 'wpshop_cart_same_item_nb_field'), 'wpshop_cart_info', 'wpshop_cart_info');
 			register_setting('wpshop_options', 'wpshop_catalog_product_option', array('wpshop_options', 'wpshop_catalog_product_variation_option_validate'));
 			add_settings_field('wpshop_catalog_product_option', __('Variation product display options for all products', 'wpshop'), array('wpshop_options', 'wpshop_catalog_varition_product_field'), 'wpshop_catalog_product_option', 'wpshop_catalog_product_section');
@@ -328,11 +328,9 @@ class wpshop_options {
 		$input_def = array();
 		$input_def['name'] = '';
 		$input_def['id'] = 'wpshop_cart_option_total_nb_of_item_allowed';
-		$input_def['type'] = 'checkbox';
-		$input_def['valueToPut'] = 'index';
+		$input_def['type'] = 'text';
 		$input_def['value'] = !empty($cart_option['total_nb_of_item_allowed']) ? $cart_option['total_nb_of_item_allowed'][0] : '';
-		$input_def['possible_value'] = 'yes';
-		$output .= wpshop_form::check_input_type($input_def, 'wpshop_cart_option[total_nb_of_item_allowed]') . '<a href="#" title="'.__('Check this box if you want to allow the user to add only one product into cart','wpshop').'" class="wpshop_infobulle_marker">?</a>';
+		$output .= wpshop_form::check_input_type($input_def, 'wpshop_cart_option[total_nb_of_item_allowed]') . '<a href="#" title="'.__('This value count all quantities in cart. Example : 2 products A + 3 products B = 5 products','wpshop').'" class="wpshop_infobulle_marker">?</a>';
 
 		echo $output;
 	}

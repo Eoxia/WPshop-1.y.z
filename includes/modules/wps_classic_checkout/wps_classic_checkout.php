@@ -70,7 +70,7 @@ if ( !class_exists("wps_classic_checkout") ) {
 			$current_step = !empty( $_GET[ 'order_step' ] ) && is_int( (int)$_GET[ 'order_step' ] ) ? (int)$_GET[ 'order_step' ] : null;
 
 			/**	Cas spécial lorsqu'il n'y a qu'un seul produit autorisé dans le panier / Special case when there is only one product allowed into cart	*/
-			if ( ( empty( $current_step ) || ( 1 == $current_step ) ) && ( !empty( $wpshop_cart_option ) && !empty( $wpshop_cart_option[ 'total_nb_of_item_allowed' ] ) && ( 'yes' === $wpshop_cart_option[ 'total_nb_of_item_allowed' ][0] ) ) ) {
+			if ( ( empty( $current_step ) || ( 1 == $current_step ) ) && ( !empty( $wpshop_cart_option ) && !empty( $wpshop_cart_option[ 'total_nb_of_item_allowed' ] ) && ( 1 == $wpshop_cart_option[ 'total_nb_of_item_allowed' ][0] ) ) ) {
 				if( empty($_SESSION) || empty($_SESSION['cart']) || empty($_SESSION['cart']['order_items']) ) {
 					$product_page_id = wpshop_tools::get_page_id( get_option( 'wpshop_product_page_id' ) );
 					$url = get_permalink( $product_page_id );
@@ -249,7 +249,7 @@ if ( !class_exists("wps_classic_checkout") ) {
 
 
 			$no_cart = false;
-			if ( empty( $wpshop_cart_option ) || empty( $wpshop_cart_option[ 'total_nb_of_item_allowed' ] ) || ( 'no' === $wpshop_cart_option[ 'total_nb_of_item_allowed' ] ) ) {
+			if ( empty( $wpshop_cart_option ) || empty( $wpshop_cart_option[ 'total_nb_of_item_allowed' ] ) || ( 1 != (int) $wpshop_cart_option[ 'total_nb_of_item_allowed' ][0] ) ) {
 				$steps[] = __('Cart', 'wpshop');
 			}
 			else {

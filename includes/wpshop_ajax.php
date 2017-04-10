@@ -1997,7 +1997,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 
 		// Check Cart Animation
 		$cart_animation_choice = ( !empty($cart_option) && !empty($cart_option['animation_cart_type']) ? $cart_option['animation_cart_type'] : null);
-		if ( !empty($cart_option['total_nb_of_item_allowed']) && ($cart_option['total_nb_of_item_allowed'][0] == 'yes') ) {
+		if ( !empty($cart_option['total_nb_of_item_allowed']) && ((int) $cart_option['total_nb_of_item_allowed'][0] == 1) ) {
 			$wpshop_cart->empty_cart();
 		}
 
@@ -2781,6 +2781,13 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	function ajax_wpshop_fill_the_downloadable_dialog() {
 		$product_id = ( !empty( $_POST ) && !empty( $_POST[ 'product_identifier' ] ) ) ? (int)$_POST[ 'product_identifier' ] : 0;
 		check_ajax_referer( "ajax_wpshop_fill_the_downloadable_dialog".$product_id );
+		ajax_wpshop_fill_the_downloadable_dialog_exec($product_id);
+	}
+	function ajax_wpshop_fill_the_downloadable_dialog_unsafe() {
+		$product_id = ( !empty( $_POST ) && !empty( $_POST[ 'product_identifier' ] ) ) ? (int)$_POST[ 'product_identifier' ] : 0;
+		ajax_wpshop_fill_the_downloadable_dialog_exec($product_id);
+	}
+	function ajax_wpshop_fill_the_downloadable_dialog_exec( $product_id ) {
 		$output  = '<form method="post" action="' .admin_url('admin-ajax.php') .'" id="upload_downloadable_file" enctype="multipart/form-data" >';
 		$output .= '<p class="formField"><label for="wpshop_file">' .__('Choose your file to send', 'wpshop'). '</label><input type="file" name="wpshop_file" /></p>';
 		$output .= '<input type="hidden" name="action" value="upload_downloadable_file_action" />';
@@ -2790,8 +2797,8 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		$output .= '</form>';
 		$output .='<script type="text/javascript">jQuery("#upload_downloadable_file").ajaxForm({
 		beforeSubmit : function() { },success: function(response) {
-		jQuery(".send_downloadable_file_dialog").dialog("close");
 		jQuery(".is_downloadable_statut_'.$product_id.'").html( response );
+		jQuery(".send_downloadable_file_dialog").dialog("close");
 		}});</script>';
 		$output = apply_filters( 'wpshop_download_file_dialog', $output, $product_id );
 
@@ -2800,6 +2807,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		die();
 	}
 	add_action('wp_ajax_fill_the_downloadable_dialog', 'ajax_wpshop_fill_the_downloadable_dialog');
+	add_action('wp_ajax_fill_the_downloadable_dialog_unsafe', 'ajax_wpshop_fill_the_downloadable_dialog_unsafe');
 
 	function ajax_wpshop_show_downloadable_interface_in_admin() {
 		$post_id = !empty( $_POST ) && !empty( $_POST[ 'post_id' ] ) && is_int( (int)$_POST[ 'post_id' ] ) ? (int)$_POST[ 'post_id' ] : 0;
