@@ -72,6 +72,7 @@ class wpshop_init{
 
 		/**	Adda custom class to the admin body	*/
 		add_filter( 'admin_body_class', array( 'wpshop_init', 'admin_body_class' ) );
+		add_filter( 'site_transient_update_plugins', array( 'wpshop_init', 'site_transient_update_plugins' ) );
 	}
 
 	/**
@@ -532,4 +533,33 @@ class wpshop_init{
 		DEFINE('WPSHOP_INTERNAL_TYPES', serialize(array_merge($wp_types, array('users' => __('Users', 'wpshop')))));
 	}
 
+	/**
+	 * Send mail when new version is available
+	 */
+	public static function site_transient_update_plugins( $option ) {
+		if ( isset( $option->response[ WPSHOP_PLUGIN_NAME ] ) ) {
+			global $wpdb;
+			$message_mdl = new wps_message_mdl();
+			$admin_new_version_message = get_option( 'WPSHOP_NEW_VERSION_ADMIN_MESSAGE', null );
+			$shop_admin_email_option = get_option( 'wpshop_emails' );
+			$shop_admin_id = $wpdb->get_var( $wpdb->prepare( 'SELECT ID FROM ' . $wpdb->users . ' WHERE user_email = %s', $shop_admin_email_option['contact_email'] ) );
+			if ( ! is_null( $shop_admin_id ) && ! is_null( $admin_new_version_message ) ) {
+				$messages_histo = $message_mdl->get_messages_histo( $admin_new_version_message, $shop_admin_id );
+				if ( ! empty( $messages_histo ) ) {
+					foreach ( $messages_histo as $messages_histo_group ) {
+						foreach ( $messages_histo_group as $messages_histo ) {
+							if ( strpos( $messages_histo['mess_title'], $option->response[ WPSHOP_PLUGIN_NAME ]->new_version ) !== false
+							|| strpos( $messages_histo['mess_message'], $option->response[ WPSHOP_PLUGIN_NAME ]->new_version ) !== false ) {
+								return $option;
+							}
+						}
+					}
+				}
+				$wps_message = new wps_message_ctr();
+				$wps_message->wpshop_prepared_email( $shop_admin_email_option['contact_email'], 'WPSHOP_NEW_VERSION_ADMIN_MESSAGE', array(
+					'wpshop_version' => $option->response[ WPSHOP_PLUGIN_NAME ]->new_version,
+				) );
+			}
+		}
+	}
 }

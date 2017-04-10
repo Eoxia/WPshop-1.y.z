@@ -1802,7 +1802,8 @@ WHERE ATTR_DET.attribute_id IN (" . $attribute_ids . ")"
                 }
 
                 /** Check messages for customization **/
-                $messages = array('WPSHOP_SIGNUP_MESSAGE' => WPSHOP_SIGNUP_MESSAGE, 'WPSHOP_PAYPAL_PAYMENT_CONFIRMATION_MESSAGE' => WPSHOP_PAYPAL_PAYMENT_CONFIRMATION_MESSAGE, 'WPSHOP_OTHERS_PAYMENT_CONFIRMATION_MESSAGE' => WPSHOP_OTHERS_PAYMENT_CONFIRMATION_MESSAGE, 'WPSHOP_SHIPPING_CONFIRMATION_MESSAGE' => WPSHOP_SHIPPING_CONFIRMATION_MESSAGE, 'WPSHOP_ORDER_UPDATE_MESSAGE' => WPSHOP_ORDER_UPDATE_MESSAGE, 'WPSHOP_ORDER_UPDATE_PRIVATE_MESSAGE' => WPSHOP_ORDER_UPDATE_PRIVATE_MESSAGE, 'WPSHOP_NEW_ORDER_ADMIN_MESSAGE' => WPSHOP_NEW_ORDER_ADMIN_MESSAGE, 'WPSHOP_NEW_QUOTATION_ADMIN_MESSAGE' => WPSHOP_NEW_QUOTATION_ADMIN_MESSAGE, 'WPSHOP_QUOTATION_CONFIRMATION_MESSAGE' => WPSHOP_QUOTATION_CONFIRMATION_MESSAGE, 'WPSHOP_QUOTATION_UPDATE_MESSAGE' => WPSHOP_QUOTATION_UPDATE_MESSAGE, 'WPSHOP_DOWNLOADABLE_FILE_IS_AVAILABLE' => WPSHOP_DOWNLOADABLE_FILE_IS_AVAILABLE, 'WPSHOP_ORDER_IS_CANCELED' => WPSHOP_ORDER_IS_CANCELED);
+                // @since 1.4.3.7 Deleted messages constants
+                /*$messages = array('WPSHOP_SIGNUP_MESSAGE' => WPSHOP_SIGNUP_MESSAGE, 'WPSHOP_PAYPAL_PAYMENT_CONFIRMATION_MESSAGE' => WPSHOP_PAYPAL_PAYMENT_CONFIRMATION_MESSAGE, 'WPSHOP_OTHERS_PAYMENT_CONFIRMATION_MESSAGE' => WPSHOP_OTHERS_PAYMENT_CONFIRMATION_MESSAGE, 'WPSHOP_SHIPPING_CONFIRMATION_MESSAGE' => WPSHOP_SHIPPING_CONFIRMATION_MESSAGE, 'WPSHOP_ORDER_UPDATE_MESSAGE' => WPSHOP_ORDER_UPDATE_MESSAGE, 'WPSHOP_ORDER_UPDATE_PRIVATE_MESSAGE' => WPSHOP_ORDER_UPDATE_PRIVATE_MESSAGE, 'WPSHOP_NEW_ORDER_ADMIN_MESSAGE' => WPSHOP_NEW_ORDER_ADMIN_MESSAGE, 'WPSHOP_NEW_QUOTATION_ADMIN_MESSAGE' => WPSHOP_NEW_QUOTATION_ADMIN_MESSAGE, 'WPSHOP_QUOTATION_CONFIRMATION_MESSAGE' => WPSHOP_QUOTATION_CONFIRMATION_MESSAGE, 'WPSHOP_QUOTATION_UPDATE_MESSAGE' => WPSHOP_QUOTATION_UPDATE_MESSAGE, 'WPSHOP_DOWNLOADABLE_FILE_IS_AVAILABLE' => WPSHOP_DOWNLOADABLE_FILE_IS_AVAILABLE, 'WPSHOP_ORDER_IS_CANCELED' => WPSHOP_ORDER_IS_CANCELED);
                 if (!empty($messages)) {
                     foreach ($messages as $key => $message) {
                         $message_option = get_option($key);
@@ -1815,7 +1816,7 @@ WHERE ATTR_DET.attribute_id IN (" . $attribute_ids . ")"
                             }
                         }
                     }
-                }
+                }*/
 
                 return true;
                 break;
@@ -2370,6 +2371,18 @@ WHERE ATTR_DET.attribute_id IN (" . $attribute_ids . ")"
                 $wpdb->update(WPSHOP_DBT_ATTRIBUTE, array('is_used_in_variation' => 'yes', 'last_update_date' => current_time('mysql', 0)), array('code' => 'product_weight'));
                 return true;
                 break;
+
+			case 67:
+				$admin_new_version_message = get_option('WPSHOP_NEW_VERSION_ADMIN_MESSAGE');
+				if (empty($admin_new_version_message)) {
+					wps_message_ctr::createMessage('WPSHOP_NEW_VERSION_ADMIN_MESSAGE');
+				}
+				$wpshop_cart_option = get_option( 'wpshop_cart_option' );
+				if( !empty( $wpshop_cart_option ) && !empty( $wpshop_cart_option[ 'total_nb_of_item_allowed' ] ) ) {
+					$wpshop_cart_option[ 'total_nb_of_item_allowed' ][0] = (int) filter_var($wpshop_cart_option[ 'total_nb_of_item_allowed' ][0], FILTER_VALIDATE_BOOLEAN);
+				}
+				update_option( 'wpshop_cart_option', $wpshop_cart_option );
+				break;
 
             /*    Always add specific case before this bloc    */
             case 'dev':

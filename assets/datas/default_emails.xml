@@ -59,6 +59,11 @@
 			<content>Hello, New order on your shop ! Order Key : [order_key], Order date : [order_date], Order payment method : [order_payment_method], [order_content] [order_addresses] [order_customer_comments]</content>
 			<description>New order on shop sended to shop administrator</description>
 		</email>
+		<email code="WPSHOP_NEW_VERSION_ADMIN_MESSAGE" shop_type="presentation" >
+			<subject>New WPShop version [wpshop_version]</subject>
+			<content>Hello, WPShop goes to [wpshop_version] ! An update is available in your WordPress administration.</content>
+			<description>New version of WPShop sended to shop administrator</description>
+		</email>
 		<email code="WPSHOP_NEW_QUOTATION_ADMIN_MESSAGE" shop_type="sale" >
 			<subject>New quotation on your shop</subject>
 			<content>Hello, New quotation on your shop ! Quotation Key : [order_temporary_key], Quotation date : [order_date], [order_content] [order_addresses] [order_customer_comments]</content>
