@@ -216,6 +216,10 @@ function placeholder_select( code ) {
 jQuery(document).ready( function() {
 	/////////////////////////////////////////// TABS ///////////////////////////////////////////
 	jQuery('.wps_variations_tabs').hide();
+	jQuery('#wps_variations_parameters').click(function(e) {
+		e.preventDefault();
+		jQuery( '#wps_variations_options, #wps_variations_questions, #wps_variations_apply_btn' ).toggle();
+	});
 	jQuery('#wps_variations_tabs li').click( function(e) {
 		e.preventDefault();
 		if( jQuery( this ).data( 'tab' ) && !jQuery( this ).hasClass( 'disabled' ) ) {
@@ -466,6 +470,7 @@ jQuery(document).ready( function() {
 		if( !jQuery( 'li[data-tab=wps_variations_price_option_tab]' ).hasClass( 'active' ) ) {
 			jQuery( 'li[data-tab=wps_variations_price_option_tab]' ).click();
 		}
+		jQuery( '#wps_variations_options, #wps_variations_questions, #wps_variations_apply_btn' ).hide();
 	}
 
 	jQuery( '#wps_variations_apply_btn:not(.disabled)' ).click( function() {
@@ -700,3 +705,33 @@ jQuery(document).ready( function() {
 	} );
 
 });
+
+function open_dialog_box( element, id, title ) {
+	var data = {
+		action: "fill_the_downloadable_dialog_unnonced",
+		product_identifier : id
+	};
+	jQuery.post(ajaxurl, data, function(response) {
+		if ( response['status'] ) {
+			nouveauDiv = document.createElement("div");
+  			nouveauDiv.innerHTML = response['response'];
+			nouveauDiv.title = title;
+			nouveauDiv.dataset.post = id;
+			nouveauDiv.setAttribute( 'class', 'send_downloadable_file_dialog' );
+			jQuery( nouveauDiv ).dialog({
+				modal: true,
+				dialogClass: "wpshop_uidialog_box",
+				autoOpen:true,
+				show: "blind",
+				resizable: false,
+				width: 600
+			});
+			jQuery( nouveauDiv ).on('dialogclose', function(event) {
+				var response = jQuery( jQuery( '.is_downloadable_statut_' + id ).html() ).first().attr('href');
+				var basename = /^(\/([^/]+\/)*)(.*)$/g;
+				var match = basename.exec(response);
+				wps_variations_price_option_raw.model[jQuery( element ).closest( "ul[data-view-model='wps_variations_price_option_raw']" ).data('identifier')].file.control.change( { link: match[3], download: 'inline', path: match[0] } );
+			});
+		}
+	}, 'json');
+}
