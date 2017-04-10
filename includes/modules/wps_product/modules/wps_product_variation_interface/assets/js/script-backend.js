@@ -728,9 +728,7 @@ function open_dialog_box( element, id, title ) {
 			});
 			jQuery( nouveauDiv ).on('dialogclose', function(event) {
 				var response = jQuery( jQuery( '.is_downloadable_statut_' + id ).html() ).first().attr('href');
-				var basename = /^(\/([^/]+\/)*)(.*)$/g;
-				var match = basename.exec(response);
-				wps_variations_price_option_raw.model[jQuery( element ).closest( "ul[data-view-model='wps_variations_price_option_raw']" ).data('identifier')].file.control.change( { link: match[3], download: 'inline', path: match[0] } );
+				wps_variations_price_option_raw.model[jQuery( element ).closest( "ul[data-view-model='wps_variations_price_option_raw']" ).data('identifier')].file.control.change( { link: response.replace(/^.*\/|\.[^.]$/g, ''), download: 'inline', path: response } );
 			});
 		}
 	}, 'json');

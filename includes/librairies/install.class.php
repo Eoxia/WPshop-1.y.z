@@ -2372,17 +2372,18 @@ WHERE ATTR_DET.attribute_id IN (" . $attribute_ids . ")"
                 return true;
                 break;
 
-			case 67:
-				$admin_new_version_message = get_option('WPSHOP_NEW_VERSION_ADMIN_MESSAGE');
-				if (empty($admin_new_version_message)) {
-					wps_message_ctr::createMessage('WPSHOP_NEW_VERSION_ADMIN_MESSAGE');
-				}
-				$wpshop_cart_option = get_option( 'wpshop_cart_option' );
-				if( !empty( $wpshop_cart_option ) && !empty( $wpshop_cart_option[ 'total_nb_of_item_allowed' ] ) ) {
-					$wpshop_cart_option[ 'total_nb_of_item_allowed' ][0] = (int) filter_var($wpshop_cart_option[ 'total_nb_of_item_allowed' ][0], FILTER_VALIDATE_BOOLEAN);
-				}
-				update_option( 'wpshop_cart_option', $wpshop_cart_option );
-				break;
+            case 67:
+                $admin_new_version_message = get_option('WPSHOP_NEW_VERSION_ADMIN_MESSAGE');
+                if (empty($admin_new_version_message)) {
+                    wps_message_ctr::createMessage('WPSHOP_NEW_VERSION_ADMIN_MESSAGE');
+                }
+                $wpshop_cart_option = get_option('wpshop_cart_option');
+                if (!empty($wpshop_cart_option) && !empty($wpshop_cart_option['total_nb_of_item_allowed'])) {
+                    $wpshop_cart_option['total_nb_of_item_allowed'][0] = (int) filter_var($wpshop_cart_option['total_nb_of_item_allowed'][0], FILTER_VALIDATE_BOOLEAN);
+                }
+                update_option('wpshop_cart_option', $wpshop_cart_option);
+                return true;
+                break;
 
             /*    Always add specific case before this bloc    */
             case 'dev':

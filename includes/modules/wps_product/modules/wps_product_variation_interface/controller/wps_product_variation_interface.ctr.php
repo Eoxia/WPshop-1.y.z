@@ -204,8 +204,8 @@ class wps_product_variation_interface {
 	 * @method wpshop_download_file_dialog_active
 	 * @return void
 	 */
-	public function wpshop_download_file_dialog_active() {
-		add_filter( 'wps_filters_product_variation_file', array( $this, 'wps_filters_product_variation_file' ), 0, 1 );
+	public static function wpshop_download_file_dialog_active() {
+		add_filter( 'wps_filters_product_variation_file', array( 'wps_product_variation_interface', 'wps_filters_product_variation_file' ), 0, 1 );
 	}
 	/**
 	 * Add old upload box for custom php dsiplay.
@@ -214,7 +214,13 @@ class wps_product_variation_interface {
 	 * @param  string $string Input filter.
 	 * @return string The div for box.
 	 */
-	public function wps_filters_product_variation_file( $string ) {
-		return '<div style="display: none" onclick="open_dialog_box(this, %ID%, \'' . esc_html_e( 'Send the downloadable file', 'wpshop' ) . '\')"><div class="is_downloadable_statut_%ID%"></div></div>';
+	public static function wps_filters_product_variation_file( $string ) {
+		ob_start();
+		?>
+			<div style="display: none;" onclick="open_dialog_box(this, %ID%, '<?php esc_html_e( 'Send the downloadable file', 'wpshop' ); ?>')">
+				<div class="is_downloadable_statut_%ID%"></div>
+			</div>
+		<?php
+		return ob_get_clean();
 	}
 }

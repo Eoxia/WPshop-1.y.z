@@ -118,7 +118,7 @@
 		</li>
 		<li class="wps_variations_price_file_col" data-view-model="wps_variations_price_option_file_%ID%">
 			<span class="wps_variations_price_option_price_file" onclick="wps_variations_price_option_raw.control.file(this)">%link%</span>
-			<?php echo esc_html( apply_filters( 'wps_filters_product_variation_file', '<input style="display: none;" type="file" name="wpshop_file" id="wpshop_file" onchange="wps_variations_price_option_raw.control.link(event, this)">' ) ); ?>
+			<?php echo apply_filters( 'wps_filters_product_variation_file', '<input style="display: none;" type="file" name="wpshop_file" id="wpshop_file" onchange="wps_variations_price_option_raw.control.link(event, this)">' ); ?>
 			<?php wp_nonce_field( 'ajax_wpshop_upload_downloadable_file_action', 'wpshop_file_nonce' );?>
 			<a class="wps_variations_price_option_price_download_file" href="%path%" target="_blank" download="" style="display: %download%">
 				<span class="dashicons dashicons-download"></span>
