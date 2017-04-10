@@ -2783,7 +2783,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		check_ajax_referer( "ajax_wpshop_fill_the_downloadable_dialog".$product_id );
 		ajax_wpshop_fill_the_downloadable_dialog_exec($product_id);
 	}
-	function ajax_wpshop_fill_the_downloadable_dialog_unsafe() {
+	function ajax_wpshop_fill_the_downloadable_dialog_unnonced() {
 		$product_id = ( !empty( $_POST ) && !empty( $_POST[ 'product_identifier' ] ) ) ? (int)$_POST[ 'product_identifier' ] : 0;
 		ajax_wpshop_fill_the_downloadable_dialog_exec($product_id);
 	}
@@ -2807,7 +2807,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		die();
 	}
 	add_action('wp_ajax_fill_the_downloadable_dialog', 'ajax_wpshop_fill_the_downloadable_dialog');
-	add_action('wp_ajax_fill_the_downloadable_dialog_unsafe', 'ajax_wpshop_fill_the_downloadable_dialog_unsafe');
+	add_action('wp_ajax_fill_the_downloadable_dialog_unnonced', 'ajax_wpshop_fill_the_downloadable_dialog_unnonced');
 
 	function ajax_wpshop_show_downloadable_interface_in_admin() {
 		$post_id = !empty( $_POST ) && !empty( $_POST[ 'post_id' ] ) && is_int( (int)$_POST[ 'post_id' ] ) ? (int)$_POST[ 'post_id' ] : 0;
