@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Wp Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-11 09:47+0200\n"
-"PO-Revision-Date: 2017-04-11 09:51+0200\n"
+"POT-Creation-Date: 2017-04-11 15:28+0200\n"
+"PO-Revision-Date: 2017-04-11 15:32+0200\n"
 "Last-Translator: Equipe de développement de digirisk <dev@digirisk.com>\n"
 "Language-Team: Développement Eoxia <dev@eoxia.com>\n"
 "Language: fr_FR\n"
@@ -20,11 +20,11 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-1: includes/modules/wps_guided_tour\n"
 "X-Poedit-SearchPathExcluded-2: core\n"
 
-#: assets/datas/default_datas_string.php:2
+#: assets/datas/default_datas_string.php:2 includes/config.php:175
 msgid "Account creation confirmation"
 msgstr "Confirmation de création de votre compte"
 
-#: assets/datas/default_datas_string.php:3
+#: assets/datas/default_datas_string.php:3 includes/config.php:176
 msgid ""
 "Hello [customer_first_name] [customer_last_name], this email confirms that "
 "your account has just been created. Thank you for your loyalty. Have a good "
@@ -38,11 +38,11 @@ msgstr ""
 msgid "User account creation confirmation message"
 msgstr "Notification de confirmation de création de compte client"
 
-#: assets/datas/default_datas_string.php:6
+#: assets/datas/default_datas_string.php:6 includes/config.php:214
 msgid "Renewal of password"
 msgstr "Renouvellement du mot de passe"
 
-#: assets/datas/default_datas_string.php:7
+#: assets/datas/default_datas_string.php:7 includes/config.php:215
 msgid ""
 "Hello [customer_first_name] [customer_last_name], <br />Somebody has asked a "
 "renewal of password for your account.<br/><br/>To renew your password, click "
@@ -58,11 +58,11 @@ msgstr ""
 msgid "Send to customer a link to renew its password"
 msgstr "Envoie d'un email à un utilisateur pour renouveler son mot de passe"
 
-#: assets/datas/default_datas_string.php:10
+#: assets/datas/default_datas_string.php:10 includes/config.php:181
 msgid "Order payment confirmation (Paypal id [paypal_order_key])"
 msgstr "Confirmation de votre paiement (Transaction paypal [paypal_order_key])"
 
-#: assets/datas/default_datas_string.php:11
+#: assets/datas/default_datas_string.php:11 includes/config.php:182
 msgid ""
 "Hello [customer_first_name] [customer_last_name], this email confirms that "
 "your payment about your recent order on our website has been completed "
@@ -77,11 +77,11 @@ msgstr ""
 msgid "User paypal payment reception confirmation"
 msgstr "Notification de réception d'un paiement paypal"
 
-#: assets/datas/default_datas_string.php:14
+#: assets/datas/default_datas_string.php:14 includes/config.php:217
 msgid "Pay and finalize your order"
 msgstr "Payez et finalisez votre commande"
 
-#: assets/datas/default_datas_string.php:15
+#: assets/datas/default_datas_string.php:15 includes/config.php:218
 msgid ""
 "Hello [customer_first_name] [customer_last_name], <br />An order is "
 "available for you on our website.<br/>You can click on this link to pay and "
@@ -97,11 +97,11 @@ msgstr ""
 msgid "Send a link for finalize its order directly"
 msgstr "Envoie un lien pour finaliser une commande"
 
-#: assets/datas/default_datas_string.php:18
+#: assets/datas/default_datas_string.php:18 includes/config.php:184
 msgid "Your payment has been received"
 msgstr "Votre paiement a été reçu"
 
-#: assets/datas/default_datas_string.php:19
+#: assets/datas/default_datas_string.php:19 includes/config.php:185
 msgid ""
 "Hello [customer_first_name] [customer_last_name], this email confirms that "
 "your payment regarding your order ([order_key]) has just been received "
@@ -116,11 +116,11 @@ msgstr ""
 msgid "User payment reception confirmation"
 msgstr "Confirmation de paiement (autres)"
 
-#: assets/datas/default_datas_string.php:22
+#: assets/datas/default_datas_string.php:22 includes/config.php:187
 msgid "Your order has been shipped"
 msgstr "Votre commande a été expédiée avec succès."
 
-#: assets/datas/default_datas_string.php:23
+#: assets/datas/default_datas_string.php:23 includes/config.php:188
 #: includes/librairies/install.class.php:1446
 msgid ""
 "Hello [customer_first_name] [customer_last_name], this email confirms that "
@@ -137,11 +137,11 @@ msgstr ""
 msgid "Order shipping message"
 msgstr "Notification d'expédition de la commande"
 
-#: assets/datas/default_datas_string.php:26
+#: assets/datas/default_datas_string.php:26 includes/config.php:178
 msgid "Your order has been recorded"
 msgstr "Votre commande a été enregistrée avec succès."
 
-#: assets/datas/default_datas_string.php:27
+#: assets/datas/default_datas_string.php:27 includes/config.php:179
 msgid ""
 "Hello [customer_first_name] [customer_last_name], this email confirms that "
 "your order has been recorded (order date : [order_date]). Thank you for your "
@@ -156,11 +156,12 @@ msgid "User order confirmation"
 msgstr "Confirmation d'enregistrement de la commande client"
 
 #: assets/datas/default_datas_string.php:30
-#: assets/datas/default_datas_string.php:39
+#: assets/datas/default_datas_string.php:39 includes/config.php:190
+#: includes/config.php:193
 msgid "Your order has been updated"
 msgstr "Votre commande a été mise à jour"
 
-#: assets/datas/default_datas_string.php:31
+#: assets/datas/default_datas_string.php:31 includes/config.php:191
 msgid ""
 "Hello [customer_first_name] [customer_last_name], your order ([order_key]) "
 "has just been updated. Please login to your account to view details. Thank "
@@ -175,11 +176,11 @@ msgstr ""
 msgid "Notify a customer when order is updated"
 msgstr "Notification de modification d'une commande au client"
 
-#: assets/datas/default_datas_string.php:34
+#: assets/datas/default_datas_string.php:34 includes/config.php:211
 msgid "Your order has been canceled"
 msgstr "Votre commande a été annulé"
 
-#: assets/datas/default_datas_string.php:35
+#: assets/datas/default_datas_string.php:35 includes/config.php:212
 msgid ""
 "Hello [customer_first_name] [customer_last_name], <br />this email confirms "
 "your order ( Order key : [order_key] - Date : [order_date] ) has been "
@@ -198,7 +199,7 @@ msgstr "Notification d'annulation de commande au client"
 msgid "A comment has been added to your order"
 msgstr "Un commentaire a été ajouté à votre commande"
 
-#: assets/datas/default_datas_string.php:40
+#: assets/datas/default_datas_string.php:40 includes/config.php:194
 msgid ""
 "Hello [customer_first_name] [customer_last_name], your order ([order_key]) "
 "has just been updated. A comment has been added:<br/><br/>[message].<br/><br/"
@@ -222,11 +223,11 @@ msgstr ""
 msgid "Private update on an order"
 msgstr "Notification de modification interne au client"
 
-#: assets/datas/default_datas_string.php:44
+#: assets/datas/default_datas_string.php:44 includes/config.php:196
 msgid "New order on your shop"
 msgstr "Nouvelle commande sur votre boutique"
 
-#: assets/datas/default_datas_string.php:45
+#: assets/datas/default_datas_string.php:45 includes/config.php:197
 msgid ""
 "Hello, New order on your shop ! Order Key : [order_key], Order date : "
 "[order_date], Order payment method : [order_payment_method], [order_content] "
@@ -241,11 +242,11 @@ msgstr ""
 msgid "New order on shop sended to shop administrator"
 msgstr "Nouvelle commande sur votre boutique (pour l'administrateur)"
 
-#: assets/datas/default_datas_string.php:48
+#: assets/datas/default_datas_string.php:48 includes/config.php:199
 msgid "New quotation on your shop"
 msgstr "Nouveau devis sur votre boutique"
 
-#: assets/datas/default_datas_string.php:49
+#: assets/datas/default_datas_string.php:49 includes/config.php:200
 msgid ""
 "Hello, New quotation on your shop ! Quotation Key : [order_temporary_key], "
 "Quotation date : [order_date], [order_content] [order_addresses] "
@@ -259,11 +260,11 @@ msgstr ""
 msgid "New quotation on shop sended to shop administrator"
 msgstr "Nouveau devis sur votre boutique (pour l'administrateur)"
 
-#: assets/datas/default_datas_string.php:52
+#: assets/datas/default_datas_string.php:52 includes/config.php:202
 msgid "Your quotation has been recorded"
 msgstr "Votre devis a été enregistré avec succès."
 
-#: assets/datas/default_datas_string.php:53
+#: assets/datas/default_datas_string.php:53 includes/config.php:203
 msgid ""
 "Hello [customer_first_name] [customer_last_name], this email confirms that "
 "your order has been recorded (Quotation date : [order_date]). [order_content]"
@@ -276,11 +277,11 @@ msgstr ""
 msgid "User quotation confirmation"
 msgstr "Confirmation d'enregistrement du devis client"
 
-#: assets/datas/default_datas_string.php:56
+#: assets/datas/default_datas_string.php:56 includes/config.php:205
 msgid "Your quotation has been updated"
 msgstr "Votre devis a été mis à jour"
 
-#: assets/datas/default_datas_string.php:57
+#: assets/datas/default_datas_string.php:57 includes/config.php:206
 msgid ""
 "Hello [customer_first_name] [customer_last_name], this email confirms that "
 "your quotation has been updated (Quotation date : [order_date]). "
@@ -294,7 +295,7 @@ msgstr ""
 msgid "Notify a customer when quotation is updated"
 msgstr "Notification de modification de devis au client"
 
-#: assets/datas/default_datas_string.php:60
+#: assets/datas/default_datas_string.php:60 includes/config.php:208
 msgid "Your downloadable product is available"
 msgstr "Votre produit téléchargeable est disponible"
 
@@ -314,7 +315,7 @@ msgid "Notify a customer when downloadable file is available after an order"
 msgstr ""
 "Notification de mise à disposition d'un produit téléchargeable au client"
 
-#: assets/datas/default_datas_string.php:65 includes/config.php:219
+#: assets/datas/default_datas_string.php:65 includes/config.php:275
 #: includes/librairies/init.class.php:93 includes/librairies/init.class.php:112
 #: includes/librairies/init.class.php:243
 #: includes/modules/wps_shortcodes/controller/wps_shortcodes_ctr.php:310
@@ -330,7 +331,7 @@ msgstr "Boutique"
 msgid "Display shop product list"
 msgstr "Affichage de la page de produits"
 
-#: assets/datas/default_datas_string.php:69 includes/config.php:226
+#: assets/datas/default_datas_string.php:69 includes/config.php:276
 #: includes/librairies/init.class.php:239
 #: includes/librairies/options/options.class.php:87
 #: includes/librairies/options/options.class.php:203
@@ -348,7 +349,7 @@ msgstr "panier"
 msgid "Display the cart page"
 msgstr "Affichage de la page panier"
 
-#: assets/datas/default_datas_string.php:73 includes/config.php:233
+#: assets/datas/default_datas_string.php:73 includes/config.php:277
 #: includes/librairies/init.class.php:241
 #: includes/librairies/payments/paypal.class.php:225
 #: includes/modules/wps_shortcodes/controller/wps_shortcodes_ctr.php:308
@@ -364,7 +365,7 @@ msgstr "Passer commande"
 msgid "Display the checkout page"
 msgstr "Affichage de la page passer commande"
 
-#: assets/datas/default_datas_string.php:77 includes/config.php:240
+#: assets/datas/default_datas_string.php:77 includes/config.php:278
 #: includes/modules/wps_classic_checkout/templates/frontend/confirmation/confirmation-summary.php:27
 msgid "My account"
 msgstr "Mon compte"
@@ -377,7 +378,7 @@ msgstr "Mon compte "
 msgid "Display the user account page"
 msgstr "Affichage de la page mon compte"
 
-#: assets/datas/default_datas_string.php:81 includes/config.php:247
+#: assets/datas/default_datas_string.php:81 includes/config.php:279
 msgid "Signup"
 msgstr "Inscription"
 
@@ -389,7 +390,7 @@ msgstr "inscrivez-vous "
 msgid "Display the signout page"
 msgstr "Affichage de la page inscription"
 
-#: assets/datas/default_datas_string.php:85 includes/config.php:254
+#: assets/datas/default_datas_string.php:85 includes/config.php:280
 msgid "Payment return successfull"
 msgstr "URL de retour paiement réussi"
 
@@ -401,7 +402,7 @@ msgstr "Retour"
 msgid "Page for succesfull payment return"
 msgstr "Page pour le retour d'un paiement réussi"
 
-#: assets/datas/default_datas_string.php:89 includes/config.php:261
+#: assets/datas/default_datas_string.php:89 includes/config.php:281
 msgid "Payment return unsuccessfull"
 msgstr "URL de retour paiement échoué"
 
@@ -413,7 +414,7 @@ msgstr "Page pour le retour d'un paiement échoué"
 msgid "Page for unsuccesfull payment return"
 msgstr "Page pour le retour d'un paiement échoué"
 
-#: assets/datas/default_datas_string.php:93 includes/config.php:268
+#: assets/datas/default_datas_string.php:93 includes/config.php:282
 msgid "Terms of sale"
 msgstr "Conditions générales de vente"
 
@@ -425,7 +426,7 @@ msgstr "Conditions générales de vente"
 msgid "Define the page for terms of sale"
 msgstr "Page pour les conditions générales de vente"
 
-#: includes/config.php:16 includes/include.php:5
+#: includes/config.php:14 includes/include.php:5
 #: includes/librairies/catalog/categories.class.php:14
 #: includes/librairies/catalog/products.class.php:17
 #: includes/librairies/dashboard.class.php:5
@@ -468,41 +469,52 @@ msgstr "Page pour les conditions générales de vente"
 msgid "Access is not allowed by this way"
 msgstr "Vous n'avez pas les droits nécessaire pour effectuer cette action"
 
-#: includes/config.php:152
+#: includes/config.php:166
 msgid "Tabs"
 msgstr "Onglets"
 
-#: includes/config.php:153
+#: includes/config.php:166
 msgid "Separated bloc"
 msgstr "Bloc Séparés"
 
-#: includes/config.php:159
+#: includes/config.php:170
 msgid "Separated box in product page"
 msgstr "Dans une boîte séparée"
 
-#: includes/config.php:160
+#: includes/config.php:170
 msgid "A tab in product data box \"Product data\""
 msgstr "Un onglet dans la boite \"Données produit\""
 
-#: includes/config.php:161
+#: includes/config.php:170
 msgid "In each attribute group section \"Product data\""
 msgstr "Dans chaque onglet de la boîte \"Données produits\""
 
-#: includes/config.php:339 includes/librairies/purchase/orders.class.php:435
+#: includes/config.php:209
+msgid ""
+"Hello [customer_first_name] [customer_last_name], <br />this email confirms "
+"that your downloadable product is available : [download_product_link].<br /"
+"><br /> Thank you for your loyalty. Have a good day."
+msgstr ""
+"Bonjour [customer_first_name] [customer_last_name], cet email vous confirme "
+"que votre  votre produit téléchargeable est disponible : "
+"[download_product_link]. <br><br />Merci pour votre confiance et à bientôt "
+"sur notre boutique."
+
+#: includes/config.php:343 includes/librairies/purchase/orders.class.php:435
 #: includes/modules/billing/billing.php:353
 #: includes/modules/wps_export/model/wps_export_mdl.php:133
 msgid "Quotation"
 msgstr "Devis"
 
-#: includes/config.php:340
+#: includes/config.php:343
 msgid "Payment gateway CIC"
 msgstr "Passerelle de paiement CIC"
 
-#: includes/config.php:365
+#: includes/config.php:367
 msgid "Mr."
 msgstr "Monsieur"
 
-#: includes/config.php:366
+#: includes/config.php:367
 msgid "Mrs."
 msgstr "Madame"
 
@@ -510,115 +522,115 @@ msgstr "Madame"
 msgid "Miss"
 msgstr "Mademoiselle"
 
-#: includes/config.php:371
+#: includes/config.php:370
 msgid "Awaiting treatment"
 msgstr "En attente de traitement"
 
-#: includes/config.php:372 includes/librairies/dashboard.class.php:96
+#: includes/config.php:371 includes/librairies/dashboard.class.php:96
 #: includes/modules/wps_dashboard/templates/backend/metabox-right_now.php:81
 msgid "Awaiting payment"
 msgstr "Paiement en attente"
 
-#: includes/config.php:373
+#: includes/config.php:372
 msgid "Partially paid"
 msgstr "Paiement incomplet"
 
-#: includes/config.php:374
+#: includes/config.php:373
 #: includes/modules/wps_credit/templates/backend/main_elements.tpl.php:73
 #: includes/modules/wps_credit/wps_credit.php:233
 msgid "Paid"
 msgstr "Payé"
 
-#: includes/config.php:375 includes/librairies/dashboard.class.php:91
+#: includes/config.php:374 includes/librairies/dashboard.class.php:91
 #: includes/modules/wps_dashboard/templates/backend/metabox-right_now.php:76
 #: includes/wpshop_ajax.php:523
 msgid "Shipped"
 msgstr "Expédié"
 
-#: includes/config.php:376 includes/librairies/dashboard.class.php:101
+#: includes/config.php:375 includes/librairies/dashboard.class.php:101
 #: includes/modules/wps_dashboard/templates/backend/metabox-right_now.php:86
 msgid "Denied"
 msgstr "Refusé"
 
-#: includes/config.php:377
+#: includes/config.php:376
 #: includes/modules/wps_orders/templates/backend/wps_order_payment_box.php:59
 msgid "Incorrect amount"
 msgstr "Montant incorrect"
 
-#: includes/config.php:378 includes/librairies/dashboard.class.php:105
+#: includes/config.php:377 includes/librairies/dashboard.class.php:105
 #: includes/modules/wps_dashboard/templates/backend/metabox-right_now.php:90
 msgid "Canceled"
 msgstr "Annulé"
 
-#: includes/config.php:379
+#: includes/config.php:378
 msgid "Refused payment"
 msgstr "Paiement refusée"
 
-#: includes/config.php:380 includes/librairies/dashboard.class.php:109
+#: includes/config.php:379 includes/librairies/dashboard.class.php:109
 #: includes/modules/wps_dashboard/templates/backend/metabox-right_now.php:94
 msgid "Refunded"
 msgstr "Remboursé"
 
-#: includes/config.php:381
+#: includes/config.php:380
 msgid "Taken in store"
 msgstr "Pris en boutique"
 
-#: includes/config.php:427
+#: includes/config.php:425
 #: includes/librairies/eav/attributes_unit.class.php:286
 msgid "Attribute unit"
 msgstr "Unité"
 
-#: includes/config.php:428
+#: includes/config.php:425
 msgid "Frontend option"
 msgstr "Affichage dans la boutique"
 
-#: includes/config.php:429 includes/librairies/catalog/products.class.php:124
+#: includes/config.php:425 includes/librairies/catalog/products.class.php:124
 msgid "Variations"
 msgstr "Produits avec options"
 
-#: includes/config.php:436
+#: includes/config.php:432
 msgid "Civility"
 msgstr "Civilité"
 
-#: includes/config.php:437
+#: includes/config.php:432
 #: includes/modules/wps_export/model/wps_export_mdl.php:43
 #: includes/modules/wps_export/model/wps_export_mdl.php:113
 msgid "First name"
 msgstr "Prénom"
 
-#: includes/config.php:438
+#: includes/config.php:432
 msgid "Last name"
 msgstr "Nom"
 
-#: includes/config.php:439
+#: includes/config.php:432
 msgid "Email adress"
 msgstr "Adresse email"
 
-#: includes/config.php:440
+#: includes/config.php:432
 msgid "Phone number"
 msgstr "Numéro de téléphone"
 
-#: includes/config.php:441
+#: includes/config.php:432
 msgid "Company"
 msgstr "Société"
 
-#: includes/config.php:442
+#: includes/config.php:432
 msgid "Adresse"
 msgstr "Adresse"
 
-#: includes/config.php:443
+#: includes/config.php:432
 #: includes/librairies/options/options_company.class.php:35
 #: includes/modules/wps_shipping/templates/backend/main_elements.tpl.php:174
 #: includes/modules/wps_shipping/templates/backend/shipping-mode-configuration-interface.php:130
 msgid "Postcode"
 msgstr "Code postal"
 
-#: includes/config.php:444
+#: includes/config.php:432
 #: includes/librairies/options/options_company.class.php:36
 msgid "City"
 msgstr "Ville"
 
-#: includes/config.php:445
+#: includes/config.php:432
 #: includes/librairies/options/options_company.class.php:37
 #: includes/modules/wps_shipping/templates/backend/main_elements.tpl.php:228
 #: includes/modules/wps_shipping/templates/backend/shipping-mode-configuration-custom-rules-table.php:8
@@ -686,7 +698,7 @@ msgstr "Supprimer l'image de catégorie"
 #: includes/librairies/payments/payment.class.php:609
 #: includes/modules/wps-pos-addon/modules/wps_product_quick_add/templates/backend/product_creation.php:43
 #: includes/modules/wps_address/controller/wps_address_ctr.php:1123
-#: includes/modules/wps_cart/controller/wps_cart_ctr.php:698
+#: includes/modules/wps_cart/controller/wps_cart_ctr.php:700
 #: includes/modules/wps_cart/templates/frontend/cart/cart.php:87
 #: includes/modules/wps_classic_checkout/wps_classic_checkout.php:321
 #: includes/modules/wps_marketing_tools/controller/wps_marketing_tools_ctr.php:191
@@ -2076,7 +2088,7 @@ msgstr "Cet addonn'est pas activé, cliquez ici pour l'activer"
 #: includes/librairies/eav/attributes.class.php:2494
 #: includes/librairies/eav/attributes.class.php:3192
 #: includes/modules/wps_address/controller/wps_address_ctr.php:1123
-#: includes/modules/wps_cart/controller/wps_cart_ctr.php:698
+#: includes/modules/wps_cart/controller/wps_cart_ctr.php:700
 #: includes/modules/wps_classic_checkout/wps_classic_checkout.php:321
 #: includes/modules/wps_customer/controller/wps_provider_ctr.php:91
 #: languages/alone_text.php:17 languages/alone_text.php:64
@@ -6190,33 +6202,31 @@ msgstr ""
 "Vous devez finaliser votre panier courant avant de pouvoir effectuer cette "
 "action."
 
-#: includes/modules/wps_cart/controller/wps_cart_ctr.php:490
-#, fuzzy
-#| msgid "Your product has been sucessfuly added to your cart"
+#: includes/modules/wps_cart/controller/wps_cart_ctr.php:492
 msgid "No more products can be added to your cart."
-msgstr "Le produit a été ajouté au panier avec succès"
+msgstr "Le panier ne peux pas contenir plus d'éléments."
 
-#: includes/modules/wps_cart/controller/wps_cart_ctr.php:888
+#: includes/modules/wps_cart/controller/wps_cart_ctr.php:890
 #: includes/modules/wps_orders/controller/wps_orders_in_back_office.php:513
 #: templates/wpshop/main_elements.tpl.php:35
 msgid "Add to cart"
 msgstr "Ajouter au panier"
 
-#: includes/modules/wps_cart/controller/wps_cart_ctr.php:890
+#: includes/modules/wps_cart/controller/wps_cart_ctr.php:892
 #: includes/modules/wps_product/controller/wps_product_ctr.php:308
 #: includes/modules/wps_product/controller/wps_product_ctr.php:325
 msgid "No product has been found."
 msgstr "Aucun produit trouvé"
 
-#: includes/modules/wps_cart/controller/wps_cart_ctr.php:952
+#: includes/modules/wps_cart/controller/wps_cart_ctr.php:954
 msgid "The coupon has been applied"
 msgstr "Le coupon a été appliqué"
 
-#: includes/modules/wps_cart/controller/wps_cart_ctr.php:959
+#: includes/modules/wps_cart/controller/wps_cart_ctr.php:961
 msgid "A coupon code is required"
 msgstr "Un code-coupon est obligatoire"
 
-#: includes/modules/wps_cart/controller/wps_cart_ctr.php:985
+#: includes/modules/wps_cart/controller/wps_cart_ctr.php:987
 msgid ""
 "An error was occured, please retry later or contact the website administrator"
 msgstr ""
@@ -8081,10 +8091,8 @@ msgid "Save your opinion"
 msgstr "Enregistrer votre avis"
 
 #: includes/modules/wps_options/controller/wps_display_options_ctr.php:18
-#, fuzzy
-#| msgid "Sorting"
 msgid "Settings"
-msgstr "Trier"
+msgstr "Réglages"
 
 #: includes/modules/wps_options/controller/wps_display_options_ctr.php:48
 msgid "Display options"
@@ -8651,10 +8659,7 @@ msgid "%d products have been successfully updated"
 msgstr "%d produits ont bien été mis à jour"
 
 #: includes/modules/wps_product/modules/wps_product_mass_interface/controller/wps_product_mass_interface_ctr.php:423
-#, fuzzy, php-format
-#| msgid ""
-#| "All selected products do not be updated. %d on %d products have been "
-#| "successfully updated"
+#, php-format
 msgid ""
 "All selected products do not be updated. %1$d on %2$d products have been "
 "successfully updated"
@@ -8712,10 +8717,8 @@ msgid "Click to add file"
 msgstr "Ajouter un fichier"
 
 #: includes/modules/wps_product/modules/wps_product_variation_interface/templates/backend/meta_box_variation.php:5
-#, fuzzy
-#| msgid "Possibilities"
 msgid "Edit possibilities"
-msgstr "Possibilités"
+msgstr "Editer les données des options"
 
 #: includes/modules/wps_product/modules/wps_product_variation_interface/templates/backend/meta_box_variation.php:12
 msgid "Generate option"
@@ -11554,25 +11557,13 @@ msgid "Latest products ordered"
 msgstr "Les derniers produits commandés"
 
 #: wpshop.php:150
-#, fuzzy, php-format
-#| msgid "For security reason %splease read this post%s"
+#, php-format
 msgid "For security reason %1$splease read this post%2$s"
 msgstr "Pour des raisons de sécurité %sveuillez lire cet article%s"
 
 #: wpshop.php:159
 msgid "Important upgrade notice"
 msgstr "Message important pour la mise à jour"
-
-#~ msgid ""
-#~ "Hello [customer_first_name] [customer_last_name], <br />this email "
-#~ "confirms that your downloadable product is available : "
-#~ "[download_product_link].<br /><br /> Thank you for your loyalty. Have a "
-#~ "good day."
-#~ msgstr ""
-#~ "Bonjour [customer_first_name] [customer_last_name], cet email vous "
-#~ "confirme que votre  votre produit téléchargeable est disponible : "
-#~ "[download_product_link]. <br><br />Merci pour votre confiance et à "
-#~ "bientôt sur notre boutique."
 
 #~ msgid ""
 #~ "Check this box if you want to allow the user to add only one product into "

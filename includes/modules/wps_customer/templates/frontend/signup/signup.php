@@ -66,6 +66,10 @@
 	</form>
 
 	<div class="wps-form-group">
+		<?php do_action('signup_extra_content'); ?>
+	</div>
+
+	<div class="wps-form-group">
 		<button class="wps-bton-first-alignRight-rounded" id="wps_signup_button"><?php _e('Sign up', 'wpshop'); ?></button>
 	</div>
 </div>
