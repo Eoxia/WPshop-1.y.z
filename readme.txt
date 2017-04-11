@@ -4,7 +4,7 @@ Tags: boutique, catalog, catalogue, commerce, e-commerce, ecommerce, m-commerce,
 Donate link: http://www.wpshop.fr/documentations/presentation-wpshop/
 Requires at least: 3.4.0
 Tested up to: 4.7.2
-Stable tag: 1.4.3.7
+Stable tag: 1.4.3.8
 License: GPLv2 or later
 
 Simple and powerfull eCommerce plugin, with French Payment and Shipping systems : Paybox, Paypal, Atos, Cybermut, SystemPay, Paysite-cash, Colissimo
@@ -96,6 +96,31 @@ Il faut vérifier que le réglage des permaliens pour votre site est bien régl�
 
 
 == Changelog ==
+
+= Version 1.4.3.8 =
+
+Améliorations / Improvments
+
+* 8594 - Ajout d'une limite de quantité de produits dans le panier - Add limited number of products in cart
+* 8547 - Réduction des requêtes dupliqués - Reduce duplicates queries
+* 8512 - Fermer l'onglet donnée produits et laisser la roue crantée option - Close product data &amp; let button options for edit data
+* 8456 - Refonte de la zone statistiques avec combinaison des statistiques de ventes et des statistiques utilisateurs - Redesign statistics page with sales &amp; customers #8309
+* 8455 - Refonte du tableau de bord avec utilisation des metabox de WordPress - Redesign dashboard shop with WordPress metaboxes
+* 8346 - Mails défaut WordPress création de compte - Default mails at signup
+* 8344 - Fonction pour retrouver l'ancienne interface d'upload - Function to use old box upload for variations
+* 8133 - Pagination liste produits, interface commande - Pagination products, order interface
+* 8055 - Mail administrateur notifiant une nouvelle version disponible - Mail new version to admin
+* 8011 - Compatibilité user switching - Compatibility user switching
+* 8009 - Ajout de filtres dans les interfaces clients - Interface customer filters wps_filter_customer_action_metabox / wps_filter_customer_list_actions / wps_filter_customer_in_order<br>
+* 8006 - Créer un devis à partir de l'interface client - Create quotation by customer interface #7393
+* 7960 - Compte libellés - Account labels
+
+Corrections / Fix
+
+* 8131 - "A partir de" voir les options actives - "Price from" only actives variations
+* 7593 - Correction d'intégration inscription &amp; adresse - Fix integrate signup &amp; address
+* 7177 - Prévisualiser le produit - Preview product
+* 7082 - Mails clients - Customer mails
 
 = Version 1.4.3.7 =
 
