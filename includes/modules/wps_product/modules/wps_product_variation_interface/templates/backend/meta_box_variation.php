@@ -78,7 +78,7 @@
 		<li class="wps_variations_price_weight_col"><?php esc_html_e( 'Weight', 'wpshop' ); ?></li>
 		<li class="wps_variations_price_reference_col"><?php esc_html_e( 'Ref. product', 'wpshop' ); ?></li>
 		<li class="wps_variations_price_file_col"><?php esc_html_e( 'Link download', 'wpshop' ); ?></li>
-		<?php echo esc_html( apply_filters( 'wps_filters_product_variation_extra_columns_title', '' ) ); ?>
+		<?php echo apply_filters( 'wps_filters_product_variation_extra_columns_title', '' ); ?>
 		<li class="wps_variations_price_active_col"><?php esc_html_e( 'Activate', 'wpshop' ); ?></li>
 	</ul>
 	<ul data-view-model="wps_variations_price_option_raw">
@@ -124,7 +124,7 @@
 				<span class="dashicons dashicons-download"></span>
 			</a>
 		</li>
-		<?php echo esc_html( apply_filters( 'wps_filters_product_variation_extra_columns_content', '' ) ); ?>
+		<?php echo apply_filters( 'wps_filters_product_variation_extra_columns_content', '' ); ?>
 		<li class="wps_variations_price_active_col">
 			<input name="wps_pdt_variations[%ID%][status]" onclick="wps_variations_price_option_raw.control.activate(this)" type="checkbox" %price_option_activate%>
 		</li>
