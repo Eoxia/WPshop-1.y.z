@@ -480,7 +480,9 @@ class wps_cart {
 
 		$current_cart = ( !empty( $order_meta )) ? $order_meta : array();
 
-		foreach( $current_cart['order_items'] as $item_id => $item ) {
+		$current_cart_order_items = isset( $current_cart['order_items'] ) ? $current_cart['order_items'] : array();
+
+		foreach( $current_cart_order_items as $item_id => $item ) {
 			if( !array_key_exists( $item_id, $order_items ) ) {
 				$count_items += $item['item_qty'];
 			}
