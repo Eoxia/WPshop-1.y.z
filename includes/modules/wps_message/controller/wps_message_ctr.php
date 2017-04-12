@@ -181,21 +181,23 @@ class wps_message_ctr {
 	 * @return integer message ID
 	 */
 	public static function createMessage( $code, $object = '', $message = '' ) {
-
 		$id = 0;
 		$xml_message = self::get_xml_messages( $code );
 		$object = empty( $object ) ? $xml_message['object'] : $object;
 		$message = empty( $message ) ? $xml_message['message'] : $message;
 		$message_option = get_option( $code, null );
-		if ( empty( $message_option ) && ! empty( $object ) && ! empty( $message ) ) {
-			$new_message = array(
-				'post_title' => __( $object , 'wpshop' ),
-				'post_content' => self::customize_message( __( $message, 'wpshop' ) ),
-				'post_status' => 'publish',
-				'post_author' => 1,
-				'post_type' => WPSHOP_NEWTYPE_IDENTIFIER_MESSAGE,
-			);
-			$id = wp_insert_post( $new_message );
+		if ( empty( $message_option ) || false === get_post_status( $message_option ) ) {
+			$id = post_exists( __( $object , 'wpshop' ), self::customize_message( __( $message, 'wpshop' ) ) );
+			if( $id == 0 ) {
+				$new_message = array(
+					'post_title' => __( $object , 'wpshop' ),
+					'post_content' => self::customize_message( __( $message, 'wpshop' ) ),
+					'post_status' => 'publish',
+					'post_author' => 1,
+					'post_type' => WPSHOP_NEWTYPE_IDENTIFIER_MESSAGE,
+				);
+				$id = wp_insert_post( $new_message );
+			}
 			update_option( $code, $id );
 		} else {
 			$id = $message_option;

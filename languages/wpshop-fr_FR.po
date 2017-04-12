@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Wp Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-11 15:28+0200\n"
-"PO-Revision-Date: 2017-04-11 15:32+0200\n"
+"POT-Creation-Date: 2017-04-12 11:00+0200\n"
+"PO-Revision-Date: 2017-04-12 11:26+0200\n"
 "Last-Translator: Equipe de développement de digirisk <dev@digirisk.com>\n"
 "Language-Team: Développement Eoxia <dev@eoxia.com>\n"
 "Language: fr_FR\n"
@@ -207,7 +207,7 @@ msgid ""
 msgstr ""
 "Bonjour  [customer_first_name] [customer_last_name], Un nouveau commentaire "
 "a été ajouté à votre commande ([order_key]) : <br/><br/>[message].<br/><br/> "
-"Merci de votre confiance et à bientôt sur notre boutique"
+"Merci de votre confiance et à bientôt sur notre boutique."
 
 #: assets/datas/default_datas_string.php:41
 msgid ""
@@ -217,7 +217,7 @@ msgid ""
 msgstr ""
 "Bonjour  [customer_first_name] [customer_last_name], Un nouveau commentaire "
 "a été ajouté à votre commande ([order_key]) : <br/><br/>[message].<br/><br/> "
-"Merci de votre confiance et à bientôt sur notre boutique"
+"Merci de votre confiance et à bientôt sur notre boutique."
 
 #: assets/datas/default_datas_string.php:42
 msgid "Private update on an order"
@@ -1504,7 +1504,7 @@ msgstr "Mise en avant du produit"
 #: includes/modules/wps_address/controller/wps_address_ctr.php:912
 #: includes/modules/wps_address/controller/wps_address_ctr.php:913
 #: includes/modules/wps_address/controller/wps_address_ctr.php:1134
-#: includes/modules/wps_message/controller/wps_message_ctr.php:525
+#: includes/modules/wps_message/controller/wps_message_ctr.php:527
 #: includes/modules/wps_orders/templates/backend/wps_order_customer_informations.php:12
 #: includes/modules/wps_shipping/templates/frontend/shipping-infos-summary.php:13
 #: includes/wpshop_ajax.php:2301 includes/wpshop_ajax.php:2370
@@ -1520,7 +1520,7 @@ msgstr "Adresse de facturation"
 #: includes/modules/wps_address/controller/wps_address_ctr.php:915
 #: includes/modules/wps_address/controller/wps_address_ctr.php:916
 #: includes/modules/wps_address/controller/wps_address_ctr.php:1133
-#: includes/modules/wps_message/controller/wps_message_ctr.php:525
+#: includes/modules/wps_message/controller/wps_message_ctr.php:527
 #: includes/modules/wps_orders/templates/backend/wps_order_customer_informations.php:26
 #: includes/modules/wps_shipping/templates/frontend/shipping-infos-summary.php:6
 #: includes/wpshop_ajax.php:2382 includes/wpshop_ajax.php:2431
@@ -1596,7 +1596,7 @@ msgstr "Aucune valeur définie"
 #: includes/librairies/display/form.class.php:235
 #: includes/librairies/init.class.php:205
 #: includes/librairies/init.class.php:451
-#: includes/modules/wps_message/controller/wps_message_ctr.php:260
+#: includes/modules/wps_message/controller/wps_message_ctr.php:262
 msgid "Select values from list"
 msgstr "Choisissez une valeur"
 
@@ -2614,7 +2614,7 @@ msgstr "Nom du produit"
 #: includes/modules/wps_customer/controller/wps_customer_group.php:335
 #: includes/modules/wps_export/model/wps_export_mdl.php:42
 #: includes/modules/wps_export/model/wps_export_mdl.php:112
-#: includes/modules/wps_message/controller/wps_message_ctr.php:238
+#: includes/modules/wps_message/controller/wps_message_ctr.php:240
 #: includes/modules/wps_payment_mode/templates/backend/main_elements.tpl.php:24
 #: includes/modules/wps_shipping/templates/backend/main_elements.tpl.php:32
 msgid "Name"
@@ -7064,7 +7064,7 @@ msgstr "Connexion"
 
 #: includes/modules/wps_customer/templates/frontend/login/login-form-first.php:4
 #: includes/modules/wps_customer/templates/frontend/signup/signup.php:4
-#: includes/modules/wps_customer/templates/frontend/signup/signup.php:69
+#: includes/modules/wps_customer/templates/frontend/signup/signup.php:73
 msgid "Sign up"
 msgstr "Inscription"
 
@@ -7948,23 +7948,23 @@ msgstr "C'est ici que sont stockés les message."
 msgid "Message historic"
 msgstr "Historique d'envoie du message"
 
-#: includes/modules/wps_message/controller/wps_message_ctr.php:239
+#: includes/modules/wps_message/controller/wps_message_ctr.php:241
 msgid "Extract from the message"
 msgstr "Extrait du message"
 
-#: includes/modules/wps_message/controller/wps_message_ctr.php:240
+#: includes/modules/wps_message/controller/wps_message_ctr.php:242
 msgid "Creation date"
 msgstr "Date de création"
 
-#: includes/modules/wps_message/controller/wps_message_ctr.php:241
+#: includes/modules/wps_message/controller/wps_message_ctr.php:243
 msgid "Last dispatch date"
 msgstr "Date du dernier envoi"
 
-#: includes/modules/wps_message/controller/wps_message_ctr.php:575
+#: includes/modules/wps_message/controller/wps_message_ctr.php:577
 msgid "Comments about the order"
 msgstr "Commentaire sur la commande"
 
-#: includes/modules/wps_message/controller/wps_message_ctr.php:577
+#: includes/modules/wps_message/controller/wps_message_ctr.php:579
 msgid "Comments about the quotation"
 msgstr "Commentaire sur le devis"
 
@@ -11564,6 +11564,24 @@ msgstr "Pour des raisons de sécurité %sveuillez lire cet article%s"
 #: wpshop.php:159
 msgid "Important upgrade notice"
 msgstr "Message important pour la mise à jour"
+
+#: wpshop.php:163
+msgid "New WPShop version [wpshop_version]"
+msgstr "Nouvelle version WPShop [wpshop_version]"
+
+#: wpshop.php:164
+msgid ""
+"Hello, WPShop goes to [wpshop_version] ! An update is available in your "
+"WordPress administration."
+msgstr ""
+"Bonjour, WPShop passe à la version [wpshop_version] ! La mise à jour est "
+"disponible dans l'administration WordPress."
+
+#: wpshop.php:165
+#, fuzzy
+#| msgid "New order on shop sended to shop administrator"
+msgid "New version of WPShop sended to shop administrator"
+msgstr "Nouvelle commande sur votre boutique (pour l'administrateur)"
 
 #~ msgid ""
 #~ "Check this box if you want to allow the user to add only one product into "

@@ -128,7 +128,7 @@ class wpshop_email_options {
 			$content .= '</select> <a id="wps-email-' . $current_message_id . '" title="' . __( 'Edit current selected message', 'wpshop' ) . '" href="' . admin_url( 'post.php?post=' . $current_message_id . '&action=edit' ) . '" target="_wps_content_customisation" class="shop-content-customisation shop-content-customisation-email dashicons dashicons-edit"></a>';
 		}*/
 
-		echo $content . '<a id="wps-email-' . $current_message_id . '" title="' . __( 'Edit current selected message', 'wpshop' ) . '" href="' . admin_url( 'post.php?post=' . $current_message_id . '&action=edit' ) . '" target="_wps_content_customisation" class="shop-content-customisation shop-content-customisation-email dashicons dashicons-edit"></a>';
+		echo $content . '<input type="hidden" name="' . $args['code'] . '" value="' . $current_message_id . '"><a id="wps-email-' . $current_message_id . '" title="' . __( 'Edit current selected message', 'wpshop' ) . '" href="' . admin_url( 'post.php?post=' . $current_message_id . '&action=edit' ) . '" target="_wps_content_customisation" class="shop-content-customisation shop-content-customisation-email dashicons dashicons-edit"></a>';
 	}
 
 }
