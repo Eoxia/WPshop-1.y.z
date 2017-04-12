@@ -171,53 +171,6 @@ DEFINE('WPSHOP_DEFINED_SHOP_TYPE', $wpshop_shop_type);
 	DEFINE('WPSHOP_PRODUCT_SHORTCODE_DISPLAY_TYPE', (!empty($wpshop_admin_display_option['wpshop_admin_product_shortcode_display'])?$wpshop_admin_display_option['wpshop_admin_product_shortcode_display']:'each-box'));
 
 
-/*	Define the default email messages	*/
-	DEFINE('WPSHOP_SIGNUP_MESSAGE_OBJECT', __('Account creation confirmation','wpshop'));
-	DEFINE('WPSHOP_SIGNUP_MESSAGE', __('Hello [customer_first_name] [customer_last_name], this email confirms that your account has just been created. Thank you for your loyalty. Have a good day.','wpshop'));
-
-	DEFINE('WPSHOP_ORDER_CONFIRMATION_MESSAGE_OBJECT', __('Your order has been recorded', 'wpshop'));
-	DEFINE('WPSHOP_ORDER_CONFIRMATION_MESSAGE', __('Hello [customer_first_name] [customer_last_name], this email confirms that your order has been recorded (order date : [order_date]). Thank you for your loyalty. Have a good day.', 'wpshop'));
-
-	DEFINE('WPSHOP_PAYPAL_PAYMENT_CONFIRMATION_MESSAGE_OBJECT', __('Order payment confirmation (Paypal id [paypal_order_key])', 'wpshop'));
-	DEFINE('WPSHOP_PAYPAL_PAYMENT_CONFIRMATION_MESSAGE', __('Hello [customer_first_name] [customer_last_name], this email confirms that your payment about your recent order on our website has been completed (order date : [order_date]). Thank you for your loyalty. Have a good day.', 'wpshop'));
-
-	DEFINE('WPSHOP_OTHERS_PAYMENT_CONFIRMATION_MESSAGE_OBJECT', __('Your payment has been received', 'wpshop'));
-	DEFINE('WPSHOP_OTHERS_PAYMENT_CONFIRMATION_MESSAGE', __('Hello [customer_first_name] [customer_last_name], this email confirms that your payment regarding your order ([order_key]) has just been received (order date : [order_date]). Thank you for your loyalty. Have a good day.', 'wpshop'));
-
-	DEFINE('WPSHOP_SHIPPING_CONFIRMATION_MESSAGE_OBJECT', __('Your order has been shipped', 'wpshop'));
-	DEFINE('WPSHOP_SHIPPING_CONFIRMATION_MESSAGE', __('Hello [customer_first_name] [customer_last_name], this email confirms that your order ([order_key]) has just been shipped (order date : [order_date], tracking number : [order_trackingNumber]). Thank you for your loyalty. Have a good day.', 'wpshop'));
-
-	DEFINE('WPSHOP_ORDER_UPDATE_MESSAGE_OBJECT', __('Your order has been updated', 'wpshop'));
-	DEFINE('WPSHOP_ORDER_UPDATE_MESSAGE', __('Hello [customer_first_name] [customer_last_name], your order ([order_key]) has just been updated. Please login to your account to view details. Thank you for your loyalty. Have a good day.', 'wpshop'));
-
-	DEFINE('WPSHOP_ORDER_UPDATE_PRIVATE_MESSAGE_OBJECT', __('Your order has been updated', 'wpshop'));
-	DEFINE('WPSHOP_ORDER_UPDATE_PRIVATE_MESSAGE', __('Hello [customer_first_name] [customer_last_name], your order ([order_key]) has just been updated. A comment has been added:<br/><br/>[message].<br/><br/> Thank you for your loyalty. Have a good day.', 'wpshop'));
-
-	DEFINE('WPSHOP_NEW_ORDER_ADMIN_MESSAGE_OBJECT', __('New order on your shop', 'wpshop'));
-	DEFINE('WPSHOP_NEW_ORDER_ADMIN_MESSAGE', __('Hello, New order on your shop ! Order Key : [order_key], Order date : [order_date], Order payment method : [order_payment_method], [order_content] [order_addresses] [order_customer_comments]', 'wpshop'));
-
-	DEFINE('WPSHOP_NEW_QUOTATION_ADMIN_MESSAGE_OBJECT', __('New quotation on your shop', 'wpshop'));
-	DEFINE('WPSHOP_NEW_QUOTATION_ADMIN_MESSAGE', __('Hello, New quotation on your shop ! Quotation Key : [order_temporary_key], Quotation date : [order_date], [order_content] [order_addresses] [order_customer_comments]', 'wpshop'));
-
-	DEFINE('WPSHOP_QUOTATION_CONFIRMATION_MESSAGE_OBJECT', __('Your quotation has been recorded', 'wpshop'));
-	DEFINE('WPSHOP_QUOTATION_CONFIRMATION_MESSAGE', __('Hello [customer_first_name] [customer_last_name], this email confirms that your order has been recorded (Quotation date : [order_date]). [order_content]', 'wpshop'));
-
-	DEFINE('WPSHOP_QUOTATION_UPDATE_MESSAGE_OBJECT', __('Your quotation has been updated', 'wpshop'));
-	DEFINE('WPSHOP_QUOTATION_UPDATE_MESSAGE', __('Hello [customer_first_name] [customer_last_name], this email confirms that your quotation has been updated (Quotation date : [order_date]). [order_content]', 'wpshop'));
-
-	DEFINE('WPSHOP_DOWNLOADABLE_FILE_IS_AVAILABLE_OBJECT', __('Your downloadable product is available', 'wpshop'));
-	DEFINE('WPSHOP_DOWNLOADABLE_FILE_IS_AVAILABLE', __('Hello [customer_first_name] [customer_last_name], <br />this email confirms that your downloadable product is available : [download_product_link].<br /><br /> Thank you for your loyalty. Have a good day.', 'wpshop'));
-
-	DEFINE('WPSHOP_ORDER_IS_CANCELED_OBJECT', __('Your order has been canceled', 'wpshop') );
-	DEFINE('WPSHOP_ORDER_IS_CANCELED', __('Hello [customer_first_name] [customer_last_name], <br />this email confirms your order ( Order key : [order_key] - Date : [order_date] ) has been canceled.<br /><br /> Thank you for your loyalty. Have a good day.', 'wpshop'));
-
-	DEFINE('WPSHOP_FORGOT_PASSWORD_MESSAGE_OBJECT', __('Renewal of password', 'wpshop') );
-	DEFINE('WPSHOP_FORGOT_PASSWORD_MESSAGE', __('Hello [customer_first_name] [customer_last_name], <br />Somebody has asked a renewal of password for your account.<br/><br/>To renew your password, click on this link : [forgot_password_link].<br/>If you are not at the origin of this request, please ignore this message.', 'wpshop') );
-
-	DEFINE('WPSHOP_DIRECT_PAYMENT_LINK_MESSAGE_OBJECT', __('Pay and finalize your order', 'wpshop') );
-	DEFINE('WPSHOP_DIRECT_PAYMENT_LINK_MESSAGE', __('Hello [customer_first_name] [customer_last_name], <br />An order is available for you on our website.<br/>You can click on this link to pay and finalize this order : [direct_payment_link]<br/><br/>[order_content]<br /><br />Thank you for your loyalty. Have a good day.', 'wpshop') );
-
-
 /*	Define debug vars	*/
 	$extra_options = get_option('wpshop_extra_options', array());
 	DEFINE('WPSHOP_ADDONS_OPTION_NAME', 'wpshop_addons');
