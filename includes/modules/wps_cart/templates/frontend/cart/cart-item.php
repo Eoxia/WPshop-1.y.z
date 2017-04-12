@@ -48,7 +48,7 @@
 
 	<div class="wps-cart-item-quantity wps-productQtyForm">
 		<?php if ( ( empty($cart_type) || ( !empty($cart_type) ) ) && !$auto_added_product  ) : ?>
-			<?php if( ( $cart_type != 'admin-panel' || ( $cart_type == 'admin-panel' && ( empty( $cart_content['order_status'] ) || $cart_content['order_status'] == 'awaiting_payment' ) ) ) ) : ?>
+			<?php if(  $cart_type != 'summary'  && ( $cart_type != 'admin-panel' || ( $cart_type == 'admin-panel' && ( empty( $cart_content['order_status'] ) || $cart_content['order_status'] == 'awaiting_payment' ) ) ) ) : ?>
 				<a href="" class="wps-cart-reduce-product-qty"><i class="wps-icon-minus"></i></a>
 				<input type="text" name="french-hens" id="wps-cart-product-qty-<?php echo $product_key; ?>" data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_set_qty_for_product_into_cart' ); ?>" value="<?php echo $item['item_qty']; ?>" class="wps-circlerounded wps-cart-product-qty">
 				<a href="" class="wps-cart-add-product-qty"><i class="wps-icon-plus"></i></a>

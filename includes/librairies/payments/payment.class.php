@@ -588,31 +588,12 @@ class wpshop_payment {
 					update_post_meta($order_id, '_' . WPSHOP_NEWTYPE_IDENTIFIER_ORDER . '_completed_date', current_time('mysql', 0));
 
 					/** Check if the order content a downloadable product **/
-					if ( !empty($order_meta['order_items']) ) {
-						foreach( $order_meta['order_items'] as $key_value => $item ) {
-							$key_value = $item['item_id'];
-							/** Check if it's a product with signle variation, check the parent product **/
-							if ( !empty($item['item_id']) && get_post_type( $item['item_id'] ) == WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION ) {
-								$parent_item = wpshop_products::get_parent_variation( $item['item_id'] );
-								$key_value = $parent_item['parent_post']->ID;
-								$parent_post_metadata = $parent_item['parent_post_meta'];
-								if ( !empty($parent_post_metadata['is_downloadable_']) ) {
-									$query = $wpdb->prepare( 'SELECT value FROM '. WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS .' WHERE id = %d', $parent_post_metadata['is_downloadable_'] );
-									$downloadable_option_value = $wpdb->get_var( $query );
-									if ( !empty( $downloadable_option_value) ) {
-										$item['item_is_downloadable_'] = $downloadable_option_value;
-									}
-
-								}
-							}
-
-							if ( !empty($item) && !empty($item['item_is_downloadable_']) && ( strtolower( __( $item['item_is_downloadable_'], 'wpshop') ) == strtolower( __('Yes', 'wpshop') ) ) ) {
-								$download_codes = get_user_meta($order_meta['customer_id'], '_order_download_codes_'.$order_id, true);
-
-								if ( !empty($download_codes) && !empty($download_codes[$key_value]) && !empty($download_codes[$key_value]['download_code']) ) {
-									$link = '<a href="' . admin_url( 'admin-post.php?action=wps_download_file&amp;oid=' . $order_id . '&amp;download=' . $download_codes[$key_value]['download_code'] ) . '">' . __('Download','wpshop') . '</a>';
-									$wps_message->wpshop_prepared_email($email, 'WPSHOP_DOWNLOADABLE_FILE_IS_AVAILABLE', array('order_key' => $order_meta['order_key'], 'customer_first_name' => $first_name, 'customer_last_name' => $last_name, 'order_date' => $order_meta['order_date'], 'download_product_link' => $link), array() );
-								}
+					if ( ! empty( $order_meta['order_items'] ) ) {
+						foreach ( $order_meta['order_items'] as $key_value => $item ) {
+							$link = wps_download_file_ctr::get_product_download_link( $order_id, $item );
+							if ( false !== $link ) {
+								$link = '<a href="' . $link . '" target="_blank">' . __( 'Download the product', 'wpshop' ) . '</a>';
+								$wps_message->wpshop_prepared_email( $email, 'WPSHOP_DOWNLOADABLE_FILE_IS_AVAILABLE', array( 'order_key' => $order_meta['order_key'], 'customer_first_name' => $first_name, 'customer_last_name' => $last_name, 'order_date' => $order_meta['order_date'], 'download_product_link' => $link ), array() );
 							}
 						}
 					}

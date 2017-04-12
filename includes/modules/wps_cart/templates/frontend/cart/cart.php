@@ -32,7 +32,6 @@
 		foreach( $cart_items as $item_id => $item ) :
 			$product_key = $item_id;
 			/** Check if it's a product or a variation **/
-			$item_post_type = get_post_type( $item['item_id'] );
 			$product_attribute_order_detail = wpshop_attributes_set::getAttributeSetDetails( get_post_meta($item['item_id'], WPSHOP_PRODUCT_ATTRIBUTE_SET_ID_META_KEY, true)  ) ;
 			$output_order = array();
 			if ( count($product_attribute_order_detail) > 0  && is_array($product_attribute_order_detail) ) {
@@ -58,67 +57,29 @@
 				$variations_indicator .= '</ul>';
 
 			}
-			$parent_def = array();
+
 			$item_title = $item['item_name'];
-			$item_id = $item['item_id'];
-			if ( $item_post_type == WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION ) {
+			$item_post_type = get_post_type( $item['item_id'] );
+			if ( WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION === $item_post_type ) {
 				$parent_def = wpshop_products::get_parent_variation( $item['item_id'] );
-				if( !empty($parent_def) && !empty($parent_def['parent_post']) ) {
+				if ( ! empty( $parent_def ) && ! empty( $parent_def['parent_post'] ) ) {
 					$parent_post = $parent_def['parent_post'];
 					$item_id = $parent_post->ID;
-					$item_title =  $parent_post->post_title;
+					$item_title = $parent_post->post_title;
 				}
 			}
 
-			/** Downloadable link in Order recap **/
-			$download_link = '';
-			$item_id_for_download = null;
-			/** Check if the product or the head product is a download product	*/
-			if( !empty( $parent_def ) ) {
-				$parent_meta = $parent_def['parent_post_meta'];
-				if ( !empty($parent_meta['is_downloadable_']) ) {
-					$query = $wpdb->prepare( 'SELECT value FROM '. WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS .' WHERE id = %d', $parent_meta['is_downloadable_'] );
-					$downloadable_option_value = $wpdb->get_var( $query );
-					if ( !empty( $downloadable_option_value) ) {
-						$item['item_is_downloadable_'] = $downloadable_option_value;
-					}
-				}
+			$download_link = wps_download_file_ctr::get_product_download_link( $oid, $item );
+			if ( false === $download_link ) {
+				$download_link = '';
+			} else {
+				$download_link = '<a href="' . $download_link . '" target="_blank" class="wps-bton-fourth-mini-rounded">' . __( 'Download the product', 'wpshop' ) . '</a>';
 			}
-			if ( !empty($item) && !empty($item['item_is_downloadable_']) && ( strtolower( __( $item['item_is_downloadable_'], 'wpshop') ) == strtolower( __('Yes', 'wpshop') ) ) ) {
-				$item_id_for_download = $item_id;
-			}
-			if( isset( $item['item_meta']['variations'] ) ) {
-				foreach ( $item['item_meta']['variations'] as $variation_id => $variation ) {
-					if( isset( $variation['item_meta']['is_downloadable_'] ) ) {
-						$item_id_for_download = $item_id . '__' . $variation_id;
-					}
-				}
-			}
-
-			/** In case there is a item identifier defined for download */
-			if ( null !== $item_id_for_download ) {
-				$download_codes = get_user_meta( get_current_user_id(), '_order_download_codes_'.$oid, true);
-				/**	Check if the current product exist into download code list, if not check if there is a composition between parent product and children product	*/
-				if ( empty( $download_codes[$item_id_for_download] ) ) {
-					$item_id_component = explode( "__", $item_id_for_download );
-					if ( !empty( $item_id_component ) && ( $item_id_component[ 0 ] != $item_id_for_download ) ) {
-						$item_id_for_download = $item_id_component[ 0 ];
-					}
-					else if ( !empty( $download_codes[ $item['item_id'] ] ) ) {
-						$item_id_for_download = $item['item_id'];
-					}
-				}
-
-				if ( !empty($download_codes) && !empty($download_codes[$item_id_for_download]) && !empty($download_codes[$item_id_for_download]['download_code']) ) {
-					$download_link = '<a href="' .admin_url( 'admin-post.php?action=wps_download_file&amp;oid=' . $oid . '&amp;download=' . $download_codes[$item_id_for_download]['download_code'] ) . '" target="_blank" class="wps-bton-fourth-mini-rounded">' .__('Download the product','wpshop'). '</a>';
-				}
-			}
-
 
 			/**	Check if product is an auto added product : don't display link to product, quantity and remover 	*/
 			$auto_added_product = false;
 			$item_options = get_post_meta( $item_id, '_' . WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT . '_options', true );
-			if ( !empty($item_options['cart']) && !empty($item_options['cart']['auto_add']) && ($item_options['cart']['auto_add'] == 'yes')) :
+			if ( ! empty( $item_options['cart'] ) && ! empty( $item_options['cart']['auto_add'] ) && ( $item_options['cart']['auto_add'] == 'yes' ) ) :
 				$auto_added_product = true;
 			endif;
 
