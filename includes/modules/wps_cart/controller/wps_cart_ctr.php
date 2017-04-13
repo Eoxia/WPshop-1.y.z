@@ -488,7 +488,7 @@ class wps_cart {
 			}
 		}
 		$wpshop_cart_option = get_option( 'wpshop_cart_option' );
-		if( !empty( $wpshop_cart_option ) && !empty( $wpshop_cart_option[ 'total_nb_of_item_allowed' ] ) && (int) $count_items > (int) $wpshop_cart_option[ 'total_nb_of_item_allowed' ][0] ) {
+		if( !empty( $wpshop_cart_option ) && !empty( $wpshop_cart_option[ 'total_nb_of_item_allowed' ] ) && !empty( $wpshop_cart_option[ 'total_nb_of_item_allowed' ][0] ) && (int) $count_items > (int) $wpshop_cart_option[ 'total_nb_of_item_allowed' ][0] ) {
 			return __('No more products can be added to your cart.', 'wpshop');
 		}
 
