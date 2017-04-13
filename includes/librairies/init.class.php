@@ -561,5 +561,6 @@ class wpshop_init{
 				) );
 			}
 		}
+		return $option;
 	}
 }
