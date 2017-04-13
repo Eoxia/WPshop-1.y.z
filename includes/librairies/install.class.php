@@ -2385,6 +2385,11 @@ WHERE ATTR_DET.attribute_id IN (" . $attribute_ids . ")"
                 return true;
                 break;
 
+			case 68:
+				wps_message_ctr::create_default_message();
+				return true;
+				break;
+
             /*    Always add specific case before this bloc    */
             case 'dev':
 

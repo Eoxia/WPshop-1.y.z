@@ -793,6 +793,10 @@ $wpshop_update_way[$wpshop_db_version] = 'data';
 $wpshop_db_version = 67;
 $wpshop_update_way[ $wpshop_db_version ] = 'data';
 }
+{/*	Version 68  - 1.4.3.9	*/
+$wpshop_db_version = 68;
+$wpshop_update_way[ $wpshop_db_version ] = 'data';
+}
 {/*	Version dev	- Call for every plugin db version	*/
 	$wpshop_db_version = 'dev';
 	$wpshop_update_way[$wpshop_db_version] = 'multiple';
