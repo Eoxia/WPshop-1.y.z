@@ -25,6 +25,7 @@ class wps_download_file_ctr {
 		if ( ! empty( $parent_def ) ) {
 			$parent_meta = $parent_def['parent_post_meta'];
 			if ( ! empty( $parent_meta['is_downloadable_'] ) ) {
+				global $wpdb;
 				$downloadable_option_value = $wpdb->get_var( $wpdb->prepare( 'SELECT value FROM ' . WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS . ' WHERE id = %d', $parent_meta['is_downloadable_'] ) );
 				if ( ! empty( $downloadable_option_value ) ) {
 					$item['item_is_downloadable_'] = $downloadable_option_value;

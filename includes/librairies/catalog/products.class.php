@@ -2986,6 +2986,7 @@ class wpshop_products
                 //Product without variations
                 $product_data = wpshop_products::get_product_data($product_id);
                 $response['product_price_output'] = wpshop_prices::get_product_price($product_data, 'price_display', 'complete_sheet');
+				$response_status = true;
             }
         }
 
@@ -3047,7 +3048,7 @@ class wpshop_products
                 $single_variations = array();
                 foreach ($selected_variation as $attribute_code => $attribute_value) {
                     if (isset($attribute_value) && $attribute_code != 'free') {
-                        $query = $wpdb->prepare("SELECT ID FROM " . $wpdb->postmeta . " AS P_META INNER JOIN " . $wpdb->posts . " as P ON ((P.ID = P_META.post_id) AND (P.post_parent = %d)) WHERE P_META.meta_value = '" . serialize(array($attribute_code => $attribute_value)) . "'", $product_id);
+                        $query = $wpdb->prepare("SELECT ID FROM " . $wpdb->postmeta . " AS P_META INNER JOIN " . $wpdb->posts . " as P ON ((P.ID = P_META.post_id) AND (P.post_parent = %d)) WHERE P_META.meta_value = '" . serialize(array($attribute_code => $attribute_value)) . "' OR P_META.meta_value = '" . serialize(array($attribute_code => (int) $attribute_value)) . "'", $product_id);
                         $single_variation_id = $wpdb->get_var($query);
                         if (!empty($single_variation_id)) {
                             $single_variations[] = $single_variation_id;

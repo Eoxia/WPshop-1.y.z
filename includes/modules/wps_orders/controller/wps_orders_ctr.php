@@ -169,6 +169,9 @@ class wps_orders_ctr {
 		}
 
 		$item = array( 'item_id' => $product['product_id'], 'item_ref' => ! empty( $product['product_reference'] ) ? $product['product_reference'] : null, 'item_name' => ! empty( $product['product_name'] ) ? $product['product_name'] : 'wpshop_product_' . $product['product_id'], 'item_qty' => $product['product_qty'], 'item_pu_ht' => $product['price_ht'], 'item_pu_ttc' => $product['product_price'], 'item_ecotaxe_ht' => 0, 'item_ecotaxe_tva' => 19.6, 'item_ecotaxe_ttc' => 0, 'item_discount_type' => $item_discount_type, 'item_discount_value' => $item_discount_value, 'item_discount_amount' => $item_discount_amount, 'item_tva_rate' => $tva, 'item_tva_amount' => $product['tva'], 'item_total_ht' => $total_ht, 'item_tva_total_amount' => $tva_total_amount, 'item_total_ttc' => $total_ttc, 'item_meta' => ! empty( $product['item_meta'] ) ? $product['item_meta'] : array() );
+		if ( isset( $product['is_downloadable_'] ) ) {
+			$item['item_is_downloadable_'] = $product['is_downloadable_'];
+		}
 		$array_not_to_do = array( WPSHOP_PRODUCT_PRICE_HT, WPSHOP_PRODUCT_PRICE_TTC, WPSHOP_PRODUCT_PRICE_TAX_AMOUNT, 'product_qty', WPSHOP_PRODUCT_PRICE_TAX, 'product_id', 'product_reference', 'product_name', 'variations' );
 		if ( ! empty( $product['item_meta'] ) ) {
 			foreach ( $product['item_meta'] as $key => $value ) {
