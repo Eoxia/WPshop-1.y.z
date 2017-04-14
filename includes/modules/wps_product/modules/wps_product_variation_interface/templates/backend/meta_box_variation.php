@@ -98,7 +98,7 @@
 			<input type="text" pattern="[0-9]+(\.[0-9][0-9]?)?" onchange="wps_variations_price_option_raw.control.price(this)" align="right" value="%price_value%">
 		</li>
 		<li class="wps_variations_price_final_col">
-			<input type="hidden" name="wps_pdt_variations[%ID%][attribute][decimal][product_price]" value="%price_option%">
+			<input type="hidden" name="wps_pdt_variations[%ID%][attribute][decimal][<?php echo (!empty($price_piloting) && $price_piloting != 'HT') ? 'product_price' : 'price_ht' ; ?>]" value="%price_option%">
 			<b>%price_option%%currency%</b> %piloting%
 		</li>
 		<li class="wps_variations_price_vat_col">

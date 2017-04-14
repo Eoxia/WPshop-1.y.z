@@ -145,7 +145,7 @@ class wps_product_variation_interface {
 			'variation' => $this->variations,
 			'nonce_delete' => wp_create_nonce( 'wpshop_variation_management' ),
 			'variation_value' => call_user_func( array( $wpdb, 'get_results' ), $query ),
-			'product_price' => $product['product_price'],
+			'product_price' => ( ! empty( $price_piloting ) && 'HT' !== $price_piloting ) ? $product['product_price'] : $product['price_ht'],
 			'tx_tva' => $product['tx_tva'],
 			'attribute_in_variation' => $attribute_list,
 			'variations_saved' => $variations_saved,
