@@ -4,7 +4,7 @@ Tags: boutique, catalog, catalogue, commerce, e-commerce, ecommerce, m-commerce,
 Donate link: http://www.wpshop.fr/documentations/presentation-wpshop/
 Requires at least: 3.4.0
 Tested up to: 4.7.2
-Stable tag: 1.4.3.9
+Stable tag: 1.4.4.0
 License: GPLv2 or later
 
 Simple and powerfull eCommerce plugin, with French Payment and Shipping systems : Paybox, Paypal, Atos, Cybermut, SystemPay, Paysite-cash, Colissimo
@@ -96,6 +96,14 @@ Il faut vérifier que le réglage des permaliens pour votre site est bien régl�
 
 
 == Changelog ==
+
+= Version 1.4.4.0 =
+
+Corrections / Fix
+
+* 8781 - Correctif limite panier - Limit cart fix
+* 8780 - Correctif blocage mise à jours - Updates fix
+* 8779 - Correctif des options produits téléchargeable - Products variations downloadable fix
 
 = Version 1.4.3.9 =
 
