@@ -7,7 +7,6 @@ var wps_variations_price_option_raw = {
 	model: (function() {
 		var result = [];
 		jQuery.each( wps_product_variation_interface.variations_saved, function( saved_index, saved_element ) {
-			console.log( saved_element.variation_dif );
 			var saved = {
 				ID: saved_index,
 				name: {
