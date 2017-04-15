@@ -3,7 +3,7 @@
  * Plugin Name: WP-Shop
  * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/
  * Description: With this plugin you will be able to manage the products you want to sell and user would be able to buy this products
- * Version: 1.4.4.0
+ * Version: 1.4.4.1
  * Author: Eoxia
  * Author URI: http://eoxia.com/
  */
@@ -11,7 +11,7 @@
 /**
  * Plugin main file.
  *
- * This file is the main file called by wordpress for our plugin use. It define the basic vars and include the different file needed to use the plugin
+ * This file is the main file called by WordPress for our plugin use. It define the basic vars and include the different file needed to use the plugin
  *
  * @author Eoxia <dev@eoxia.com>
  * @version 1.3
@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**    Allows to refresh css and js file in final user browser    */
-DEFINE( 'WPSHOP_VERSION', '1.4.4.0' );
+DEFINE( 'WPSHOP_VERSION', '1.4.4.1' );
 
 /**    Allows to avoid problem with theme not supporting thumbnail for post    */
 add_theme_support( 'post-thumbnails' );
@@ -82,7 +82,7 @@ add_action( 'admin_menu', array( 'wpshop_init', 'admin_menu' ) );
 add_action( 'menu_order', array( 'wpshop_init', 'admin_menu_order' ) );
 add_action( 'custom_menu_order', array( 'wpshop_init', 'admin_custom_menu_order' ) );
 
-/*    Call function for new wordpress element creating [term (product_category) / post (product)]    */
+/*    Call function for new WordPress element creating [term (product_category) / post (product)]    */
 add_action( 'init', array( 'wpshop_init', 'add_new_wp_type' ) );
 
 /*    Call function allowing to change element front output    */
@@ -92,7 +92,7 @@ add_action( 'the_content', array( 'wpshop_display', 'products_page' ), 1 );
 /**    On plugin activation create the default parameters to use the ecommerce    */
 register_activation_hook( __FILE__, array( 'wpshop_install', 'install_on_activation' ) );
 
-/**    On plugin deactivation call the function to clean the wordpress installation    */
+/**    On plugin deactivation call the function to clean the WordPress installation    */
 register_deactivation_hook( __FILE__, array( 'wpshop_install', 'uninstall_wpshop' ) );
 
 /**    Get current plugin version    */
@@ -106,8 +106,9 @@ if ( (defined( 'WPSINSTALLER_STEPS_COUNT' ) && (WPSINSTALLER_STEPS_COUNT <= $cur
 	}
 }
 // Start session
-if(session_id() == '')
-     session_start();
+if ( session_id() == '' ) {
+	 session_start();
+}
 
 // WP-Shop class instanciation
 function classes_init() {
