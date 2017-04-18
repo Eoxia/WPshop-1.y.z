@@ -145,12 +145,12 @@ ob_start();
 		position : relative;
 	}
 	.iban_infos {
-		flaot : left;
+		float : left;
 		width : 100%;
 		text-align : left;
 		height : auto;
 	}
-		</style><?php
+</style><?php
 $tpl_element['common']['default']['invoice_page_content_css'] = ob_get_contents();
 ob_end_clean();
 
