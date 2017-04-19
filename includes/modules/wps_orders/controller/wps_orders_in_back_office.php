@@ -18,7 +18,7 @@ class wps_orders_in_back_office {
 		add_action('wp_ajax_wps_reverify_payment_invoice_ref', array( $this, 'wps_reverify_payment_invoice_ref' ) );
 
 		// WP General actions
-		add_action( 'admin_enqueue_scripts', array( $this, 'wps_orders_scripts') );
+		add_action( 'admin_enqueue_scripts', array( $this, 'wps_orders_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'wps_orders_scripts_texts' ), 20 );
 		add_action('save_post', array( $this, 'save_order_custom_informations'));
 
@@ -34,7 +34,8 @@ class wps_orders_in_back_office {
 		if( ! in_array( $current_screen->post_type, array( WPSHOP_NEWTYPE_IDENTIFIER_ORDER ), true ) )
 			return;
 
-		wp_enqueue_script( 'wps_orders_backend', WPS_ORDERS_URL.WPS_ORDERS_DIR.'/assets/backend/js/wps_orders.js' );
+		wp_enqueue_style( 'wps_orders_backend', WPS_ORDERS_URL . WPS_ORDERS_DIR . '/assets/backend/css/wps_orders.backend.css' );
+		wp_enqueue_script( 'wps_orders_backend', WPS_ORDERS_URL . WPS_ORDERS_DIR . '/assets/backend/js/wps_orders.js' );
 	}
 
 	function wps_orders_scripts_texts() {
@@ -136,9 +137,9 @@ class wps_orders_in_back_office {
 	/**
 	 * METABOX CONTENT - Display an lsiting of products to make quotation in backend
 	 */
-	function wps_products_listing_for_quotation($post) {
+	function wps_products_listing_for_quotation( $post ) {
 		$letters = array( 'ALL', 'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
-		$current_letter = sanitize_title( $letters[1] );
+		$current_letter = sanitize_title( $letters[0] );
 		$wps_product_mdl = new wps_product_mdl();
 		$products = $wps_product_mdl->get_products_by_letter( $current_letter );
 		require( wpshop_tools::get_template_part( WPS_ORDERS_DIR, $this->template_dir, "backend", "product-listing/wps_orders_product_listing") );

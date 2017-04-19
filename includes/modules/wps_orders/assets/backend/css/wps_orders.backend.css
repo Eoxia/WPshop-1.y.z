@@ -1,0 +1,10 @@
+#wps_orders_product_listing_table ul.page-numbers:after {
+	clear: both;
+	content: "";
+	display: table;
+}
+#wps_orders_product_listing_table ul.page-numbers li{
+	display: inline-block;
+	float: left;
+	margin: 0 10px 0 0;
+}

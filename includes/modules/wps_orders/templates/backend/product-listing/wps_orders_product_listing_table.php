@@ -21,7 +21,9 @@
 			'base' => '%_%',
 			'format' => '?paged_order=%#%',
 			'current' => $paged,
-			'total' => ceil( $total_products / $elements_per_page )
+			'total' => ceil( $total_products / $elements_per_page ),
+			'type'	=> 'list',
+			'prev_next' => true,
 		) );
 		foreach ( $products as $product ) :
 			if( ( $elements_per_page * ( $paged - 1 ) ) > $i ) {
