@@ -390,14 +390,14 @@ a[class*="wps-"][class*="-block"] {
   content: none;
 }
 
-.wps-taxonomy-wrapper {
+/*.wps-taxonomy-wrapper {
   display: table-cell;
   table-layout: fixed;
 }
 .wps-taxonomy-wrapper > * {
   display: table-cell;
   vertical-align: top;
-}
+}*/
 .wps-taxonomy-wrapper .wps-filters {
   width: 18em;
   padding-right: 2em;
