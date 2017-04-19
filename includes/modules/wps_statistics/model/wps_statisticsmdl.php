@@ -33,7 +33,7 @@
 				'orderby'					=> 'post_date',
 				'order'						=> 'DESC',
 				'post_type'				=> WPSHOP_NEWTYPE_IDENTIFIER_ORDER,
-				'post_status'			=> 'all',
+				'post_status'			=> 'any',
 				'meta_query'			=> array(
 					'relation'	=> 'OR',
 					array(
