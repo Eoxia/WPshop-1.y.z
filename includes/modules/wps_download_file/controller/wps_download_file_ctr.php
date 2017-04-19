@@ -8,6 +8,8 @@ class wps_download_file_ctr {
 
 	// Function to find download link by
 	public static function get_product_download_link( $oid, $item ) {
+		global $wpdb;
+
 		$parent_def = array();
 		$item_id = $item['item_id'];
 		$item_post_type = get_post_type( $item['item_id'] );
@@ -16,29 +18,30 @@ class wps_download_file_ctr {
 			if ( ! empty( $parent_def ) && ! empty( $parent_def['parent_post'] ) ) {
 				$parent_post = $parent_def['parent_post'];
 				$item_id = $parent_post->ID;
+				$item_title = $parent_post->post_title;
 			}
 		}
-		/** Downloadable link in Order recap */
-		$download_link = false;
+
+		$download_link = '';
 		$item_id_for_download = null;
 		/** Check if the product or the head product is a download product	*/
 		if ( ! empty( $parent_def ) ) {
 			$parent_meta = $parent_def['parent_post_meta'];
 			if ( ! empty( $parent_meta['is_downloadable_'] ) ) {
-				global $wpdb;
-				$downloadable_option_value = $wpdb->get_var( $wpdb->prepare( 'SELECT value FROM ' . WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS . ' WHERE id = %d', $parent_meta['is_downloadable_'] ) );
+				$query = $wpdb->prepare( 'SELECT value FROM ' . WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS . ' WHERE id = %d', $parent_meta['is_downloadable_'] );
+				$downloadable_option_value = $wpdb->get_var( $query );
 				if ( ! empty( $downloadable_option_value ) ) {
 					$item['item_is_downloadable_'] = $downloadable_option_value;
 				}
 			}
 		}
-		if ( ! empty( $item ) && ! empty( $item['item_is_downloadable_'] ) && ( strtolower( __( $item['item_is_downloadable_'], 'wpshop' ) ) === strtolower( __( 'Yes', 'wpshop' ) ) ) ) {
+		if ( ! empty( $item ) && ! empty( $item['item_is_downloadable_'] ) && ( strtolower( __( $item['item_is_downloadable_'], 'wpshop') ) == strtolower( __('Yes', 'wpshop') ) ) ) {
 			$item_id_for_download = $item_id;
-			if ( isset( $item['item_meta']['variations'] ) ) {
-				foreach ( $item['item_meta']['variations'] as $variation_id => $variation ) {
-					if ( isset( $variation['item_meta']['is_downloadable_'] ) ) {
-						$item_id_for_download = $item_id . '__' . $variation_id;
-					}
+		}
+		if ( isset( $item['item_meta']['variations'] ) ) {
+			foreach ( $item['item_meta']['variations'] as $variation_id => $variation ) {
+				if ( isset( $variation['item_meta']['is_downloadable_'] ) ) {
+					$item_id_for_download = $item_id . '__' . $variation_id;
 				}
 			}
 		}
@@ -48,8 +51,8 @@ class wps_download_file_ctr {
 			$download_codes = get_user_meta( get_current_user_id(), '_order_download_codes_' . $oid, true );
 			/**	Check if the current product exist into download code list, if not check if there is a composition between parent product and children product	*/
 			if ( empty( $download_codes[ $item_id_for_download ] ) ) {
-				$item_id_component = explode( '__', $item_id_for_download );
-				if ( ! empty( $item_id_component ) && ( $item_id_component[0] !== $item_id_for_download ) ) {
+				$item_id_component = explode( "__", $item_id_for_download );
+				if ( ! empty( $item_id_component ) && ( $item_id_component[0] != $item_id_for_download ) ) {
 					$item_id_for_download = $item_id_component[0];
 				} elseif ( ! empty( $download_codes[ $item['item_id'] ] ) ) {
 					$item_id_for_download = $item['item_id'];
@@ -60,6 +63,7 @@ class wps_download_file_ctr {
 				$download_link = admin_url( 'admin-post.php?action=wps_download_file&amp;oid=' . $oid . '&amp;download=' . $download_codes[ $item_id_for_download ]['download_code'] );
 			}
 		}
+
 		return $download_link;
 	}
 
