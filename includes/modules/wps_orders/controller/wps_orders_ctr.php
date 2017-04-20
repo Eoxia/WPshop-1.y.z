@@ -269,7 +269,10 @@ class wps_orders_ctr {
 				$html_content = wpshop_modules_billing::generate_html_invoice( $order_id, $invoice_ref );
 			}
 
-			if ( $mode == 'pdf' ) {
+			/**
+			 * Génération de la facture au format PDF
+			 */
+			if ( 'pdf' === $mode ) {
 				require_once( WPSHOP_LIBRAIRIES_DIR . 'HTML2PDF/html2pdf.class.php' );
 				try {
 					// $html_content = wpshop_display::display_template_element('invoice_print_page_content_css', array(), array(), 'common') . '<page>' . $html_content . '</page>';
