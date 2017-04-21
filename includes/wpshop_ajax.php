@@ -486,7 +486,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		$order_id = ( isset( $_POST[ 'order_id' ] ) && !empty( $_POST[ 'order_id' ] ) ) ? (int)$_POST[ 'order_id' ] : null;
 
 		if ( !empty($order_id) ) {
-			$result = (array(true, '<h1>'.__('Tracking number','wpshop').'</h1><p>'.__('Enter a tracking number, or leave blank:','wpshop').'</p><input type="hidden" value="'.$order_id.'" name="oid" /><input type="text" name="trackingNumber" /><br /><br /><p>'.__('Enter a tracking link, or leave blank: (http included)','wpshop').'</p><input type="text" name="trackingLink" /><br /><br /><input type="submit" class="button-primary sendTrackingNumber" value="'.__('Send','wpshop').'" /> <input type="button" class="button-secondary closeAlert" value="'.__('Cancel','wpshop').'" />'));
+			$result = (array(true, '<h1>'.__('Tracking number','wpshop').'</h1><p>'.__('Enter a tracking number, or leave blank:','wpshop').'</p><input type="hidden" value="'.$order_id.'" name="oid" /><input type="text" name="trackingNumber" /><br /><br /><p>'.__('Enter a tracking link, or leave blank: (http included)','wpshop').'</p><input type="text" name="trackingLink" /><br /><br /><input type="submit" data-nonce="' . esc_attr( wp_create_nonce( 'wpshop_change_order_state' ) ) . '" class="button-primary sendTrackingNumber" value="'.__('Send','wpshop').'" /> <input type="button" class="button-secondary closeAlert" value="'.__('Cancel','wpshop').'" />'));
 
 		}
 		else {

@@ -587,7 +587,7 @@ wpshop( document ).ready(function() {
 		// Start ajax request : update the order state
 		var data = {
 				action: "change_order_state",
-				wpshop_ajax_nonce: jQuery("#input_wpshop_change_order_state").val(),
+				wpshop_ajax_nonce: jQuery( this ).attr( 'data-nonce' ),
 				order_id: oid,
 				order_state: 'shipped',
 				order_shipped_number : trackingNumber,
