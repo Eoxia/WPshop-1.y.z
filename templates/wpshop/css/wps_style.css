@@ -608,7 +608,7 @@ a[class*="wps-"][class*="-block"] {
 [class*="wps"][class*="gridwrapper"]:before,
 [class*="wps"][class*="gridwrapper"]:after {
   content: "";
-  display: table;
+  display: block;
 }
 [class*="wps"][class*="gridwrapper"]:after {
   clear: both;
