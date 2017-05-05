@@ -47,7 +47,7 @@ class wps_highlighting_ctr {
 				'labels'             => $labels,
 				'public'             => true,
 				'publicly_queryable' => true,
-				'show_ui'            => false,
+				'show_ui'            => true,
 				'show_in_menu'       => false,
 				'menu_icon'			 => 'dashicons-star-filled',
 				'query_var'          => true,
