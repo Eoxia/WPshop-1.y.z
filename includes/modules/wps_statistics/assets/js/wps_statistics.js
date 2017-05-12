@@ -3,7 +3,7 @@ jQuery( document ).ready(function() {
 		dateFormat: 'yy-mm-dd'
 	} );
 
-	jQuery( document ).on( 'click', '.wps-statistics-quick-links', function( event ) {
+	jQuery( '.wps-statistics-quick-links' ).click( function( event ) {
 		event.preventDefault();
 
 		jQuery( 'input[name=wps_statistics_start_date]' ).val( jQuery( this ).attr( 'data-from' ) );

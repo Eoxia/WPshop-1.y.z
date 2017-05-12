@@ -123,7 +123,7 @@ class wps_statistics_ctr {
 	 *
 	 * @return [type]             [description]
 	 */
-	function get_average_time_between_orders( $order_list  ) {
+	function get_average_time_between_orders( $order_list ) {
 		$time_between_orders = 0;
 		$last_date = null;
 		foreach ( $order_list as $order ) {
@@ -131,6 +131,8 @@ class wps_statistics_ctr {
 				$last_order = new DateTime( $last_date );
 				$current_order = new DateTime( $order['order_postmeta']['order_date'] );
 				$time_between_orders += $last_order->getTimestamp() - $current_order->getTimestamp();
+			} else {
+
 			}
 
 			$last_date = $order['order_postmeta']['order_date'];
@@ -144,23 +146,21 @@ class wps_statistics_ctr {
 	 *
 	 * @return boolean The boolean state allowing to know if the shop is out of bounds for time since last order
 	 */
-	function check_current_time_since_last_order() {
+	function check_current_time_since_last_order( $list_orders ) {
 		$average_check = array(
 			'status'		=> false,
 			'last_date'	=> null,
 			'average'		=> null,
 			'duration'	=> null,
 		);
-		$current_date = new DateTime( 'now' );
+		$current_date = new DateTime( current_time( 'Y-m-d H:i:s', 0 ) );
 
-		$list_orders = $this->wps_stats_mdl->wps_orders_all();
 		if ( ! empty( $list_orders ) ) {
-
 			$last_order = array_slice( $list_orders, 0, 1 );
 			foreach ( $last_order as $order ) {
-				$average_check[ 'last_date' ] = $order['order_postmeta']['order_date'];
+				$average_check['last_date'] = $order['order_postmeta']['order_date'];
 			}
-			$last_order_dateTime = new DateTime( $average_check[ 'last_date' ] );
+			$last_order_dateTime = new DateTime( $average_check['last_date'] );
 
 			$duration_since_last_order = $current_date->getTimestamp() - $last_order_dateTime->getTimestamp();
 			$average_check['duration'] = $duration_since_last_order;
@@ -175,8 +175,12 @@ class wps_statistics_ctr {
 	/**
 	 * Main Statistics output
 	 */
-	function wps_display_main_statistics() {
-		global $wpdb, $current_month_offset;
+	function wps_display_main_statistics( $shop_orders = null ) {
+		global $current_month_offset;
+
+		if ( null === $shop_orders ) {
+			$shop_orders = $this->wps_stats_mdl->wps_orders_all();
+		}
 
 		$current_month_offset = (int) current_time( 'm' );
 		$current_month_offset = isset( $_GET['month'] ) ? (int) $_GET['month'] : $current_month_offset;
@@ -213,61 +217,55 @@ class wps_statistics_ctr {
 	/**
 	 * Display custom Statistics area. Allows to choose date for stats displaying
 	 *
-	 * @param  string $start      Optionnal. The start date to get stats for.
-	 * @param  string $end        Optionnal. The end date to get stats for.
+	 * @param array  $shop_orders The list of orders to use for stats.
+	 * @param string $start      Optionnal. The start date to get stats for.
+	 * @param string $end        Optionnal. The end date to get stats for.
 	 */
-	function wps_display_custom_statistics( $start = null, $end = null ) {
+	function wps_display_custom_statistics( $shop_orders, $start = null, $end = null ) {
 		$current_month_start = date( 'Y-m-d', strtotime( 'first day of this month', time() ) );
 		$current_month_end = date( 'Y-m-d', strtotime( 'last day of this month', time() ) );
 
 		$last_month_start = date( 'Y-m-d', strtotime( 'first day of last month', time() ) );
 		$last_month_end = date( 'Y-m-d', strtotime( 'last day of last month', time() ) );
 
-		$date_start = null !== $start ? $start : date( 'Y-m-d', strtotime( 'first day of this month', time() ) );
-		$date_end = null !== $end ? $end : date( 'Y-m-d', strtotime( 'last day of this month', time() ) );
+		$date_start = null !== $start ? $start : $current_month_start;
+		$date_end = null !== $end ? $end : $current_month_end;
 
 		$stats_translations = array(
-			'numberOfSales' => __('Number of sales','wpshop'),
-			'sales' => __('sales','wpshop'),
-			'salesAmount' => __('Sales amount','wpshop'),
-			'wpshopCurrency' => wpshop_tools::wpshop_get_currency(),
+			'numberOfSales'		=> __( 'Number of sales', 'wpshop' ),
+			'sales'						=> __( 'sales', 'wpshop' ),
+			'salesAmount'			=> __( 'Sales amount', 'wpshop' ),
+			'wpshopCurrency'	=> wpshop_tools::wpshop_get_currency(),
 		);
 
-		$order_list = $this->wps_stats_mdl->wps_orders_all( array(
-			'date_query' => array(
-				array(
-					'after'			=> $date_start,
-					'before'		=> $date_end,
-					'inclusive'	=> true,
-				)
-			),
-		) );
-
-		$orders_total_amount = $orders_total_shipping_cost = 0;
+		$orders_total_amount = $orders_total_shipping_cost = $order_count = 0;
 		$orders_number_stats = $orders_amount_stats = array();
-		if ( ! empty( $order_list ) ) {
-			foreach ( $order_list as $order ) {
+		if ( ! empty( $shop_orders ) ) {
+			foreach ( $shop_orders as $order ) {
 				$order_data = $order['order_postmeta'];
-				$orders_total_amount += $order_data['order_grand_total'];
+				if ( ( $date_start <= $order_data['order_date'] ) && ( $date_end >= $order_data['order_date'] ) ) {
+					$orders_total_amount += $order_data['order_grand_total'];
+					$order_count++;
 
-				$time = strtotime( date( 'Ymd', strtotime( $order_data['order_date'] ) ) ) . '000';
-				if ( ! isset( $orders_number_stats[ $time ] ) ) {
-					$orders_number_stats[ $time ] = 0;
+					$time = strtotime( date( 'Ymd', strtotime( $order_data['order_date'] ) ) ) . '000';
+					if ( ! isset( $orders_number_stats[ $time ] ) ) {
+						$orders_number_stats[ $time ] = 0;
+					}
+					$orders_number_stats[ $time ]++;
+
+					if ( ! isset( $orders_amount_stats[ $time ] ) ) {
+						$orders_amount_stats[ $time ] = 0;
+					}
+					$orders_amount_stats[ $time ] += $order_data['order_grand_total'];
+
+					$orders_total_shipping_cost += $order_data['order_shipping_cost'];
 				}
-				$orders_number_stats[ $time ]++;
-
-				if ( ! isset( $orders_amount_stats[ $time ] ) ) {
-					$orders_amount_stats[ $time ] = 0;
-				}
-				$orders_amount_stats[ $time ] += $order_data['order_grand_total'];
-
-				$orders_total_shipping_cost += $order_data['order_shipping_cost'];
 			}
 		}
 
 		$orders_number_for_stats = null;
 		if ( ! empty( $orders_number_stats ) ) {
-			$orders_numbers= array();
+			$orders_numbers = array();
 			foreach ( $orders_number_stats as $time => $number ) {
 				$orders_numbers[] = "[$time, $number]";
 			}
@@ -289,12 +287,12 @@ class wps_statistics_ctr {
 					'after'			=> $date_start,
 					'before'		=> $date_end,
 					'inclusive'	=> true,
-				)
+				),
 			),
 			'count_total' => true,
 		) );
 
-		require( wpshop_tools::get_template_part( WPS_STATISTICS_DIR, WPS_STATISTICS_TEMPLATES_MAIN_DIR, 'backend', 'wps_statistics_custom') );
+		require( wpshop_tools::get_template_part( WPS_STATISTICS_DIR, WPS_STATISTICS_TEMPLATES_MAIN_DIR, 'backend', 'wps_statistics_custom' ) );
 	}
 
 	/**
@@ -306,8 +304,18 @@ class wps_statistics_ctr {
 		$start_date = ! empty( $_POST ) && ! empty( $_POST['wps_statistics_start_date'] ) ? sanitize_text_field( $_POST['wps_statistics_start_date'] ) : date( 'Y-m-d', strtotime( 'first day of this month', time() ) );
 		$end_date = ! empty( $_POST ) && ! empty( $_POST['wps_statistics_end_date'] ) ? sanitize_text_field( $_POST['wps_statistics_end_date'] ) : date( 'Y-m-d', strtotime( 'last day of this month', time() ) );
 
+		$order_list = $this->wps_stats_mdl->wps_orders_all( array(
+			'date_query' => array(
+				array(
+					'after'			=> $date_start,
+					'before'		=> $date_end,
+					'inclusive'	=> true,
+				),
+			),
+		) );
+
 		ob_start();
-		$this->wps_display_custom_statistics( $start_date, $end_date );
+		$this->wps_display_custom_statistics( $order_list, $start_date, $end_date );
 		$output = ob_get_clean();
 
 		wp_die( $output );

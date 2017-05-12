@@ -9,7 +9,7 @@
 				<div>
 					<div>
 						<span class="wps-h5"><?php _e( 'Sales statistics', 'wpshop'); ?></span>
-						<?php $this->wps_display_main_statistics(); ?>
+						<?php $this->wps_display_main_statistics( $shop_orders ); ?>
 					</div>
 				</div>
 				<div>
@@ -22,7 +22,7 @@
 			<div>
 				<div>
 					<span class="wps-h5"><?php _e( 'Custom statistics', 'wpshop'); ?></span>
-					<div id="wps_statistics_custom_container" class="wps-bloc-loader" ><?php $this->wps_display_custom_statistics(); ?></div>
+					<div id="wps_statistics_custom_container" class="wps-bloc-loader" ><?php $this->wps_display_custom_statistics( $shop_orders ); ?></div>
 				</div>
 			</div>
 		</div>

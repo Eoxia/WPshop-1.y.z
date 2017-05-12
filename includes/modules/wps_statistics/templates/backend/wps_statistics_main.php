@@ -20,22 +20,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <?php
 foreach ( $dates as $label => $date_def ) :
-	if ( is_array( $date_def ) ) {
+
+	$args = array();
+	if ( is_array( $date_def ) ) :
 		$args = array(
-			'date_query'			=> $date_def,
+			'date_query'	=> $date_def,
 		);
-	} else {
-		$args = array();
-	}
-	$orders = $this->wps_stats_mdl->wps_orders_all( $args );
+	endif;
 
-	if ( null !== $orders ) :
-		$orders_total_amount = 0;
-		foreach ( $orders as $order ) {
+	$orders_total_amount = 0;
+	$order_count = 0;
+	if ( null !== $shop_orders ) :
+		foreach ( $shop_orders as $order ) :
 			$order_data = $order['order_postmeta'];
-
-			$orders_total_amount += $order_data['order_grand_total'];
-		}
+			if ( empty( $args ) ) :
+				$orders_total_amount += $order_data['order_grand_total'];
+				$order_count = count( $shop_orders );
+			elseif ( ( $date_def['after'] <= $order_data['order_date'] ) && ( $date_def['before'] >= $order_data['order_date'] ) ) :
+				$orders_total_amount += $order_data['order_grand_total'];
+				$order_count++;
+			endif;
+		endforeach;
 	endif;
 
 	$user_subscription_number = new WP_User_Query( array(
@@ -43,10 +48,11 @@ foreach ( $dates as $label => $date_def ) :
 		'count_total' => true,
 	) );
 ?>
+
 <div class="wps-table-row">
 	<div class="wps-table-cell textleft"><?php echo esc_html( $label ); ?></div>
-	<?php if ( null !== $orders ) : ?>
-	<div class="wps-table-cell"><?php echo esc_html( count( $orders ) ); ?></div>
+	<?php if ( null !== $shop_orders ) : ?>
+	<div class="wps-table-cell"><?php echo esc_html( $order_count ); ?></div>
 	<div class="wps-table-cell"><?php echo esc_html( number_format( $orders_total_amount, 2, '.', '' ) . ' ' . wpshop_tools::wpshop_get_currency( false ) ); ?></div>
 	<?php else : ?>
 	<div class="wps-table-cell"><?php esc_html_e( 'No orders have been placed for the moment', 'wpshop' ); ?></div>

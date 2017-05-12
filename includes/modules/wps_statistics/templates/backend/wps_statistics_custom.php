@@ -36,12 +36,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="wps-table-cell"><?php esc_html_e( 'Customer subscription', 'wpshop' ); ?></div>
 	</div>
 	<div class="wps-table-row">
-		<?php if ( null !== $order_list ) : ?>
-		<div class="wps-table-cell"><?php echo esc_html( count( $order_list ) ); ?></div>
+		<?php if ( 0 !== $order_count ) : ?>
+		<div class="wps-table-cell"><?php echo esc_html( $order_count ); ?></div>
 		<div class="wps-table-cell"><?php echo esc_html( number_format( $orders_total_amount, 2, '.', '' ) . ' ' . wpshop_tools::wpshop_get_currency( false ) ); ?></div>
 		<div class="wps-table-cell"><?php echo esc_html( number_format( $orders_total_shipping_cost, 2, '.', '' ) . ' ' . wpshop_tools::wpshop_get_currency( false ) ); ?></div>
 		<?php else : ?>
 		<div class="wps-table-cell"><?php esc_html_e( 'No orders have been placed for the moment', 'wpshop' ); ?></div>
+		<div class="wps-table-cell">&nbsp;</div>
 		<div class="wps-table-cell">&nbsp;</div>
 		<?php endif; ?>
 		<div class="wps-table-cell"><?php echo esc_html( $user_subscription_number->get_total() ); ?></div>

@@ -63,7 +63,7 @@ $human_readable_time = wpshop_tools::minutes_to_time( $average_in_minutes, $form
 		<div class="wps-table-cell textleft" >
 			<?php	echo esc_html( $human_readable_time ); ?>
 			<?php
-				$order_duration_state = $this->check_current_time_since_last_order();
+				$order_duration_state = $this->check_current_time_since_last_order( $shop_orders );
 				$duration = ( $order_duration_state['duration'] / 60 );
 				$format = '%hh %imin';
 				if ( 1440 <= $duration ) {
@@ -78,7 +78,7 @@ $human_readable_time = wpshop_tools::minutes_to_time( $average_in_minutes, $form
 					$icon = 'dashicons-yes';
 				endif;
 			?>
-			<span style="color: <?php echo $text_color; ?>;" ><i class="dashicons <?php echo $icon; ?>"></i><?php echo esc_html( sprintf( __( 'Last order date %1$s - Time since: %2$s', 'wpshop' ), mysql2date( get_option( 'date_format' ), $order_duration_state['last_date'], true ), $time_since_last_order ) ); ?></span>
+			<br/><span style="color: <?php echo $text_color; ?>;" ><i class="dashicons <?php echo $icon; ?>"></i><?php echo esc_html( sprintf( __( 'Last order date %1$s - Time since: %2$s', 'wpshop' ), mysql2date( get_option( 'date_format' ), $order_duration_state['last_date'], true ), $time_since_last_order ) ); ?></span>
 	</div>
 	</div>
 	<div class="wps-table-row">
