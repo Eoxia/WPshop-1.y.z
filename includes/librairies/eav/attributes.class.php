@@ -2699,7 +2699,10 @@ GROUP BY ATT.id, chosen_val", $element_id, $attribute_code);
 	 */
 	public static function get_attribute_type_select_option_info($option_id, $field = 'label', $attribute_data_type = 'custom', $only_value = false) {
 		global $wpdb;
-
+		if( ! is_numeric( $option_id ) ) {
+			return '';
+		}
+		$option_id = (int) $option_id;
 		switch ( $attribute_data_type ) {
 			case 'internal':
 				$entity_infos = get_post($option_id);
@@ -2726,7 +2729,7 @@ GROUP BY ATT.id, chosen_val", $element_id, $attribute_code);
 				break;
 
 			default:
-				if( ! array_key_exists( $option_id, self::$select_option_info_cache ) ) {
+				if ( ! array_key_exists( $option_id, self::$select_option_info_cache ) ) {
 					$query = $wpdb->prepare("SELECT " . $field . " FROM ".WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS." WHERE id=%d LIMIT 1", $option_id);
 					self::$select_option_info_cache[$option_id] = $wpdb->get_var($query);
 				}
