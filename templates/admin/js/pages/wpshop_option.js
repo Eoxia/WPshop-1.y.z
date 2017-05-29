@@ -1,31 +1,35 @@
-wpshop(document).ready(function(){
-	jQuery("form#wpshop_option_form").attr( "enctype", "multipart/form-data" );
-	jQuery("form#wpshop_option_form").attr( "encoding", "multipart/form-data" );
-	if(window.location.hash) {
+wpshop( document ).ready(function() {
+	jQuery( 'form#wpshop_option_form' ).attr( 'enctype', 'multipart/form-data' );
+	jQuery( 'form#wpshop_option_form' ).attr( 'encoding', 'multipart/form-data' );
+	if ( window.location.hash ) {
 		var hash = window.location.hash;
-		jQuery("#wpshop_option_form").attr("action", "options.php"+hash);
+		jQuery( '#wpshop_option_form' ).attr( 'action', 'options.php' + hash );
 	}
 
-	function gerer_affichage_element (elt,test) {
-		elt_display = '.'+elt.attr('id')+'_content';
+	function gerer_affichage_element ( elt, test ) {
+		elt_display = '.' + elt.attr( 'id' ) + '_content';
 
-		if(elt.is(':checked')){
-			jQuery(elt_display).stop(true).fadeIn();
-			if(test){
-				alert('checked');
+		if ( elt.is( ':checked' ) ) {
+			jQuery( elt_display ).stop( true ).fadeIn();
+			if ( test ) {
+				alert( 'checked' );
 			}
-		}else{
-			jQuery(elt_display).stop(true).fadeOut();
-			if(test){
-				alert('unchecked'+elt_display);
+		}else {
+			jQuery( elt_display ).stop( true ).fadeOut();
+			if ( test ) {
+				alert( 'unchecked' + elt_display );
 			}
 		}
 
 	}
 
-	jQuery("#options-tabs").tabs();
-	jQuery("#options-tabs li a.ui-tabs-anchor").click(function(){
-		jQuery("#wpshop_option_form").attr("action", "options.php"+jQuery(this).attr("href"));
+	jQuery( '#options-tabs' ).tabs({
+		select: function( event, ui ) {
+			window.location.hash = ui.tab.hash;
+		}
+	});
+	jQuery('#options-tabs li a.ui-tabs-anchor' ).click(function() {
+		jQuery('#wpshop_option_form' ).attr( 'action', 'options.php' + jQuery(this).attr("href"));
 	});
 	jQuery(".slider_variable").parent().parent().addClass('ui-slider-row');
 
@@ -148,7 +152,7 @@ wpshop(document).ready(function(){
 			jQuery("#wpshop_partial_payment_config_container").hide();
 		}
 	});
-	
+
 	jQuery("#wpshop_payment_partial_on_quotation_activation_state").live('click', function(){
 		if ( jQuery(this).is(":checked") ) {
 			jQuery("#wpshop_partial_payment_quotation_config_container").show();
@@ -170,7 +174,7 @@ wpshop(document).ready(function(){
 			jQuery( this ).closest( "td" ).children( "a.shop-content-customisation" ).hide();
 		}
 	});
-	
+
 	jQuery( "#wps-delete-shop-logo" ).click( function(){
 		if ( confirm( wpshopConvertAccentTojs( WPS_DELETE_SHOP_LOGO_MSG ) ) ) {
 			jQuery( "#wpshop_logo_field" ).val( "" );
