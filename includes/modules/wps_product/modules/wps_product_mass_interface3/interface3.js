@@ -74,18 +74,42 @@ function applyChosen( element ) {
 		stateAdd = true;
 	} );
 	jQuery( element ).siblings( '.chosen-container' ).find( '.chosen-search-input' ).keydown( function( evt ) {
-		var stroke, _ref, target, value;
+		var stroke, _ref, target, value, data, selectCol, columnClass, attrCode;
 		stroke = null != ( evt.which = _ref ) ? _ref : evt.keyCode;
 		if ( 13 === stroke && stateAdd ) {
 			target = jQuery( evt.target );
 			value = jQuery.trim( target.val() );
+			selectCol = jQuery( '*[name$=\'' + select.prop( 'name' ).replace( /row_.*?\[/gi, '[' ) + '\']' );
 			newPossibility = document.createElement( 'OPTION' );
-			newPossibility.setAttribute( 'value', 'new' );
 			newPossibility.appendChild( document.createTextNode( value ) );
-			newPossibility = jQuery( newPossibility ).prop( 'selected', true );
-			select.append( newPossibility );
-			select.trigger( 'chosen:close' );
-			select.trigger( 'chosen:updated' );
+			columnClass = select.parent( 'td' ).prop( 'class' ).match( /column-[\d\w-_]+/g );
+			for ( i = 0; i < columnClass.length; i++ ) {
+				attrCode = columnClass[i].replace( 'column-', '' );
+				if ( i > 0 ) {
+					console.log( 'Error' );
+				}
+			}
+			data = {
+				action: 'new_option_for_select_from_product_edition',
+				wpshop_ajax_nonce: WPSHOP_NEWOPTION_CREATION_NONCE,
+				attribute_code: attrCode,
+				attribute_new_label: value,
+				attribute_selected_values: []
+			};
+			jQuery.post( ajaxurl, data, function( response ) {
+				newPossibility.setAttribute( 'value', response[3] );
+				selectCol.each( function() {
+					var currentElement = jQuery( this );
+					var value = jQuery( newPossibility ).clone();
+					if ( currentElement.prop( 'name' ) == select.prop( 'name' ) ) {
+						value = value.prop( 'selected', true );
+						currentElement.closest( 'tr' ).find( 'input:checkbox[name^=cb]' ).prop( 'checked', true );
+					}
+					currentElement.append( value );
+					currentElement.trigger( 'chosen:close' );
+					currentElement.trigger( 'chosen:updated' );
+				} );
+			}, 'json' );
 			return false;
 		}
 		return true;
