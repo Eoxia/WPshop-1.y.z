@@ -30,6 +30,7 @@ class mass_interface3 {
 		add_action( 'admin_menu', array( $this, 'mass_init' ), 350 );
 		add_action( 'wp_ajax_wps_mass_3_new', array( $this, 'ajax_new' ) );
 		add_action( 'wp_ajax_wps_mass_3_save', array( $this, 'ajax_save' ) );
+		add_filter( 'set-screen-option', array( $this, 'set_screen_option' ), 10, 3 );
 	}
 	public function mass_init() {
 		$this->hook = add_submenu_page( 'edit.php?post_type=' . WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT, __( 'Mass product edit 3', 'wpshop' ), __( 'Mass product edit 3', 'wpshop' ), 'manage_options', ( isset( $_GET['page'] ) && strpos( $_GET['page'], 'mass_edit_interface3_att_set_' ) !== false ) ? $_GET['page'] : 'mass_edit_interface3_att_set_1', array( $this, 'mass_interface' ) );
@@ -91,7 +92,6 @@ class mass_interface3 {
 	}
 	public function mass_interface_screen_option() {
 		add_action( 'admin_notices', array( $this, 'ajax_admin_notice' ) );
-		add_filter( 'set-screen-option', array( $this, 'set_screen_option' ), 10, 3 );
 		add_filter( 'default_hidden_columns', array( $this, 'hidden_columns' ), 10, 2 );
 		$this->wp_list_table( $this->hook );
 	}
