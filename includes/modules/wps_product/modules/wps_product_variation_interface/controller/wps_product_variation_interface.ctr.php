@@ -52,19 +52,19 @@ class wps_product_variation_interface {
 	 * @return boolean          Actual state of module.
 	 */
 	public function is_activate( $new_val = null ) {
-	    if ( ! isset( $this->is_active ) ) {
-	        $option = get_option( 'wps_variation_interface_display', null );
-	        if ( is_null( $option ) ) {
-	            $new_val = true;
-	            $option = false;
-	        }
-	        $this->is_active = (bool) $option;
-	    }
-	    if ( isset( $new_val ) && $this->is_active !== $new_val ) {
-	        update_option( 'wps_variation_interface_display', $new_val );
-	        $this->is_active = $new_val;
-	    }
-	    return $this->is_active;
+		if ( ! isset( $this->is_active ) ) {
+			$option = get_option( 'wps_variation_interface_display', null );
+			if ( is_null( $option ) ) {
+				$new_val = true;
+				$option = false;
+			}
+			$this->is_active = (bool) $option;
+		}
+		if ( isset( $new_val ) && $this->is_active !== $new_val ) {
+			update_option( 'wps_variation_interface_display', $new_val );
+			$this->is_active = $new_val;
+		}
+		return $this->is_active;
 	}
 	/**
 	 * Get variations of an element.
@@ -113,7 +113,7 @@ class wps_product_variation_interface {
 		}
 		$sql = 'SELECT * FROM ' . WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS . ' WHERE id IN (\'' . implode( '\', \'', $ids ) . '\') AND status = %s';
 		$query = call_user_func( array( $wpdb, 'prepare' ), $sql, 'valid' );
-		$product = wpshop_products::get_product_data( $post->ID, false, '"publish","draft","future"' );
+		$product = wpshop_products::get_product_data( $post->ID, false, '"publish","draft","future","pending"' );
 		$is_used_in_variation = wpshop_attributes::getElement( 'yes', "'valid', 'notused'", 'is_used_in_variation', true );
 		$attribute_list = array();
 		foreach ( $is_used_in_variation as $attribute ) {

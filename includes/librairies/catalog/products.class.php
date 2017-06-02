@@ -832,7 +832,8 @@ class wpshop_products
                     $sub_tpl_component = array();
                     $criteria = '';
                     foreach ($sorting_criteria as $c):
-                        $criteria .= '<option value="' . $c['code'] . '" ' . selected( $atts['order'], $c['code'], false ) . '>' . __($c['frontend_label'], 'wpshop') . '</option>';
+						$selected = isset( $atts['order'] ) ? $atts['order'] : null;
+                        $criteria .= '<option value="' . $c['code'] . '" ' . selected( $selected, $c['code'], false ) . '>' . __($c['frontend_label'], 'wpshop') . '</option>';
                     endforeach;
                     $sub_tpl_component['SORTING_CRITERIA_LIST'] = $criteria;
                     $tpl_component['SORTING_CRITERIA'] = wpshop_display::display_template_element($sub_template_part, $sub_tpl_component);

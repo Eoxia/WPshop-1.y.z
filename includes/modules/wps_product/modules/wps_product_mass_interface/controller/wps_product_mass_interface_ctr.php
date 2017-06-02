@@ -183,11 +183,11 @@ class wps_product_mass_interface_ctr {
 			$args = array(
 			'base' => '%_%',
 			'format' => admin_url( 'admin-ajax.php?action=wps_add_quick_interface&page=%#%' ),
-					'current' => ( $current_page + 1 ),
-					'total' => ceil( $products / $one_page_limit ),
-						'type' => 'array',
-						'prev_next' => false,
-						'show_all' => true,
+				'current' => ( $current_page + 1 ),
+				'total' => ceil( $products / $one_page_limit ),
+					'type' => 'array',
+					'prev_next' => false,
+					'show_all' => true,
 			);
 			$paginate = paginate_links( $args );
 

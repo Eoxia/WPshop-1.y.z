@@ -1,6 +1,18 @@
-function addPost( event, element ) {
+jQuery( document ).on( 'click', 'a', function( event ) {
+	if ( '#' == jQuery( this ).attr( 'href' ).charAt( 0 ) ) {
+		event.preventDefault();
+		window[ jQuery( this ).attr( 'href' ).substring( 1 ) ]( jQuery( this ) );
+	}
+} );
+
+jQuery( document ).ready( function() {
+	jQuery( '.chosen-select' ).each( function() {
+		applyChosen( this );
+	} );
+} );
+
+function addPost( element ) {
 	var newPost = jQuery( '#inline-edit' ).clone();
-	event.preventDefault();
 	newPost.show();
 	jQuery( element ).addClass( 'hidden' );
 	newPost.find( '.cancel' ).click( function() {
@@ -8,14 +20,12 @@ function addPost( event, element ) {
 		jQuery( element ).removeClass( 'hidden' );
 	} );
 	newPost.find( 'input[name="post_title"]' ).on( 'keydown', function( e ) {
-		if ( e.which == 13 ) {
+		if ( 13 == e.which ) {
 			e.preventDefault();
 			sendPost();
 		}
 	} );
-	newPost.find( '.save' ).click( function() {
-		sendPost();
-	} );
+	newPost.find( '.save' ).click( sendPost );
 	sendPostWait = true;
 	function sendPost() {
 		if ( sendPostWait ) {
@@ -42,25 +52,6 @@ function addPost( event, element ) {
 		}
 	}
 	jQuery( '#the-list' ).prepend( newPost );
-}
-
-function savePosts() {
-	var checkeds = jQuery( '#the-list input:checkbox[name^=cb]:checked' );
-	var datas = checkeds.closest( 'tr' ).find( ':input:not(.toggle-row, .chosen-search-input), select, textarea' ).add( '<input type="text" name="action" value="wps_mass_3_save"/>' );
-	if ( checkeds.length <= 0 ) {
-		return;
-	}
-	jQuery( '.bulkactions .spinner' ).addClass( 'is-active' );
-	jQuery.post( ajaxurl, datas.serialize(), function( response ) {
-		jQuery( '.bulkactions .spinner' ).removeClass( 'is-active' );
-		checkeds.prop( 'checked', false );
-		jQuery( ':input[id^=cb-select-all]' ).prop( 'checked', false );
-
-		//Notice = jQuery( '.hidden.notice' ).clone().addClass( 'notice-success' ).removeClass( 'hidden' );
-		//notice.find( 'p' ).text( response.data.notice );
-		//jQuery( '.hidden.notice' ).after( notice );
-		window.location.reload();
-	} );
 }
 
 function applyChosen( element ) {
@@ -118,7 +109,7 @@ function applyChosen( element ) {
 
 jQuery( document ).on( 'change', '#the-list :input:not(input:checkbox[name^=cb]), #the-list select, #the-list textarea', function() {
 	jQuery( this ).closest( 'tr' ).find( 'input:checkbox[name^=cb]' ).prop( 'checked', true );
-});
+} );
 
 jQuery( document ).on( 'click', '.bulk-save', function() {
 	savePosts();
@@ -128,10 +119,10 @@ jQuery( document ).on( 'click', '.bulk-save', function() {
 jQuery( document ).keydown(function( e ) {
 	var key = undefined;
 	var possible = [ e.key, e.keyIdentifier, e.keyCode, e.which ];
-	while ( key === undefined && possible.length > 0 ) {
+	while ( undefined === key && possible.length > 0 ) {
 		key = possible.pop();
 	}
-	if ( key && ( key == '115' || key == '83' ) && ( e.ctrlKey || e.metaKey ) && ! ( e.altKey ) ) {
+	if ( key && ( '115' == key || '83' == key ) && ( e.ctrlKey || e.metaKey ) && ! ( e.altKey ) ) {
 		e.preventDefault();
 		jQuery( ':focus' ).blur();
 		savePosts();
@@ -140,12 +131,41 @@ jQuery( document ).keydown(function( e ) {
 	return true;
 } );
 
+function savePosts() {
+	var checkeds = jQuery( '#the-list input:checkbox[name^=cb]:checked' );
+	var datas = checkeds.closest( 'tr' ).find( ':input:not(.toggle-row, .chosen-search-input), select, textarea' ).add( '<input type="text" name="action" value="wps_mass_3_save"/>' );
+	if ( checkeds.length <= 0 ) {
+		return;
+	}
+	jQuery( '.bulkactions .spinner' ).addClass( 'is-active' );
+	jQuery.post( ajaxurl, datas.serialize(), function( response ) {
+		jQuery( '.bulkactions .spinner' ).removeClass( 'is-active' );
+		checkeds.prop( 'checked', false );
+		jQuery( ':input[id^=cb-select-all]' ).prop( 'checked', false );
+
+		//Notice = jQuery( '.hidden.notice' ).clone().addClass( 'notice-success' ).removeClass( 'hidden' );
+		//notice.find( 'p' ).text( response.data.notice );
+		//jQuery( '.hidden.notice' ).after( notice );
+		window.location.reload();
+	} );
+}
+
 jQuery( document ).on( 'click', '.notice-dismiss', function() {
 	jQuery( this ).parent( 'div' ).remove();
 } );
 
-jQuery( document ).ready( function() {
-	jQuery( '.chosen-select' ).each( function() {
-		applyChosen( this );
-	} );
-} );
+function thumbnail( element ) {
+	var uploaderCategory = wp.media( {
+		multiple: false,
+		title: jQuery( this ).data( 'mediaTitle' ),
+		library: {
+			type: 'image'
+		}
+	} ).on( 'select', function() {
+		var selectedPicture = uploaderCategory.state().get( 'selection' );
+		var attachment = selectedPicture.first().toJSON();
+		element.siblings( 'input' ).val( attachment.id );
+		element.html( '<img width="25" height="25" src="' + attachment.sizes.thumbnail.url + '">' );
+		element.closest( 'tr' ).find( 'input:checkbox[name^=cb]' ).prop( 'checked', true );
+	} ).open();
+}
