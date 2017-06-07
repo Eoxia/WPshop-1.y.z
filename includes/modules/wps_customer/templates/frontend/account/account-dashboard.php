@@ -4,21 +4,30 @@ $account_page_id = wpshop_tools::get_page_id( get_option( 'wpshop_myaccount_page
 $account_dashboard_part = !empty( $_GET['account_dashboard_part'] ) ? sanitize_text_field( $_GET['account_dashboard_part'] ) : '';
 ?>
 
-<?php $user_ID = get_current_user_id(); ?>
+<?php $user_id = get_current_user_id(); ?>
 
-<?php if ( 0 !== $user_ID ) : ?>
-<div class="wps-user-dashboard">
-	<?php $account_user = get_userdata( $user_ID ); ?>
-	<span class="wps-user-name">
-		<?php _e( 'Hello', 'wpshop' ); ?>
-		<strong><?php echo $account_user->data->user_login; ?></strong>
-	</span>
-	<span class="wps-user-thumbnail">
-		<?php echo get_avatar( $user_ID, 40 ); ?>
-	</span>
-	<a href="<?php echo wp_logout_url( site_url() ); ?>" class="" title="<?php _e( 'Log out', 'wpshop' ); ?>">
-		<i class="wps-icon-power"></i>
-	</a>
+<?php if ( 0 !== $user_id ) :
+	$account_user = get_userdata( $user_id ); ?>
+<div class="wps-user-dashboard" >
+	<?php do_action( 'wps_user_dashboard_header', $user_id, $account_user ); ?>
+
+	<div class="wps-user-info has-sub-menu" >
+		<span class="wps-user-name">
+			<?php echo get_avatar( $user_id, 40 ); ?>
+			<strong><?php echo esc_html( $account_user->data->user_login ); ?></strong>
+		</span>
+		<ul class="sub-menu" >
+		<?php
+		if ( function_exists( 'current_user_switched' ) ) :
+			$old_user = current_user_switched();
+			if ( $old_user && $url = user_switching::maybe_switch_url( $old_user ) ) :
+				printf( '<li><a href="%s">Switch back</a></li>', esc_url( $url ) );
+			endif;
+		endif;
+		?>
+			<li><a href="<?php echo esc_url( wp_logout_url( site_url() ) ); ?>"><i class="wps-icon-power"></i>&nbsp;<?php esc_html_e( 'Se déconnecter', 'eoxia' ); ?></a></li>
+		</ul>
+	</div>
 </div>
 <?php endif; ?>
 

@@ -1,0 +1,87 @@
+/**
+ * Account main navigation
+ */
+.wps-user-dashboard .wps-user-info {
+	margin: 0 20px;
+	float: right;
+	position: relative;
+}
+.wps-user-dashboard:after {
+	display: block;
+	content: '';
+	clear: both;
+}
+.wps-user-dashboard .avatar {
+	border-radius: 50%;
+}
+.wps-user-dashboard li, .wps-user-dashboard ul {
+	list-style: none;
+}
+.wps-user-dashboard > li {
+	float: left;
+}
+.wps-user-dashboard > li > a {
+	display: block;
+	position: relative;
+	text-align: center;
+	font-size: 2em;
+	float: none;
+	height: 80px;
+	line-height: 80px;
+	width: 60px;
+	color: #fff;
+}
+.wps-user-dashboard > li {
+	position: relative;
+}
+.wps-user-dashboard .sub-menu {
+	margin: 0 !important;
+	position: absolute;
+	top: 100%;
+	right: 0;
+	z-index: 99999;
+	text-align: left;
+	list-style: none;
+	padding: 0;
+	transform: translateY(-4px);
+	transition: all 0.2s ease-out;
+	pointer-events: none;
+	opacity: 0;
+}
+.wps-user-dashboard .has-sub-menu:hover .sub-menu {
+	transform: translateY(0);
+	pointer-events: all;
+	opacity: 1;
+}
+.wps-user-dashboard .sub-menu:before {
+	display: block;
+	content: '';
+	position: absolute;
+	top: -8px;
+	right: 24px;
+	width: 0;
+	height: 0;
+	border-left: 8px solid transparent;
+	border-right: 8px solid transparent;
+	border-bottom: 8px solid #2A323B;
+}
+.wps-user-dashboard .sub-menu li a {
+	background: #2A323B;
+	font-size: 12px;
+	text-transform: none;
+	font-weight: normal;
+	height: auto;
+	line-height: 2em;
+	padding: 8px 10px;
+	width: 180px;
+	display: inline-block;
+	color: #fff;
+	text-decoration: none;
+	transition: all 0.2s ease-out;
+}
+.wps-user-dashboard .sub-menu li a:hover {
+	background: #505a65
+}
+.wps-user-dashboard .sub-menu .avatar {
+	margin-right: 10px;
+}

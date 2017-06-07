@@ -74,6 +74,7 @@ class wps_account_ctr {
 		wp_enqueue_script( 'wps_login_js', WPS_ACCOUNT_URL.'wps_customer/assets/frontend/js/wps_login.js' );
 		wp_enqueue_script( 'wps_signup_js', WPS_ACCOUNT_URL.'wps_customer/assets/frontend/js/wps_signup.js' );
 		wp_enqueue_script( 'wps_account_js', WPS_ACCOUNT_URL.'wps_customer/assets/frontend/js/wps_account.js' );
+		wp_enqueue_style( 'wps_account_css', WPS_ACCOUNT_URL.'wps_customer/assets/frontend/css/frontend.css' );
 	}
 
 	/** LOG IN - Display log in Form **/
