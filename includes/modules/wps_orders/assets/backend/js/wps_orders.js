@@ -221,7 +221,7 @@ jQuery( document ).ready( function() {
 					refresh_cart();
 				}
 				else {
-					alert( 'An error was occured' );
+					alert( 'Error #OrderBackJS224' );
 				}
 		}, 'json');
 	});

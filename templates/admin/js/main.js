@@ -1110,7 +1110,7 @@ wpshop( document ).ready(function() {
 					jQuery ( '#wps_order_choose_customer' ).removeClass( 'wps-bton-loading' );
 				}
 				else {
-					alert( 'An error was occured...');
+					alert( 'Error #MainJS1113' );
 				}
 			}, 'json');
 		}

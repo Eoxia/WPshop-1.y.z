@@ -102,7 +102,7 @@ jq_wpeogeoloc( document ).ready(function() {
 						reload_administration_dashboard_address( '','');
 					}
 					else {
-						alert( 'An error was occured...' );
+						alert( 'Error #AddressBackJS105' );
 						jQuery( '#wps_customer_addresses' ).animate( {'opacity' : 1}, 350 );
 					}
 			}, 'json');
@@ -147,7 +147,7 @@ function reload_administration_dashboard_address( address_type_id, customer_id )
 					});
 				}
 				else {
-					alert( 'An error was occured...' );
+					alert( 'Error #AddressBackJS150' );
 					jQuery( '#wps_customer_addresses' ).animate( {'opacity' : 1}, 350 );
 				}
 		}, 'json');

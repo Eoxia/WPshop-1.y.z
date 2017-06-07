@@ -33,7 +33,7 @@ jQuery( document ).ready( function() {
 	        					});
 
 	        				} else {
-	        					alert( 'An error was occured...' );
+										alert( 'Error #CustomerBackJS36' );
 	        					jQuery( '#wps_customer_list_container' ).animate( { 'opacity': 1 }, 350 );
 	        				}
 	        		}, 'json' );
@@ -91,7 +91,7 @@ jQuery( document ).ready( function() {
 						update_selected_address_ids();
 					});
 				} else {
-					alert( 'An error was occured...' );
+					alert( 'Error #CustomerBackJS94' );
 					jQuery( '#wps_selected_customer_informations' ).animate( {'opacity' : 1}, 350 );
 				}
 		}, 'json');
