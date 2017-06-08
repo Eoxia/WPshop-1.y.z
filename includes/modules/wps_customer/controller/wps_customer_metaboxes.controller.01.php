@@ -28,8 +28,8 @@ class wps_customer_metaboxe_controller_01 extends wps_customer_ctr {
 	 * @param WP_Post $customer Le client actuel / The current customer
 	 */
 	function add_meta_box( $customer ) {
-		remove_meta_box( 'submitdiv', WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, 'normal' );
-		add_meta_box( 'submitdiv', __( 'Save' ), array( $this, 'wps_customer_informations_save' ), WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, 'side', 'high' );
+		// remove_meta_box( 'submitdiv', WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, 'normal' );
+		// add_meta_box( 'submitdiv', __( 'Save' ), array( $this, 'wps_customer_informations_save' ), WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, 'side', 'high' );
 		add_meta_box( 'wps_customer_informations', __( 'Customer\'s account informations', 'wpshop' ), array( $this, 'wps_customer_account_informations' ), WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, 'normal', 'high' );
 		if ( 'auto-draft' !== $customer->post_status ) {
 			add_meta_box( 'wps_customer_orders', __( 'Customer\'s orders', 'wpshop' ), array( $this, 'wps_customer_orders_list' ), WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, 'normal', 'low' );

@@ -185,14 +185,12 @@ class wps_statistics_mdl {
 							/** Check if user is administrator **/
 							$user_def = get_user_by( 'id', $order_meta['customer_id'] );
 							$wps_statistics_exclude_customer = get_user_meta( $order_meta['customer_id'], 'wps_statistics_exclude_customer', true );
-							$excluded_from_statistics = ( !empty($wps_statistics_exclude_customer) ) ? true : false;
+							$excluded_from_statistics = ( ! empty( $wps_statistics_exclude_customer ) ) ? true : false;
 
-
-							if ( !empty($user_def) && !empty($user_def->caps) && is_array($user_def->caps) && array_key_exists( 'customer', $user_def->caps) && $excluded_from_statistics === false ) {
+							if ( ! empty( $user_def ) && ! empty( $user_def->caps ) && is_array( $user_def->caps ) && array_key_exists( 'customer', $user_def->caps ) && ( false === $excluded_from_statistics ) ) {
 								if ( empty($customer_recap[ $order_meta['customer_id'] ] ) ) {
 									$customer_recap[ $order_meta['customer_id'] ] = $order_meta['order_grand_total'];
-								}
-								else {
+								} else {
 									$customer_recap[ $order_meta['customer_id'] ] += $order_meta['order_grand_total'];
 								}
 							}

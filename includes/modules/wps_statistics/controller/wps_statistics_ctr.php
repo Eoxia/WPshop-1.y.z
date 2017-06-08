@@ -7,8 +7,8 @@ class wps_statistics_ctr {
 	function __construct() {
 		// WP Main Actions
 		add_action( 'admin_menu', array(&$this, 'register_stats_menu'), 250);
-		add_action( 'save_post', array( &$this, 'wps_statistics_save_customer_infos') );
-		add_action( 'add_meta_boxes', array( &$this, 'add_customer_meta_box'), 1 );
+		add_action( 'save_post', array( &$this, 'wps_statistics_save_customer_infos'), 10, 2 );
+		add_action( 'post_submitbox_misc_actions', array( $this, 'wps_statistics_meta_box_content' ) );
 
 		// Add Javascript Files & CSS File in admin
 		add_action( 'admin_enqueue_scripts', array( $this, 'add_scripts' ) );
@@ -36,39 +36,33 @@ class wps_statistics_ctr {
 	}
 
 	/**
-	 * Add Meta Boxes to exclude customers of WPShop Statistics
-	 */
-	function add_customer_meta_box() {
-		global $post;
-		add_meta_box( 'wps_statistics_customer', __( 'Statistics', 'wps_price' ), array( &$this, 'wps_statistics_meta_box_content' ), WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, 'side', 'low' );
-	}
-
-	/**
 	 * Meta box content to exclude customers of statistics
+	 *
+	 * @param  WP_Post $post    Définition complète du post actuellement en cours de modification / Current edited post entire definition.
 	 */
-	function wps_statistics_meta_box_content() {
-		global $post;
+	function wps_statistics_meta_box_content( $post ) {
 		$user_meta = '';
-		if ( !empty($post) && !empty($post->post_author) ) {
+		if ( ! empty( $post ) && ! empty( $post->post_author ) ) {
 			$user_meta = get_user_meta( $post->post_author, 'wps_statistics_exclude_customer', true );
 		}
-		$output = '<input type="checkbox" name="wps_statistics_exclude_customer" id="wps_statistics_exclude_customer" ' .( (!empty($user_meta) ) ? 'checked="checked"' : '' ). '/> <label for="wps_statistics_exclude_customer">' .__('Exclude this customer from WPShop Statistics', 'wpshop'). '</label>';
-		echo $output;
+		$output = '<span class="misc-pub-section" ><input type="checkbox" name="wps_statistics_exclude_customer" id="wps_statistics_exclude_customer" ' . checked( $user_meta, true, false ) . '/> <label for="wps_statistics_exclude_customer">' . __( 'Exclude this customer from WPShop Statistics', 'wpshop' ) . '</label></span>';
+
+		echo $output; // WPCS: XSS ok.
 	}
 
 	/**
 	 * Save action to exclude customer of statistics
+	 *
+	 * @param  integer $post_id L'identifiant du post actuellement en cours de modification / Current edited post identifier.
+	 * @param  WP_Post $post    Définition complète du post actuellement en cours de modification / Current edited post entire definition.
 	 */
-	function wps_statistics_save_customer_infos() {
-		$action = !empty( $_POST['action'] ) ? sanitize_text_field( $_POST['action'] ) : '';
-		$post_type = !empty( $_POST['post_type'] ) ? sanitize_text_field( $_POST['post_type'] ) : '';
-		$post_id = !empty( $_POST['post_ID'] ) ? (int) $_POST['post_ID'] : 0;
-		$wps_statistics_exclude_customer = isset( $_POST['wps_statistics_exclude_customer'] ) ? (int) $_POST['wps_statistics_exclude_customer'] : 0;
+	function wps_statistics_save_customer_infos( $post_id, $post ) {
+		$action = ! empty( $_POST['action'] ) ? sanitize_text_field( $_POST['action'] ) : ''; // WPCS: CSRF ok.
+		$wps_statistics_exclude_customer = isset( $_POST['wps_statistics_exclude_customer'] ) && ( 'on' === $_POST['wps_statistics_exclude_customer'] ) ? true : false; // WPCS: CSRF ok.
 
-		if ( !empty($action) && $action != 'autosave' && !empty($post_type) && $post_type == WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ) {
-			$customer_def = get_post( $post_id );
-			if( isset( $wps_statistics_exclude_customer ) ) {
-				update_user_meta( $customer_def->post_author, 'wps_statistics_exclude_customer', $wps_statistics_exclude_customer );
+		if ( ( ! empty( $action ) && ( 'autosave' !== $action ) ) && ( WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS === get_post_type( $post_id ) ) ) {
+			if ( isset( $wps_statistics_exclude_customer ) ) {
+				update_user_meta( $post->post_author, 'wps_statistics_exclude_customer', $wps_statistics_exclude_customer );
 			}
 		}
 	}
@@ -91,26 +85,31 @@ class wps_statistics_ctr {
 		$ordered_customers = array();
 		foreach ( $shop_orders as $order ) {
 			$user_id = $order['order_postmeta']['customer_id'];
-			$customer_id = null;
-			$args = array(
-				'post_type'				=> WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS,
-				'author'					=> $user_id,
-				'orderby'	 				=> 'post_date',
-				'order'	 					=> 'ASC',
-				'post_status'	 		=> 'all',
-				'posts_per_page' 	=>	1,
-			);
-			$customer = new WP_Query( $args );
+			$wps_statistics_exclude_customer = get_user_meta( $user_id, 'wps_statistics_exclude_customer', true );
+			$excluded_from_statistics = ( ! empty( $wps_statistics_exclude_customer ) ) ? true : false;
 
-			if ( ! isset( $ordered_customers[ $user_id ]['count'] ) ) {
-				$ordered_customers[ $user_id ]['count'] = 0;
-				$ordered_customers[ $user_id ]['total_amount'] = 0;
+			if ( false === $excluded_from_statistics ) {
+				$customer_id = null;
+				$args = array(
+					'post_type'				=> WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS,
+					'author'					=> $user_id,
+					'orderby'	 				=> 'post_date',
+					'order'	 					=> 'ASC',
+					'post_status'	 		=> 'all',
+					'posts_per_page' 	=> 1,
+				);
+				$customer = new WP_Query( $args );
+
+				if ( ! isset( $ordered_customers[ $user_id ]['count'] ) ) {
+					$ordered_customers[ $user_id ]['count'] = 0;
+					$ordered_customers[ $user_id ]['total_amount'] = 0;
+				}
+				$ordered_customers[ $user_id ]['count']++;
+				$ordered_customers[ $user_id ]['id'] = $user_id;
+				$ordered_customers[ $user_id ]['post_id'] = $customer->post->ID;
+				$ordered_customers[ $user_id ]['name'] = ( !empty($order['order_info']) && !empty($order['order_info']['billing']) && !empty($order['order_info']['billing']['address']) && !empty($order['order_info']['billing']['address']['address_last_name']) && !empty($order['order_info']['billing']['address']['address_first_name']) ) ? $order['order_info']['billing']['address']['address_first_name'].' '.$order['order_info']['billing']['address']['address_last_name'] : '';;
+				$ordered_customers[ $user_id ]['total_amount'] += $order['order_postmeta']['order_grand_total'];
 			}
-			$ordered_customers[ $user_id ]['count']++;
-			$ordered_customers[ $user_id ]['id'] = $user_id;
-			$ordered_customers[ $user_id ]['post_id'] = $customer->post->ID;
-			$ordered_customers[ $user_id ]['name'] = ( !empty($order['order_info']) && !empty($order['order_info']['billing']) && !empty($order['order_info']['billing']['address']) && !empty($order['order_info']['billing']['address']['address_last_name']) && !empty($order['order_info']['billing']['address']['address_first_name']) ) ? $order['order_info']['billing']['address']['address_first_name'].' '.$order['order_info']['billing']['address']['address_last_name'] : '';;
-			$ordered_customers[ $user_id ]['total_amount'] += $order['order_postmeta']['order_grand_total'];
 		}
 
 		require( wpshop_tools::get_template_part( WPS_STATISTICS_DIR, WPS_STATISTICS_TEMPLATES_MAIN_DIR, "backend", "wps-statistics") );
