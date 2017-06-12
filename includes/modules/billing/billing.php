@@ -471,6 +471,9 @@ if (!class_exists("wpshop_modules_billing")) {
 																		$item_title = $item['item_name'];
 																}
 																$sub_tpl_component['INVOICE_ROW_ITEM_NAME'] = $item_title;
+																if ( 'free_product' === get_post_status( $item_id ) ) {
+																	$sub_tpl_component['INVOICE_ROW_ITEM_NAME'] = '<b>' . $sub_tpl_component['INVOICE_ROW_ITEM_NAME'] . '</b><br>' . get_post_field('post_content', $item_id);
+																}
 																/**		Get attribute order for current product		*/
 																$product_attribute_order_detail = wpshop_attributes_set::getAttributeSetDetails(get_post_meta($item['item_id'], WPSHOP_PRODUCT_ATTRIBUTE_SET_ID_META_KEY, true));
 																$output_order = array();

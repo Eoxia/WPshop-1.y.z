@@ -1,3 +1,12 @@
 [name^="row"] {
 	width: 100%;
 }
+.chosen-select {
+	display: none;
+}
+#the-list .column-thumbnail a span {
+	display: none;
+}
+#the-list .column-thumbnail a span:first-child {
+	display: inline;
+}

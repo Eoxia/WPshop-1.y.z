@@ -102,11 +102,12 @@ class Mass_Interface3 {
 		?></h1>
 		<?php
 		if ( current_user_can( $this->post_type_object->cap->create_posts ) ) {
-			echo ' <a href="#addPost" class="page-title-action" data-nonce="' . esc_attr( wp_create_nonce( 'add_post-' . $this->hook ) ) . '">';
+			echo ' <a href="#addPost" class="page-title-action" data-nonce="' . esc_attr( wp_create_nonce( 'add_post-' . sanitize_title( get_class() ) ) ) . '">';
 			echo esc_html( $this->post_type_object->labels->add_new ) . '</a>';
 		}
 		?>
 		<hr class="wp-header-end">
+		<?php echo '<input type="hidden" id="hook" value="' . esc_attr( $this->hook ) . '">'; ?>
 		<form id="posts-filter" method="get">
 		<?php $wp_list_table->views(); ?>
 		<?php $wp_list_table->search_box( $this->post_type_object->labels->search_items, 'post' ); ?>
@@ -181,7 +182,7 @@ class Mass_Interface3 {
 					'heading_list'       => $this->post_type_object->labels->items_list,
 				)
 			);
-			$class = get_class();
+			$class = sanitize_title( get_class() );
 			$this->wp_list_table->screen->add_option(
 				'per_page', array(
 					'default' => 20,
@@ -216,7 +217,7 @@ class Mass_Interface3 {
 	 * @param  mixed  $value  Actual value to save.
 	 */
 	public function set_screen_option( $string, $option, $value ) {
-		$class = get_class();
+		$class = sanitize_title( get_class() );
 		if ( "{$class}_per_page" === $option ) {
 			$value = (int) $value;
 			if ( $value < 1 || $value > 999 ) {
@@ -270,14 +271,31 @@ class Mass_Interface3 {
 		wp_deregister_style( 'wpshop_main_css' );
 	}
 	/**
+	 * Change default url for set_url_scheme(). See pagination & get_views. Impossible to re-use set_url_sheme inner.
+	 *
+	 * @method set_current_url
+	 * @param  string        $url    Given url.
+	 * @param  string | null $scheme Scheme to give $url. Currently 'http', 'https', 'login', 'login_post', 'admin', 'relative', 'rest', 'rpc', or null.
+	 */
+	public function set_current_url( $url, $scheme ) {
+		/*
+		Remove_filter( 'set_url_scheme', array( $this, 'set_current_url' ), 10 );
+		$url = set_url_sheme( esc_url( $_POST['current_url'] ) );
+		add_filter( 'set_url_scheme', array( $this, 'set_current_url' ), 10, 2 );
+		*/
+		return $_POST['current_url'];
+	}
+	/**
 	 * Ajax callback for new element.
 	 *
 	 * @method ajax_new
 	 * @return void JSON with all elements to update.
 	 */
 	public function ajax_new() {
+		check_ajax_referer( 'add_post-' . sanitize_title( get_class() ) );
 		add_filter( 'default_hidden_columns', array( $this, 'hidden_columns' ), 10, 2 );
-		$wp_list_table = $this->wp_list_table( $_POST['screen'] );
+		add_filter( 'set_url_scheme', array( $this, 'set_current_url' ), 10, 2 );
+		$wp_list_table = $this->wp_list_table( sanitize_title( $_POST['hook'] ) );
 		$wpshop_product_attribute = array();
 		foreach ( $wp_list_table->request_items_columns() as $key_var => $var ) {
 			$wpshop_product_attribute[ $var['data'] ][ $key_var ] = null;
@@ -286,7 +304,7 @@ class Mass_Interface3 {
 			array(
 				'post_type' => WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT,
 				'post_status' => 'publish',
-				'post_title' => $_POST['title'],
+				'post_title' => sanitize_text_field( $_POST['title'] ),
 			)
 		);
 		if ( ! empty( $new_product_id ) ) {
@@ -304,7 +322,6 @@ class Mass_Interface3 {
 		} else {
 			wp_die( 1 );
 		}
-		$class = get_class();
 		$data = $wp_list_table->request( $new_product_id );
 		$per_page = $wp_list_table->screen->get_option( 'per_page', 'option' );
 		$wp_list_table->column_headers();
@@ -335,6 +352,7 @@ class Mass_Interface3 {
 	 * @return void JSON with number of saved elements (not used).
 	 */
 	public function ajax_save() {
+		check_ajax_referer( 'bulk-save-mass-edit-interface-3' );
 		$i = 0;
 		$product_class = new wpshop_products();
 		if ( ! empty( $_REQUEST['cb'] ) ) {
