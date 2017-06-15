@@ -1,3 +1,4 @@
+
 jQuery( document ).on( 'click', 'a', function( event ) {
 	if ( '#' == jQuery( this ).attr( 'href' ).charAt( 0 ) ) {
 		event.preventDefault();
@@ -13,6 +14,7 @@ jQuery( document ).ready( function() {
 
 function addPost( element ) {
 	var newPost = jQuery( '#inline-edit' ).clone();
+	var nonce = jQuery( element ).data( 'nonce' );
 	newPost.show();
 	jQuery( element ).addClass( 'hidden' );
 	newPost.find( '.cancel' ).click( function() {
@@ -32,10 +34,14 @@ function addPost( element ) {
 			sendPostWait = false;
 			newPost.find( '.spinner' ).addClass( 'is-active' );
 			title = newPost.find( 'input[name="post_title"]' ).val();
-			jQuery.post( ajaxurl, { action: 'wps_mass_3_new', title: title, screen: list_args.screen.id }, function( response ) {
+			hook = jQuery( '#hook' ).val();
+			current_url = jQuery( location ).attr( 'href' );
+			jQuery.post( ajaxurl, { action: 'wps_mass_3_new', _wpnonce: nonce, title: title, hook: hook, current_url: current_url }, function( response ) {
 				jQuery( '#the-list' ).prepend( response.data.row );
-				jQuery( '.subsubsub' ).html( response.data.subsubsub );
-				jQuery( '.tablenav.top' ).prevUntil( '#posts-filter' ).andSelf().html( response.data.tablenav_top );
+				jQuery( '.subsubsub' ).prevUntil( '#posts-filter' ).andSelf().remove();
+				jQuery( '#posts-filter' ).prepend( response.data.subsubsub );
+				jQuery( '.tablenav.top' ).prevUntil( '#posts-filter' ).andSelf().remove();
+				jQuery( '#posts-filter' ).after( response.data.tablenav_top );
 				jQuery( '.tablenav.bottom' ).html( response.data.tablenav_bottom );
 				newPost.remove();
 				toMuchRows = response.data.per_page - jQuery( '#the-list > tr' ).length;
@@ -138,7 +144,7 @@ function savePosts() {
 		return;
 	}
 	jQuery( '.bulkactions .spinner' ).addClass( 'is-active' );
-	jQuery.post( ajaxurl, datas.serialize(), function( response ) {
+	jQuery.post( ajaxurl, '_wpnonce=' + jQuery( '.bulkactions .bulk-save' ).data( 'nonce' ) + '&' + datas.serialize(), function( response ) {
 		jQuery( '.bulkactions .spinner' ).removeClass( 'is-active' );
 		checkeds.prop( 'checked', false );
 		jQuery( ':input[id^=cb-select-all]' ).prop( 'checked', false );
@@ -155,17 +161,23 @@ jQuery( document ).on( 'click', '.notice-dismiss', function() {
 } );
 
 function thumbnail( element ) {
-	var uploaderCategory = wp.media( {
-		multiple: false,
-		title: jQuery( this ).data( 'mediaTitle' ),
-		library: {
-			type: 'image'
-		}
-	} ).on( 'select', function() {
-		var selectedPicture = uploaderCategory.state().get( 'selection' );
-		var attachment = selectedPicture.first().toJSON();
-		element.siblings( 'input' ).val( attachment.id );
-		element.html( '<img width="25" height="25" src="' + attachment.sizes.thumbnail.url + '">' );
+	if ( element.children( 'span' ).length > 1 ) {
+		element.siblings( 'input' ).val( '' );
+		element.children( 'span' ).first().remove();
 		element.closest( 'tr' ).find( 'input:checkbox[name^=cb]' ).prop( 'checked', true );
-	} ).open();
+	} else {
+		uploaderCategory = wp.media( {
+			multiple: false,
+			title: jQuery( this ).data( 'mediaTitle' ),
+			library: {
+				type: 'image'
+			}
+		} ).on( 'select', function() {
+			var selectedPicture = uploaderCategory.state().get( 'selection' );
+			var attachment = selectedPicture.first().toJSON();
+			element.siblings( 'input' ).val( attachment.id );
+			element.prepend( '<span class="img"><img width="25" height="25" src="' + attachment.sizes.thumbnail.url + '"></span>' );
+			element.closest( 'tr' ).find( 'input:checkbox[name^=cb]' ).prop( 'checked', true );
+		} ).open();
+	}
 }

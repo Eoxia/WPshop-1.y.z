@@ -1328,6 +1328,9 @@ ob_end_clean();
 		$sent_attribute_list = array();
 
 		if ( !empty($attributeToSet) ) {
+			$attributeToSet = apply_filters( 'save_attribute_for_entity', $attributeToSet, $entityTypeId, $entityId );
+			$old_attribute_to_set = $attributeToSet;
+			$attribute_setted = array();
 			foreach ($attributeToSet as $attributeType => $attributeTypeDetails) {
 				/** Preparation des parametres permettant de supprimer les bonnes valeurs des attributs suivant la configuration de la boutique et de la methode de mise a jour */
 				$delete_current_attribute_values_params = array(
@@ -1339,7 +1342,10 @@ ob_end_clean();
 				}
 
 				if(!empty($attributeTypeDetails) && is_array($attributeTypeDetails)) {
+					$attributeTypeDetails = apply_filters( "save_attribute_for_entity_{$attributeType}", $attributeTypeDetails, $entityTypeId, $entityId );
 					foreach($attributeTypeDetails as $attribute_code => $attributeValue) {
+						$attributeValue = apply_filters( "save_attribute_for_entity_{$attributeType}_{$attribute_code}", apply_filters( "save_attribute_for_entity__{$attribute_code}", $attributeValue, $entityTypeId, $entityId ), $entityTypeId, $entityId );
+						$old_attribute_value = $attributeValue;
 
 						if ( $attributeType == 'decimal' ) {
 							$attributeValue = str_replace(',', '.', $attributeValue);
@@ -1424,6 +1430,17 @@ ob_end_clean();
 								}
 							}
 						}
+						do_action( "saved_attribute_for_entity_{$attributeType}_{$attribute_code}", $attributeValue, $old_attribute_value, $entityTypeId, $entityId );
+						do_action( "saved_attribute_for_entity__{$attribute_code}", $attributeValue, $old_attribute_value, $entityTypeId, $entityId );
+						if ( isset( $attribute_setted[$attributeType][$attribute_code] ) ) {
+							if( is_array( $attribute_setted[$attributeType][$attribute_code] )) {
+								$attribute_setted[$attributeType][$attribute_code][] = $attributeValue;
+							} else {
+								$attribute_setted[$attributeType][$attribute_code] = array( $attribute_setted[$attributeType][$attribute_code], $attributeValue );
+							}
+						} else {
+							$attribute_setted[$attributeType][$attribute_code] = $attributeValue;
+						}
 					}
 
 					if ( empty($from) ) {
@@ -1438,6 +1455,7 @@ ob_end_clean();
 					}
 				}
 			}
+			do_action( "saved_attribute_for_entity", $attribute_setted, $old_attribute_to_set, $entityTypeId, $entityId );
 		}
 	}
 

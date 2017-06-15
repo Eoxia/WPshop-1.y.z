@@ -110,6 +110,7 @@ class WPS_Mass_List_Table extends WP_List_Table {
 				$columns[ $column ] = $data_column['name'];
 			}
 		}
+		$columns['date'] = __( 'Date' );
 		return $columns;
 	}
 	/**
@@ -120,7 +121,9 @@ class WPS_Mass_List_Table extends WP_List_Table {
 	 */
 	protected function get_sortable_columns() {
 		$sortable_columns = array(
-			'title'    => array( 'title', false ),
+			'title'     => array( 'title', false ),
+			'thumbnail' => array( 'thumbnail', false ),
+			'date' => array( 'p.post_date', false ),
 		);
 		foreach ( $this->request_items_columns() as $column => $data_column ) {
 			$sortable_columns[ $column ] = array( $data_column['code'], false );
@@ -175,19 +178,52 @@ class WPS_Mass_List_Table extends WP_List_Table {
 	public function column_thumbnail( $item ) {
 		$thumbnail_id = '';
 		$link_content = get_the_post_thumbnail( $item['ID'], array( 25, 25 ) );
-		if ( empty( $link_content ) ) {
-			$link_content = __( 'Choose Image' );
-		} else {
+		if ( ! empty( $link_content ) ) {
+			$link_content = "<span class=\"img\">{$link_content}</span>";
 			$thumbnail_id = get_post_thumbnail_id( $item['ID'] );
 		}
 		$popup_title = __( 'Choose Image' );
 		return sprintf(
-			'<input type="hidden" name="row_%1$s[thumbnail]" value="%2$s"><a href="#thumbnail" data-media-title="%3$s">%4$s</a>',
+			'<input type="hidden" name="row_%1$s[thumbnail]" value="%2$s"><a href="#thumbnail" data-media-title="%3$s">%4$s<span class="text">%3$s</span></a>',
 			$item['ID'],
 			$thumbnail_id,
 			__( 'Choose Image' ),
 			$link_content
 		);
+	}
+	public function column_date( $item ) {
+		global $mode;
+
+		if ( '0000-00-00 00:00:00' === $item['pdate'] ) {
+			$t_time = $h_time = __( 'Unpublished' );
+			$time_diff = 0;
+		} else {
+			$t_time = get_the_time( __( 'Y/m/d g:i:s a' ) );
+			$m_time = $item['pdate'];
+			$time = get_post_time( 'G', true, $item['ID'] );
+
+			$time_diff = time() - $time;
+
+			if ( $time_diff > 0 && $time_diff < DAY_IN_SECONDS ) {
+				$h_time = sprintf( __( '%s ago' ), human_time_diff( $time ) );
+			} else {
+				$h_time = mysql2date( __( 'Y/m/d' ), $m_time );
+			}
+		}
+
+		if ( 'publish' === $item['status'] ) {
+			_e( 'Published' );
+		} elseif ( 'future' === $item['status'] ) {
+			if ( $time_diff > 0 ) {
+				echo '<strong class="error-message">' . __( 'Missed schedule' ) . '</strong>';
+			} else {
+				_e( 'Scheduled' );
+			}
+		} else {
+			_e( 'Last Modified' );
+		}
+		echo '<br />';
+		echo '<abbr title="' . $t_time . '">' . $h_time . '</abbr>';
 	}
 	/**
 	 * Column content for title.
@@ -434,19 +470,12 @@ class WPS_Mass_List_Table extends WP_List_Table {
 		$include_states = implode( "','", $include_states );
 		$post_types = implode( "','", $this->_post_types );
 		$orderby = isset( $_REQUEST['orderby'] ) ? esc_sql( $_REQUEST['orderby'] ) : 'p.post_date'; // WPCS: CSRF ok.
-		$order = isset( $_REQUEST['order'] ) ? esc_sql( $_REQUEST['order'] ) : 'DESC'; // WPCS: CSRF ok.
+		$order = isset( $_REQUEST['order'] ) ? esc_sql( strtoupper( $_REQUEST['order'] ) ) : 'DESC'; // WPCS: CSRF ok.
 		$cast = isset( $_REQUEST['cast'] ) ? esc_sql( $_REQUEST['cast'] ) : ''; // WPCS: CSRF ok.
 		$cast = strtoupper( $cast );
 		$s = isset( $_REQUEST['s'] ) ? esc_sql( $_REQUEST['s'] ) : ''; // WPCS: CSRF ok.
 		$exclude_attribute_codes = implode( "','", $this->exclude_attribute_codes );
-		$extra = '';
 		$items_count = $wpdb->prepare( "SELECT FOUND_ROWS() FROM {$wpdb->posts} WHERE 1 = %d", 1 );
-		if ( ! is_null( $id_post ) ) {
-			$id_post = intval( $id_post );
-			$extra = "
-			AND p.ID = {$id_post}";
-			$s = '';
-		}
 		$true = true;
 		if ( $true ) { // FOUND_ROWS incompatibilities ?
 			$items_count = $wpdb->prepare(
@@ -470,8 +499,8 @@ class WPS_Mass_List_Table extends WP_List_Table {
 		$wpsdb_values_text = WPSHOP_DBT_ATTRIBUTE_VALUES_TEXT;
 		$wpsdb_values_options = WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS;
 		$extra_select = '';
-		if ( ! in_array( $orderby, array( 'p.post_date', 'title', 'ID' ), true ) ) {
-			$extra_select = "GROUP_CONCAT( ( SELECT IFNULL( val_dec1.value,
+		if ( ! in_array( $orderby, apply_filters( 'wps_mass_list_custom_orderby', array( 'title', 'ID', 'thumbnail', 'p.post_date' ) ), true ) ) {
+			$extra_select = "SELECT GROUP_CONCAT( IFNULL( val_dec1.value,
 				IFNULL( val_dat1.value,
 					IFNULL( val_tex1.value,
 						IFNULL( val_var1.value,
@@ -481,7 +510,7 @@ class WPS_Mass_List_Table extends WP_List_Table {
 						)
 					)
 				)
-			)
+			) SEPARATOR ' ' )
 			FROM wp_posts p1
 			LEFT JOIN {$wpsdb_attribute} attr1 ON attr1.status = 'valid' AND attr1.code = '{$orderby}'
 			LEFT JOIN {$wpsdb_values_decimal} val_dec1 ON val_dec1.attribute_id = attr1.id AND val_dec1.entity_id = p1.ID
@@ -490,13 +519,36 @@ class WPS_Mass_List_Table extends WP_List_Table {
 			LEFT JOIN {$wpsdb_values_text} val_tex1 ON val_tex1.attribute_id = attr1.id AND val_tex1.entity_id = p1.ID
 			LEFT JOIN {$wpsdb_values_varchar} val_var1 ON val_var1.attribute_id = attr1.id AND val_var1.entity_id = p1.ID
 			LEFT JOIN {$wpsdb_values_options} val_opt1 ON val_opt1.attribute_id = attr1.id AND val_opt1.id = val_int1.value
-			WHERE p1.ID = p.ID ) SEPARATOR ' ' )";
-			print_r( $extra_select );
+			WHERE p1.ID = p.ID";
+			$extra_select = "( {$extra_select} )";
 			if ( ! empty( $cast ) ) {
 				$extra_select = "CAST( {$extra_select} AS {$cast} )";
 			}
 			$extra_select = ",
 			{$extra_select} AS {$orderby}";
+		}
+		if ( 'thumbnail' === $orderby ) {
+			$ids = $wpdb->get_col( $wpdb->prepare(
+				"SELECT CAST( pm.post_id AS SIGNED INTEGER ) as col
+				FROM {$wpdb->postmeta} pm
+				JOIN {$wpdb->posts} p ON pm.post_id = p.ID AND p.post_type IN ( '{$post_types}' )
+				WHERE pm.meta_key = %s
+				AND pm.meta_value != %d
+				ORDER BY pm.meta_value {$order}",
+				'_thumbnail_id',
+				0
+			) );
+			$ids = implode( ', ', $ids );
+			$orderby = "FIELD( p.ID, {$ids} )";
+		}
+		$orderby = apply_filters( 'wps_mass_list_custom_orderby_query', $orderby );
+		$extra = "GROUP BY p.ID
+		ORDER BY {$orderby} {$order}
+		LIMIT %d, %d";
+		if ( ! is_null( $id_post ) ) {
+			$id_post = intval( $id_post );
+			$extra = "AND p.ID = {$id_post}";
+			$s = '';
 		}
 		$wpdb->query(
 			$wpdb->prepare( 'SET SESSION group_concat_max_len = %d', 1000000 )
@@ -509,6 +561,7 @@ class WPS_Mass_List_Table extends WP_List_Table {
 				p.post_parent as parent,
 				p.post_status as status,
 				p.post_type as type,
+				p.post_date as pdate,
 				GROUP_CONCAT(
 					CONCAT(
 						attr.id, ':',
@@ -545,10 +598,8 @@ class WPS_Mass_List_Table extends WP_List_Table {
 				)
 				WHERE p.post_status IN ( '{$include_states}' )
 				AND p.post_type IN ( '{$post_types}' )
-				AND p.post_title LIKE %s{$extra}
-				GROUP BY p.ID
-				ORDER BY {$orderby} {$order}
-				LIMIT %d, %d",
+				AND p.post_title LIKE %s
+				{$extra}",
 				WPSHOP_PRODUCT_ATTRIBUTE_SET_ID_META_KEY,
 				$this->request_current_view(),
 				$this->entity_id,
@@ -784,15 +835,17 @@ class WPS_Mass_List_Table extends WP_List_Table {
 			if ( (int) $view['id'] === (int) $this->request_current_view() ) {
 				$class = ' class="current"';
 			}
+			$current_url = set_url_scheme( 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
 			$link = add_query_arg(
 				array(
 					'page' =>
-				str_replace(
-					"{$this->screen->post_type}_page_",
-					'',
-					substr( $this->screen->id, 0, strpos( $this->screen->id, '_att_set_' ) ) . '_att_set_' . $view['id']
+					str_replace(
+						"{$this->screen->post_type}_page_",
+						'',
+						substr( $this->screen->id, 0, strpos( $this->screen->id, '_att_set_' ) ) . '_att_set_' . $view['id']
+					),
 				),
-				)
+				$current_url
 			);
 			$link = remove_query_arg( 'paged', $link );
 			$result[ $view['id'] ] = sprintf(
@@ -814,7 +867,7 @@ class WPS_Mass_List_Table extends WP_List_Table {
 	 */
 	public function bulk_actions( $which = '' ) {
 		submit_button( __( 'Save changes', 'wpshop' ), 'bulk-save', 'bulk-save', false, array(
-			'data-nonce' => wp_create_nonce( 'bulk-save-' . $this->hook ),
+			'data-nonce' => wp_create_nonce( 'bulk-save-mass-edit-interface-3' ),
 		) );
 		?><span class="spinner"></span><?php
 	}
@@ -835,7 +888,11 @@ class WPS_Mass_List_Table extends WP_List_Table {
 		}
 		if ( ! array_key_exists( $item['parent'], $this->items ) && 0 !== (int) $item['parent'] ) {
 			$parent_item = $this->request( $item['parent'] );
-			$this->items[ $item['parent'] ] = $parent_item[0];
+			if ( isset( $parent_item[0] ) ) {
+				$this->items[ $item['parent'] ] = $parent_item[0];
+			} else {
+				$this->items[ $item['parent'] ] = null;
+			}
 		}
 		if ( array_key_exists( $item['parent'], $rows ) ) {
 			$offset = array_search( $item['parent'], array_keys( $rows ), true );

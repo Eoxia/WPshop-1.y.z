@@ -84,7 +84,7 @@ class wps_quotation_backend_ctr {
 		$new_product_id = -1;
 
 		$post_title = ( !empty($_POST['post_title']) ) ? sanitize_text_field( $_POST['post_title'] ) : -1;
-		$post_content = ( !empty($_POST['post_content']) ) ? sanitize_text_field( $_POST['post_content'] ) : '';
+		$post_content = ( !empty($_POST['post_content']) ) ? nl2br( esc_textarea( $_POST['post_content'] ) ) : ''; 
 		$attributes = ( !empty($_POST['attribute']) ) ? (array) $_POST['attribute'] : array();
 
 		if( $post_title != -1 ) {
