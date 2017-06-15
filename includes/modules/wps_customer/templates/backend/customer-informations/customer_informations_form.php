@@ -6,7 +6,7 @@
 	if( !empty($signup_fields) ) :
 		foreach( $signup_fields as $fields_section_name => $fields_section ) : ?>
 		<span class="wps-h4"><?php _e( $fields_section_name, 'wpshop' ); ?></span>
-		<div><?php
+		<div class="customer-account-detail-group" ><?php
 			foreach( $fields_section as $signup_field ) :
 			$query = $wpdb->prepare( 'SELECT value  FROM '.WPSHOP_DBT_ATTRIBUTE_VALUES_PREFIX.strtolower($signup_field->data_type). ' WHERE entity_type_id = %d AND attribute_id = %d AND entity_id = %d ', $customer_entity_type_id, $signup_field->id, $cid );
 

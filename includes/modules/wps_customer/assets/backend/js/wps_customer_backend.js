@@ -3,7 +3,7 @@ jQuery( document ).ready( function() {
 	// Choose a customer in Order administration panel
 	jQuery( document ).on( 'change', '#user_customer_id', function() {
 		jQuery( '#wps_orders_selected_customer' ).val( jQuery( '#user_customer_id' ).chosen().val() );
-		refresh_customer_informations_admin();
+		refreshCustomerInformationsInOrders();
 	});
 
 	// Create a new customer in administration
@@ -38,7 +38,7 @@ jQuery( document ).ready( function() {
 	        				}
 	        		}, 'json' );
 	        		// Refresh address & account datas
-	        		refresh_customer_informations_admin();
+	        		refreshCustomerInformationsInOrders();
 	        	} else {
 	        		jQuery( '#wps_signup_error_container' ).html( response[1] );
 	        		jQuery( '#wps_signup_button' ).removeClass( 'wps-bton-loading' );
@@ -54,16 +54,12 @@ jQuery( document ).ready( function() {
 		jQuery( this ).addClass( 'wps-bton-loading' );
 	});
 
-	update_selected_address_ids();
+	updateSelectedAddressesIDS();
 
 	/** Update Selected addresses ids **/
-	function update_selected_address_ids() {
-		/*if ( jQuery( '.wps_select_address' ).length == 0 ) {
-			jQuery( '#wps_order_selected_address_billing' ).val( '' );
-			jQuery( '#wps_order_selected_address_shipping' ).val( '' );
-		}*/
-		jQuery( '.wps_select_address' ).each( function(index, element) {
-			if( jQuery( element ).prop( 'checked' ) ) {
+	function updateSelectedAddressesIDS() {
+		jQuery( '.wps_select_address' ).each( function( index, element ) {
+			if ( jQuery( element ).prop( 'checked' ) ) {
 				jQuery( '*[name="wps_order_selected_address[' + jQuery( element ).attr( 'name' ).substr( 0, jQuery( element ).attr( 'name' ).indexOf( '_address_id' ) ) + ']"]' ).val( jQuery( element ).val() );
 			}
 		} );
@@ -72,30 +68,24 @@ jQuery( document ).ready( function() {
 	/**
 	 * Refresh Customer inforations in order back-office panel
 	 */
-	function refresh_customer_informations_admin() {
-		jQuery( '#wps_customer_account_informations' ).animate( { 'opacity': 0.15 }, 350 );
-		jQuery( '#wps_customer_addresses' ).animate( { 'opacity': 0.15 }, 350 );
+	function refreshCustomerInformationsInOrders() {
 		var data = {
-				action: 'wps_order_refresh_customer_informations',
-				_wpnonce: jQuery( '#wps_customer_account_informations' ).data( 'nonce' ),
-				customer_id: jQuery( '#wps_orders_selected_customer' ).val(),
-				order_id: jQuery( '#post_ID' ).val()
-			};
+			action: 'wps_order_refresh_customer_informations',
+			_wpnonce: jQuery( '#wps_customer_account_informations' ).data( 'nonce' ),
+			customer_id: jQuery( '#wps_orders_selected_customer' ).val(),
+			order_id: jQuery( '#post_ID' ).val()
+		};
+
+		jQuery( '#wpshop_order_customer_information_box .inside' ).addClass( 'wps-bloc-loader wps-bloc-loading' );
 		jQuery.post( ajaxurl, data, function( response ) {
-				if ( response['status'] ) {
-					jQuery( '#wps_customer_account_informations' ).html( response['account'] );
-					jQuery( '#wps_customer_account_informations' ).animate( { 'opacity': 1 }, 350 );
-
-					jQuery( '#wps_customer_addresses' ).html( response['addresses'] );
-					jQuery( '#wps_customer_addresses' ).animate( { 'opacity': 1 }, 350, function() {
-						update_selected_address_ids();
-					});
-				} else {
-					alert( 'Error #CustomerBackJS94' );
-					jQuery( '#wps_selected_customer_informations' ).animate( {'opacity' : 1}, 350 );
-				}
-		}, 'json');
+			if ( response.status ) {
+				jQuery( '#wpshop_order_customer_information_box .inside' ).html( response.output );
+				updateSelectedAddressesIDS();
+			} else {
+				alert( 'Error #CustomerBackJS94' );
+			}
+			jQuery( '#wpshop_order_customer_information_box .inside' ).removeClass( 'wps-bloc-loader wps-bloc-loading' );
+		}, 'json' );
 	}
-
 
 });

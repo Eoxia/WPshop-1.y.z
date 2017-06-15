@@ -1,0 +1,47 @@
+#wps_customer_contacts .inside {
+	padding: 0px;
+	margin: 0px;
+}
+#wps_customer_contacts .inside .dashicons {
+	cursor: pointer;
+}
+#wps_customer_contacts .inside .dashicons.dashicons-star-filled {
+	color: gold;
+	cursor: auto;
+}
+#wps_customer_contacts .inside .dashicons.dashicons-lock {
+	cursor: auto;
+}
+.wps-customer-contacts-actions {
+	text-align: right;
+}
+#wps_customer_contacts .inside .dashicons-star-empty:hover {
+	color: gold;
+}
+
+#wps_customer_contacts .inside table td.wps-customer-associate-contact-container {
+	text-align: right;
+	text-decoration: none;
+}
+#wps_customer_contacts .inside table td.wps-customer-associate-contact-container {
+	padding: 0px;
+}
+#wps_customer_contacts .inside table td.wps-customer-associate-contact-container input[type="text"] {
+	margin: 10px 15px 5px 0;
+	height: 30px;
+	width: 300px;
+}
+.wps-customer-contact-association-opener {
+	cursor: pointer;
+	line-height: 35px;
+	margin: 10px 15px 5px 0;
+	display: block;
+}
+.wps-customer-contact-association-opener i {
+	background-color: #00A0D2;
+	color: #FFF;
+	height: 30px;
+	line-height: 33px;
+	padding: 0 5px;
+	margin: 4px 0 0 0;
+}

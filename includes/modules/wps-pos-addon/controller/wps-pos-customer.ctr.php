@@ -329,23 +329,20 @@ class wps_pos_addon_customer {
 	 * AJAX - Recherche dans la liste des clients du site / Search into website customer list
 	 */
 	function ajax_pos_customer_search() {
-		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
-
-		if ( !wp_verify_nonce( $_wpnonce, 'ajax_pos_customer_search' ) )
-			wp_die();
+		check_ajax_referer( 'ajax_pos_customer_search' );
 
 		global $wpdb;
-		$term = ( !empty( $_POST['term'] ) ) ? sanitize_text_field( $_POST['term'] ) : '';
+		$term = ( ! empty( $_POST['term'] ) ) ? sanitize_text_field( $_POST['term'] ) : '';
 
-		/** Get the default customer **/
+		// Get the default customer.
 		$default_customer_option = get_option( 'wpshop_pos_addon_default_customer_id' );
-		if ( !empty($default_customer_option) ) {
-			$default_user = get_user_by('id', $default_customer_option);
-			if ( !empty($default_user) ) {
+		if ( ! empty( $default_customer_option ) ) {
+			$default_user = get_user_by( 'id', $default_customer_option );
+			if ( ! empty( $default_user ) ) {
 				$user_infos = array(
 					'ID' => $default_user->ID,
-					'last_name' => get_user_meta($default_user->ID, 'last_name', true),
-					'first_name' => get_user_meta($default_user->ID, 'first_name', true),
+					'last_name' => get_user_meta( $default_user->ID, 'last_name', true ),
+					'first_name' => get_user_meta( $default_user->ID, 'first_name', true ),
 					'email' => '-',
 				);
 				$customer_list[] = $user_infos;
@@ -365,5 +362,3 @@ class wps_pos_addon_customer {
 	}
 
 }
-
-?>

@@ -143,7 +143,7 @@ Améliorations / Improvments
 * 8133 - Pagination liste produits, interface commande - Pagination products, order interface
 * 8055 - Mail administrateur notifiant une nouvelle version disponible - Mail new version to admin
 * 8011 - Compatibilité user switching - Compatibility user switching
-* 8009 - Ajout de filtres dans les interfaces clients - Interface customer filters wps_filter_customer_action_metabox / wps_filter_customer_list_actions / wps_filter_customer_in_order<br>
+* 8009 - Ajout de filtres dans les interfaces clients - Interface customer filters wps_filter_customer_list_actions / wps_filter_customer_in_order<br>
 * 8006 - Créer un devis à partir de l'interface client - Create quotation by customer interface #7393
 * 7960 - Compte libellés - Account labels
 

@@ -3,9 +3,7 @@ if ( !empty($orders) ) :
 	$permalink_option = get_option( 'permalink_structure' );
 	$account_page_id = get_option('wpshop_myaccount_page_id');
 ?>
-
-
-<?php if( !$from_admin ): ?>
+<?php if ( ! is_admin() ): ?>
 <span class="wps-h5"><?php _e( 'My last orders', 'wpshop'); ?></span>
 <?php endif; ?>
 
@@ -15,7 +13,7 @@ if ( !empty($orders) ) :
 		<div class="wps-table-cell"><?php _e( 'Reference', 'wpshop'); ?></div>
 		<div class="wps-table-cell"><?php _e( 'Total', 'wpshop'); ?></div>
 		<div class="wps-table-cell"><?php _e( 'Status', 'wpshop'); ?></div>
-		<div class="wps-table-cell"><?php _e( 'Tracking number', 'wpshop'); ?></div>
+		<?php if ( true === $shipping_addresses_activated ) : ?><div class="wps-table-cell"><?php _e( 'Tracking number', 'wpshop'); ?></div><?php endif; ?>
 		<div class="wps-table-cell"><?php _e( 'Actions', 'wpshop'); ?></div>
 	</div>
 	<?php
@@ -28,5 +26,3 @@ if ( !empty($orders) ) :
 <?php else : ?>
 <div class="wps-alert-info"><?php _e( 'No order have been created for the moment', 'wpshop'); ?></div>
 <?php endif; ?>
-
-

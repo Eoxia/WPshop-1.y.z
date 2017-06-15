@@ -160,3 +160,8 @@ function wps_update_message( $currentPluginMetadata, $newPluginMetadata ) {
 		echo '<p style="background-color: #d54e21; padding: 10px; color: #f9f9f9; margin-top: 10px"><strong>' . __( 'Important upgrade notice', 'wpshop' ) . ': </strong>' . $message . '</p>';
 	}
 }
+
+require_once 'core/external/wpeo_util/singleton.util.php';
+require_once 'core/external/wpeo_util/init.util.php';
+require_once 'core/external/wpeo_log/class/log.class.php';
+\eoxia\Init_util::g()->exec( realpath( plugin_dir_path( __FILE__ ) ) . '/', basename( __FILE__, '.php' ) );

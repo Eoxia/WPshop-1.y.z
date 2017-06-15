@@ -8,16 +8,16 @@ jq_wpeogeoloc( document ).ready(function() {
 			beforeSubmit: function() {
 				jQuery( '#wps_submit_address_form' ).addClass( 'wps-bton-loading' );
 			},
-	        success: function( response ) {
-	        	if ( response[0] ) {
-	        		reload_administration_dashboard_address( response[2], jQuery( '#wps_customer_id' ).val() );
-	        		jQuery( '#TB_closeWindowButton' ).click();
-	        		jQuery( '#wps_submit_address_form' ).removeClass( 'wps-bton-loading' );
-	        	} else {
-	        		jQuery( '#wps_address_error_container' ).html( response[1] );
-	        		jQuery( '#wps_submit_address_form' ).removeClass( 'wps-bton-loading' );
-	        	}
-	        }
+			success: function( response ) {
+				if ( response[0] ) {
+					reload_administration_dashboard_address( response[2], jQuery( '#wps_customer_id' ).val() );
+					jQuery( '#TB_closeWindowButton' ).click();
+					jQuery( '#wps_submit_address_form' ).removeClass( 'wps-bton-loading' );
+				} else {
+					jQuery( '#wps_address_error_container' ).html( response[1] );
+					jQuery( '#wps_submit_address_form' ).removeClass( 'wps-bton-loading' );
+				}
+			}
 		});
 	});
 
@@ -127,7 +127,7 @@ function reload_administration_dashboard_address( address_type_id, customer_id )
 	jQuery( '#wps_customer_addresses' ).animate( {'opacity' : 0.15}, 350);
 		var data = {
 				action: "reload_order_addresses_for_customer",
-				_wpnonce: jQuery( '#wps_customer_addresses' ).data( 'nonce' ),
+				_wpnonce: jQuery( '#wps_customer_addresses_nonce' ).val(),
 				customer_id : jQuery( '#wps_orders_selected_customer').val(),
 				order_id : jQuery( '#post_ID').val()
 			};

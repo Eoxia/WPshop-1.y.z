@@ -392,7 +392,6 @@ class wpshop_products
         }
 
         echo '<div id="tabs-product-related">' . self::related_products_meta_box_content($post) . '</div>';
-        echo '<div id="tabs-product-provider">' . self::provider_products_meta_box_content($post) . '</div>';
         echo '<div id="tabs-product-display">' . self::product_frontend_display_config_meta_box($post) . '</div>';
         if (!empty($currentTabContent['boxMore'])) {
             echo $currentTabContent['boxMore'];
@@ -424,32 +423,6 @@ class wpshop_products
 			<select name="related_products_list[]" id="related_products_list" class="ajax_chosen_select_related_products" multiple >' . $existing_selection . '</select>
 			<input type="hidden" id="wpshop_ajax_search_element_type_related_products" name="wpshop_ajax_search_element_type" value="' . $post->post_type . '" />
 			<input type="hidden" id="wpshop_nonce_ajax_search_related_products" name="wpshop_nonce_ajax_search" value="' . wp_create_nonce("wpshop_element_search") . '" />';
-
-        return $content;
-    }
-
-    /**
-     * Output the content for related product metabox
-     * @param object $post The current edited post
-     * @return string
-     */
-    public static function provider_products_meta_box_content($post)
-    {
-        $content = $existing_selection = '';
-
-        if (!empty($post->ID)) {
-            $providers_id = get_post_meta($post->ID, WPSHOP_PRODUCT_PROVIDER, true);
-            if (!empty($providers_id) && !empty($providers_id[0])) {
-                foreach ($providers_id as $provider_id) {
-                    $existing_selection .= '<option selected value="' . $provider_id . '" >' . get_the_title($provider_id) . '</option>';
-                }
-            }
-        }
-
-        $content = '<p>' . __('Type the begin of a provider last name/first name in the field below to add', 'wpshop') . '</p>
-			<select name="provider_list[]" id="provider_list" class="ajax_chosen_select_provider_products" multiple >' . $existing_selection . '</select>
-			<input type="hidden" id="wpshop_ajax_search_element_type_provider_products" name="wpshop_ajax_search_element_type" value="' . WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS . '" />
-			<input type="hidden" id="wpshop_nonce_ajax_search_provider_products" name="wpshop_nonce_ajax_search" value="' . wp_create_nonce("wpshop_element_search") . '" />';
 
         return $content;
     }
@@ -832,8 +805,8 @@ class wpshop_products
                     $sub_tpl_component = array();
                     $criteria = '';
                     foreach ($sorting_criteria as $c):
-						$selected = isset( $atts['order'] ) ? $atts['order'] : null;
-                        $criteria .= '<option value="' . $c['code'] . '" ' . selected( $selected, $c['code'], false ) . '>' . __($c['frontend_label'], 'wpshop') . '</option>';
+											$selected = isset( $atts['order'] ) ? $atts['order'] : null;
+                      $criteria .= '<option value="' . $c['code'] . '" ' . selected( $selected, $c['code'], false ) . '>' . __($c['frontend_label'], 'wpshop') . '</option>';
                     endforeach;
                     $sub_tpl_component['SORTING_CRITERIA_LIST'] = $criteria;
                     $tpl_component['SORTING_CRITERIA'] = wpshop_display::display_template_element($sub_template_part, $sub_tpl_component);

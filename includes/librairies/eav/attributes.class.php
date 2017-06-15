@@ -1403,10 +1403,7 @@ ob_end_clean();
 									}
 									else{
 										$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_VALUES_PREFIX.$attributeType, array_merge($query_params, array('value' => $attributeValue)));
-										wpeologs_ctr::log_datas_in_files( 'wpshop_attributes', array(
-											'object_id' 	=> $entityId,
-											'message' 		=> __( 'Add the attribute : ' . $currentAttribute->code . ' with value : ' . $attributeValue , 'wpshop' ) ), 0
-										);
+										\eoxia\log_class::exec( 'wpshop_attributes', 'wpshop_attributes', __( 'Add the attribute : ' . $currentAttribute->code . ' with value : ' . $attributeValue , 'wpshop' ), array( 'object_id' 	=> $entityId ), 0 );
 									}
 
 									/**	Dans le cas ou l'attribut courant est utilise dans l'interface permettant de trier les produits (option de l'attribut) on defini une meta specifique	*/
@@ -1435,10 +1432,7 @@ ob_end_clean();
 						if(!empty($attr_to_delete)){
 							foreach ($attr_to_delete as $value) {
 								$wpdb->delete(WPSHOP_DBT_ATTRIBUTE_VALUES_PREFIX.$attributeType, array_merge($delete_current_attribute_values_params, array('value_id' => $value->value_id)));
-								wpeologs_ctr::log_datas_in_files( 'wpshop_attributes', array(
-									'object_id' 	=> $entityId,
-									'message' 		=> __( 'Remove the attribute : ' . $value->value_id, 'wpshop' ) ), 0
-								);
+								\eoxia\log_class::exec( 'wpshop_attributes', 'wpshop_attributes', __( 'Remove the attribute : ' . $value->value_id, 'wpshop' ), array( 'object_id' 	=> $entityId ), 0 );
 							}
 						}
 					}

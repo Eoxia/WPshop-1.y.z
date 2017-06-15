@@ -1,22 +1,11 @@
 <?php if ( !defined( 'ABSPATH' ) ) exit;
 class wps_account_ctr {
-	/** Define the main directory containing the template for the current plugin
-	* @var string
-	*/
-	private $template_dir;
-	/**
-	 * Define the directory name for the module in order to check into frontend
-	 * @var string
-	 */
-	private $plugin_dirname = WPS_ACCOUNT_DIR;
 
 	private $redirect = false;
 
 	private $redirect_url;
 
 	function __construct() {
-		/** Template Load **/
-		$this->template_dir = WPS_ACCOUNT_PATH . WPS_ACCOUNT_DIR . "/templates/";
 		/** Shortcodes **/
 		// Sign up Display Shortcode
 		add_shortcode( 'wps_signup', array( &$this, 'display_signup' ) );
@@ -92,7 +81,7 @@ class wps_account_ctr {
 			}
 			else {
 				ob_start();
-				require_once( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, $this->template_dir, "frontend", "login/login-form") );
+				require_once( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, WPS_ACCOUNT_TPL,  "frontend", "login/login-form") );
 				$output = ob_get_contents();
 				ob_end_clean();
 				if ( !$force_login ) {
@@ -174,7 +163,7 @@ class wps_account_ctr {
 	function get_login_first_step() {
 		$output = '';
 		ob_start();
-		require_once( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, $this->template_dir,"frontend", "login/login-form", "first") );
+		require_once( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, WPS_ACCOUNT_TPL, "frontend", "login/login-form", "first") );
 		$output .= ob_get_contents();
 		ob_end_clean();
 		return $output;
@@ -227,7 +216,7 @@ class wps_account_ctr {
 		$output = '';
 		if ( get_current_user_id() == 0 ) {
 			ob_start();
-			require_once( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, $this->template_dir, "frontend", "forgot-password/forgot-password") );
+			require_once( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, WPS_ACCOUNT_TPL,  "frontend", "forgot-password/forgot-password") );
 			$output = ob_get_contents();
 			ob_end_clean();
 		}
@@ -376,7 +365,7 @@ class wps_account_ctr {
 	function get_renew_password_form() {
 		if ( get_current_user_id() == 0 ) {
 			ob_start();
-			require_once( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, $this->template_dir,"frontend", "forgot-password/password-renew") );
+			require_once( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, WPS_ACCOUNT_TPL, "frontend", "forgot-password/password-renew") );
 			$output = ob_get_contents();
 			ob_end_clean();
 		}
@@ -415,7 +404,7 @@ class wps_account_ctr {
 				}
 			}
 			ob_start();
-			require( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, $this->template_dir,"frontend", "signup/signup") );
+			require( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, WPS_ACCOUNT_TPL, "frontend", "signup/signup") );
 			$output = ob_get_contents();
 			ob_end_clean();
 		}
@@ -555,7 +544,7 @@ class wps_account_ctr {
 		$user_preferences = get_user_meta( get_current_user_id(), 'user_preferences', true );
 		$wpshop_cart_option = get_option( 'wpshop_cart_option' );
 		ob_start();
-		require_once( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, $this->template_dir, "frontend", "signup/signup", "newsletter") );
+		require_once( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, WPS_ACCOUNT_TPL,  "frontend", "signup/signup", "newsletter") );
 		$output = ob_get_contents();
 		ob_end_clean();
 
@@ -599,7 +588,7 @@ class wps_account_ctr {
 					}
 				}
 				ob_start();
-				require( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, $this->template_dir,"backend", "customer-informations/customer_informations_form") );
+				require( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, WPS_ACCOUNT_TPL, "backend", "customer-informations/customer_informations_form") );
 				$output = ob_get_contents();
 				ob_end_clean();
 			} else {
@@ -619,7 +608,7 @@ class wps_account_ctr {
 								foreach( $attributes_sections as $attributes_section ) {
 									$query = $wpdb->prepare( 'SELECT * FROM ' .WPSHOP_DBT_ATTRIBUTE_DETAILS. ' WHERE status = %s AND entity_type_id = %d AND attribute_set_id = %d AND attribute_group_id = %d', 'valid', $customer_entity_id, $attributes_set->id, $attributes_section->id);
 									$attributes_details = $wpdb->get_results( $query );
-
+									$attribute_details = '';
 									foreach( $attributes_details as $attributes_detail ) {
 										$query = $wpdb->prepare( 'SELECT * FROM ' .WPSHOP_DBT_ATTRIBUTE. ' WHERE id = %d AND status = %s', $attributes_detail->attribute_id, 'valid' );
 										$attribute_def = $wpdb->get_row( $query );
@@ -647,7 +636,7 @@ class wps_account_ctr {
 										if( !empty( $attribute_def ) ) {
 											if( $attribute_def->frontend_input != 'password' ) {
 												ob_start();
-												require( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, $this->template_dir,"frontend", "account/account_informations_element") );
+												require( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, WPS_ACCOUNT_TPL, "frontend", "account/account_informations_element") );
 												$attribute_details .= ob_get_contents();
 												ob_end_clean();
 											}
@@ -655,18 +644,16 @@ class wps_account_ctr {
 									}
 
 									ob_start();
-									require( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, $this->template_dir,"frontend", "account/account_informations_group_element") );
+									require( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, WPS_ACCOUNT_TPL, "frontend", "account/account_informations_group_element") );
 									$attributes_sections_tpl .= ob_get_contents();
 									ob_end_clean();
-
 								}
-
 							}
 						}
 					}
 				}
 				ob_start();
-				require_once( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, $this->template_dir, "frontend", "account/account_informations") );
+				require_once( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, WPS_ACCOUNT_TPL,  "frontend", "account/account_informations") );
 				$output = ob_get_contents();
 				ob_end_clean();
 			}
@@ -707,7 +694,7 @@ class wps_account_ctr {
 				}
 
 			ob_start();
-			require( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, $this->template_dir,"frontend", "account/account_form") );
+			require( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, WPS_ACCOUNT_TPL, "frontend", "account/account_form") );
 			$output = ob_get_contents();
 			ob_end_clean();
 		}

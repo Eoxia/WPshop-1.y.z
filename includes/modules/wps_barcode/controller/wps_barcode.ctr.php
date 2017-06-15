@@ -249,37 +249,10 @@ class wps_barcode {
 			/** For add a product */
 			$_REQUEST['wpshop_product_attribute']['varchar']['barcode'] = !empty( $_REQUEST['wpshop_product_attribute']['varchar']['barcode'] ) ? sanitize_text_field( $_REQUEST['wpshop_product_attribute']['varchar']['barcode'] ) : null;
 			if( !isset($_REQUEST['wpshop_product_attribute']['varchar']['barcode']) ) {
-				wpeologs_ctr::log_datas_in_files( 'wps_barcode',
-				array(
-					'object_id' => $post_ID,
-					'message' => sprintf( __('Adding barcode: %s for %s object ID', 'wps_barcode'), '<b>'.$_REQUEST['wpshop_product_attribute']['varchar']['barcode'].'</b>', '<b>'.$post_ID.'</b>') ),
-				0);
+				\eoxia\log_class::exec( 'wps_barcode', 'wps_barcode', sprintf( __('Adding barcode: %s for %s object ID', 'wps_barcode'), '<b>'.$_REQUEST['wpshop_product_attribute']['varchar']['barcode'].'</b>', '<b>'.$post_ID.'</b>'), array( 'object_id' 	=> $post_ID ), 0 );
+
 				$_REQUEST['wpshop_product_attribute']['varchar']['barcode'] = $this->wps_generate_barcode($array);
 			}
-			/*if (  isset($barcode) ) {
-				if ($barcode !== '') {
-					wpeologs_ctr::log_datas_in_files( 'wps_barcode',
-					array(
-					'object_id' => $post_ID,
-					'message' => sprintf( __('Change barcode: %s replacing %s for %s object ID', 'wps_barcode'), '<b>'.sanitize_text_field( $_REQUEST['wpshop_product_attribute']['varchar']['barcode'] ).'</b>', '<b>'.$barcode.'</b>', '<b>'.$post_ID.'</b>') ), 0);
-
-					$barcode = sanitize_text_field( $_REQUEST['wpshop_product_attribute']['varchar']['barcode'] );
-				}
-				else {
-					wpeologs_ctr::log_datas_in_files( 'wps_barcode',
-					array(
-						'object_id' => $post_ID,
-						'message' => sprintf( __('Adding barcode: %s for %s object ID', 'wps_barcode'), '<b>'.$barcode.'</b>', '<b>'.$post_ID.'</b>') ),
-					0);
-
-					// $_REQUEST['wpshop_product_attribute']['varchar']['barcode'] = $barcode;
-				}
-			}
-			else {
-				/** On met à jour l'attribut barcode *//*
-				$products = new wps_product_ctr();
-				$products->update_the_attribute_for_product($post_ID, 'varchar', 'barcode', $barcode);
-			}*/
 		}
 	}
 
@@ -326,7 +299,7 @@ class wps_barcode {
 				'wps_barcode'), $barcode->getLog() );
 
 		if ( class_exists('wpeologs_ctr') ) {
-			wpeologs_ctr::log_datas_in_files( 'wps_barcode', array('object_id' => $id, 'message' => $message), 0);
+			\eoxia\log_class::exec( 'wps_barcode', 'wps_barcode', $message, array( 'object_id' => $id ), 0 );
 		}
 
 		return $gencode;

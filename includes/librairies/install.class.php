@@ -2388,22 +2388,49 @@ WHERE ATTR_DET.attribute_id IN (" . $attribute_ids . ")"
 			case 68:
 				wps_message_ctr::create_default_message();
 				return true;
-				break;
+			break;
 
-            /*    Always add specific case before this bloc    */
-            case 'dev':
+			case 69:
+				// Récupération des commandes pour mise à jour des informations concernant le client.
+				$query = $wpdb->prepare( "SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE meta_key = %s", '_order_postmeta' );
+				$orders_meta = $wpdb->get_results( $query );
+				foreach ( $orders_meta as $order_meta ) {
+					$order_data = maybe_unserialize( $order_meta->meta_value );
+					$wpdb->update( $wpdb->posts, array( 'post_parent' => wps_customer_ctr::get_customer_id_by_author_id( $order_data['customer_id'] ) ), array( 'ID' => $order_meta->post_id ) );
+				}
 
-                //wp_cache_flush();
-                // Newsletters options
-                //$wp_rewrite->flush_rules();
-                return true;
-                break;
+				/** Mise à jour des identifiants des auteurs et parents des clients */
+				$customer_args = $args = array(
+					'post_type'				=> WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS,
+					'post_status'	 		=> 'all',
+					'posts_per_page' 	=> -1,
+				);
+				$customers = new WP_Query( $customer_args );
+				$wps_customer_admin = new wps_customer_admin();
+				foreach ( $customers->posts as $customer ) {
+					$wpdb->update( $wpdb->posts, array( 'post_parent' => $customer->ID ), array( 'post_author' => $customer->post_author, 'post_type' => WPSHOP_NEWTYPE_IDENTIFIER_ADDRESS ) );
+				}
 
-            default:
-                return true;
-                break;
-        }
-    }
+				/** Mise a jour des statuts clients. Draft pour tous les publish */
+				$wpdb->update( $wpdb->posts, array( 'post_status' => 'draft' ), array( 'post_status' => 'publish', 'post_type' => WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ) );
+				/** Mise à jour du post_parent à 0 pour les clients qui n'ont pas avoir de parent */
+				$wpdb->update( $wpdb->posts, array( 'post_parent' => 0 ), array( 'post_type' => WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ) );
+				return true;
+			break;
+
+			/** Always add specific case before this bloc */
+			case 'dev':
+				// wp_cache_flush();
+				// Newsletters options
+				// $wp_rewrite->flush_rules();
+				return true;
+			break;
+
+			default:
+				return true;
+			break;
+		}
+	}
 
     /**
      * Method called when deactivating the plugin

@@ -571,48 +571,35 @@ class wps_address {
 		return $addresses_list;
 	}
 
-
-
 	/**
-	 * Build and return queried address form
-	 * @param integer $address_type_id
-	 * @param integer $address_id
-	 * @param integer $user_id
-	 * @return string
+	 * Construction et affichage du formulaire de création/modification d'une adresse / Build and return queried address form
+	 *
+	 * @param integer $address_type_id L'identifiant du type d'adresse a éditer (facturation/livraison/etc) / Address type identifier (billing/shipping/...).
+	 * @param integer $address_id Optionnal. Si fournit correspond à l'identifiant de l'adresse à éditer / If given: identifier of the address we want to update.
+	 * @param integer $customer_id Optinnal. Si fournit corrspond à l'identifiant du client pour lequel créer/éditer l'adresse / If given: Identifier of customer to create/update address for.
+	 *
+	 * @return array Un tableau contenant l'affihage du formulaire en premier index et le titre du forulaire en second index.
 	 */
-	function loading_address_form( $address_type_id, $address_id = '', $user_id = '', $display_in_front = false ) {
-		$response  = '<div id="wps_address_error_container"></div>';
-		$response .= '<form id="wps_address_form_save" action="' .admin_url('admin-ajax.php'). '" method="post">';
-		$response .= '<input type="hidden" name="action" value="wps_save_address" />';
-		$response .= wp_nonce_field( 'wps_save_address', '_wpnonce', true, false );
+	function loading_address_form( $address_type_id, $address_id = '', $customer_id = '' ) {
 		$first_address_checking = false;
-
-		$user_id = ( !empty($user_id) ) ? $user_id : get_current_user_id();
-		$customer_id = wps_customer_ctr::get_customer_id_by_author_id( $user_id );
-		if ( !empty($address_id) ) {
-			$response .= self::display_form_fields($address_type_id, $address_id, '', '', array(), array(), array(), $customer_id);
-			$title = __('Edit your address', 'wpshop');
-		}
-		elseif($address_type_id) {
+		// $customer_id = wps_customer_ctr::get_customer_id_by_author_id( $user_id );
+		if ( ! empty( $address_id ) ) {
+			$title = __( 'Edit your address', 'wpshop' );
+		} elseif ( $address_type_id ) {
 			$billing_option = get_option( 'wpshop_billing_address' );
 
-			$addresses = self::get_addresses_list( $user_id );
-			$list_addresses = ( !empty($addresses[ $billing_option['choice'] ]) ) ? $addresses[ $billing_option['choice'] ] : array();
+			$addresses = self::get_addresses_list( $customer_id );
+			$list_addresses = ( ! empty( $addresses[ $billing_option['choice'] ] ) ) ? $addresses[ $billing_option['choice'] ] : array();
 			$first_address_checking = ( empty( $list_addresses ) ) ? true : false;
 
-			$response .= self::display_form_fields($address_type_id, '', '', '', array(), array(), array(), $customer_id );
-			$title = __('Add a new address', 'wpshop');
+			$title = __( 'Add a new address', 'wpshop' );
 		}
 
-		/** Check if a billing address is already save **/
-		if ( $first_address_checking && $address_type_id != $billing_option['choice'] ) {
-			$response .= '<div class="wps-form"><input name="wps-shipping-to-billing" id="wps-shipping-to-billing" checked="checked" type="checkbox" /> <label for="wps-shipping-to-billing">' .__( 'Use the same address for billing', 'wpshop' ). '</label></div>';
-		}
+		ob_start();
+		require( wpshop_tools::get_template_part( WPS_ADDRESS_DIR, WPS_LOCALISATION_TEMPLATES_MAIN_DIR, 'common', 'address', 'form' ) );
+		$form = ob_get_clean();
 
-		$response .= '<button id="wps_submit_address_form" class="wps-bton-first-alignRight-rounded">' .__('Save', 'wpshop'). '</button>';
-
-		$response .= '</form>';
-		return array( $response, $title );
+		return array( $form, $title );
 	}
 
 	/**
@@ -661,10 +648,16 @@ class wps_address {
 
 
 
-	/** Treat the differents fields of form and classified them by form
-	 * @return boolean
+	/**
+	 * Treat the differents fields of form and classified them by form
+	 *
+	 * @param  integer $attribute_set_id     L'identifiant du groupe d'attribut à utiliser.
+	 * @param  integer $address_id_to_copy   [description]
+	 * @param  array   $address_info_to_copy [description]
+	 *
+	 * @return array                        [description]
 	 */
-	public static function save_address_infos( $attribute_set_id, $address_id_to_copy = 0, $address_info_to_copy = array(), $customer_id = false, $post_ID = false ) {
+	public static function save_address_infos( $attribute_set_id, $address_id_to_copy = 0, $address_info_to_copy = array(), $customer_id = false, $post_id = false ) {
 		global $wpdb;
 
 		if( empty( $address_info_to_copy ) ) {
@@ -683,34 +676,21 @@ class wps_address {
 
 		// Create or update the post address
 		// @TODO : REQUEST
-		$post_parent = '';
-		$post_author = get_current_user_id();
 		$customer_id = !empty( $customer_id ) ? (int) $customer_id : ( !empty( $_REQUEST['user']['customer_id'] ) ? (int) $_REQUEST['user']['customer_id'] : 0 );
-		$post_ID = !empty( $post_ID ) ? (int) $post_ID : ( !empty( $_REQUEST['post_ID'] ) ? (int) $_REQUEST['post_ID'] : 0 );
+		$post_id = ! empty( $post_id ) ? (int) $post_id : ( ! empty( $_REQUEST['post_ID'] ) ? (int) $_REQUEST['post_ID'] : 0 );
 
-		if ( !empty($customer_id) ) {
-			$customer = get_post( $customer_id );
-			$post_parent = $customer->post_author;
-			$post_author = $customer->post_author;
-		}
-		elseif ( !empty( $post_ID ) ) {
-			$post_parent = $post_ID;
-		}
-		else {
-			$post_parent = get_current_user_id();
-		}
 		$post_address = array(
-			'post_author' => $post_author,
 			'post_title' => !empty( $attribute ) && !empty( $attribute[$attribute_set_id] ) && !empty( $attribute[$attribute_set_id]['varchar'] ) && !empty( $attribute[$attribute_set_id]['varchar']['address_title'] ) ? $attribute[$attribute_set_id]['varchar']['address_title'] : '',
 			'post_status' => 'draft',
 			'post_name' => WPSHOP_NEWTYPE_IDENTIFIER_ADDRESS,
 			'post_type' => WPSHOP_NEWTYPE_IDENTIFIER_ADDRESS,
-			'post_parent'=>	$post_parent
 		);
 
 		$edit_other_thing = true;
 
-		if ( empty($current_item_edited) && (empty( $current_attribute_set_id ) || $current_attribute_set_id != $attribute_set_id )) {
+		if ( empty( $current_item_edited ) && ( empty( $current_attribute_set_id ) || $current_attribute_set_id != $attribute_set_id ) ) {
+			$post_address['post_author'] = get_current_user_id();
+			$post_address['post_parent'] = empty( $customer_id ) && ! empty( $post_id ) ? $post_id : $customer_id;
 			$current_item_edited = wp_insert_post( $post_address );
 			if ( is_admin()) {
 				$attribute[$attribute_set_id]['item_id'] = $current_item_edited;
@@ -1014,50 +994,6 @@ class wps_address {
 		return $output_form_fields;
 	}
 
-	// /**
-	//  * Action when Shipping and billing are same for customer
-	//  * @param integer $billing_address_id
-	//  * @param integer $shipping_address_id
-	//  */
-	// function same_shipping_as_billing($billing_address_id, $shipping_address_id) {
-	// 	$tableauGeneral = $_REQUEST;
-	//
-	// 	// Create an array with the shipping address fields definition
-	// 	$shipping_fields = array();
-	// 	foreach ($tableauGeneral['attribute'][$billing_address_id] as $key=>$attribute_group ) {
-	// 		if ( is_array($attribute_group) ) {
-	// 			foreach( $attribute_group as $field_name=>$value ) {
-	// 				$shipping_fields[] =  sanitize_text_field( $field_name );
-	// 			}
-	// 		}
-	// 	}
-	// 	// Test if the billing address field exist in shipping form
-	// 	foreach ($tableauGeneral['attribute'][$shipping_address_id] as $key=>$attribute_group ) {
-	// 		if (is_array($attribute_group) ) {
-	// 			foreach( $attribute_group as $field_name=>$value ) {
-	// 				if ( in_array($field_name, $shipping_fields) ) {
-	// 					if ($field_name == 'address_title') {
-	// 						$tableauGeneral['attribute'][$billing_address_id][$key][$field_name] = __('Billing address', 'wpshop');
-	// 					}
-	// 					else {
-	// 						$tableauGeneral['attribute'][$billing_address_id][$key][$field_name] = sanitize_text_field( $tableauGeneral['attribute'][$shipping_address_id][$key][$field_name] );
-	// 					}
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-	//
-	// 	foreach ( $tableauGeneral as $key=>$value ) {
-	// 		if ( !empty($_POST) ) {
-	// 			$_POST[$key] = $value;
-	// 		}
-	// 		else {
-	// 			$_REQUEST[$key] = $value;
-	// 		}
-	// 	}
-	//
-	// }
-
 	/**
 	 * Copy Shipping address datas in billing corresponding datas
 	 * @param integer $shipping_address_type_id
@@ -1100,10 +1036,9 @@ class wps_address {
 	 */
 	function display_addresses_interface( $customer_id = '', $admin_display = false, $order_id = '' ) {
 		$output = $extra_class = $billing_address_display = $shipping_address_display = $first_address_checking = '';
-		$is_from_admin = ( !empty($customer_id) ) ? true : false;
-		$user_id = ( !empty($customer_id) ) ? $customer_id : get_current_user_id();
+		$is_from_admin = ! empty( $customer_id ) ? true : false;
 
-		if ( $user_id != 0 ) {
+		if ( $customer_id ) {
 			$shipping_option = get_option( 'wpshop_shipping_address_choice' );
 			$billing_option = get_option( 'wpshop_billing_address' );
 
@@ -1152,7 +1087,7 @@ class wps_address {
 				}
 
 				if ( $display_address_of_type ) {
-					$box_content = !$admin_display ? self::display_address_interface_content( $address_type_id, $address_title, '', $address_type, $user_id ) : '';
+					$box_content = !$admin_display ? self::display_address_interface_content( $address_type_id, $address_title, '', $address_type, $customer_id ) : '';
 					$first_address_checking = ( empty( $box_content ) && ( 'shipping' == $address_type ) ) ? true : false;
 
 					ob_start();
@@ -1348,12 +1283,12 @@ class wps_address {
 	 * AJAX - Load address form in Modal Box
 	 */
 	function wps_load_address_form() {
-		$address_id = ( !empty( $_POST['address_id'] ) ) ? (int) $_POST['address_id'] : '';
-		$address_type_id = ( !empty( $_POST['address_type_id']) ) ? sanitize_text_field( $_POST['address_type_id'] ) : '';
-
+		$address_type_id = ( ! empty( $_POST['address_type_id'] ) ) ? sanitize_text_field( $_POST['address_type_id'] ) : '';
 		check_ajax_referer( 'wps_load_address_form_' . $address_type_id );
 
-		wp_die( json_encode( self::loading_address_form( $address_type_id, $address_id, get_current_user_id() ) ) );
+		$address_id = ( ! empty( $_POST['address_id'] ) ) ? (int) $_POST['address_id'] : '';
+
+		wp_die( wp_json_encode( self::loading_address_form( $address_type_id, $address_id, get_current_user_id() ) ) );
 	}
 
 	/**
@@ -1371,10 +1306,10 @@ class wps_address {
 
 		foreach ( $attribute as $id_group => $attribute_group ) {
 			$address_type = $id_group;
-			$group = wps_address::get_addresss_form_fields_by_type ($id_group);
+			$group = wps_address::get_addresss_form_fields_by_type( $id_group );
 			foreach ( $group as $attribute_sets ) {
 				foreach ( $attribute_sets as $attribute_set_field ) {
-					$validate = $wpshop->validateForm($attribute_set_field['content'], $attribute[$id_group], 'address_edition');
+					$validate = $wpshop->validateForm( $attribute_set_field['content'], $attribute[ $id_group ], 'address_edition' );
 				}
 
 				if ( $validate ) {

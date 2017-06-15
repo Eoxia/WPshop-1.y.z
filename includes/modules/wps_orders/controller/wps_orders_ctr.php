@@ -100,24 +100,28 @@ class wps_orders_ctr {
 		return $output;
 	}
 
-		/**
-		 * Display orders in customer account
-		 *
-		 * @param integer $customer_id
-		 * @return string
-		 */
+	/**
+	 * Display orders in customer account
+	 *
+	 * @param integer $customer_id Identifiant du client pour qui afficher les commandes / The customer identifier we want to have order list for.
+	 *
+	 * @return string
+	 */
 	function display_orders_in_account( $customer_id = '' ) {
-
 		$output = '';
-		$customer_id = ( ! empty( $customer_id ) ) ? $customer_id : get_current_user_id();
-		$from_admin = ( ! empty( $customer_id ) ) ? true : false;
+		$customer_id = ( ! empty( $customer_id ) ) ? $customer_id : wps_customer_ctr::get_customer_id_by_author_id( get_current_user_id() );
 		$wps_orders_mdl = new wps_orders_mdl();
 		$orders = $wps_orders_mdl->get_customer_orders( $customer_id );
-		// Display orders
+
+		$shipping_address_option = get_option( 'wpshop_shipping_address_choice' );
+		// Vérification de l'activation ou non des livraisons pour l'affichage des adresses correspondantes / Check shipping addresses state in order to display or not addresses.
+		$shipping_addresses_activated = ( ! empty( $shipping_address_option ) && ! empty( $shipping_address_option['activate'] ) ) ? true : false;
+
 		ob_start();
 		require_once( wpshop_tools::get_template_part( WPS_ORDERS_DIR, $this->template_dir, 'frontend', 'orders_list_in_account' ) );
 		$output = ob_get_contents();
 		ob_end_clean();
+
 		return $output;
 	}
 

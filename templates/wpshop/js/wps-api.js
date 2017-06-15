@@ -181,7 +181,7 @@ jQuery(document).ready(function(wpsjq) {
 
 		var autoplay = wpsjq_get_attr_dataname(cible, 'data-autoplay', false);
 
-		wpsjq('.wps-owlCarousel').owlCarousel({
+		wpsjq('.wps-owlCarousel').wpsOwlCarousel({
 			slideSpeed : 300,
 			paginationSpeed : 400,
 			singleItem:false,
@@ -733,7 +733,7 @@ jQuery(document).ready(function(wpsjq) {
 
 	wps_product_slider = wpsjq(".wps-showroom-slider-content");
 
-	 wps_product_slider.owlCarousel({
+	 wps_product_slider.wpsOwlCarousel({
 		slideSpeed : 300,
 		paginationSpeed : 400,
 		singleItem:true,

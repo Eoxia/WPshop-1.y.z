@@ -16,9 +16,10 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	DEFINE('WPS_ACCOUNT_DIR', basename(dirname(__FILE__)));
 	DEFINE('WPS_ACCOUNT_PATH', str_replace( "\\", "/", str_replace( WPS_ACCOUNT_DIR, "", dirname( __FILE__ ) ) ) );
 	DEFINE('WPS_ACCOUNT_URL', str_replace( str_replace( "\\", "/", ABSPATH), site_url() . '/', WPS_ACCOUNT_PATH ) );
+	DEFINE('WPS_ACCOUNT_TPL', WPS_ACCOUNT_PATH . WPS_ACCOUNT_DIR . '/templates/' );
 
 	include( plugin_dir_path( __FILE__ ).'controller/wps_customer_ctr.php' );
-	include( plugin_dir_path( __FILE__ ).'controller/wps_customer_metaboxes.controller.01.php' );
+	include( plugin_dir_path( __FILE__ ).'controller/wps-customer-metaboxes.controller.01.php' );
 	include( plugin_dir_path( __FILE__ ).'controller/wps_account_ctr.php' );
 	include( plugin_dir_path( __FILE__ ).'controller/wps_account_dashboard_ctr.php' );
 	include( plugin_dir_path( __FILE__ ).'model/wps_customer_mdl.php' );

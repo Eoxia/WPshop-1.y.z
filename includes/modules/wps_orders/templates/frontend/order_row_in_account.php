@@ -13,20 +13,21 @@
 	<div class="wps-table-cell">
 		<span class="wps-label-<?php echo $color_label[$order_meta['order_status']]; ?>"><?php _e($order_status[$order_meta['order_status']], 'wpshop');?></span>
 	</div>
+	<?php if ( true === $shipping_addresses_activated ) : ?>
 	<div class="wps-table-cell">
 		<?php if (!empty($order_meta['order_trackingLink'])): ?>
 			<?php /** Check if http:// it's found in the link */
-$url = $order_meta['order_trackingLink'];
-if ('http://' != substr($url, 0, 7)) {
-    $url = 'http://' . $url;
-}
-
-?>
+			$url = $order_meta['order_trackingLink'];
+			if ('http://' != substr($url, 0, 7)) {
+			    $url = 'http://' . $url;
+			}
+			?>
 			<a href="<?php echo $url; ?>" target="_blank"><?php echo !empty($order_meta['order_trackingNumber']) ? $order_meta['order_trackingNumber'] : ""; ?></a>
 		<?php else: ?>
 			<?php _e('No tracking links', 'wpshop');?>
 		<?php endif;?>
 	</div>
+<?php endif; ?>
 	<?php if (!is_admin()): ?>
 		<div class="wps-table-cell wps-customer-order-list-actions">
 			<button data-nonce="<?php echo wp_create_nonce('wps_orders_load_details'); ?>" class="wps-bton-third wps-orders-details-opener" id="wps-order-details-opener-<?php echo $order_id; ?>"><?php _e('Order details', 'wpshop');?></button>

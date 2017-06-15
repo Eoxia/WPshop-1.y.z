@@ -426,10 +426,7 @@ if ( !class_exists("wpshop_prices") ) {
 			 * default value
 			 */
 			if( empty( $rate_vat ) ) {
-				wpeologs_ctr::log_datas_in_files( 'wps_product', array(
-					'object_id' 	=> $product_id,
-					'message' 		=> __( 'Use the default VAT rate', 'wpshop' ) ), 0
-				);
+				\eoxia\log_class::exec( 'wps_product', 'wps_product', __( 'Use the default VAT rate', 'wpshop' ), array( 'object_id' 	=> $product_id ), 0 );
 
 				$query = "
 						SELECT ATTR_VAL_OPTIONS.value, ATTR_VAL_OPTIONS.id
@@ -446,11 +443,8 @@ if ( !class_exists("wpshop_prices") ) {
 			 * dans ce cas la on utilise le log / If it is still empty , it means that no
 			 * VAT rate found in this case the log is used
 			 */
-			if( empty( $rate_vat ) ) {
-				wpeologs_ctr::log_datas_in_files( 'wps_product', array(
-					'object_id' 	=> $product_id,
-					'message' 		=> __( 'No VAT rate in the product and no default VAT rate found', 'wpshop' ) ), 2
-				);
+			if ( empty( $rate_vat ) ) {
+				\eoxia\log_class::exec( 'wps_product', 'wps_product', __( 'No VAT rate in the product and no default VAT rate found', 'wpshop' ), array( 'object_id' 	=> $product_id ), 2 );
 			}
 
 			return $rate_vat;

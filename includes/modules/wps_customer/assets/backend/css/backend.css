@@ -42,7 +42,7 @@
 .wp-shop-customers-list-ordered-product p {
 	margin: 0px !important;
 	font-style: italic;
-	text-decoration: underline;	
+	text-decoration: underline;
 }
 .wps-customer-name-container:after {
 	content: "";
@@ -59,7 +59,29 @@
 	width: 50%;
 }
 
+#minor-publishing-actions > div, #misc-publishing-actions > div {
+	display: none;
+}
+#misc-publishing-actions > span {
+	display: block;
+}
+body.post-type-wpshop_customers div.postbox > div.inside {
+	padding: 0 !important;
+	margin: 0 !important;
+}
+body.post-type-wpshop_customers div.postbox > div.inside div.wps-boxed, div.postbox > div.inside div.wps-table {
+	margin-bottom: 0 !important;
+}
+#wps_customer_orders.postbox > h2 > span > a.page-title-action, #wpshop_order_customer_information_box.postbox > h2 > span > a.page-title-action {
+	top: 0px;
+}
+.customer-account-detail-group:after {
+	content: "";
+	display: table;
+	clear: both;
+}
 i.wps-icon-plus{
 	background: none !important;
 	color:#555555 !important;
 	padding: 0 !important;
+}

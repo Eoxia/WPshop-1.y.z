@@ -34,17 +34,18 @@ class wps_customer_mdl {
 		/**	Define args for listing	*/
 		$customer_list_args = array(
 			'post_type'				=> WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS,
-			'post_status'			=> array( 'pending', 'draft', 'publish', 'private', ),
+			'post_status'			=> array( 'pending', 'draft', 'publish', 'private' ),
 			'posts_per_page'	=> $nb_per_page,
-			'offset'					=> $offset * $nb_per_page,
 		);
+		if ( -1 !== $nb_per_page ) {
+			$customer_list_args['offset'] = $offset * $nb_per_page;
+		}
 
 		$wpshop_customer_search = new wpshop_customer_search();
-		add_filter( 'posts_where', array( $wpshop_customer_search, 'wpshop_search_where_in_customer') );
+		add_filter( 'posts_where', array( $wpshop_customer_search, 'wpshop_search_where_in_customer' ) );
 
 		/**	Get customer list with builtin wordpress function	*/
 		$customer_list_query = new WP_Query( wp_parse_args( $extra_args, $customer_list_args ) );
-		// echo "<pre>"; print_r($customer_list_query); echo "</pre>";
 
 		/**	Remove previously added filter for search extension	*/
 		remove_filter( 'posts_where', array( $wpshop_customer_search, 'wpshop_search_where_in_customer' ) );

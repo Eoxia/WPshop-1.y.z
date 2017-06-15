@@ -212,7 +212,7 @@ class wpshop_init{
 
 	var WPSHOP_NO_ATTRIBUTES_SELECT_FOR_VARIATION = "'.__('You have to select at least one attribute for creating a new variation', 'wpshop').'";
 
-	var WPSHOP_CHOSEN_ATTRS = {disable_search_threshold: 5, no_results_text: WPSHOP_CHOSEN_NO_RESULT, placeholder_text_single : WPSHOP_CHOSEN_SELECT_FROM_LIST, placeholder_text_multiple : WPSHOP_CHOSEN_SELECT_FROM_MULTI_LIST};
+	var WPSHOP_CHOSEN_ATTRS = {search_contains: true, disable_search_threshold: 5, no_results_text: WPSHOP_CHOSEN_NO_RESULT, placeholder_text_single : WPSHOP_CHOSEN_SELECT_FROM_LIST, placeholder_text_multiple : WPSHOP_CHOSEN_SELECT_FROM_MULTI_LIST};
 
 	var WPSHOP_TEMPLATES_URL = "'.WPSHOP_TEMPLATES_URL.'";
 	var WPSHOP_BUTTON_DESCRIPTION = "'.__('Insert shortcode into page content', 'wpshop').'";

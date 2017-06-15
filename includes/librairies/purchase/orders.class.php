@@ -343,21 +343,26 @@ class wpshop_orders {
 	}
 
 
-	/** Set the custom colums
+	/**
+	 * Set the custom colums
 	 * @return array
-	*/
+	 */
 	static function orders_edit_columns($columns){
+		$shipping_address_option = get_option( 'wpshop_shipping_address_choice' );
+
 	  $columns = array(
-		'cb' => '<input type="checkbox" />',
-		'order_identifier' => __('Identifiers', 'wpshop'),
-		'order_status' => __('Status', 'wpshop'),
-		'order_type' => __('Order type', 'wpshop'),
-		'order_billing' => __('Billing', 'wpshop'),
-		'order_shipping' => __('Shipping', 'wpshop'),
-		'order_total' => __('Order total', 'wpshop'),
-		'date' => __('Date', 'wpshop'),
-		//'order_actions' => __('Actions', 'wpshop')
-	  );
+			'cb' => '<input type="checkbox" />',
+			'order_identifier' => __('Identifiers', 'wpshop'),
+			'order_status' => __('Status', 'wpshop'),
+			'order_type' => __('Order type', 'wpshop'),
+			'order_billing' => __('Billing', 'wpshop'),
+		);
+		if ( ( ! empty( $shipping_address_option ) && ! empty( $shipping_address_option['activate'] ) ) ) {
+			$columns ['order_shipping'] = __('Shipping', 'wpshop');
+		}
+		$columns ['order_total'] = __('Order total', 'wpshop');
+		$columns ['date'] = __('Date', 'wpshop');
+		//$columns ['order_actions'] = __('Actions', 'wpshop');
 
 	  return $columns;
 	}

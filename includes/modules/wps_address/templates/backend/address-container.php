@@ -23,7 +23,7 @@ endif;
 			<a id="wps-add-an-address-<?php echo esc_attr( $address_type_id ); ?>"
 				class="add-new-h2 alignright thickbox"
 				href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-ajax.php' ) . $url_separator . 'action=wps_order_load_address_edit_form&address_type=' . $address_type_id . '&customer_id=' . $customer_id . '&width=740&height=690', 'load_adress_edit_form', '_wpnonce' ) ); ?>">
-					<i class="wps-icon-plus"></i><?php printf( esc_html( 'Create a %s', 'wpshop' ), strtolower( $address_title ) ); ?>
+				<i class="wps-icon-plus"></i><?php esc_html_e( 'Create', 'wpshop' ); ?>
 			</a>
 		</span>
 		<div style="clear : both;">
@@ -31,7 +31,7 @@ endif;
 				<?php if ( ! empty( $box_content ) ) : ?>
 				<?php echo $box_content; // WPCS: XSS ok. ?>
 				<?php else : ?>
-					<div class="wps-alert-info"><?php printf( __( 'You do not have create a %s', 'wpshop'), strtolower( $address_title ) ); ?></div>
+					<div class="wps-alert-info"><?php echo esc_html( sprintf( __( 'You do not have create a %s', 'wpshop' ), strtolower( $address_title ) ) ); ?></div>
 				<?php endif; ?>
 			</ul>
 		</div>

@@ -1073,49 +1073,6 @@ wpshop( document ).ready(function() {
 		}
 	});
 
-	/**
-	jQuery( document ).on( 'click', '#wps_submit_address_form', function() {
-
-		jQuery('#wps_address_form_save').ajaxForm({
-			dataType:  'json',
-			beforeSubmit : function() {
-				jQuery( '#wps_submit_address_form' ).addClass( 'wps-bton-loading' );
-			},
-	        success: function( response ) {
-	        	if ( response[0] ) {
-	        		reload_administration_dashboard_address( response[2], jQuery( '#wps_customer_id').val() );
-	        		jQuery( '#TB_closeWindowButton').click();
-	        		jQuery( '#wps_submit_address_form' ).removeClass( 'wps-bton-loading' );
-	        	}
-	        	else {
-	        		jQuery('#wps_address_error_container').html( response[1] );
-	        		jQuery( '#wps_submit_address_form' ).removeClass( 'wps-bton-loading' );
-	        	}
-	        },
-		}).submit();
-	});
-
-
-	function reload_administration_dashboard_address( customer_id ) {
-		if( customer_id != null ) {
-			var data = {
-					action: "wps_order_choose_customer",
-					customer_id : customer_id
-				};
-			jQuery.post(ajaxurl, data, function( response ){
-				if ( response['status'] ) {
-					jQuery( '#wps_customer_id' ).val( jQuery( '#user_customer_id').val() );
-					jQuery( '.wps_billing_data_container' ).html( response['billing_data'] );
-					jQuery( '.wps_shipping_data_container' ).html( response['shipping_data'] );
-					jQuery ( '#wps_order_choose_customer' ).removeClass( 'wps-bton-loading' );
-				}
-				else {
-					alert( 'Error #MainJS1113' );
-				}
-			}, 'json');
-		}
-	}
-	**/
 });
 
 /* Javascript plotting library for jQuery, v. 0.7.
