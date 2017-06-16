@@ -85,3 +85,8 @@
 .wps-user-dashboard .sub-menu .avatar {
 	margin-right: 10px;
 }
+.customer-account-detail-group:after {
+	clear: both;
+	content: "";
+	display: table;
+}

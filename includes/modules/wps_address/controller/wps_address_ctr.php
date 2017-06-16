@@ -42,7 +42,7 @@ class wps_address {
 
 		/**	Add shortocde listener for addresses	*/
 		add_shortcode( 'wps_address_list', array( &$this, 'get_addresses') );
-		add_shortcode( 'wps_addresses', array( &$this, 'display_addresses_interface') );
+		add_shortcode( 'wps_addresses', array( &$this, 'shortcode_callback_display_addresses') );
 		add_shortcode( 'wps_addresses_list', array( &$this, 'shortcode_display_addresses_list' ) );
 
 		/**	Add listener for ajax actions	*/
@@ -1025,7 +1025,17 @@ class wps_address {
 		return $tmp_array;
 	}
 
-
+	/**
+	 * Affichage du shortcode générant la liste des adresses clients
+	 *
+	 * @version 1.4.4.3
+	 *
+	 * @param  array $args Les arguments passés au shortcode.
+	 */
+	function shortcode_callback_display_addresses( $args ) {
+		$customer_id = ! empty( $args ) && ! empty( $args['CID'] ) ? (int) $args['CID'] : wps_customer_ctr::get_customer_id_by_author_id( get_current_user_id() );
+		return $this->display_addresses_interface( $customer_id );
+	}
 
 	/**
 	 * Display Address Inteface
@@ -1101,22 +1111,35 @@ class wps_address {
 		return $output;
 	}
 
-	/** Display address interface content **/
+	/**
+	 * [display_address_interface_content description]
+	 *
+	 * @param  [type]  $address_type_id  [description].
+	 * @param  [type]  $address_title    [description].
+	 * @param  [type]  $selected_address [description].
+	 * @param  [type]  $type             [description].
+	 * @param  string  $customer_id      [description].
+	 * @param  boolean $admin_display    [description].
+	 * @param  string  $order_id         [description].
+	 *
+	 * @return [type]                    [description]
+	 */
 	public static function display_address_interface_content( $address_type_id, $address_title, $selected_address = null, $type, $customer_id = '', $admin_display = false, $order_id = '' ) {
-		$user_id = ( !empty($customer_id) ) ? $customer_id : get_current_user_id();
-		$is_from_admin = ( !empty($customer_id) ) ? true : false;
-		$select_id = ( !empty($type) && $type == 'shipping') ?  'shipping_address_address_list' : 'billing_address_address_list';
+		$customer_id_from_cookie = ! empty( $_COOKIE ) && ! empty( $_COOKIE['wps_current_connected_customer'] ) ? (int) $_COOKIE['wps_current_connected_customer'] : wps_customer_ctr::get_customer_id_by_author_id( get_current_user_id() );
+		$customer_id = ! empty( $customer_id ) && ! empty( $customer_id ) && is_int( (int) $customer_id ) ? (int) $customer_id : $customer_id_from_cookie;
+
+		$select_id = ( ! empty( $type ) && ( 'shipping' == $type ) ) ?  'shipping_address_address_list' : 'billing_address_address_list';
 		$output = '';
 
-		if( !empty($address_type_id) ) {
-			$addresses = self::get_addresses_list( $user_id );
-			$list_addresses = ( !empty($addresses[ $address_type_id ]) ) ? $addresses[ $address_type_id ] : array();
-			if ( empty($list_addresses) ) {
-				$form = self::display_form_fields($address_type_id);
+		if ( ! empty( $address_type_id ) ) {
+			$addresses = self::get_addresses_list( $customer_id );
+			$list_addresses = ( ! empty( $addresses[ $address_type_id ] ) ) ? $addresses[ $address_type_id ] : array();
+			if ( empty( $list_addresses ) ) {
+				$form = self::display_form_fields( $address_type_id );
 			}
 
 			ob_start();
-			require( wpshop_tools::get_template_part( WPS_ADDRESS_DIR, WPS_LOCALISATION_TEMPLATES_MAIN_DIR, ( $admin_display ? 'backend' : 'frontend' ), "address", "content" ) );
+			require( wpshop_tools::get_template_part( WPS_ADDRESS_DIR, WPS_LOCALISATION_TEMPLATES_MAIN_DIR, ( $admin_display ? 'backend' : 'frontend' ), 'address', 'content' ) );
 			$output .= ob_get_contents();
 			ob_end_clean();
 		}

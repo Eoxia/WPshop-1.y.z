@@ -21,7 +21,7 @@ class wps_orders_ctr {
 		/** Template Load */
 		// add_filter( 'wpshop_custom_template', array( &$this, 'custom_template_load' ) );
 		add_shortcode( 'order_customer_informations', array( &$this, 'display_order_customer_informations' ) );
-		add_shortcode( 'wps_orders_in_customer_account', array( $this, 'display_orders_in_account' ) );
+		add_shortcode( 'wps_orders_in_customer_account', array( $this, 'shortcode_callback_display_orders_in_account' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'wps_orders_scripts' ) );
 		/**	Include the different javascript	*/
 		add_action( 'admin_init', array( &$this, 'admin_js' ) );
@@ -49,9 +49,9 @@ class wps_orders_ctr {
 	}
 
 
-		/**
-		 * Add scripts
-		 */
+	/**
+	 * Add scripts
+	 */
 	function wps_orders_scripts() {
 
 		wp_enqueue_script( 'wps_orders_fronend', WPS_ORDERS_URL . WPS_ORDERS_DIR . '/assets/frontend/js/wps_orders.js' );
@@ -98,6 +98,18 @@ class wps_orders_ctr {
 			$output = wpshop_display::display_template_element( 'wps_orders_choose_customer_interface', $tpl_component, array(), 'admin' );
 		}
 		return $output;
+	}
+
+	/**
+	 * Affichage du shortcode générant la liste des commandes d'un client
+	 *
+	 * @version 1.4.4.3
+	 *
+	 * @param  array $args Les arguments passés au shortcode.
+	 */
+	function shortcode_callback_display_orders_in_account( $args ) {
+		$customer_id = ! empty( $args ) && ! empty( $args['CID'] ) ? (int) $args['CID'] : wps_customer_ctr::get_customer_id_by_author_id( get_current_user_id() );
+		return $this->display_orders_in_account( $customer_id );
 	}
 
 	/**

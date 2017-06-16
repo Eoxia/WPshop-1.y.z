@@ -54,25 +54,25 @@ jQuery( document ).ready( function() {
 			beforeSubmit : function() {
 				jQuery( '#wps_submit_address_form' ).addClass( 'wps-bton-loading' );
 			},
-	        success: function( response ) {
-	        	if ( response[0] ) {
-	        		jQuery( '.wpsjq-closeModal').click();
-	        		jQuery( '#wps_submit_address_form' ).removeClass( 'wps-bton-loading' );
+      success: function( response ) {
+      	if ( response[0] ) {
+      		jQuery( '.wpsjq-closeModal').click();
+      		jQuery( '#wps_submit_address_form' ).removeClass( 'wps-bton-loading' );
 
-	        		reload_address_container( response[2], '' );
-	        		if( response[3] != null && response[3] != "" ) {
-	        			reload_address_container( response[3], '' );
-	        			setTimeout(function() {
-	        				var height_tab = parseFloat( jQuery( '#wps-address-container-' + response[2] + ' .wps-adresse-listing-select').height() );
-	        				jQuery( '#wps-address-container-' + response[3] + ' .wps-adresse-listing-select').height( height_tab );
-	        			}, 5000);
-	        		}
-	        	}
-	        	else {
-	        		jQuery('#wps_address_error_container').html( response[1] );
-	        		jQuery( '#wps_submit_address_form' ).removeClass( 'wps-bton-loading' );
-	        	}
-	        },
+      		reload_address_container( response[2], '' );
+      		if( response[3] != null && response[3] != "" ) {
+      			reload_address_container( response[3], '' );
+      			setTimeout(function() {
+      				var height_tab = parseFloat( jQuery( '#wps-address-container-' + response[2] + ' .wps-adresse-listing-select').height() );
+      				jQuery( '#wps-address-container-' + response[3] + ' .wps-adresse-listing-select').height( height_tab );
+      			}, 5000);
+      		}
+      	}
+      	else {
+      		jQuery('#wps_address_error_container').html( response[1] );
+      		jQuery( '#wps_submit_address_form' ).removeClass( 'wps-bton-loading' );
+      	}
+      },
 		});
 	});
 
@@ -138,7 +138,6 @@ jQuery( document ).ready( function() {
 	});
 
 	function reload_address_container( address_type, address_id  ) {
-
 		var data = {
 				action: "wps_reload_address_interface",
 				_wpnonce: jQuery( '#wps-address-container-' + address_type ).data( 'nonce' ),
@@ -154,7 +153,6 @@ jQuery( document ).ready( function() {
 							jQuery('.wps-billing-address').slideDown( 'slow' );
 							jQuery( '.wps_address_use_same_addresses' ).fadeOut();
 						});
-
 					});
 				}
 

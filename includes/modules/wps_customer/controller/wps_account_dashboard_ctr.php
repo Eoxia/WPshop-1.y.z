@@ -1,6 +1,10 @@
 <?php if ( !defined( 'ABSPATH' ) ) exit;
 class wps_account_dashboard_ctr {
 	function __construct() {
+		if ( empty( $_COOKIE ) || empty( $_COOKIE['wps_current_connected_customer'] ) ) {
+			setcookie( 'wps_current_connected_customer', wps_customer_ctr::get_customer_id_by_author_id( get_current_user_id() ), strtotime( '+30 days' ), SITECOOKIEPATH, COOKIE_DOMAIN, is_ssl() );
+		}
+
 		add_shortcode( 'wps_account_dashboard', array( $this, 'display_account_dashboard') );
 		// add_shortcode( 'wps_messages', array( 'wpshop_messages', 'get_histo_messages_per_customer' ) );
 		add_shortcode( 'wps_account_last_actions_resume', array($this, 'display_account_last_actions' ) );
@@ -8,41 +12,41 @@ class wps_account_dashboard_ctr {
 
 	function import_data( $part ) {
 		$output = '';
+		$current_customer_id = ! empty( $_COOKIE ) && ! empty( $_COOKIE['wps_current_connected_customer'] ) ? (int) $_COOKIE['wps_current_connected_customer'] : wps_customer_ctr::get_customer_id_by_author_id( get_current_user_id() );
 
-		switch( $part ) {
+		switch ( $part ) {
 			case 'account' :
-				$output  = '<div id="wps_account_informations_container" data-nonce="' . wp_create_nonce( 'wps_account_reload_informations' ) . '">';
-				$output .= do_shortcode('[wps_account_informations]');
+				$output  = '<div id="wps_account_informations_container" data-nonce="' . esc_attr( wp_create_nonce( 'wps_account_reload_informations' ) ) . '" >';
+				$output .= do_shortcode( '[wps_account_informations CID="' . $current_customer_id . '" ]' );
 				$output .= '</div>';
-				$output .= do_shortcode( '[wps_orders_in_customer_account]');
+				$output .= do_shortcode( '[wps_orders_in_customer_account CID="' . $current_customer_id . '" ]' );
 			break;
 			case 'address' :
-				$output .= do_shortcode( '[wps_addresses]' );
+				$output .= do_shortcode( '[wps_addresses CID="' . $current_customer_id . '" ]' );
 			break;
 			case 'order' :
-				$output = do_shortcode( '[wps_orders_in_customer_account]' );
+				$output = do_shortcode( '[wps_orders_in_customer_account CID="' . $current_customer_id . '" ]' );
 			break;
 			case  'opinion' :
-				$output = do_shortcode( '[wps_opinion]' );
+				$output = do_shortcode( '[wps_opinion CID="' . $current_customer_id . '" ]' );
 			break;
 			case 'wishlist' :
-				$output = '<div class="wps-alert-info">' .__( 'This functionnality will be available soon', 'wpshop'). '</div>';
+				$output = '<div class="wps-alert-info">' . __( 'This functionnality will be available soon', 'wpshop' ) . '</div>';
 			break;
 			case 'coupon' :
-				$output = do_shortcode( '[wps_coupon]' );
+				$output = do_shortcode( '[wps_coupon CID="' . $current_customer_id . '" ]' );
 			break;
 			case 'messages' :
-				$output = do_shortcode( '[wps_message_histo]' );
+				$output = do_shortcode( '[wps_message_histo CID="' . $current_customer_id . '" ]' );
 			break;
 			default :
-				$output = do_shortcode('[wps_account_informations]');
+				$output = do_shortcode( '[wps_account_informations CID="' . $current_customer_id . '" ]' );
 			break;
-
 		}
 
 		$output = apply_filters( 'wps_my_account_extra_panel_content', $output, $part );
 
-		if( get_current_user_id() == 0 ) {
+		if ( 0 === get_current_user_id() ) {
 			$output = do_shortcode( '[wpshop_login]' );
 		}
 		return $output;

@@ -18,7 +18,7 @@ class wps_account_ctr {
 		// Renew password form
 		add_shortcode( 'wps_renew_password', array( &$this, 'get_renew_password_form'));
 		//Account informations
-		add_shortcode( 'wps_account_informations', array($this, 'display_account_informations') );
+		add_shortcode( 'wps_account_informations', array($this, 'shortcode_callback_display_account_informations') );
 		//Account form
 		add_shortcode( 'wps_account_informations_form', array($this, 'account_informations_form') );
 
@@ -552,51 +552,74 @@ class wps_account_ctr {
 	}
 
 	/**
+	 * Affichage du shortcode générant le compte client
+	 *
+	 * @version 1.4.4.3
+	 *
+	 * @param  array $args Les arguments passés au shortcode.
+	 */
+	function shortcode_callback_display_account_informations( $args ) {
+		$customer_id = ! empty( $args ) && ! empty( $args['CID'] ) ? (int) $args['CID'] : wps_customer_ctr::get_customer_id_by_author_id( get_current_user_id() );
+		return $this->display_account_informations( $customer_id );
+	}
+
+	/**
+	 * Affiche les champs du formualire d'édition des informations d'un compte client
+	 *
+	 * @param  integer $cid L'identifiant du client dont il faut afficher le formulaire d'édition.
+	 *
+	 * @return string     L'afficahge HTML des champs
+	 */
+	function display_account_form_fields( $cid ) {
+		global $wpdb;
+
+		$customer_entity_type_id = wpshop_entities::get_entity_identifier_from_code( WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS );
+		$fields_to_output = $signup_form_section = $password_attribute = $signup_form_attributes = array();
+
+		$query = $wpdb->prepare( 'SELECT id FROM ' . WPSHOP_DBT_ATTRIBUTE_SET . ' WHERE entity_id = %d', $customer_entity_type_id );
+		$customer_entity_id = $wpdb->get_var( $query );
+		$attributes_set = wpshop_attributes_set::getElement( $customer_entity_id );
+		$account_attributes = wpshop_attributes_set::getAttributeSetDetails( ( ! empty( $attributes_set->id ) ) ? $attributes_set->id : '', "'valid'" );
+		$query = $wpdb->prepare( 'SELECT * FROM ' . WPSHOP_DBT_ATTRIBUTE_GROUP . ' WHERE attribute_set_id = %d', $attributes_set->id );
+		$customer_attributes_sections = $wpdb->get_results( $query );
+		foreach ( $customer_attributes_sections as $k => $customer_attributes_section ) {
+			$signup_form_section[ $customer_attributes_section->name ] = array();
+			if ( ! empty( $account_attributes[ $customer_attributes_section->id ] ) ) {
+				foreach ( $account_attributes[ $customer_attributes_section->id ]['attribut'] as $attribute ) {
+					$signup_form_section[ $customer_attributes_section->name ][] = $attribute;
+				}
+			}
+		}
+
+		ob_start();
+		require( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, WPS_ACCOUNT_TPL, 'common/account', 'account', 'form' ) );
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		return $output;
+	}
+
+	/**
 	 * ACCOUNT - Display Account informations
+	 *
 	 * @return string
 	 */
 	function display_account_informations( $customer_id = '', $force_edition_form = false, $customer_link = false ) {
 		global $wpdb;
 		$output = $attributes_sections_tpl = $attribute_details = '';
-		$is_from_admin = ( !empty($customer_id) ) ? true : false;
-		$customer_id = ( !empty($customer_id) ) ? $customer_id : get_current_user_id();
-		if( $customer_id != 0 ) {
+		$customer_id = ( ! empty( $customer_id ) ) ? $customer_id : get_current_user_id();
+		if ( 0 !== $customer_id ) {
 			$screen = get_current_screen();
-			if( ( is_admin() && isset( $screen ) && is_object( $screen ) && $screen->post_type == WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ) || $force_edition_form ) {
-				$customer_entity_type_id = wpshop_entities::get_entity_identifier_from_code( WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS );
-				$query = $wpdb->prepare( 'SELECT ID FROM ' .$wpdb->posts. ' WHERE post_type = %s AND post_author = %d', WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, $customer_id );
-				$cid = $wpdb->get_var( $query );
+			$customer_entity_id = wpshop_entities::get_entity_identifier_from_code( WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS );
+			$cid = $customer_id;
 
-				$fields_to_output = $signup_fields = array();
-
-				$password_attribute = $signup_form_attributes =  array();
-
-				$entity_id = wpshop_entities::get_entity_identifier_from_code( WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS );
-
-				$query = $wpdb->prepare('SELECT id FROM '.WPSHOP_DBT_ATTRIBUTE_SET.' WHERE entity_id = %d', $entity_id);
-				$customer_entity_id = $wpdb->get_var( $query );
-				$attributes_set = wpshop_attributes_set::getElement($customer_entity_id);
-				$account_attributes = wpshop_attributes_set::getAttributeSetDetails( ( !empty($attributes_set->id) ) ? $attributes_set->id : '', "'valid'");
-				$query = $wpdb->prepare('SELECT * FROM '.WPSHOP_DBT_ATTRIBUTE_GROUP.' WHERE attribute_set_id = %d', $attributes_set->id );
-				$customer_attributes_sections = $wpdb->get_results( $query );
-				foreach( $customer_attributes_sections as $k => $attributes_section ) {
-					$signup_fields[$attributes_section->name] = array();
-					if ( !empty( $account_attributes[$attributes_section->id] ) ) {
-						foreach( $account_attributes[$attributes_section->id]['attribut'] as $attribute ) {
-							$signup_fields[$attributes_section->name][] = $attribute;
-						}
-					}
-				}
+			if ( ( is_admin() && isset( $screen ) && is_object( $screen ) && ( WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS == $screen->post_type ) ) || $force_edition_form ) {
 				ob_start();
-				require( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, WPS_ACCOUNT_TPL, "backend", "customer-informations/customer_informations_form") );
+				require( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, WPS_ACCOUNT_TPL, 'backend/customer-informations', 'form' ) );
 				$output = ob_get_contents();
 				ob_end_clean();
 			} else {
-				$customer_entity_id = wpshop_entities::get_entity_identifier_from_code( WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS );
-				$query = $wpdb->prepare( 'SELECT ID FROM ' .$wpdb->posts. ' WHERE post_type = %s AND post_author = %d', WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, $customer_id );
-				$cid = $wpdb->get_var( $query );
-
-				if( !empty($customer_entity_id) ) {
+				if ( ! empty( $customer_entity_id ) ) {
 					$query = $wpdb->prepare( 'SELECT * FROM '.WPSHOP_DBT_ATTRIBUTE_SET. ' WHERE entity_id = %d AND status = %s AND default_set = %s', $customer_entity_id, 'valid', 'yes' );
 					$attributes_sets = $wpdb->get_results( $query );
 					foreach( $attributes_sets as $attributes_set ) {
@@ -626,8 +649,7 @@ class wps_account_ctr {
 											if ( $attribute_def->data_type_to_use == 'custom' ) {
 												$query = $wpdb->prepare("SELECT label FROM " . WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS . " WHERE attribute_id = %d AND status = 'valid' AND id = %d", $attribute_def->id, $attribute_value );
 												$attribute_value = $wpdb->get_var( $query );
-											}
-											else if ( $attribute_def->data_type_to_use == 'internal')  {
+											} elseif ( $attribute_def->data_type_to_use == 'internal')  {
 												$associated_post = get_post( $atribute_value );
 												$attribute_value = $associated_post->post_title;
 											}
@@ -652,8 +674,9 @@ class wps_account_ctr {
 						}
 					}
 				}
+
 				ob_start();
-				require_once( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, WPS_ACCOUNT_TPL,  "frontend", "account/account_informations") );
+				require_once( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, WPS_ACCOUNT_TPL, 'frontend', 'account/account_informations' ) );
 				$output = ob_get_contents();
 				ob_end_clean();
 			}
@@ -661,43 +684,38 @@ class wps_account_ctr {
 		return $output;
 	}
 
+
+	/**
+	 * ACCOUNT - AJAX - Fill account informations modal
+	 */
+	function wps_fill_account_informations_modal() {
+		check_ajax_referer( 'wps_fill_account_informations_modal' );
+
+		$customer_id_from_cookie = ! empty( $_COOKIE ) && ! empty( $_COOKIE['wps_current_connected_customer'] ) ? (int) $_COOKIE['wps_current_connected_customer'] : wps_customer_ctr::get_customer_id_by_author_id( get_current_user_id() );
+		$customer_id = ! empty( $_POST ) && ! empty( $_POST['customer_id'] ) && is_int( (int) $_POST['customer_id'] ) ? (int) $_POST['customer_id'] : $customer_id_from_cookie;
+
+		$title = __( 'Edit your account informations', 'wpshop' );
+		$content = $this->account_informations_form( $customer_id );
+
+		wp_die( wp_json_encode( array( 'status' => true, 'title' => $title, 'content' => $content ) ) );
+	}
+
 	/**
 	 * ACCOUNT - Edit account informations data
+	 *
+	 * @param integer $cid L'identifiant du client pour lequel on veut modifier les informations.
 	 */
-	function account_informations_form() {
+	function account_informations_form( $cid = 0 ) {
 		global $wpdb;
 		$output = '';
-		if ( get_current_user_id() != 0 ) {
-			// Customer ID data
-				$customer_entity_type_id = wpshop_entities::get_entity_identifier_from_code( WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS );
-				$query = $wpdb->prepare( 'SELECT ID FROM ' .$wpdb->posts. ' WHERE post_type = %s AND post_author = %d', WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, get_current_user_id() );
-				$cid = $wpdb->get_var( $query );
 
-				$fields_to_output = $signup_fields = array();
-
-				$password_attribute = $signup_form_attributes =  array();
-
-				$entity_id = wpshop_entities::get_entity_identifier_from_code( WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS );
-
-				$query = $wpdb->prepare('SELECT id FROM '.WPSHOP_DBT_ATTRIBUTE_SET.' WHERE entity_id = %d', $entity_id);
-				$customer_entity_id = $wpdb->get_var( $query );
-				$attributes_set = wpshop_attributes_set::getElement($customer_entity_id);
-				$account_attributes = wpshop_attributes_set::getAttributeSetDetails( ( !empty($attributes_set->id) ) ? $attributes_set->id : '', "'valid'");
-				$query = $wpdb->prepare('SELECT id FROM '.WPSHOP_DBT_ATTRIBUTE_GROUP.' WHERE attribute_set_id = %d', $attributes_set->id );
-				$customer_attributes_sections = $wpdb->get_results( $query );
-				foreach( $customer_attributes_sections as $k => $customer_attributes_section ) {
-					if ( !empty( $account_attributes[$customer_attributes_section->id] ) ) {
-						foreach( $account_attributes[$customer_attributes_section->id]['attribut'] as $attribute ) {
-							$signup_fields[] = $attribute;
-						}
-					}
-				}
-
+		if ( 0 !== $cid ) {
 			ob_start();
-			require( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, WPS_ACCOUNT_TPL, "frontend", "account/account_form") );
+			require( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, WPS_ACCOUNT_TPL, 'frontend', 'account/account_form' ) );
 			$output = ob_get_contents();
 			ob_end_clean();
 		}
+
 		return $output;
 	}
 
@@ -708,11 +726,10 @@ class wps_account_ctr {
 		$wps_entities = new wpshop_entities();
 		$element_id = $wps_entities->get_entity_identifier_from_code( WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS );
 
-		$query = $wpdb->prepare( 'SELECT post_author FROM ' .$wpdb->posts. ' WHERE post_type = %s AND ID = %d', WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, $cid );
-		$user_id = $wpdb->get_var( $query );
+		$user_id = wps_customer_ctr::get_author_id_by_customer_id( $cid );
 
-		$user_name = !empty($args['attribute']['varchar']['user_login']) ? $args['attribute']['varchar']['user_login'] : $args['attribute']['varchar']['user_email'];
-		$user_pass = !empty($args['attribute']['varchar']['user_pass']) ? $args['attribute']['varchar']['user_pass'] : '';
+		$user_name = ! empty( $args['attribute']['varchar']['user_login'] ) ? $args['attribute']['varchar']['user_login'] : $args['attribute']['varchar']['user_email'];
+		$user_pass = ! empty( $args['attribute']['varchar']['user_pass'] ) ? $args['attribute']['varchar']['user_pass'] : '';
 
 		$query = $wpdb->prepare('SELECT id FROM ' .WPSHOP_DBT_ATTRIBUTE_SET. ' WHERE entity_id = %d', $element_id );
 		$attribute_set_id = $wpdb->get_var( $query );
@@ -757,59 +774,46 @@ class wps_account_ctr {
 	/**
 	 * ACCOUNT - Save account informations
 	 */
-	function wps_save_account_informations () {
+	function wps_save_account_informations() {
 		check_ajax_referer( 'wps_save_account_informations' );
 
-		global $wpdb;
-		$status = false; $response = '';
+		$status = true;
+		$response = '';
 
-		$user_id = get_current_user_id();
-		if ( !empty($user_id) ) {
-			$query = $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_type = %s AND post_author = %d", WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, $user_id );
-			$cid = $wpdb->get_var( $query );
-		}
+		$customer_id_from_cookie = ! empty( $_COOKIE ) && ! empty( $_COOKIE['wps_current_connected_customer'] ) ? (int) $_COOKIE['wps_current_connected_customer'] : wps_customer_ctr::get_customer_id_by_author_id( get_current_user_id() );
+		$customer_id = ! empty( $_POST ) && ! empty( $_POST['customer_id'] ) && is_int( (int) $_POST['customer_id'] ) ? (int) $_POST['customer_id'] : $customer_id_from_cookie;
 
-		$errors = $this->save_account_informations( $cid, $_POST );
-		if( !empty( $errors ) ) {
-			$response = '<div class="wps-alert-error">' .__('Some errors have been detected', 'wpshop') . ' : <ul>';
-			foreach( $errors as $error ){
+		$errors = $this->save_account_informations( $customer_id, $_POST );
+		if ( ! empty( $errors ) ) {
+			$response = '<div class="wps-alert-error">' . __( 'Some errors have been detected', 'wpshop' ) . ' : <ul>';
+			foreach ( $errors as $error ) {
 				$response .= '<li>' . $error . '</li>';
 			}
 			$response .= '</div>';
-		}
-		else {
+		} else {
 			$status = true;
+			$response = $customer_id;
 		}
 
-		wp_die( json_encode( array( 'status' => $status, 'response' => $response) ) );
+		wp_die( wp_json_encode( array( 'status' => $status, 'response' => $response ) ) );
 	}
 
 	/**
 	 * ACCOUNT - AJAX - Reload account informations data
 	 */
 	function wps_account_reload_informations() {
-		//check_ajax_referer( 'wps_account_reload_informations' );
+		// check_ajax_referer( 'wps_account_reload_informations' );
+
+		$customer_id_from_cookie = ! empty( $_COOKIE ) && ! empty( $_COOKIE['wps_current_connected_customer'] ) ? (int) $_COOKIE['wps_current_connected_customer'] : wps_customer_ctr::get_customer_id_by_author_id( get_current_user_id() );
+		$customer_id = ! empty( $_POST ) && ! empty( $_POST['customer_id'] ) && is_int( (int) $_POST['customer_id'] ) ? (int) $_POST['customer_id'] : $customer_id_from_cookie;
 
 		$status = false;
-		$response = do_shortcode('[wps_account_informations]');
-		if( !empty($response) ) {
+		$response = $this->display_account_informations( $customer_id );
+		if ( ! empty( $response ) ) {
 			$status = true;
 		}
 
-		wp_die( json_encode( array( 'status' => $status, 'response' => $response ) ) );
-	}
-
-	/**
-	 * ACCOUNT - AJAX - Fill account informations modal
-	 */
-	function wps_fill_account_informations_modal() {
-		check_ajax_referer( 'wps_fill_account_informations_modal' );
-
-		$title = $content = '';
-		$title = __('Edit your account informations', 'wpshop');
-		$content = do_shortcode( '[wps_account_informations_form]' );
-		echo json_encode( array( 'status' => true, 'title' => $title, 'content' => $content) );
-		wp_die();
+		wp_die( wp_json_encode( array( 'status' => $status, 'response' => $response ) ) );
 	}
 
 }

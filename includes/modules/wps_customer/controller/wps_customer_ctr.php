@@ -34,6 +34,8 @@ class wps_customer_ctr {
 		/** Customer options for the shop */
 		add_action( 'wsphop_options', array( &$this, 'declare_options' ), 8 );
 		add_action( 'wp_ajax_wps_customer_search', array( $this, 'ajax_search_customer' ) );
+
+		add_action( 'wp_login', array( $this, 'hook_login_for_setting_customer_id' ), 10, 2 );
 	}
 
 	/**
@@ -604,6 +606,16 @@ class wps_customer_ctr {
 
         return $return;
     }
+
+	/**
+	 * Définition d'un cookie avec 'idetifiant du client auqule l'utilisateur est affecté : set a cookie with the customer identifier if connected user is associated to only one customer
+	 *
+	 * @param  string    $user_login le nom d'utilisateur de l'utilisateur actuellement connecté / Username of current connected user.
+	 * @param  WP_Object $user       l'objet WP_User correspond à l'utilisateur actuellement connecté / Current connected user WP_Object definition.
+	 */
+	public function hook_login_for_setting_customer_id( $user_login, $user ) {
+	 	setcookie( 'wps_current_connected_customer', self::get_customer_id_by_author_id( $user->ID ), strtotime( '+30 days' ), SITECOOKIEPATH, COOKIE_DOMAIN, is_ssl() );
+	}
 
 	/**
 	 * AJAX callback for customer search

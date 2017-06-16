@@ -114,7 +114,7 @@ class WPS_Customer_Metaboxes_Controller extends wps_customer_ctr {
 	 */
 	function wps_customer_account_informations( $post ) {
 		$wps_account = new wps_account_ctr();
-		$output = $wps_account->display_account_informations( $post->post_author );
+		$output = $wps_account->display_account_informations( $post->ID );
 
 		echo $output; // WPCS: XSS ok.
 	}
