@@ -108,7 +108,7 @@ class wps_orders_ctr {
 	 * @param  array $args Les arguments passés au shortcode.
 	 */
 	function shortcode_callback_display_orders_in_account( $args ) {
-		$customer_id = ! empty( $args ) && ! empty( $args['CID'] ) ? (int) $args['CID'] : wps_customer_ctr::get_customer_id_by_author_id( get_current_user_id() );
+		$customer_id = ! empty( $args ) && ! empty( $args['cid'] ) ? (int) $args['cid'] : wps_customer_ctr::get_customer_id_by_author_id( get_current_user_id() );
 		return $this->display_orders_in_account( $customer_id );
 	}
 

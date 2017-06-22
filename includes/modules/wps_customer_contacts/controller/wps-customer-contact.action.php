@@ -83,6 +83,8 @@ class WPS_Customers_Contacts {
 			wp_register_style( 'task-manager-frontend-style', WPS_CUST_CONTACT_URL . 'assets/css/frontend.css', array(), WPSHOP_VERSION );
 			wp_enqueue_style( 'task-manager-frontend-style' );
 		}
+		wp_register_script( 'wps_customer_contacts-frontend-script', WPS_CUST_CONTACT_URL . 'assets/js/wps_customer_contacts.frontend.js', array(), WPSHOP_VERSION );
+		wp_enqueue_script( 'wps_customer_contacts-frontend-script' );
 	}
 
 	/**

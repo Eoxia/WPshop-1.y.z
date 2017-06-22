@@ -17,30 +17,30 @@ class wps_account_dashboard_ctr {
 		switch ( $part ) {
 			case 'account' :
 				$output  = '<div id="wps_account_informations_container" data-nonce="' . esc_attr( wp_create_nonce( 'wps_account_reload_informations' ) ) . '" >';
-				$output .= do_shortcode( '[wps_account_informations CID="' . $current_customer_id . '" ]' );
+				$output .= do_shortcode( '[wps_account_informations cid="' . $current_customer_id . '" ]' );
 				$output .= '</div>';
-				$output .= do_shortcode( '[wps_orders_in_customer_account CID="' . $current_customer_id . '" ]' );
+				$output .= do_shortcode( '[wps_orders_in_customer_account cid="' . $current_customer_id . '" ]' );
 			break;
 			case 'address' :
-				$output .= do_shortcode( '[wps_addresses CID="' . $current_customer_id . '" ]' );
+				$output .= do_shortcode( '[wps_addresses cid="' . $current_customer_id . '" ]' );
 			break;
 			case 'order' :
-				$output = do_shortcode( '[wps_orders_in_customer_account CID="' . $current_customer_id . '" ]' );
+				$output = do_shortcode( '[wps_orders_in_customer_account cid="' . $current_customer_id . '" ]' );
 			break;
 			case  'opinion' :
-				$output = do_shortcode( '[wps_opinion CID="' . $current_customer_id . '" ]' );
+				$output = do_shortcode( '[wps_opinion cid="' . $current_customer_id . '" ]' );
 			break;
 			case 'wishlist' :
 				$output = '<div class="wps-alert-info">' . __( 'This functionnality will be available soon', 'wpshop' ) . '</div>';
 			break;
 			case 'coupon' :
-				$output = do_shortcode( '[wps_coupon CID="' . $current_customer_id . '" ]' );
+				$output = do_shortcode( '[wps_coupon cid="' . $current_customer_id . '" ]' );
 			break;
 			case 'messages' :
-				$output = do_shortcode( '[wps_message_histo CID="' . $current_customer_id . '" ]' );
+				$output = do_shortcode( '[wps_message_histo cid="' . $current_customer_id . '" ]' );
 			break;
 			default :
-				$output = do_shortcode( '[wps_account_informations CID="' . $current_customer_id . '" ]' );
+				$output = do_shortcode( '[wps_account_informations cid="' . $current_customer_id . '" ]' );
 			break;
 		}
 

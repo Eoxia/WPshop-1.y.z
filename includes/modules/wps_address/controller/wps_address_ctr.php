@@ -1033,7 +1033,7 @@ class wps_address {
 	 * @param  array $args Les arguments passés au shortcode.
 	 */
 	function shortcode_callback_display_addresses( $args ) {
-		$customer_id = ! empty( $args ) && ! empty( $args['CID'] ) ? (int) $args['CID'] : wps_customer_ctr::get_customer_id_by_author_id( get_current_user_id() );
+		$customer_id = ! empty( $args ) && ! empty( $args['cid'] ) ? (int) $args['cid'] : wps_customer_ctr::get_customer_id_by_author_id( get_current_user_id() );
 		return $this->display_addresses_interface( $customer_id );
 	}
 

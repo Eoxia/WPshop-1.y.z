@@ -15,7 +15,7 @@ class wps_customer_ctr {
 		/** Create customer entity type on wordpress initilisation */
 		add_action( 'init', array( $this, 'create_customer_entity' ) );
 
-		add_action( 'admin_init', array( $this, 'redirect_new_user' ) );
+		// add_action( 'admin_init', array( $this, 'redirect_new_user' ) );
 
 		/** When a wordpress user is created, create a customer (post type) */
 		add_action( 'user_register', array( $this, 'create_entity_customer_when_user_is_created' ) );

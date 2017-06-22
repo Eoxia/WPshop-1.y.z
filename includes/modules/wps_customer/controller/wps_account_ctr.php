@@ -559,7 +559,7 @@ class wps_account_ctr {
 	 * @param  array $args Les arguments passés au shortcode.
 	 */
 	function shortcode_callback_display_account_informations( $args ) {
-		$customer_id = ! empty( $args ) && ! empty( $args['CID'] ) ? (int) $args['CID'] : wps_customer_ctr::get_customer_id_by_author_id( get_current_user_id() );
+		$customer_id = ! empty( $args ) && ! empty( $args['cid'] ) ? (int) $args['cid'] : wps_customer_ctr::get_customer_id_by_author_id( get_current_user_id() );
 		return $this->display_account_informations( $customer_id );
 	}
 
@@ -739,31 +739,10 @@ class wps_account_ctr {
 			wpshop_attributes::saveAttributeForEntity( $args['attribute'], $element_id, $cid );
 			foreach ( $group as $attribute_sets ) {
 				foreach ( $attribute_sets as $attribute_set_field ) {
-					if( $admin ) {
-						$validate = $wpshop->validateForm($attribute_set_field['content'], $args['attribute'] );
+					if ( $admin ) {
+						$validate = $wpshop->validateForm( $attribute_set_field['content'], $args['attribute'] );
 					}
-					if ( empty($wpshop->errors) || !$admin ) {
-						$wpshop_attributes = new wpshop_attributes();
-						foreach( $attribute_set_field['content'] as $attribute ) {
-							$attribute_def = wpshop_attributes::getElement( $attribute['name'], "'valid'", 'code');
-							if ( !in_array( $attribute['name'], $exclude_user_meta ) ) {
-								update_user_meta( $user_id, $attribute['name'], wpshop_tools::varSanitizer( $args['attribute'][$attribute['data_type']][$attribute['name']])  );
-							}
-							else {
-								wp_update_user( array('ID' => $user_id, $attribute['name'] => wpshop_tools::varSanitizer( $args['attribute'][$attribute['data_type']][$attribute['name']]) ) );
-							}
-						}
-
-						/** Update newsletter user preferences **/
-						$newsletter_preferences = array();
-						if( !empty($args['newsletters_site']) ) {
-							$newsletter_preferences['newsletters_site'] = 1;
-						}
-						if( !empty($args['newsletters_site_partners']) ) {
-							$newsletter_preferences['newsletters_site_partners'] = 1;
-						}
-						update_user_meta( $user_id, 'user_preferences', $newsletter_preferences);
-					} else {
+					if ( ! empty( $wpshop->errors ) ) {
 						return $wpshop->errors;
 					}
 				}
