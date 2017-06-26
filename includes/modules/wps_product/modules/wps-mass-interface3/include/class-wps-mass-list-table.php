@@ -141,10 +141,10 @@ class WPS_Mass_List_Table extends WP_List_Table {
 	public function column_default( $item, $column_name ) {
 		if ( isset( $this->columns_items[ $column_name ] ) && is_callable( array( $this, "column_data_{$this->columns_items[ $column_name ]['type']}" ) ) ) {
 			$callable_ext = str_replace( '-', '_', $this->columns_items[ $column_name ]['type'] );
-			$callable = array( $this, "column_data_{$callable_ext}" );
-			if ( ! is_callable( $callable ) ) {
-				$callable = array( $this, 'column_data_text' );
+			if ( ! method_exists( $this, "column_data_{$callable_ext}" ) ) {
+				$callable_ext = 'text';
 			}
+			$callable = array( $this, "column_data_{$callable_ext}" );
 			return call_user_func(
 				$callable,
 				(int) $this->columns_items[ $column_name ]['id'],

@@ -243,6 +243,7 @@ class Mass_Interface3 {
 	 * @return void
 	 */
 	public function scripts() {
+		wp_deregister_script( 'wpes_chosen_js' );
 		wp_enqueue_script(
 			'jquery_chosen_js',
 			WPS_PDCT_MASS_CHOSEN_JS . 'chosen.jquery.min.js',
