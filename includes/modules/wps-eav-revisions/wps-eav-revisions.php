@@ -83,13 +83,11 @@ class WPS_EAV_Revisions {
 		$wpsdb_histo = WPSHOP_DBT_ATTRIBUTE_VALUES_HISTO;
 		$wpsdb_values_options = WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS;
 		$result = '0';
-		$fromto_compare = '';
 		if ( ! empty( $fromto ) ) {
 			$result = $wpdb->get_var( $wpdb->prepare(
 				"SELECT IFNULL( val_opt.label,
 					histo.value
-				),
-				rev.post_date
+				)
 				FROM {$wpsdb_histo} histo
 				LEFT JOIN {$wpsdb_values_options} val_opt ON val_opt.attribute_id = histo.attribute_id AND val_opt.id = histo.value
 				LEFT JOIN (
@@ -104,7 +102,7 @@ class WPS_EAV_Revisions {
 				AND ( rev.post_date IS NULL OR histo.creation_date < rev.post_date )
 				AND histo.attribute_id = %d
 				AND histo.entity_id = %d
-				ORDER BY histo.creation_date DESC LIMIT 1",
+				ORDER BY histo.value_id DESC LIMIT 1",
 				$revision->post_parent,
 				$revision->post_date,
 				$revision->post_date,
