@@ -82,20 +82,36 @@ class WPS_EAV_Revisions {
 		global $wpdb;
 		$wpsdb_histo = WPSHOP_DBT_ATTRIBUTE_VALUES_HISTO;
 		$wpsdb_values_options = WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS;
-		$result = $wpdb->get_var( $wpdb->prepare(
-			"SELECT IFNULL( val_opt.label,
-				histo.value
-			)
-			FROM {$wpsdb_histo} histo
-			LEFT JOIN {$wpsdb_values_options} val_opt ON val_opt.attribute_id = histo.attribute_id AND val_opt.id = histo.value
-			WHERE histo.creation_date >= %s
-			AND histo.attribute_id = %d
-			AND histo.entity_id = %d
-			ORDER BY histo.creation_date ASC LIMIT 1",
-			$revision->post_date,
-			$field,
-			$revision->post_parent
-		) );
+		$result = '0';
+		$fromto_compare = '';
+		if ( ! empty( $fromto ) ) {
+			$result = $wpdb->get_var( $wpdb->prepare(
+				"SELECT IFNULL( val_opt.label,
+					histo.value
+				),
+				rev.post_date
+				FROM {$wpsdb_histo} histo
+				LEFT JOIN {$wpsdb_values_options} val_opt ON val_opt.attribute_id = histo.attribute_id AND val_opt.id = histo.value
+				LEFT JOIN (
+					SELECT *
+					FROM {$wpdb->posts} rev
+					WHERE rev.post_type = 'revision'
+     				AND rev.post_parent = %d
+					AND rev.post_date > %s
+					LIMIT 1
+				) rev ON 1 = 1
+				WHERE histo.creation_date >= %s
+				AND ( rev.post_date IS NULL OR histo.creation_date < rev.post_date )
+				AND histo.attribute_id = %d
+				AND histo.entity_id = %d
+				ORDER BY histo.creation_date DESC LIMIT 1",
+				$revision->post_parent,
+				$revision->post_date,
+				$revision->post_date,
+				$field,
+				$revision->post_parent
+			) );
+		}
 		$result = ( '0' === $result ) ? null : $result;
 		return $result;
 	}
