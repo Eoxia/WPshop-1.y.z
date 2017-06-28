@@ -742,7 +742,27 @@ class wps_account_ctr {
 					if ( $admin ) {
 						$validate = $wpshop->validateForm( $attribute_set_field['content'], $args['attribute'] );
 					}
-					if ( ! empty( $wpshop->errors ) ) {
+
+					if ( empty($wpshop->errors) || !$admin ) {
+						$wpshop_attributes = new wpshop_attributes();
+						foreach( $attribute_set_field['content'] as $attribute ) {
+							$attribute_def = wpshop_attributes::getElement( $attribute['name'], "'valid'", 'code');
+							if ( !in_array( $attribute['name'], $exclude_user_meta ) ) {
+								update_user_meta( $user_id, $attribute['name'], wpshop_tools::varSanitizer( $args['attribute'][$attribute['data_type']][$attribute['name']])  );
+							} else {
+								wp_update_user( array( 'ID' => $user_id, $attribute['name'] => wpshop_tools::varSanitizer( $args['attribute'][$attribute['data_type']][$attribute['name']]) ) );
+							}
+						}
+						/** Update newsletter user preferences **/
+						$newsletter_preferences = array();
+						if( !empty($args['newsletters_site']) ) {
+							$newsletter_preferences['newsletters_site'] = 1;
+						}
+						if( !empty($args['newsletters_site_partners']) ) {
+							$newsletter_preferences['newsletters_site_partners'] = 1;
+						}
+						update_user_meta( $user_id, 'user_preferences', $newsletter_preferences);
+					} else {
 						return $wpshop->errors;
 					}
 				}

@@ -21,30 +21,28 @@ jQuery( document ).ready( function() {
 		beforeSubmit: function( formData, jqForm, options ) {
 			jqForm.find( 'button' ).addClass( 'wps-bton-loading' );
 		},
-        success: function( response, statusText, xhr, $form ) {
-	    	$form.find( 'button' ).removeClass( 'wps-bton-loading' );
-	    	if ( response[0] ) {
-	    		jQuery( '.wps-address-first-address-creation-container' ).slideUp( 'slow' ).remove();
-	    		jQuery( '.wps-add-an-address' ).removeClass( 'hidden' );
+		success: function( response, statusText, xhr, $form ) {
+			$form.find( 'button' ).removeClass( 'wps-bton-loading' );
+			if ( response[0] ) {
+				jQuery( '.wps-address-first-address-creation-container' ).slideUp( 'slow' ).remove();
+				jQuery( '.wps-add-an-address' ).removeClass( 'hidden' );
 
-	    		if ( response[1] ) {
-	    			jQuery( '#wps-address-container-' + response[2] ).html( response[1] );
-	    		}
+				if ( response[1] ) {
+					jQuery( '#wps-address-container-' + response[2] ).html( response[1] );
+				}
 
-	    		if ( response[3] != '' ) {
-	    			reload_address_container( response[3], '' );
-	    			if ( jQuery( '#wps-checkout-valid-step-three' ).length ) {
-		    			jQuery('#wps-checkout-valid-step-three').slideDown( "slow" );
-		    		}
-	    		}
-	    		else if ( jQuery('#wps-checkout-valid-step-three').length ) {
-	    			jQuery('#wps-checkout-valid-step-three').show().click();
-	    		}
-	    	}
-	    	else {
-	    		jQuery('#wps_address_error_container').html( response[1] );
-	    	}
-        },
+				if ( response[3] != '' ) {
+					reload_address_container( response[3], '' );
+					if ( jQuery( '#wps-checkout-valid-step-three' ).length ) {
+						jQuery('#wps-checkout-valid-step-three').slideDown( "slow" );
+					}
+				} else if ( jQuery('#wps-checkout-valid-step-three').length ) {
+					jQuery('#wps-checkout-valid-step-three').show().click();
+				}
+			} else {
+				jQuery('#wps_address_error_container').html( response[1] );
+			}
+		}
 	});
 
 	jQuery( document ).on( 'click', '#wps_submit_address_form', function() {

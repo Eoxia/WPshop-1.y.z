@@ -46,9 +46,12 @@ jQuery( document ).ready( function() {
 	        }
 		}).submit();
 	});
-	setTimeout(function() {
- jQuery( window ).off( 'beforeunload.edit-post' );
- }, 1 );
+
+ 	jQuery( document ).on( 'change', '.wps-form-group input, .wps-form-group select, .wps-form-group textarea', function() {
+		jQuery( window ).on( 'beforeunload.edit-post', function() {
+			return true;
+		});
+	});
 
 	jQuery( document ).on( 'click', '#wps_account_form_button', function() {
 		jQuery( this ).addClass( 'wps-bton-loading' );

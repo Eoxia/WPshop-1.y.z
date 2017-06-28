@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div id="wps_address_error_container"></div>
 <form id="wps_address_form_save" action="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" method="post">
 	<input type="hidden" name="action" value="wps_save_address" />
-	<input type="text" name="post_ID" value="<?php echo esc_attr( $customer_id ); ?>" />
+	<input type="hidden" name="post_ID" value="<?php echo esc_attr( $customer_id ); ?>" />
 	<?php wp_nonce_field( 'wps_save_address' ); ?>
 	<?php echo self::display_form_fields( $address_type_id, $address_id, '', '', array(), array(), array(), $customer_id ); // WPCS: XSS ok. ?>
 

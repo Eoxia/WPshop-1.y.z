@@ -16,13 +16,11 @@ if ( !empty($list_addresses) ) :
 	if( !empty($selected_address) && $address_id == $selected_address ) {
 		$class = 'wps-activ';
 		$checked = 'checked="checked"';
-	}
-	else {
+	} else {
 		if( $i == 0 && empty($selected_address) ) {
 			$checked = 'checked="checked"';
 			$class = 'wps-activ';
-		}
-		else {
+		} else {
 			$checked = $class = '';
 		}
 	}

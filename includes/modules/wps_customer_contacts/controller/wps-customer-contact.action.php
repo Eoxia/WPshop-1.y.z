@@ -93,9 +93,22 @@ class WPS_Customers_Contacts {
 	 * @param WP_Post $customer La définition principale du client actuellement en cours d'édition / Current edited customer definition.
 	 */
 	function customer_contact_list_callback( $customer ) {
+		$users = $this->get_customer_contact_list( $customer );
+
+		/** Display user list for current customer */
+		require( wpshop_tools::get_template_part( WPS_CUST_CONTACT_DIR, WPS_CUST_CONTACT_TPL, 'backend', 'contacts' ) );
+	}
+
+	/**
+	 * Récupération de la liste des contacts pour un client
+	 *
+	 * @param  WP_Post $customer La définition complète du client pour lequel récupérer les contacts.
+	 *
+	 * @return [type]           [description]
+	 */
+	function get_customer_contact_list( $customer ) {
 		/** Define user list */
 		$users = array();
-		$default_user = 0;
 
 		/** Get associated users' */
 		$associated_users = (array) get_post_meta( $customer->ID, $this->user_contact_list_meta_key, true );
@@ -104,20 +117,18 @@ class WPS_Customers_Contacts {
 			foreach ( $user_list as $user_id ) {
 				if ( 0 !== $user_id ) {
 					$associated_user = get_user_by( 'ID', $user_id );
-					$users[ $user_id ] = wp_parse_args( $associated_user->data, array(
-						'last_name'		=> $associated_user->last_name,
-						'first_name'	=> $associated_user->first_name,
-						'is_default'	=> ( $user_id === (int) $customer->post_author ? true : false ),
-					) );
-					if ( $user_id === (int) $customer->post_author ) {
-						$default_user = $user_id;
+					if ( is_object( $associated_user ) ) {
+						$users[ $user_id ] = wp_parse_args( $associated_user->data, array(
+							'last_name'		=> $associated_user->last_name,
+							'first_name'	=> $associated_user->first_name,
+							'is_default'	=> ( $user_id === (int) $customer->post_author ? true : false ),
+						) );
 					}
 				}
 			}
 		}
 
-		/** Display user list for current customer */
-		require( wpshop_tools::get_template_part( WPS_CUST_CONTACT_DIR, WPS_CUST_CONTACT_TPL, 'backend', 'contacts' ) );
+		return $users;
 	}
 
 	/**

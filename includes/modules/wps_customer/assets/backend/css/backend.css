@@ -17,11 +17,11 @@
 .post-type-wpshop_customers.post-php .wrap {
 	clear: both;
 }
-#customer_name {
-	width: 350px;
+#customer-contacts {
+	width: 35%;
 }
-#customer_email {
-	width: 150px;
+#customer-orders {
+	width: 35%;
 }
 .column-customer_orders ul {
 	margin: 0px !important;
@@ -49,14 +49,17 @@
 	display: table;
 	clear: both;
 }
+.wps-customer-email {
+	float: left;
+	width: 30%;
+}
 .wps-customer-last_name {
 	float: left;
-	width: 50%;
+	width: 30%;
 }
 .wps-customer-first_name {
-	float: right;
-	text-align: left;
-	width: 50%;
+	float: left;
+	width: 30%;
 }
 
 #minor-publishing-actions > div, #misc-publishing-actions > div {

@@ -1,16 +1,32 @@
-<?php if (!defined('ABSPATH')) {
+<?php
+/**
+ * Fichier de gestion des clients dans WPShop
+ *
+ * @package WPShop
+ * @subpackage Customer
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
  * Manage Customer general and front-end functions
- * @author ALLEGRE Jérôme - EOXIA
  *
+ * @author ALLEGRE Jérôme - EOXIA
  */
 class wps_customer_ctr {
 
+	/**
+	 * Stock l'identifiant du client sur lequel on est actuellement pour éviter de faire des requêtes tout le temps
+	 *
+	 * @var array
+	 */
 	public static $customer_user_identifier_cache = array();
 
+	/**
+	 * Instanciation des clients dans WPShop
+	 */
 	public function __construct() {
 		/** Create customer entity type on wordpress initilisation */
 		add_action( 'init', array( $this, 'create_customer_entity' ) );
@@ -39,61 +55,6 @@ class wps_customer_ctr {
 	}
 
 	/**
- 	* Customer options for the shop
- 	*/
-	public static function declare_options()
-    {
-        if (WPSHOP_DEFINED_SHOP_TYPE == 'sale') {
-            $wpshop_shop_type = !empty($_POST['wpshop_shop_type']) ? sanitize_text_field($_POST['wpshop_shop_type']) : '';
-            $old_wpshop_shop_type = !empty($_POST['old_wpshop_shop_type']) ? sanitize_text_field($_POST['old_wpshop_shop_type']) : '';
-
-            if (($wpshop_shop_type == '' || $wpshop_shop_type != 'presentation')
-                && ($old_wpshop_shop_type == '' || $old_wpshop_shop_type != 'presentation')) {
-                /**    Add module option to wpshop general options    */
-                register_setting('wpshop_options', 'wpshop_cart_option', array('wps_customer_ctr', 'wpshop_options_validate_customers_newsleters'));
-                add_settings_field('display_newsletters_subscriptions', __('Display newsletters subscriptions', 'wpshop'), array('wps_customer_ctr', 'display_newsletters_subscriptions'), 'wpshop_cart_info', 'wpshop_cart_info');
-
-            }
-        }
-    }
-
-    /**
-     * Validate Options Customer
-     * @param unknown_type $input
-     * @return unknown
-     */
-    public static function wpshop_options_validate_customers_newsleters($input)
-    {
-        return $input;
-    }
-
-    public static function display_newsletters_subscriptions()
-    {
-        $cart_option = get_option('wpshop_cart_option', array());
-        $output = '';
-
-        $input_def = array();
-        $input_def['name'] = '';
-        $input_def['id'] = 'wpshop_cart_option_display_newsletter_site_subscription';
-        $input_def['type'] = 'checkbox';
-        $input_def['valueToPut'] = 'index';
-        $input_def['value'] = !empty($cart_option['display_newsletter']['site_subscription']) ? $cart_option['display_newsletter']['site_subscription'][0] : 'no';
-        $input_def['possible_value'] = 'yes';
-        $output .= wpshop_form::check_input_type($input_def, 'wpshop_cart_option[display_newsletter][site_subscription]') . '<label for="' . $input_def['id'] . '">' . __('Newsletters of the site', 'wpshop') . '</label>' . '<a href="#" title="' . __('Check this box if you want display newsletter site subscription', 'wpshop') . '" class="wpshop_infobulle_marker">?</a>' . '<br>';
-
-        $input_def = array();
-        $input_def['name'] = '';
-        $input_def['id'] = 'wpshop_cart_option_display_newsletter_partner_subscription';
-        $input_def['type'] = 'checkbox';
-        $input_def['valueToPut'] = 'index';
-        $input_def['value'] = !empty($cart_option['display_newsletter']['partner_subscription']) ? $cart_option['display_newsletter']['partner_subscription'][0] : 'no';
-        $input_def['possible_value'] = 'yes';
-        $output .= wpshop_form::check_input_type($input_def, 'wpshop_cart_option[display_newsletter][partner_subscription]') . '<label for="' . $input_def['id'] . '">' . __('Newsletters of the partners', 'wpshop') . '</label>' . '<a href="#" title="' . __('Check this box if you want display newsletter partners subscription', 'wpshop') . '" class="wpshop_infobulle_marker">?</a>' . '<br>';
-
-        echo $output;
-    }
-
-	/**
 	 * Affiche la liste des clients de la boutique / Display customer list
 	 *
 	 * @param integer $selected_user L'identifiant du client à sélectionner par défaut si il est fourni / The customer identifier to select automatically if given.
@@ -114,12 +75,123 @@ class wps_customer_ctr {
 	}
 
 	/**
+	 * Définition d'un cookie avec 'idetifiant du client auqule l'utilisateur est affecté : set a cookie with the customer identifier if connected user is associated to only one customer
+	 *
+	 * @param	string		$user_login le nom d'utilisateur de l'utilisateur actuellement connecté / Username of current connected user.
+	 * @param	WP_Object $user			 l'objet WP_User correspond à l'utilisateur actuellement connecté / Current connected user WP_Object definition.
+	 */
+	public function hook_login_for_setting_customer_id( $user_login, $user ) {
+		 setcookie( 'wps_current_connected_customer', self::get_customer_id_by_author_id( $user->ID ), strtotime( '+30 days' ), SITECOOKIEPATH, COOKIE_DOMAIN, is_ssl() );
+	}
+
+	/**
+	 * AJAX callback for customer search
+	 */
+	public function ajax_search_customer() {
+		check_ajax_referer( 'wps_customer_search' );
+
+		$term = ! empty( $_GET ) && ! empty( $_GET['term'] ) && is_string( (string) $_GET['term'] ) ? (string) $_GET['term'] : $term;
+		$list = $this->search_customer( $term );
+
+		wp_die( wp_json_encode( $list ) );
+	}
+
+	/**
+	 * Search function for customer / Fonction de recherche des clients
+	 *
+	 * @param string $term The term we have to search into database for getting existing users / Le terme qu'il faut rechercher pour retrouver les utilisateurs dans la base de données.
+	 */
+	public function search_customer( $term ) {
+		$users = array();
+		$search_users = new WP_User_Query( array(
+			'search'				 => '*' . esc_attr( $term ) . '*',
+			'search_columns' => array( 'user_login', 'user_url', 'user_email', 'user_nicename', 'display_name' ),
+		) );
+		if ( ! empty( $search_users->get_results() ) ) {
+			foreach ( $search_users->get_results() as $user ) {
+				$users[ $user->ID ]['id'] = $user->ID;
+				$users[ $user->ID ]['display_name'] = $user->display_name;
+				$users[ $user->ID ]['email'] = $user->user_email;
+				$users[ $user->ID ]['last_name'] = $user->last_name;
+				$users[ $user->ID ]['first_name'] = $user->first_name;
+			}
+		}
+		$search_users_in_meta = new WP_User_Query( array(
+			'meta_query'		 => array(
+				'relation' => 'OR',
+				array(
+					'key'		 => 'first_name',
+					'value'	 => $term,
+					'compare' => 'LIKE',
+				),
+				array(
+					'key'		 => 'last_name',
+					'value'	 => $term,
+					'compare' => 'LIKE',
+				),
+			),
+		) );
+		if ( ! empty( $search_users_in_meta->get_results() ) ) {
+			foreach ( $search_users_in_meta->get_results() as $user ) {
+				$users[ $user->ID ]['id'] = $user->ID;
+				$users[ $user->ID ]['display_name'] = $user->display_name;
+				$users[ $user->ID ]['email'] = $user->user_email;
+				$users[ $user->ID ]['last_name'] = $user->last_name;
+				$users[ $user->ID ]['first_name'] = $user->first_name;
+			}
+		}
+		if ( empty( $users ) ) {
+			$users[] = array(
+				'id'		=> null,
+				'label'	=> __( 'Create a new user', 'digirisk' ),
+			);
+		}
+
+		return $users;
+	}
+
+	/**
+	 * Récupère l'id du client selon son author id / Get customer id by the author id
+	 *
+	 * @param int $author_id L'identifiatn de l'utilisateur dont on veut avoir le numéro de client / User id we want the customer ID for.
+	 *
+	 * @return int $customer_id
+	 */
+	public static function get_customer_id_by_author_id( $author_id ) {
+		if ( ! isset( self::$customer_user_identifier_cache[ $author_id ] ) ) {
+			$query = $GLOBALS['wpdb']->prepare( "SELECT ID FROM {$GLOBALS['wpdb']->posts} WHERE post_author = %d AND post_type = %s ORDER BY ID ASC", $author_id, WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS );
+			self::$customer_user_identifier_cache[ $author_id ] = $GLOBALS['wpdb']->get_var( $query );
+		}
+
+		return self::$customer_user_identifier_cache[ $author_id ];
+	}
+
+	/**
+	 * Récupère l'id de l'utilisateur selon l'id du client / Get author id by customer id
+	 *
+	 * @method get_author_id_by_customer_id
+	 * @param	int $customer_id ID in wpshop_customers type.
+	 *
+	 * @return int
+	 */
+	public static function get_author_id_by_customer_id( $customer_id ) {
+		$flipped = array_flip( self::$customer_user_identifier_cache );
+		if ( ! isset( $flipped[ $customer_id ] ) ) {
+			$author_id = $GLOBALS['wpdb']->get_var( $GLOBALS['wpdb']->prepare( "SELECT post_author FROM {$GLOBALS['wpdb']->posts} WHERE ID = %d", $customer_id ) );
+			self::$customer_user_identifier_cache[ $author_id ] = $customer_id;
+			$flipped[ $customer_id ] = $author_id;
+		}
+
+		return $flipped[ $customer_id ];
+	}
+
+	/**
 	 * Create the customer entity
 	 */
 	public function create_customer_entity() {
 		global $wpdb;
 		$query = $wpdb->prepare( "SELECT P.post_title, PM.meta_value FROM {$wpdb->posts} AS P INNER JOIN {$wpdb->postmeta} AS PM ON (PM.post_id = P.ID) WHERE P.post_name = %s AND PM.meta_key = %s", WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, '_wpshop_entity_params' );
-		$customer_entity_definition = $wpdb->get_row( $query );
+		$customer_entity_definition = $wpdb->get_row( $query ); // WPCS: unprepared sql ok.
 		$current_entity_params = ! empty( $customer_entity_definition ) && ! empty( $customer_entity_definition->meta_value ) ? unserialize( $customer_entity_definition->meta_value ) : null;
 
 		$post_type_params = array(
@@ -165,88 +237,139 @@ class wps_customer_ctr {
 		register_post_type( WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, $post_type_params );
 	}
 
-    /**
-     * Redirect when create new customer in admin
-     */
-    public function redirect_new_user()
-    {
-        global $pagenow;
+	/**
+	 * Customer options for the shop
+	 */
+	public static function declare_options() {
+		if ( WPSHOP_DEFINED_SHOP_TYPE == 'sale' ) {
+			$wpshop_shop_type = ! empty( $_POST['wpshop_shop_type'] ) ? sanitize_text_field( $_POST['wpshop_shop_type'] ) : '';
+			$old_wpshop_shop_type = ! empty( $_POST['old_wpshop_shop_type'] ) ? sanitize_text_field( $_POST['old_wpshop_shop_type'] ) : '';
 
-        /* Check current admin page. */
-        if ($pagenow != 'user-new.php' && isset($_SESSION['redirect_to_customer'])) {
-            $redirect = $_SESSION['redirect_to_customer'];
-            unset($_SESSION['redirect_to_customer']);
-            if ($pagenow == 'users.php') {
-                wp_redirect(admin_url($redirect, 'http'));
-                exit;
-            }
-        }
+			if ( ( $wpshop_shop_type == '' || $wpshop_shop_type != 'presentation' )
+					&& ( $old_wpshop_shop_type == '' || $old_wpshop_shop_type != 'presentation' ) ) {
+					/**		Add module option to wpshop general options		*/
+					register_setting( 'wpshop_options', 'wpshop_cart_option', array( 'wps_customer_ctr', 'wpshop_options_validate_customers_newsleters' ) );
+					add_settings_field( 'display_newsletters_subscriptions', __( 'Display newsletters subscriptions', 'wpshop' ), array( 'wps_customer_ctr', 'display_newsletters_subscriptions' ), 'wpshop_cart_info', 'wpshop_cart_info' );
+			}
+		}
+	}
 
-        /* Redirect to new user */
-        $post_type = !empty($_GET['post_type']) ? sanitize_text_field($_GET['post_type']) : '';
-        if ($pagenow == 'post-new.php' && isset($post_type) && $post_type == WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS) {
-            $_SESSION['redirect_to_customer'] = 'edit.php?post_type=' . WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS;
-            wp_redirect(admin_url('user-new.php', 'http'), 301);
-            exit;
-        }
+	/**
+	 * Validation des options spécifiques aux utilisateurs
+	 *
+	 * @param array $input Les réglages que l'on souhaite enregistrer et qu'il faut vérifier.
+	 *
+	 * @return array Les réglages des clients qui ont été vérifiés
+	 */
+	public static function wpshop_options_validate_customers_newsleters( $input ) {
+			return $input;
+	}
 
-        /* Include JS on new user customer */
-        if ($pagenow == 'user-new.php' && isset($_SESSION['redirect_to_customer'])) {
-            add_action('admin_print_scripts', array($this, 'admin_user_customer_js'), 20);
-        }
-    }
-    /* JS to select customer in place of suscriber */
-    public function admin_user_customer_js()
-    {
-        echo "<script type='text/javascript'>\n";
-        echo "jQuery(document).ready(function($) {";
-        echo "\n$('#role').val('customer').change();";
-        echo "\n});\n</script>";
-    }
+	/**
+	 * Affichage des champs permettant les réglages concernant les newsletters des clients dans les réglages de la boutique
+	 */
+	public static function display_newsletters_subscriptions() {
+		$cart_option = get_option( 'wpshop_cart_option', array() );
+		$output = '';
 
-    /**
-     * Create an entity of customer type when a new user is created
-     *
-     * @param integer $user_id
-     */
-    public static function create_entity_customer_when_user_is_created($user_id)
-    {
-        $user_data = get_userdata($user_id);
-        $user_info = array_merge(get_object_vars($user_data->data), array_map('self::array_map_create_entity_customer_when_user_is_created', get_user_meta($user_id)));
-        $customer_post_ID = wp_insert_post(array('post_type' => WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, 'post_author' => $user_id, 'post_title' => $user_data->user_nicename));
-        self::save_customer_synchronize($customer_post_ID, $user_id, $user_info);
+		$input_def = array();
+		$input_def['name'] = '';
+		$input_def['id'] = 'wpshop_cart_option_display_newsletter_site_subscription';
+		$input_def['type'] = 'checkbox';
+		$input_def['valueToPut'] = 'index';
+		$input_def['value'] = ! empty( $cart_option['display_newsletter']['site_subscription'] ) ? $cart_option['display_newsletter']['site_subscription'][0] : 'no';
+		$input_def['possible_value'] = 'yes';
+		$output .= wpshop_form::check_input_type( $input_def, 'wpshop_cart_option[display_newsletter][site_subscription]' ) . '<label for="' . $input_def['id'] . '">' . __( 'Newsletters of the site', 'wpshop' ) . '</label><a href="#" title="' . __( 'Check this box if you want display newsletter site subscription', 'wpshop' ) . '" class="wpshop_infobulle_marker">?</a><br>';
 
-        /** Change metabox Hidden Nav Menu Definition to display WPShop categories' metabox **/
-        $usermeta = get_post_meta($user_id, 'metaboxhidden_nav-menus', true);
-        if (!empty($usermeta) && is_array($usermeta)) {
-            $data_to_delete = array_search('add-wpshop_product_category', $usermeta);
-            if ($data_to_delete !== false) {
-                unset($usermeta[$data_to_delete]);
-                update_user_meta($user_id, 'metaboxhidden_nav-menus', $usermeta);
-            }
-        }
-    }
-    private static function array_map_create_entity_customer_when_user_is_created($a)
-    {
-        return $a[0];
-    }
+		$input_def = array();
+		$input_def['name'] = '';
+		$input_def['id'] = 'wpshop_cart_option_display_newsletter_partner_subscription';
+		$input_def['type'] = 'checkbox';
+		$input_def['valueToPut'] = 'index';
+		$input_def['value'] = ! empty( $cart_option['display_newsletter']['partner_subscription'] ) ? $cart_option['display_newsletter']['partner_subscription'][0] : 'no';
+		$input_def['possible_value'] = 'yes';
+		$output .= wpshop_form::check_input_type( $input_def, 'wpshop_cart_option[display_newsletter][partner_subscription]' ) . '<label for="' . $input_def['id'] . '">' . __( 'Newsletters of the partners', 'wpshop' ) . '</label><a href="#" title="' . __( 'Check this box if you want display newsletter partners subscription', 'wpshop' ) . '" class="wpshop_infobulle_marker">?</a><br>';
 
-    /**
-     * Update an entity of customer type when a user profile is update
-     *
-     * @param integer $user_id
-     */
-    public static function update_entity_customer_when_profile_user_is_update($user_id)
-    {
-        $user_data = get_userdata($user_id);
-        $user_info = array_merge(get_object_vars($user_data->data), array_map('self::array_map_create_entity_customer_when_user_is_created', get_user_meta($user_id)));
-        $customer_post_ID = self::get_customer_id_by_author_id($user_id);
-        self::save_customer_synchronize($customer_post_ID, $user_id, $user_info);
-    }
-    private static function array_map_update_entity_customer_when_profile_user_is_update($a)
-    {
-        return $a[0];
-    }
+		echo $output; // WPCS: XSS ok.
+	}
+
+	/**
+	 * Redirect when create new customer in admin
+	 */
+	public function redirect_new_user() {
+		global $pagenow;
+
+		/* Check current admin page. */
+		if ( $pagenow != 'user-new.php' && isset( $_SESSION['redirect_to_customer'] ) ) {
+			$redirect = $_SESSION['redirect_to_customer'];
+			unset( $_SESSION['redirect_to_customer'] );
+			if ( $pagenow == 'users.php' ) {
+					wp_redirect( admin_url( $redirect, 'http' ) );
+					exit;
+			}
+		}
+
+		/* Redirect to new user */
+		$post_type = ! empty($_GET['post_type']) ? sanitize_text_field($_GET['post_type']) : '';
+		if ($pagenow == 'post-new.php' && isset($post_type) && $post_type == WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS) {
+				$_SESSION['redirect_to_customer'] = 'edit.php?post_type=' . WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS;
+				wp_redirect(admin_url('user-new.php', 'http'), 301);
+				exit;
+		}
+
+		/* Include JS on new user customer */
+		if ($pagenow == 'user-new.php' && isset($_SESSION['redirect_to_customer'])) {
+				add_action('admin_print_scripts', array($this, 'admin_user_customer_js'), 20);
+		}
+	}
+
+	/**
+	 * Sélection automatique du role client lors de la création d'un utilisateur dans WordPress
+	 */
+	public function admin_user_customer_js() {
+		echo "<script type='text/javascript'>jQuery(document).ready(function($) { $('#role').val('customer').change(); });\n</script>";
+	}
+
+	/**
+	 * Create an entity of customer type when a new user is created
+	 *
+	 * @param integer $user_id
+	 */
+	public static function create_entity_customer_when_user_is_created( $user_id ) {
+		$user_data = get_userdata($user_id);
+		$user_info = array_merge(get_object_vars($user_data->data), array_map('self::array_map_create_entity_customer_when_user_is_created', get_user_meta($user_id)));
+		$customer_post_ID = wp_insert_post(array('post_type' => WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, 'post_author' => $user_id, 'post_title' => $user_data->user_nicename));
+		self::save_customer_synchronize($customer_post_ID, $user_id, $user_info);
+
+		/** Change metabox Hidden Nav Menu Definition to display WPShop categories' metabox **/
+		$usermeta = get_post_meta($user_id, 'metaboxhidden_nav-menus', true);
+		if (! empty($usermeta) && is_array($usermeta)) {
+			$data_to_delete = array_search('add-wpshop_product_category', $usermeta);
+			if ($data_to_delete !== false) {
+					unset($usermeta[$data_to_delete]);
+					update_user_meta($user_id, 'metaboxhidden_nav-menus', $usermeta);
+			}
+		}
+	}
+	private static function array_map_create_entity_customer_when_user_is_created( $a ) {
+			return $a[0];
+	}
+
+	/**
+	 * Update an entity of customer type when a user profile is update
+	 *
+	 * @param integer $user_id
+	 */
+	public static function update_entity_customer_when_profile_user_is_update( $user_id ) {
+			$user_data = get_userdata($user_id);
+			$user_info = array_merge(get_object_vars($user_data->data), array_map('self::array_map_create_entity_customer_when_user_is_created', get_user_meta($user_id)));
+			$customer_post_ID = self::get_customer_id_by_author_id($user_id);
+			self::save_customer_synchronize($customer_post_ID, $user_id, $user_info);
+	}
+
+	private static function array_map_update_entity_customer_when_profile_user_is_update( $a ) {
+			return $a[0];
+	}
 
 
 	public static function prevent_send_mail_from_wordpress() {
@@ -262,7 +385,7 @@ class wps_customer_ctr {
 		$query = $wpdb->prepare('SELECT id FROM ' . WPSHOP_DBT_ATTRIBUTE_SET . ' WHERE entity_id = %d', $element_id);
 		$attribute_set_id = $wpdb->get_var($query);
 		$attributes_default = array();
-		if (!empty($attribute_set_id)) {
+		if (! empty($attribute_set_id)) {
 			$group = wps_address::get_addresss_form_fields_by_type($attribute_set_id);
 			foreach ($group as $attribute_sets) {
 				foreach ($attribute_sets as $attribute_set_field) {
@@ -285,7 +408,7 @@ class wps_customer_ctr {
 		add_filter( 'send_password_change_email', array( get_class(), 'prevent_send_mail_from_wordpress' ) );
 		foreach ($user_info as $user_meta => $user_meta_value) {
 			$attribute_def = wpshop_attributes::getElement($user_meta, "'valid'", 'code');
-			if (!empty($attribute_def)) {
+			if (! empty($attribute_def)) {
 				//Save data in user meta
 				if (in_array($user_meta, $exclude_user_meta)) {
 					if ($user_meta == 'user_pass') {
@@ -301,7 +424,7 @@ class wps_customer_ctr {
 				//Save data in attribute tables, ckeck first if exist to know if Insert or Update
 				$query = $wpdb->prepare('SELECT * FROM ' . WPSHOP_DBT_ATTRIBUTE_VALUES_PREFIX . strtolower($attribute_def->data_type) . ' WHERE entity_type_id = %d AND entity_id = %d AND attribute_id = %d', $element_id, $customer_post_ID, $attribute_def->id);
 				$checking_attribute_exist = $wpdb->get_results($query);
-				if (!empty($checking_attribute_exist)) {
+				if (! empty($checking_attribute_exist)) {
 					$wpdb->update(
 						WPSHOP_DBT_ATTRIBUTE_VALUES_PREFIX . strtolower($attribute_def->data_type),
 						array(
@@ -332,116 +455,115 @@ class wps_customer_ctr {
 	}
 
 	/**
- 	* Change the customer list table header to display custom informations
- 	*
- 	* @param array $current_header The current header list displayed to filter and modify for new output
- 	*
- 	* @return array The new header to display
- 	*/
-    public function list_table_header($current_header)
-    {
-        unset($current_header['title']);
-        unset($current_header['date']);
+	 * Change the customer list table header to display custom informations
+	 *
+	 * @param array $current_header The current header list displayed to filter and modify for new output.
+	 *
+	 * @return array The new header to display
+	 */
+	public function list_table_header( $current_header ) {
+		unset( $current_header['title'] );
+		unset( $current_header['date'] );
 
-        $current_header['customer_identifier'] = __( 'Customer ID', 'wpshop');
-        $current_header['customer_name'] = '<span class="wps-customer-last_name" >' . __('Last-name', 'wpshop') . '</span><span class="wps-customer-first_name" >' . __('First-name', 'wpshop') . '</span>';
-        $current_header['customer_email'] = __('E-mail', 'wpshop');
-        $current_header['customer_orders'] = __('Customer\'s orders', 'wpshop');
-        $current_header['customer_date_subscription'] = __('Subscription', 'wpshop');
-        $current_header['customer_date_lastlogin'] = __('Last login date', 'wpshop');
+		$current_header['customer_identifier'] = __( 'Customer ID', 'wpshop' );
+		$current_header['customer-name'] = __( 'Customer name', 'wpshop' );
+		// $current_header['customer_name'] = '<span class="wps-customer-last_name" >' . __('Last-name', 'wpshop') . '</span><span class="wps-customer-first_name" >' . __('First-name', 'wpshop') . '</span>';
+		// $current_header['customer_email'] = __('E-mail', 'wpshop');
+		$current_header['customer-contacts'] = __( 'Contacts', 'wpshop' );
+		$current_header['customer-orders'] = __( 'Customer last order', 'wpshop' );
+		$current_header['customer_date_subscription'] = __( 'Subscription', 'wpshop' );
+		// $current_header['customer_date_lastlogin'] = __( 'Last login date', 'wpshop' );
 
-        return $current_header;
-    }
+		return $current_header;
+	}
 
-    /**
-     * Display the content into list table column
-     *
-     * @param string $column THe column identifier to modify output for
-     * @param integer $post_id The current post identifier
-     */
-    public function list_table_column_content($column, $post_id)
-    {
-        global $wpdb;
-        /**    Get wp_users idenfifier from customer id    */
-        $current_user_id_in_list = self::get_author_id_by_customer_id($post_id);
+	/**
+	 * Display the content into list table column
+	 *
+	 * @param string  $column THe column identifier to modify output for.
+	 * @param integer $post_id The current post identifier.
+	 */
+	public function list_table_column_content( $column, $post_id ) {
+		global $wpdb;
 
-        /**    Get current post informations    */
-        $customer_post = get_post($post_id);
+		/**		Get wp_users identifier from customer id		*/
+		$customer_post_author = self::get_author_id_by_customer_id( $post_id );
 
-        /**    Get user data    */
-        $current_user_datas = get_userdata($current_user_id_in_list);
+		/**		Get current post informations		*/
+		$customer_post = get_post( $post_id );
 
-        /**    Switch current column for custom case    */
-        $use_template = true;
-        switch ($column) {
-            case 'customer_identifier':
-                echo $post_id;
-                $use_template = false;
-                break;
-            case 'customer_date_subscription':
-                echo mysql2date(get_option('date_format'), $current_user_datas->user_registered, true);
-                $use_template = false;
-                break;
-            case 'customer_date_lastlogin':
-                $last_login = get_user_meta($current_user_id_in_list, 'last_login_time', true);
-                if (!empty($last_login)):
-                    echo mysql2date(get_option('date_format') . ' ' . get_option('time_format'), $last_login, true);
-                else:
-                    _e('Never logged in', 'wpshop');
-                endif;
-                $use_template = false;
-                break;
-        }
+		/**		Switch current column for custom case		*/
+		$use_template = true;
+		switch ( $column ) {
+			case 'customer_identifier' :
+				echo $post_id;
+				$use_template = false;
+			break;
 
-        /**    Require the template for displaying the current column    */
-        if ($use_template) {
-            $template = wpshop_tools::get_template_part(WPS_ACCOUNT_DIR, WPS_ACCOUNT_PATH . WPS_ACCOUNT_DIR . '/templates/', 'backend', 'customer_listtable/' . $column);
-            if (is_file($template)) {
-                require $template;
-            }
-        }
-    }
+			case 'customer_date_subscription' :
+				echo mysql2date( get_option( 'date_format' ), $customer_post->post_date, true );
+				$use_template = false;
+			break;
 
-    /**
-     * Filter bulk actions into customer list table
-     *
-     * @param array $actions Current available actions list
-     *
-     * @return array The new action list to use into customer list table
-     */
-    public function customer_list_table_bulk_actions($actions)
-    {
-        unset($actions['edit']);
-        unset($actions['trash']);
+			case 'customer_date_lastlogin' :
+				$last_login = get_user_meta( $customer_post_author, 'last_login_time', true );
+				if ( ! empty( $last_login ) ) :
+					echo mysql2date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $last_login, true );
+				else :
+					_e( 'Never logged in', 'wpshop' );
+				endif;
+				$use_template = false;
+			break;
+		}
 
-        return $actions;
-    }
+		/**		Require the template for displaying the current column		*/
+		if ( $use_template ) {
+			$template = wpshop_tools::get_template_part(WPS_ACCOUNT_DIR, WPS_ACCOUNT_PATH . WPS_ACCOUNT_DIR . '/templates/', 'backend', 'customer_listtable/' . $column);
+			if ( is_file( $template ) ) {
+				require $template;
+			}
+		}
+	}
 
-    public function list_table_filters()
-    {
-        $post_type = !empty($_GET['post_type']) ? sanitize_text_field($_GET['post_type']) : '';
-        if (isset($post_type)) {
-            if (post_type_exists($post_type) && ($post_type == WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS)) {
-                $filter_possibilities = array();
-                $filter_possibilities[''] = __('-- Select Filter --', 'wpshop');
-                $filter_possibilities['orders'] = __('List customers with orders', 'wpshop');
-                $filter_possibilities['no_orders'] = __('List customers without orders', 'wpshop');
-                echo wpshop_form::form_input_select('entity_filter', 'entity_filter', $filter_possibilities, (!empty($_GET['entity_filter']) ? sanitize_text_field($_GET['entity_filter']) : ''), '', 'index');
-            }
-        }
-    }
+	/**
+	 * Filter bulk actions into customer list table
+	 *
+	 * @param array $actions Current available actions list.
+	 *
+	 * @return array The new action list to use into customer list table
+	 */
+	public function customer_list_table_bulk_actions( $actions ) {
+		unset( $actions['edit'] );
+		unset( $actions['trash'] );
 
-    public function list_table_filter_parse_query($query)
-    {
-        global $pagenow, $wpdb;
-        $post_type = !empty($_GET['post_type']) ? sanitize_text_field($_GET['post_type']) : '';
-        $entity_filter = !empty($_GET['entity_filter']) ? sanitize_text_field($_GET['entity_filter']) : '';
-        if (is_admin() && ($pagenow == 'edit.php') && !empty($post_type) && ($post_type == WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS) && !empty($entity_filter)) {
-            $check = null;
-            switch ($entity_filter) {
-                case 'orders':
-                    $sql_query = $wpdb->prepare(
-                        "SELECT ID
+		return $actions;
+	}
+
+		public function list_table_filters()
+		{
+				$post_type = ! empty($_GET['post_type']) ? sanitize_text_field($_GET['post_type']) : '';
+				if (isset($post_type)) {
+						if (post_type_exists($post_type) && ($post_type == WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS)) {
+								$filter_possibilities = array();
+								$filter_possibilities[''] = __('-- Select Filter --', 'wpshop');
+								$filter_possibilities['orders'] = __('List customers with orders', 'wpshop');
+								$filter_possibilities['no_orders'] = __('List customers without orders', 'wpshop');
+								echo wpshop_form::form_input_select('entity_filter', 'entity_filter', $filter_possibilities, (! empty($_GET['entity_filter']) ? sanitize_text_field($_GET['entity_filter']) : ''), '', 'index');
+						}
+				}
+		}
+
+		public function list_table_filter_parse_query($query)
+		{
+				global $pagenow, $wpdb;
+				$post_type = ! empty($_GET['post_type']) ? sanitize_text_field($_GET['post_type']) : '';
+				$entity_filter = ! empty($_GET['entity_filter']) ? sanitize_text_field($_GET['entity_filter']) : '';
+				if (is_admin() && ($pagenow == 'edit.php') && ! empty($post_type) && ($post_type == WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS) && ! empty($entity_filter)) {
+						$check = null;
+						switch ($entity_filter) {
+								case 'orders':
+										$sql_query = $wpdb->prepare(
+												"SELECT ID
 						FROM {$wpdb->posts}
 						WHERE post_type = %s
 						AND post_status != %s
@@ -450,15 +572,15 @@ class wps_customer_ctr {
 						FROM {$wpdb->posts}
 						WHERE post_type = %s
 						AND post_status != %s)",
-                        WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS,
-                        'auto-draft',
-                        WPSHOP_NEWTYPE_IDENTIFIER_ORDER,
-                        'auto-draft');
-                    $check = 'post__in';
-                    break;
-                case 'no_orders':
-                    $sql_query = $wpdb->prepare(
-                        "SELECT ID
+												WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS,
+												'auto-draft',
+												WPSHOP_NEWTYPE_IDENTIFIER_ORDER,
+												'auto-draft');
+										$check = 'post__in';
+										break;
+								case 'no_orders':
+										$sql_query = $wpdb->prepare(
+												"SELECT ID
 						FROM {$wpdb->posts}
 						WHERE post_type = %s
 						AND post_status != %s
@@ -467,220 +589,109 @@ class wps_customer_ctr {
 						FROM {$wpdb->posts}
 						WHERE post_type = %s
 						AND post_status != %s)",
-                        WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS,
-                        'auto-draft',
-                        WPSHOP_NEWTYPE_IDENTIFIER_ORDER,
-                        'auto-draft');
-                    $check = 'post__in';
-                    break;
-            }
+												WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS,
+												'auto-draft',
+												WPSHOP_NEWTYPE_IDENTIFIER_ORDER,
+												'auto-draft');
+										$check = 'post__in';
+										break;
+						}
 
-            if (!empty($check)) {
-                $results = $wpdb->get_results($sql_query);
-                $user_id_list = array();
-                foreach ($results as $item) {
-                    $user_id_list[] = $item->ID;
-                }
-                if (empty($post_id_list)) {
-                    $post_id_list[] = 'no_result';
-                }
-                $query->query_vars[$check] = $user_id_list;
-            }
-            $query->query_vars['post_type'] = WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS;
-            $query->query_vars['post_status'] = 'any';
-        }
-    }
-
-    /**
-     * Récupère la liste de tous les clients / Get the list of all customers
-     *
-     * @return array
-     */
-    public static function get_all_customer($post_status = 'publish')
-    {
-        global $wpdb;
-
-        $query = $wpdb->prepare("SELECT * FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s", WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, $post_status);
-        $list_customer = $wpdb->get_results($query);
-
-        return $list_customer;
-    }
-
-	/**
-	 * Récupère l'id du client selon son author id / Get customer id by the author id
-	 *
-	 * @param int $author_id L'identifiatn de l'utilisateur dont on veut avoir le numéro de client / User id we want the customer ID for.
-	 *
-	 * @return int $customer_id
-	 */
-	public static function get_customer_id_by_author_id( $author_id ) {
-		if ( ! isset( self::$customer_user_identifier_cache[ $author_id ] ) ) {
-			$query = $GLOBALS['wpdb']->prepare( "SELECT ID FROM {$GLOBALS['wpdb']->posts} WHERE post_author = %d AND post_type = %s ORDER BY ID ASC", $author_id, WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS );
-			self::$customer_user_identifier_cache[ $author_id ] = $GLOBALS['wpdb']->get_var( $query );
+						if (! empty($check)) {
+								$results = $wpdb->get_results($sql_query);
+								$user_id_list = array();
+								foreach ($results as $item) {
+										$user_id_list[] = $item->ID;
+								}
+								if (empty($post_id_list)) {
+										$post_id_list[] = 'no_result';
+								}
+								$query->query_vars[$check] = $user_id_list;
+						}
+						$query->query_vars['post_type'] = WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS;
+						$query->query_vars['post_status'] = 'any';
+				}
 		}
 
-		return self::$customer_user_identifier_cache[ $author_id ];
-	}
+		/**
+		 * Récupère la liste de tous les clients / Get the list of all customers
+		 *
+		 * @return array
+		 */
+		public static function get_all_customer($post_status = 'publish')
+		{
+				global $wpdb;
 
-	/**
-	 * Récupère l'id de l'utilisateur selon l'id du client / Get author id by customer id
-	 *
-	 * @method get_author_id_by_customer_id
-	 * @param	int $customer_id ID in wpshop_customers type.
-	 *
-	 * @return int
-	 */
-	public static function get_author_id_by_customer_id( $customer_id ) {
-		$flipped = array_flip( self::$customer_user_identifier_cache );
-		if ( ! isset( $flipped[ $customer_id ] ) ) {
-			$author_id = $GLOBALS['wpdb']->get_var( $GLOBALS['wpdb']->prepare( "SELECT post_author FROM {$GLOBALS['wpdb']->posts} WHERE ID = %d", $customer_id ) );
-			self::$customer_user_identifier_cache[ $author_id ] = $customer_id;
-			$flipped[ $customer_id ] = $author_id;
+				$query = $wpdb->prepare("SELECT * FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s", WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, $post_status);
+				$list_customer = $wpdb->get_results($query);
+
+				return $list_customer;
 		}
 
-		return $flipped[ $customer_id ];
-	}
+		/**
+		 * Essaie de créer une corrélation entre le formulaire que l'on passe et customer ( ex: billing_address => customer )
+		 *
+		 * @param array $form Passer directement le $_POST pour créer un client.
+		 * @return array ou int : 1 = Aucun mail, 2 = L'utilisateur existe déjà
+		 */
+		public static function quick_add_customer($form)
+		{
+				$return = 1;
+				if (! empty($form)) {
+						global $wpdb;
+						$customer_type_id = wpshop_entities::get_entity_identifier_from_code(WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS);
+						$query = $wpdb->prepare('SELECT id FROM ' . WPSHOP_DBT_ATTRIBUTE_SET . ' WHERE entity_id = %d', $customer_type_id);
+						$customer_entity_id = $wpdb->get_var($query);
+						$attributes_set = wpshop_attributes_set::getElement($customer_entity_id);
+						$account_attributes = wpshop_attributes_set::getAttributeSetDetails((! empty($attributes_set->id)) ? $attributes_set->id : '', "'valid'");
 
-    /**
-     * Essaie de créer une corrélation entre le formulaire que l'on passe et customer ( ex: billing_address => customer )
-     *
-     * @param array $form Passer directement le $_POST pour créer un client.
-     * @return array ou int : 1 = Aucun mail, 2 = L'utilisateur existe déjà
-     */
-    public static function quick_add_customer($form)
-    {
-        $return = 1;
-        if (!empty($form)) {
-            global $wpdb;
-            $customer_type_id = wpshop_entities::get_entity_identifier_from_code(WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS);
-            $query = $wpdb->prepare('SELECT id FROM ' . WPSHOP_DBT_ATTRIBUTE_SET . ' WHERE entity_id = %d', $customer_type_id);
-            $customer_entity_id = $wpdb->get_var($query);
-            $attributes_set = wpshop_attributes_set::getElement($customer_entity_id);
-            $account_attributes = wpshop_attributes_set::getAttributeSetDetails((!empty($attributes_set->id)) ? $attributes_set->id : '', "'valid'");
+						$customer_attributes_to_save = $customer_attributes_to_save_temp = array();
 
-            $customer_attributes_to_save = $customer_attributes_to_save_temp = array();
+						foreach ($form['attribute'] as $attribute_type => $attributes) {
+								foreach ($attributes as $attribute_code => $attribute_value) {
+										$customer_attributes_compare[$attribute_code] = $attribute_type;
+								}
+						}
 
-            foreach ($form['attribute'] as $attribute_type => $attributes) {
-                foreach ($attributes as $attribute_code => $attribute_value) {
-                    $customer_attributes_compare[$attribute_code] = $attribute_type;
-                }
-            }
+						foreach ($account_attributes as $account_attribute_group) {
+								foreach ($account_attribute_group['attribut'] as $attribute) {
+										foreach (preg_grep('/' . $attribute->code . '/', array_keys($customer_attributes_compare)) as $codeForm) {
+												if ($customer_attributes_compare[$codeForm] == $attribute->data_type) {
+														$user[$attribute->code] = array('attribute_id' => $attribute->id, 'data_type' => $attribute->data_type, 'value' => sanitize_text_field($_POST['attribute'][$attribute->data_type][$codeForm]));
+														if ($attribute->code == 'user_email') {
+																$email_founded = true;
+														}
+												}
+										}
+								}
+						}
 
-            foreach ($account_attributes as $account_attribute_group) {
-                foreach ($account_attribute_group['attribut'] as $attribute) {
-                    foreach (preg_grep('/' . $attribute->code . '/', array_keys($customer_attributes_compare)) as $codeForm) {
-                        if ($customer_attributes_compare[$codeForm] == $attribute->data_type) {
-                            $user[$attribute->code] = array('attribute_id' => $attribute->id, 'data_type' => $attribute->data_type, 'value' => sanitize_text_field($_POST['attribute'][$attribute->data_type][$codeForm]));
-                            if ($attribute->code == 'user_email') {
-                                $email_founded = true;
-                            }
-                        }
-                    }
-                }
-            }
+						if ($email_founded && is_email($user['user_email']['value'])) {
+								$user_id = username_exists($user['user_email']['value']);
+								if (empty($user_id)) {
+										$user_name = isset($user['user_login']['value']) ? $user['user_login']['value'] : $user['user_email']['value'];
+										$user_pass = isset($user['user_pass']['value']) ? $user['user_pass']['value'] : wp_generate_password(12, false);
+										$user_id = wp_create_user($user_name, $user_pass, $user['user_email']['value']);
 
-            if ($email_founded && is_email($user['user_email']['value'])) {
-                $user_id = username_exists($user['user_email']['value']);
-                if (empty($user_id)) {
-                    $user_name = isset($user['user_login']['value']) ? $user['user_login']['value'] : $user['user_email']['value'];
-                    $user_pass = isset($user['user_pass']['value']) ? $user['user_pass']['value'] : wp_generate_password(12, false);
-                    $user_id = wp_create_user($user_name, $user_pass, $user['user_email']['value']);
+										if (!is_wp_error($user_id)) {
+												$customer_entity_request = $wpdb->prepare('SELECT ID FROM ' . $wpdb->posts . ' WHERE post_type = %s AND post_author = %d', WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, $user_id);
+												$customer_entity_id = $wpdb->get_var($customer_entity_request);
+												$return = array();
+												$return['integer']['ID'] = $user_id;
 
-                    if (!is_wp_error($user_id)) {
-                        $customer_entity_request = $wpdb->prepare('SELECT ID FROM ' . $wpdb->posts . ' WHERE post_type = %s AND post_author = %d', WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, $user_id);
-                        $customer_entity_id = $wpdb->get_var($customer_entity_request);
-                        $return = array();
-                        $return['integer']['ID'] = $user_id;
+												foreach ($user as $meta_key => $meta_values) {
+														update_user_meta($user_id, $meta_key, $meta_values['value']);
+														$wpdb->insert(WPSHOP_DBT_ATTRIBUTE_VALUES_PREFIX . strtolower($meta_values['data_type']), array('entity_type_id' => $customer_type_id, 'attribute_id' => $meta_values['attribute_id'], 'entity_id' => $customer_entity_id, 'user_id' => $user_id, 'creation_date_value' => current_time('mysql', 0), 'language' => 'fr_FR', 'value' => $meta_values['value']));
+														$return[$meta_values['data_type']][$meta_key] = $meta_values['value'];
+												}
+										}
+								} else {
+										$return = 2;
+								}
+						}
+				}
 
-                        foreach ($user as $meta_key => $meta_values) {
-                            update_user_meta($user_id, $meta_key, $meta_values['value']);
-                            $wpdb->insert(WPSHOP_DBT_ATTRIBUTE_VALUES_PREFIX . strtolower($meta_values['data_type']), array('entity_type_id' => $customer_type_id, 'attribute_id' => $meta_values['attribute_id'], 'entity_id' => $customer_entity_id, 'user_id' => $user_id, 'creation_date_value' => current_time('mysql', 0), 'language' => 'fr_FR', 'value' => $meta_values['value']));
-                            $return[$meta_values['data_type']][$meta_key] = $meta_values['value'];
-                        }
-                    }
-                } else {
-                    $return = 2;
-                }
-            }
-        }
-
-        return $return;
-    }
-
-	/**
-	 * Définition d'un cookie avec 'idetifiant du client auqule l'utilisateur est affecté : set a cookie with the customer identifier if connected user is associated to only one customer
-	 *
-	 * @param  string    $user_login le nom d'utilisateur de l'utilisateur actuellement connecté / Username of current connected user.
-	 * @param  WP_Object $user       l'objet WP_User correspond à l'utilisateur actuellement connecté / Current connected user WP_Object definition.
-	 */
-	public function hook_login_for_setting_customer_id( $user_login, $user ) {
-	 	setcookie( 'wps_current_connected_customer', self::get_customer_id_by_author_id( $user->ID ), strtotime( '+30 days' ), SITECOOKIEPATH, COOKIE_DOMAIN, is_ssl() );
-	}
-
-	/**
-	 * AJAX callback for customer search
-	 */
-	public function ajax_search_customer() {
-		check_ajax_referer( 'wps_customer_search' );
-
-		$term = ! empty( $_GET ) && ! empty( $_GET['term'] ) && is_string( (string) $_GET['term'] ) ? (string) $_GET['term'] : $term;
-		$list = $this->search_customer( $term );
-
-		wp_die( wp_json_encode( $list ) );
-	}
-
-	/**
-	 * Search function for customer / Fonction de recherche des clients
-	 *
-	 * @param string $term The term we have to search into database for getting existing users / Le terme qu'il faut rechercher pour retrouver les utilisateurs dans la base de données.
-	 */
-	public function search_customer( $term ) {
-		$users = array();
-		$search_users = new WP_User_Query( array(
-			'search'         => '*' . esc_attr( $term ) . '*',
-			'search_columns' => array( 'user_login', 'user_url', 'user_email', 'user_nicename', 'display_name' ),
-		) );
-		if ( ! empty( $search_users->get_results() ) ) {
-			foreach ( $search_users->get_results() as $user ) {
-				$users[ $user->ID ]['id'] = $user->ID;
-				$users[ $user->ID ]['display_name'] = $user->display_name;
-				$users[ $user->ID ]['email'] = $user->user_email;
-				$users[ $user->ID ]['last_name'] = $user->last_name;
-				$users[ $user->ID ]['first_name'] = $user->first_name;
-			}
+				return $return;
 		}
-		$search_users_in_meta = new WP_User_Query( array(
-			'meta_query'     => array(
-				'relation' => 'OR',
-				array(
-					'key'     => 'first_name',
-					'value'   => $term,
-					'compare' => 'LIKE',
-				),
-				array(
-					'key'     => 'last_name',
-					'value'   => $term,
-					'compare' => 'LIKE',
-				),
-			),
-		) );
-		if ( ! empty( $search_users_in_meta->get_results() ) ) {
-			foreach ( $search_users_in_meta->get_results() as $user ) {
-				$users[ $user->ID ]['id'] = $user->ID;
-				$users[ $user->ID ]['display_name'] = $user->display_name;
-				$users[ $user->ID ]['email'] = $user->user_email;
-				$users[ $user->ID ]['last_name'] = $user->last_name;
-				$users[ $user->ID ]['first_name'] = $user->first_name;
-			}
-		}
-		if ( empty( $users ) ) {
-			$users[] = array(
-				'id'		=> null,
-				'label'	=> __( 'Create a new user', 'digirisk' ),
-			);
-		}
-
-		return $users;
-	}
 
 }
