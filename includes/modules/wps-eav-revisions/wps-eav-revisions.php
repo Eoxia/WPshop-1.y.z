@@ -20,18 +20,7 @@ class WPS_EAV_Revisions {
 	public function wp_save_post_revision_post_has_changed( $post_has_changed, $last_revision, $post ) {
 		return true;
 	}
-	public function wp_restore_post_revision( $post_id, $revision_id ) {
-		/*
-		$post     = get_post( $post_id );
-		$revision = get_post( $revision_id );
-		$meta = get_metadata( 'post', $revision->ID, 'foo', true );
-		if ( false === $meta ) {
-			delete_post_meta( $post_id, 'foo' );
-		} else {
-			update_post_meta( $post_id, 'foo', $meta );
-		}*/
-	}
-	public function wp_post_revision_fields( $fields, $post ) {
+	private function product_attributes( $post_id ) {
 		global $wpdb;
 		$wpsdb_attribute = WPSHOP_DBT_ATTRIBUTE;
 		$wpsdb_attribute_set = WPSHOP_DBT_ATTRIBUTE_DETAILS;
@@ -42,10 +31,11 @@ class WPS_EAV_Revisions {
 		$wpsdb_values_varchar = WPSHOP_DBT_ATTRIBUTE_VALUES_VARCHAR;
 		$wpsdb_values_text = WPSHOP_DBT_ATTRIBUTE_VALUES_TEXT;
 		$wpsdb_values_options = WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS;
-		$datas = $wpdb->get_results( $wpdb->prepare(
+		return $wpdb->get_results( $wpdb->prepare(
 			"SELECT attr.id,
 			attr.code,
 			attr.frontend_label,
+			attr.data_type,
 			GROUP_CONCAT(
 				IFNULL( val_dec.value,
 					IFNULL( val_dat.value,
@@ -70,48 +60,68 @@ class WPS_EAV_Revisions {
 			LEFT JOIN {$wpsdb_values_options} val_opt ON val_opt.attribute_id = attr.id AND val_opt.id = val_int.value
 			WHERE p.ID = %d
 			GROUP BY attr.code",
-			$post['ID']
+			$post_id
 		), ARRAY_A );
-		foreach ( $datas as $data ) {
+	}
+	public function wp_restore_post_revision( $post_id, $revision_id ) {
+		$product_class = new wpshop_products();
+		$attrs = array();
+		foreach ( $this->product_attributes( $post_id ) as $attr ) {
+			$attrs[ $attr['data_type'] ][ $attr['code'] ] = $this->wp_post_revision_field( '', $attr['id'], get_post( $revision_id ), '', false );
+		}
+		$product_class->save_product_custom_informations(
+			$post_id,
+			array(
+				'post_ID' => $post_id,
+				'product_id' => $post_id,
+				'user_ID' => get_current_user_id(),
+				'action' => 'editpost',
+				'wpshop_product_attribute' => $attrs,
+			)
+		);
+	}
+	public function wp_post_revision_fields( $fields, $post ) {
+		foreach ( $this->product_attributes( $post['ID'] ) as $data ) {
 			$fields[ $data['id'] ] = $data['frontend_label'];
 			add_filter( "_wp_post_revision_field_{$data['id']}", array( $this, 'wp_post_revision_field' ), 10, 4 );
 		}
 		return $fields;
 	}
-	public function wp_post_revision_field( $value, $field, $revision, $fromto ) {
+	public function wp_post_revision_field( $value, $field, $revision, $fromto, $option_label = true ) {
 		global $wpdb;
 		$wpsdb_histo = WPSHOP_DBT_ATTRIBUTE_VALUES_HISTO;
 		$wpsdb_values_options = WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS;
 		$result = '0';
-		$fromto_compare = '';
-		if ( ! empty( $fromto ) ) {
-			$result = $wpdb->get_var( $wpdb->prepare(
-				"SELECT IFNULL( val_opt.label,
-					histo.value
-				),
-				rev.post_date
-				FROM {$wpsdb_histo} histo
-				LEFT JOIN {$wpsdb_values_options} val_opt ON val_opt.attribute_id = histo.attribute_id AND val_opt.id = histo.value
-				LEFT JOIN (
-					SELECT *
-					FROM {$wpdb->posts} rev
-					WHERE rev.post_type = 'revision'
-     				AND rev.post_parent = %d
-					AND rev.post_date > %s
-					LIMIT 1
-				) rev ON 1 = 1
-				WHERE histo.creation_date >= %s
-				AND ( rev.post_date IS NULL OR histo.creation_date < rev.post_date )
-				AND histo.attribute_id = %d
-				AND histo.entity_id = %d
-				ORDER BY histo.creation_date DESC LIMIT 1",
-				$revision->post_parent,
-				$revision->post_date,
-				$revision->post_date,
-				$field,
-				$revision->post_parent
-			) );
+		if ( true === $option_label ) {
+			$select = 'IFNULL( val_opt.label,
+				histo.value
+			)';
+		} else {
+			$select = 'histo.value';
 		}
+		$result = $wpdb->get_var( $wpdb->prepare(
+			"SELECT {$select}
+			FROM {$wpsdb_histo} histo
+			LEFT JOIN {$wpsdb_values_options} val_opt ON val_opt.attribute_id = histo.attribute_id AND val_opt.id = histo.value
+			LEFT JOIN (
+				SELECT *
+				FROM {$wpdb->posts} rev
+				WHERE rev.post_type = 'revision'
+ 				AND rev.post_parent = %d
+				AND rev.post_date > %s
+				ORDER BY rev.ID ASC LIMIT 1
+			) rev ON 1 = 1
+			WHERE histo.creation_date >= %s
+			AND ( rev.post_date IS NULL OR histo.creation_date < rev.post_date )
+			AND histo.attribute_id = %d
+			AND histo.entity_id = %d
+			ORDER BY histo.value_id DESC LIMIT 1",
+			$revision->post_parent,
+			$revision->post_date,
+			$revision->post_date,
+			$field,
+			$revision->post_parent
+		) );
 		$result = ( '0' === $result ) ? null : $result;
 		return $result;
 	}
