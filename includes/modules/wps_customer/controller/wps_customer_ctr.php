@@ -33,6 +33,8 @@ class wps_customer_ctr {
 
 		// add_action( 'admin_init', array( $this, 'redirect_new_user' ) );
 
+		add_filter( 'wp_redirect', array( $this, 'wp_redirect_after_user_new' ), 1 );
+
 		/** When a wordpress user is created, create a customer (post type) */
 		add_action( 'user_register', array( $this, 'create_entity_customer_when_user_is_created' ) );
 		add_action( 'edit_user_profile_update', array( $this, 'update_entity_customer_when_profile_user_is_update' ) );
@@ -107,8 +109,9 @@ class wps_customer_ctr {
 			'search'				 => '*' . esc_attr( $term ) . '*',
 			'search_columns' => array( 'user_login', 'user_url', 'user_email', 'user_nicename', 'display_name' ),
 		) );
-		if ( ! empty( $search_users->get_results() ) ) {
-			foreach ( $search_users->get_results() as $user ) {
+		$user_query_results = $search_users->get_results();
+		if ( ! empty( $user_query_results ) ) {
+			foreach ( $user_query_results as $user ) {
 				$users[ $user->ID ]['id'] = $user->ID;
 				$users[ $user->ID ]['display_name'] = $user->display_name;
 				$users[ $user->ID ]['email'] = $user->user_email;
@@ -131,8 +134,9 @@ class wps_customer_ctr {
 				),
 			),
 		) );
-		if ( ! empty( $search_users_in_meta->get_results() ) ) {
-			foreach ( $search_users_in_meta->get_results() as $user ) {
+		$user_query_results_2 = $search_users_in_meta->get_results();
+		if ( ! empty( $user_query_results_2 ) ) {
+			foreach ( $user_query_results_2 as $user ) {
 				$users[ $user->ID ]['id'] = $user->ID;
 				$users[ $user->ID ]['display_name'] = $user->display_name;
 				$users[ $user->ID ]['email'] = $user->user_email;
@@ -143,7 +147,7 @@ class wps_customer_ctr {
 		if ( empty( $users ) ) {
 			$users[] = array(
 				'id'		=> null,
-				'label'	=> __( 'Create a new user', 'digirisk' ),
+				'label'	=> __( 'Create a new user', 'wpshop' ),
 			);
 		}
 
@@ -175,7 +179,7 @@ class wps_customer_ctr {
 	 * @return int
 	 */
 	public static function get_author_id_by_customer_id( $customer_id ) {
-		$flipped = array_flip( self::$customer_user_identifier_cache );
+		$flipped = ! empty( self::$customer_user_identifier_cache ) ? array_flip( self::$customer_user_identifier_cache ) : '';
 		if ( ! isset( $flipped[ $customer_id ] ) ) {
 			$author_id = $GLOBALS['wpdb']->get_var( $GLOBALS['wpdb']->prepare( "SELECT post_author FROM {$GLOBALS['wpdb']->posts} WHERE ID = %d", $customer_id ) );
 			self::$customer_user_identifier_cache[ $author_id ] = $customer_id;
@@ -323,6 +327,20 @@ class wps_customer_ctr {
 		}
 	}
 
+	public function wp_redirect_after_user_new( $location ) {
+		global $pagenow;
+
+		if ( is_admin() && $pagenow === 'user-new.php' ) {
+			$user_details = get_user_by( 'email', $_REQUEST[ 'email' ] );
+			$user_id = $user_details->ID;
+
+			if( $location == 'users.php?update=add&id=' . $user_id )
+			return add_query_arg( array( 'user_id' => $user_id ), 'user-edit.php' );
+		}
+
+		return $location;
+	}
+
 	/**
 	 * Sélection automatique du role client lors de la création d'un utilisateur dans WordPress
 	 */
@@ -333,21 +351,23 @@ class wps_customer_ctr {
 	/**
 	 * Create an entity of customer type when a new user is created
 	 *
-	 * @param integer $user_id
+	 * @param integer $user_id L'identifiant de l'utilisateur qui vient d'être créé et pour qui on va créer le client.
 	 */
 	public static function create_entity_customer_when_user_is_created( $user_id ) {
-		$user_data = get_userdata($user_id);
-		$user_info = array_merge(get_object_vars($user_data->data), array_map('self::array_map_create_entity_customer_when_user_is_created', get_user_meta($user_id)));
-		$customer_post_ID = wp_insert_post(array('post_type' => WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, 'post_author' => $user_id, 'post_title' => $user_data->user_nicename));
-		self::save_customer_synchronize($customer_post_ID, $user_id, $user_info);
+		if ( ! is_admin() || strpos( $_SERVER['REQUEST_URI'], 'admin-ajax.php' )  ) {
+			$user_data = get_userdata( $user_id );
+			$user_info = array_merge( get_object_vars( $user_data->data ), array_map( 'self::array_map_create_entity_customer_when_user_is_created', get_user_meta( $user_id ) ) );
+			$customer_post_ID = wp_insert_post( array( 'post_type' => WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, 'post_author' => $user_id, 'post_title' => $user_data->user_nicename ) );
+			self::save_customer_synchronize( $customer_post_ID, $user_id, $user_info );
 
-		/** Change metabox Hidden Nav Menu Definition to display WPShop categories' metabox **/
-		$usermeta = get_post_meta($user_id, 'metaboxhidden_nav-menus', true);
-		if (! empty($usermeta) && is_array($usermeta)) {
-			$data_to_delete = array_search('add-wpshop_product_category', $usermeta);
-			if ($data_to_delete !== false) {
-					unset($usermeta[$data_to_delete]);
-					update_user_meta($user_id, 'metaboxhidden_nav-menus', $usermeta);
+			/** Change metabox Hidden Nav Menu Definition to display WPShop categories' metabox */
+			$usermeta = get_post_meta( $user_id, 'metaboxhidden_nav-menus', true );
+			if ( ! empty( $usermeta ) && is_array( $usermeta ) ) {
+				$data_to_delete = array_search( 'add-wpshop_product_category', $usermeta );
+				if ( false !== $data_to_delete ) {
+					unset( $usermeta[ $data_to_delete ] );
+					update_user_meta( $user_id, 'metaboxhidden_nav-menus', $usermeta );
+				}
 			}
 		}
 	}
