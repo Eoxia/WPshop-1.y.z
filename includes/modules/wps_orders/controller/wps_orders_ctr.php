@@ -296,6 +296,7 @@ class wps_orders_ctr {
 					$html2pdf = new HTML2PDF( 'P', 'A4', 'fr' );
 					$html2pdf->setDefaultFont( 'Arial' );
 					$html2pdf->writeHTML( $html_content );
+					ob_clean();
 					$html2pdf->Output( 'order_' . $order_id . '.pdf', 'D' );
 				} catch (HTML2PDF_exception $e) {
 					echo $e;
