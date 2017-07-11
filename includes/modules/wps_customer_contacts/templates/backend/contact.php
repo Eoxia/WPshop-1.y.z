@@ -25,8 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<td><?php echo esc_html( $user['user_email'] ); ?></td>
 
 		<td class="wps-customer-contacts-actions" >
-
-		<?php do_action( 'wps_customer_contacts_list_action', $user_id ); ?>
+			<?php do_action( 'wps_customer_contacts_list_action', $user_id ); ?>
 
 		<?php if ( true === $user['is_default'] ) : ?>
 			<i title="<?php esc_attr_e( 'This is the main contact / customer creator', 'wpshop' ); ?>" class="dashicons dashicons-star-filled" ></i>
@@ -34,7 +33,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<i title="<?php esc_attr_e( 'Change to default customer', 'wpshop' ); ?>" class="dashicons dashicons-star-empty" ></i>
 		<?php endif; ?>
 
-		<!-- <a title="<?php esc_attr_e( 'User account edition', 'wpshop' ); ?>" href="<?php echo esc_url( admin_url( 'admin-ajax.php?action=load_user_account_form&_wpnonce=' . wp_create_nonce( 'load_user_account_form' ) . '&user_id=' . $user_id ) ); ?>" class="thickbox" ><i class="dashicons dashicons-edit" ></i></a> -->
+			<a title="<?php esc_attr_e( 'User account edition', 'wpshop' ); ?>" href="<?php echo esc_url( get_edit_user_link( $user_id ) ); ?>" target="wps_contact_edition" ><i class="dashicons dashicons-edit" ></i></a>
 
 		<?php if ( true === $user['is_default'] ) : ?>
 			<i title="<?php esc_attr_e( 'This is the main contact, you can\'t unlink it', 'wpshop' ); ?>" class="dashicons dashicons-lock" ></i>
