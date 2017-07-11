@@ -31,6 +31,7 @@ class WPS_Customers_Contacts {
 	public function __construct() {
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_box' ) );
 
+		// Appel du filtre permettant d'ajouter des informations dans la liste des méthodes de contacts dans les profil utilisateur.
 		add_filter( 'user_contactmethods', array( $this, 'add_contact_method_to_user' ), 20, 2 );
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'callback_admin_enqueue_scripts' ), 11 );
@@ -119,11 +120,13 @@ class WPS_Customers_Contacts {
 			foreach ( $user_list as $user_id ) {
 				if ( 0 !== $user_id ) {
 					$associated_user = get_user_by( 'ID', $user_id );
+					$user_metas = get_user_meta( $user_id );
 					if ( is_object( $associated_user ) ) {
 						$users[ $user_id ] = wp_parse_args( $associated_user->data, array(
 							'last_name'		=> $associated_user->last_name,
 							'first_name'	=> $associated_user->first_name,
 							'is_default'	=> ( $user_id === (int) $customer->post_author ? true : false ),
+							'metas'				=> $user_metas,
 						) );
 					}
 				}
@@ -189,7 +192,7 @@ class WPS_Customers_Contacts {
 	 */
 	public function add_contact_method_to_user( $contact_methods, $user ) {
 		$wps_contact_method = array(
-			'phone'	=> __( 'Phone number', 'wpshop' ),
+			'wps_phone'	=> __( 'Phone number', 'wpshop' ),
 		);
 
 		return array_merge( $wps_contact_method, $contact_methods );

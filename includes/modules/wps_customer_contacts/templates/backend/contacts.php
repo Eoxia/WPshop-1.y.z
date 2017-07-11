@@ -23,13 +23,24 @@ $output = ob_get_clean();
 	data-change-default-nonce="<?php echo esc_attr( wp_create_nonce( 'wps_customer_contacts_change_default' ) ); ?>"
 	data-default-user-id="<?php echo esc_attr( $default_user ); ?>"  >
 
+	<thead>
+		<tr data-customer-id="<?php echo esc_attr( $customer->ID ); ?>" data-user-id="<?php echo esc_attr( $user_id ); ?>" >
+			<td><?php esc_html_e( 'ID', 'wpshop' ); ?></td>
+			<td><?php echo esc_html( 'Last Name' ) . ' - ' . esc_html( 'First Name' ); ?></td>
+			<td><?php esc_html_e( 'Display name' ); ?></td>
+			<td><?php esc_html_e( 'Email' ); ?></td>
+			<td><?php esc_html_e( 'Phone', 'wpshop' ); ?></td>
+			<td class="wps-customer-contacts-actions" >&nbsp;</td>
+		</tr>
+	</thead>
+
 	<tbody>
 		<?php echo $output; // WPCS: XSS ok. ?>
 	</tbody>
 
 	<tfoot>
 		<tr>
-			<td colspan="5" class="wps-customer-associate-contact-container" >
+			<td colspan="6" class="wps-customer-associate-contact-container" >
 				<span class="wps-customer-contact-association-opener" ><i class="dashicons dashicons-plus" ></i></span>
 				<input type="text" class="wps-customer-autocomplete-input hidden" placeholder="<?php esc_html_e( 'Start typing for user searching', 'wpshop' ); ?>"
 					data-search-nonce="<?php echo esc_attr( wp_create_nonce( 'wps_customer_search' ) ); ?>"

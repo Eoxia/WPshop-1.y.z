@@ -20,9 +20,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<?php endif; ?>
 	<tr data-customer-id="<?php echo esc_attr( $customer->ID ); ?>" data-user-id="<?php echo esc_attr( $user_id ); ?>" >
 		<td>#<?php echo esc_html( $user_id ); ?></td>
-		<td><?php echo esc_html( $user['last_name'] . ' ' . $user['first_name'] ); ?></td>
+		<td><?php echo esc_html( $user['last_name'] . ' - ' . $user['first_name'] ); ?></td>
 		<td><?php echo esc_html( $user['display_name'] ); ?></td>
 		<td><?php echo esc_html( $user['user_email'] ); ?></td>
+		<td><?php echo ( isset( $user['metas']['wps_phone'] ) && ! empty( $user['metas']['wps_phone'] ) ? esc_html( implode( ',', $user['metas']['wps_phone'] ) ) : '&mdash;' ); ?></td>
 
 		<td class="wps-customer-contacts-actions" >
 			<?php do_action( 'wps_customer_contacts_list_action', $user_id ); ?>
