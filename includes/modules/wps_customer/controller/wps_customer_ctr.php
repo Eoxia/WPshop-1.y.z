@@ -34,6 +34,8 @@ class wps_customer_ctr {
 		// Redirection vers la page d'édition d'un utilisateur après sa création.
 		add_filter( 'wp_redirect', array( $this, 'wp_redirect_after_user_new' ), 1 );
 
+		add_filter( 'wp_redirect', array( $this, 'wp_redirect_after_user_new' ), 1 );
+
 		/** When a wordpress user is created, create a customer (post type) */
 		add_action( 'user_register', array( $this, 'create_entity_customer_when_user_is_created' ) );
 		add_action( 'edit_user_profile_update', array( $this, 'update_entity_customer_when_profile_user_is_update' ) );
@@ -315,6 +317,20 @@ class wps_customer_ctr {
 			if ( 'users.php?update=add&id=' . $user_id === $location ) {
 				return add_query_arg( array( 'user_id' => $user_id ), 'user-edit.php' );
 			}
+		}
+
+		return $location;
+	}
+
+	public function wp_redirect_after_user_new( $location ) {
+		global $pagenow;
+
+		if ( is_admin() && $pagenow === 'user-new.php' ) {
+			$user_details = get_user_by( 'email', $_REQUEST[ 'email' ] );
+			$user_id = $user_details->ID;
+
+			if( $location == 'users.php?update=add&id=' . $user_id )
+			return add_query_arg( array( 'user_id' => $user_id ), 'user-edit.php' );
 		}
 
 		return $location;
