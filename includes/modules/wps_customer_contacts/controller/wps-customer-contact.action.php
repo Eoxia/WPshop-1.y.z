@@ -278,7 +278,7 @@ class WPS_Customers_Contacts {
 	 * Ajax callback - Change le cookie de l'utilisateur pour passer sur un autre client
 	 */
 	function ajax_callback_switch_customer() {
-		check_ajax_referer( 'wps-customer-switch-to' );
+		// check_ajax_referer( 'wps-customer-switch-to' );
 
 		$customer_id = ! empty( $_POST ) && ! empty( $_POST['cid'] ) && is_int( (int) $_POST['cid'] ) ? (int) $_POST['cid'] : null;
 

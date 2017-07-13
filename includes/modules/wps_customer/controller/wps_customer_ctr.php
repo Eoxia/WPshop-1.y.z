@@ -316,21 +316,6 @@ class wps_customer_ctr {
 	public function wp_redirect_after_user_new( $location ) {
 		global $pagenow;
 
-		if ( is_admin() && 'user-new.php' === $pagenow ) {
-			$user_details = get_user_by( 'email', $_REQUEST['email'] );
-			$user_id = $user_details->ID;
-
-			if ( 'users.php?update=add&id=' . $user_id === $location ) {
-				return add_query_arg( array( 'user_id' => $user_id ), 'user-edit.php' );
-			}
-		}
-
-		return $location;
-	}
-
-	public function wp_redirect_after_user_new( $location ) {
-		global $pagenow;
-
 		if ( is_admin() && $pagenow === 'user-new.php' ) {
 			$user_details = get_user_by( 'email', $_REQUEST[ 'email' ] );
 			$user_id = $user_details->ID;
