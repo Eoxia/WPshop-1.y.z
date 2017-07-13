@@ -46,6 +46,9 @@ class WPS_Customers_Contacts {
 		add_action( 'wp_ajax_wps_customer_contacts_dissociate', array( $this, 'ajax_callback_dissociate_user' ) );
 		// Changement de l'utilisateur par défaut (auteur) d'un client / Change the default user (author) for a customer.
 		add_action( 'wp_ajax_wps_customer_contacts_change_default', array( $this, 'ajax_callback_change_default_user' ) );
+
+		// Changement de compte client dans le frontend pour l'utilisateur connecté / Switch between customer account for current connected user.
+		add_action( 'wp_ajax_wps_customer_switch_to', array( $this, 'ajax_callback_switch_customer' ) );
 	}
 
 	/**
@@ -269,6 +272,20 @@ class WPS_Customers_Contacts {
 
 		$this->customer_contact_list_callback( get_post( $customer_id ) );
 		wp_die();
+	}
+
+	/**
+	 * Ajax callback - Change le cookie de l'utilisateur pour passer sur un autre client
+	 */
+	function ajax_callback_switch_customer() {
+		check_ajax_referer( 'wps-customer-switch-to' );
+
+		$customer_id = ! empty( $_POST ) && ! empty( $_POST['cid'] ) && is_int( (int) $_POST['cid'] ) ? (int) $_POST['cid'] : null;
+
+		unset( $_COOKIE['wps_current_connected_customer'] );
+		setcookie( 'wps_current_connected_customer', $customer_id, strtotime( '+30 days' ), SITECOOKIEPATH, COOKIE_DOMAIN, is_ssl() );
+
+		wp_die( wp_json_encode( array( 'status' => true ) ) );
 	}
 
 }
