@@ -78,11 +78,17 @@ class wps_customer_ctr {
 	/**
 	 * Définition d'un cookie avec 'idetifiant du client auqule l'utilisateur est affecté : set a cookie with the customer identifier if connected user is associated to only one customer
 	 *
-	 * @param	string		$user_login le nom d'utilisateur de l'utilisateur actuellement connecté / Username of current connected user.
-	 * @param	WP_Object $user			 l'objet WP_User correspond à l'utilisateur actuellement connecté / Current connected user WP_Object definition.
+	 * @param	string    $user_login le nom d'utilisateur de l'utilisateur actuellement connecté / Username of current connected user.
+	 * @param	WP_Object $user			  l'objet WP_User correspond à l'utilisateur actuellement connecté / Current connected user WP_Object definition.
 	 */
 	public function hook_login_for_setting_customer_id( $user_login, $user ) {
-		 setcookie( 'wps_current_connected_customer', self::get_customer_id_by_author_id( $user->ID ), strtotime( '+30 days' ), SITECOOKIEPATH, COOKIE_DOMAIN, is_ssl() );
+		$customer_id = wps_customer_ctr::get_customer_id_by_author_id( $user->ID );
+		if ( empty( $customer_id ) ) {
+			$query = $GLOBALS['wpdb']->prepare( "SELECT post_id FROM {$GLOBALS['wpdb']->postmeta} WHERE meta_key = %s AND meta_value LIKE %s ORDER BY meta_id LIMIT 1", '_wpscrm_associated_user', "%;i:$user->ID;%" );
+			$customer_id = $GLOBALS['wpdb']->get_var( $query );
+		}
+
+		setcookie( 'wps_current_connected_customer', $customer_id, strtotime( '+30 days' ), SITECOOKIEPATH, COOKIE_DOMAIN, is_ssl() );
 	}
 
 	/**
