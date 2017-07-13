@@ -55,7 +55,7 @@
 		</div>
 	</div>
 
-	<h3 class="about-headline-callout"><?php printf( __( 'A question ? A comment ? A need ? Join us on %sWPShop forum%s', 'wpshop'), '<a href="http://forums.eoxia.com/login" taget="_wpshop_forums" >', '</a>' ); ?></h3>
+	<?php // <h3 class="about-headline-callout"><?php printf( __( 'A question ? A comment ? A need ? Join us on %sWPShop forum%s', 'wpshop'), '<a href="http://forums.eoxia.com/login" taget="_wpshop_forums" >', '</a>' ); </h3> ?>
 
 	<hr>
 	<div class="return-to-dashboard"><a href="<?php echo admin_url( 'admin.php?page=wpshop_dashboard' ); ?>"><?php _e( 'Go to your shop dashboard', 'wpshop'); ?></a></div>

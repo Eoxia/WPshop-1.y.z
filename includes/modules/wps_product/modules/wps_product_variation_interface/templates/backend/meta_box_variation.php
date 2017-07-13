@@ -47,15 +47,15 @@
 		<li class="wps_variations_questions_question_col"><?php esc_html_e( 'Do you want to manage each options singly or combine them ?', 'wpshop' ); ?></li>
 		<li class="wps_variations_questions_answers_col">
 			<?php
-				$id = uniqid();
+				$id1 = uniqid();
 			?>
-			<input id="question_combine_options_<?php echo intval( $id ); ?>" name="question_combine_options" type="radio" value="combine">
-			<label for="question_combine_options_<?php echo intval( $id ); ?>"><?php esc_html_e( 'Combined options', 'wpshop' ); ?></label>
+			<input id="question_combine_options_<?php echo intval( $id1 ); ?>" name="question_combine_options" type="radio" value="combine">
+			<label for="question_combine_options_<?php echo intval( $id1 ); ?>"><?php esc_html_e( 'Combined options', 'wpshop' ); ?></label>
 			<?php
-				$id = uniqid();
+				$id2 = uniqid();
 			?>
-			<input id="question_combine_options_<?php echo intval( $id ); ?>" name="question_combine_options" type="radio" value="single">
-			<label for="question_combine_options_<?php echo intval( $id ); ?>"><?php esc_html_e( 'Distinct options', 'wpshop' ); ?></label>
+			<input id="question_combine_options_<?php echo intval( $id2 ); ?>" name="question_combine_options" type="radio" value="single">
+			<label for="question_combine_options_<?php echo intval( $id2 ); ?>"><?php esc_html_e( 'Distinct options', 'wpshop' ); ?></label>
 		</li>
 	</ul>
 </div>

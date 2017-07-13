@@ -50,7 +50,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<?php endforeach; ?>
 	</div>
 	<?php endforeach; ?>
-<?php endif; ?>
-<div class="wps-form-group">
-<?php do_action( 'signup_extra_fields' ); ?>
-</div>
+<?php endif;
+$content = '';
+ob_start();
+do_action( 'signup_extra_fields' );
+$content = ob_get_clean();
+if ( ! empty( $content ) ) {
+	?>
+	<div class="wps-form-group">
+		<?php echo $content; ?>
+	</div>
+	<?php
+}

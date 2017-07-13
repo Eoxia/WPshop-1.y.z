@@ -358,7 +358,7 @@ class wps_customer_ctr {
 		}
 	}
 	private static function array_map_create_entity_customer_when_user_is_created( $a ) {
-			return $a[0];
+		return $a[0];
 	}
 
 	/**
@@ -367,14 +367,12 @@ class wps_customer_ctr {
 	 * @param integer $user_id
 	 */
 	public static function update_entity_customer_when_profile_user_is_update( $user_id ) {
+		if ( ! is_admin() || strpos( $_SERVER['REQUEST_URI'], 'admin-ajax.php' )  ) {
 			$user_data = get_userdata($user_id);
 			$user_info = array_merge(get_object_vars($user_data->data), array_map('self::array_map_create_entity_customer_when_user_is_created', get_user_meta($user_id)));
 			$customer_post_ID = self::get_customer_id_by_author_id($user_id);
 			self::save_customer_synchronize($customer_post_ID, $user_id, $user_info);
-	}
-
-	private static function array_map_update_entity_customer_when_profile_user_is_update( $a ) {
-			return $a[0];
+		}
 	}
 
 
