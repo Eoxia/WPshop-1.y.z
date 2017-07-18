@@ -634,15 +634,15 @@ class wpshop_payment {
 
 			$order_meta['order_status'] = $payment_status;
 
-			if( !$save_metadata ) {
-				return 	$order_meta;
-			}
-			else {
+			update_post_meta( $order_id, '_wpshop_order_status', $payment_status);
+			if( $save_metadata ) {
 				update_post_meta( $order_id, '_order_postmeta', $order_meta);
 			}
-			update_post_meta( $order_id, '_wpshop_order_status', $payment_status);
 		}
 		do_action( 'wps_after_check_order_payment_total_amount', $order_id );
+		if ( ! $save_metadata ) {
+			return $order_meta;
+		}
 	}
 
 	/**

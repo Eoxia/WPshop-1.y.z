@@ -2385,35 +2385,33 @@ h3.wps_dashboard {
 #wpshop_order_payment [class*="wps-bton"][class*="mini"] {
 	padding-top : 1.4em;
 }
-.wps_private_comment_message { position: relative; background: #F0F6FC; border: 1px solid #e0ecf8; padding : 8px; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; color : #2e75bf; width : 100%; float : left;}
+.wps_private_comment_message { background: #F0F6FC; border: 1px solid #e0ecf8; padding : 8px; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; color : #2e75bf; width : 100%; position: relative; }
 .wps_private_comment_message:after, .wps_private_comment_message:before { bottom: 100%; left: 5%; border: solid transparent; content: " "; height: 0; width: 0; position: absolute; pointer-events: none; }
 .wps_private_comment_message:after { border-color: rgba(240, 246, 252, 0); border-bottom-color: #F0F6FC; border-width: 10px; margin-left: -10px; }
 .wps_private_comment_message:before { border-color: rgba(46, 117, 191, 0); border-bottom-color: #e0ecf8; border-width: 11px; margin-left: -11px; }
 .wps_private_comment {
-	position : relative;
-	float : left;
+	margin-top: 10px;
 	width : 100%;
 	margin-bottom : 10px;
-	padding-bottom : 10px;
-	border-bottom : 1px dashed #CCCCCC;
+	padding-top: 10px;
+	border-top: 1px dashed #CCCCCC;
+}
+.wps_private_comment:first-child {
+	margin-top: 14px;
 }
 .wps_private_comment_avatar {
 	width : 30px;
 	height : 30px;
-	position : relative;
 	float : left;
-	margin-bottom : 15px;
-	margin-right : 10px
+	margin-right : 10px;
 }
 .wps_private_comment_avatar img {
 	width : 30px;
 	height : auto;
 }
 .wps_private_comment_author_informations {
-	position : relative;
-	float : left;
 	width : auto;
-	height : 25px;
+	height : 45px;
 	padding-top : 5px;
 	min-width : 200px
 }
@@ -2424,6 +2422,14 @@ h3.wps_dashboard {
 }
 .wps_private_comment_date {
 	font-style : italic;
+}
+#wps_private_messages_container {
+	clear: both;
+	padding-top: 1px;
+}
+.addPrivateComment {
+	float: right;
+	margin-top: 5px;
 }
 
 #wps_customer_list_container .chzn-container, #wps_customer_list_container .chzn-container .chzn-drop {

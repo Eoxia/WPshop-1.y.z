@@ -269,7 +269,7 @@ class Mass_Interface3 {
 		wp_register_style( 'mass_interface3_css', WPS_PDCT_MASS_CSS . 'wps-mass-interface3.css' );
 		wp_enqueue_style( 'jquery_chosen_css' );
 		wp_enqueue_style( 'mass_interface3_css' );
-		wp_deregister_style( 'wpshop_main_css' );
+		wp_dequeue_style( 'wpshop_main_css' );
 	}
 	/**
 	 * Change default url for set_url_scheme(). See pagination & get_views. Impossible to re-use set_url_sheme inner.

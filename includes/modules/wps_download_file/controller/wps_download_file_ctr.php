@@ -60,7 +60,9 @@ class wps_download_file_ctr {
 		}
 		/** In case there is a item identifier defined for download */
 		if ( null !== $item_id_for_download ) {
-			$download_codes = get_user_meta( get_current_user_id(), '_order_download_codes_' . $oid, true );
+			$cid = (int) get_post_meta( $oid, '_wpshop_order_customer_id', true );
+			$cid = ! empty( $cid ) ? $cid : get_current_user_id();
+			$download_codes = get_user_meta( $cid, '_order_download_codes_' . $oid, true );
 			/** Check if the current product exist into download code list, if not check if there is a composition between parent product and children product  */
 			if ( empty( $download_codes[ $item_id_for_download ] ) ) {
 				$item_id_component = explode( '__', $item_id_for_download );
@@ -70,10 +72,12 @@ class wps_download_file_ctr {
 					$item_id_for_download = $item['item_id'];
 				}
 			}
+			//var_dump($download_codes);
 			if ( ! empty( $download_codes ) && ! empty( $download_codes[ $item_id_for_download ] ) && ! empty( $download_codes[ $item_id_for_download ]['download_code'] ) ) {
 				$download_link = admin_url( 'admin-post.php?action=wps_download_file&amp;oid=' . $oid . '&amp;download=' . $download_codes[ $item_id_for_download ]['download_code'] );
 			}
 		}
+		//exit();
 
 		return $download_link;
 	}
@@ -160,7 +164,7 @@ class wps_download_file_ctr {
 							__( 'Failure returned at order link generation. UserID : <b>%1$d</b>, ProductID : <b>%2$d</d>, UserMeta : <pre>%3$s</pre>', 'wpshop' ),
 							(int) get_current_user_id(),
 							(int) $item['item_id'],
-							get_user_meta( get_current_user_id(), '_order_download_codes_' . $order_id, true )
+							get_user_meta( (int) $order_meta['customer_id'], '_order_download_codes_' . $order_id, true )
 						),
 						array(
 							'object_id' => $order_id,
@@ -168,7 +172,13 @@ class wps_download_file_ctr {
 						0
 					);
 				} else {
+					$user_data = get_userdata( $order_meta['customer_id'] );
+					$order_info = get_post_meta( $order_id, '_order_info', true );
+					$email = ( ! empty( $user_data ) && ! empty( $user_data->user_email ) ) ? $user_data->user_email : '';
+					$first_name = ( ! empty( $order_info ) && ! empty( $order_info['billing'] ) && ! empty( $order_info['billing']['address']['address_first_name'] ) ? $order_info['billing']['address']['address_first_name'] : '' );
+					$last_name = ( ! empty( $order_info ) && ! empty( $order_info['billing'] ) && ! empty( $order_info['billing']['address']['address_last_name'] ) ? $order_info['billing']['address']['address_last_name'] : '' );
 					$link = '<a href="' . esc_url( $link ) . '" target="_blank">' . __( 'Download the product', 'wpshop' ) . '</a>';
+					$wps_message = new wps_message_ctr();
 					$wps_message->wpshop_prepared_email(
 						$email,
 						'WPSHOP_DOWNLOADABLE_FILE_IS_AVAILABLE',

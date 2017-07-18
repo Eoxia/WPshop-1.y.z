@@ -185,8 +185,10 @@ class wps_orders_in_back_office {
 		// Affectation du client de la commande / Affect customer to order.
 		remove_action( 'save_post', array( $this, 'save_order_custom_informations' ) );
 		wp_update_post( array( 'ID' => $post_id, 'post_parent' => $customer_id ) );
-		update_post_meta( $post_id, '_wpshop_order_customer_id', $user_id );
-		$order_meta['customer_id'] = $user_id;
+		if ( empty( $order_meta['customer_id'] ) ) {
+			update_post_meta( $post_id, '_wpshop_order_customer_id', $user_id );
+			$order_meta['customer_id'] = $user_id;
+		}
 
 		if ( empty( $order_meta['order_key'] ) ) {
 			$order_meta['order_key'] = ! empty( $order_meta['order_key'] ) ? $order_meta['order_key'] : ( ! empty( $order_meta['order_status'] ) && ( $order_meta['order_status'] != 'awaiting_payment' ) ? wpshop_orders::get_new_order_reference() : '');
