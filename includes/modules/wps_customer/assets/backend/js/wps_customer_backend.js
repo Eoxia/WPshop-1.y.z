@@ -48,7 +48,7 @@ jQuery( document ).ready( function() {
 		}).submit();
 	});
 
- 	jQuery( document ).on( 'change', '.wps-form-group input, .wps-form-group select, .wps-form-group textarea', function() {
+	jQuery( document ).on( 'change', '.wpshop-admin-post-type-wpshop_customers .wps-form-group input,.wpshop-admin-post-type-wpshop_customers .wps-form-group select,.wpshop-admin-post-type-wpshop_customers .wps-form-group textarea', function() {
 		jQuery( window ).on( 'beforeunload.edit-post', function() {
 			return true;
 		});

@@ -35,11 +35,33 @@
 			next( $messages_histo );
 		endwhile; ?>
 	</div>
-	<?php if( $nb_pages_messages_histo != 1 ) {
+	<div class="wps-my-message tablenav-pages" style="margin: 7px;text-align: right;">
+	<?php /* if( $nb_pages_messages_histo != 1 ) {
 		for( $i = 1; $i <= $nb_pages_messages_histo; $i++ ) { ?>
 		<?php echo '<' . ( ( $page_message_histo == $i ) ? 'span' : 'a href="' . add_query_arg( array( 'page_message_histo' => $i ) ) . '"' ) . ' class="page-numbers">' . $i . '</' . ( ( $page_message_histo == $i ) ? 'span' : 'a' ) . '>'; ?>
 	<?php }
-	} ?>
+	} */
+	echo paginate_links(
+		array(
+			'base'               => '%_%',
+			'format'             => '?page_message_histo=%#%',
+			'total'              => $nb_pages_messages_histo,
+			'current'            => max( 1, $page_message_histo ),
+			'show_all'           => false,
+			'end_size'           => 1,
+			'mid_size'           => 2,
+			'prev_next'          => true,
+			'prev_text'          => esc_html__( '« Previous' ),
+			'next_text'          => esc_html__( 'Next »' ),
+			'type'               => 'plain',
+			'add_args'           => false,
+			'add_fragment'       => '',
+			'before_page_number' => '',
+			'after_page_number'  => '',
+		)
+	);
+	?>
+	</div>
 <?php else: ?>
 	<div class="wps-alert-info">
 		<?php _e( 'No email was sent.', 'wpshop' ); ?>

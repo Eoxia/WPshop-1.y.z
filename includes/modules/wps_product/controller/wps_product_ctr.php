@@ -46,6 +46,7 @@ class wps_product_ctr {
 	}
 
 	public function callback_admin_enqueue_scripts( $hook ) {
+		wp_enqueue_script( 'wps_backend_product_js', WPS_PRODUCT_URL . '/asset/js/backend-product.js', array( "jquery", "jquery-form" ), WPS_PRODUCT_VERSION );
 		if( $hook != 'tools_page_wpshop_tools' )
 			return;
 
