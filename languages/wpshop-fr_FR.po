@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Wp Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-03 15:05+0200\n"
-"PO-Revision-Date: 2017-07-03 15:09+0200\n"
+"PO-Revision-Date: 2017-07-19 10:04+0200\n"
 "Last-Translator: Equipe de développement de digirisk <dev@digirisk.com>\n"
 "Language-Team: Développement Eoxia <dev@eoxia.com>\n"
 "Language: fr_FR\n"
@@ -7874,7 +7874,7 @@ msgstr "Frais de port offert dans %s"
 #: includes/modules/wps_marketing_tools/controller/wps_marketing_tools_ctr.php:128
 #: includes/modules/wps_shipping/templates/frontend/shipping-mode-element.php:48
 msgid "Free shipping cost"
-msgstr "Frais de port offert"
+msgstr "Frais de port offerts"
 
 #: includes/modules/wps_marketing_tools/templates/backend/wps_low_stock_alert_configuration_interface.php:4
 msgid "Activate the low-stock alert display"
