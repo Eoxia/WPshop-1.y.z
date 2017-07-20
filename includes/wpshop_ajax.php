@@ -498,7 +498,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 	add_action( 'wp_ajax_dialog_inform_shipping_number', 'wpshop_ajax_dialog_inform_shipping_number' );
 
 	function wpshop_ajax_change_order_state() {
-		global $order_status;
+		global $order_status, $wps_shipping_mode_ctr;
 		check_ajax_referer( 'wpshop_change_order_state', 'wpshop_ajax_nonce' );
 
 		$order_id = ( isset( $_POST[ 'order_id' ] ) && !empty( $_POST[ 'order_id' ] ) ) ? (int)$_POST[ 'order_id' ] : null;
@@ -522,9 +522,10 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 				$output_payment_box_class = 'wpshop_order_status_shipped';
 				$output_payment_box_content = __('Shipped', 'wpshop');
 
-				$output_shipping_box  = '<li><strong>'.__('Order shipping date','wpshop').' :</strong>'.$order['order_shipping_date'].'</li>';
-				$output_shipping_box .= '<li><strong>'.__('Tracking number','wpshop').' :</strong> '.$order['order_trackingNumber'].'</li>';
-				$output_shipping_box .= '<li><strong>'.__('Tracking link','wpshop').' :</strong> '.$order['order_trackingLink'].'</li>';
+				$order_postmeta = $order;
+				ob_start();
+				require( wpshop_tools::get_template_part( WPS_SHIPPING_MODE_DIR, $wps_shipping_mode_ctr->template_dir, 'backend', 'order-shipping-informations' ) );
+				$output_shipping_box = ob_get_clean();
 
 				$result = array( true, $order_state, $output_shipping_box, $output_payment_box_class, $output_payment_box_content );
 			}

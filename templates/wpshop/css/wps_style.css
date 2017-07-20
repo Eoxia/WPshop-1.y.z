@@ -940,7 +940,7 @@ a[class*="wps-"][class*="-block"] {
 [class*="wps-form"][class*="-group"] label[for] {
   cursor: pointer;
 }
-[class*="wps-form"][class*="-group"]:nth-child(odd) {
+[class*="wps-form"][class*="-group"]:nth-of-type(even) {
   padding-left: 1em;
 }
 [class*="wps-form"] .wps-form-inliner {

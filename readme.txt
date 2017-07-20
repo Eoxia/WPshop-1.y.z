@@ -3,8 +3,8 @@ Contributors: Eoxia
 Tags: boutique, catalog, catalogue, commerce, e-commerce, ecommerce, m-commerce, mcommerce, produits, responsive, shop, shopping cart, wp shop, wordpress ecommerce, wordpress shop, WPshop, wp-shop, french payment gateway, passerelle de paiement française
 Donate link: http://www.wpshop.fr/documentations/presentation-wpshop/
 Requires at least: 3.4.0
-Tested up to: 4.7.4
-Stable tag: 1.4.4.2
+Tested up to: 4.8
+Stable tag: 1.4.4.3
 License: GPLv2 or later
 
 Simple and powerfull eCommerce plugin, with French Payment and Shipping systems : Paybox, Paypal, Atos, Cybermut, SystemPay, Paysite-cash, Colissimo
@@ -96,6 +96,30 @@ Il faut vérifier que le réglage des permaliens pour votre site est bien régl�
 
 
 == Changelog ==
+
+= Version 1.4.4.3 =
+
+Améliorations / Improvments
+
+* 8058 - Ajouter les attributs dans les revisions produits / Attributes on product revisions
+* 8057 - Interface produits en masse tri par colonnes / Mass interface sort by columns
+* 8519 - OWL Carousel enqueue only for complete_sheet
+* 9497 - Interface en masse des attributs des produits / Mass interface to manage products attributes
+* 9874 - Masquage de la colonne Livraison dans le listing des commandes si il n'y a pas de livraison sur le site / Hide shipping column in order list if shipping is disabled on website
+* 10499 - Gestion des contacts par clients / Manage contacts by customers
+* 10675 - Révision des produits / Product revisions
+* 10676 - Numéro d'erreurs JS / Error number debug JS
+* 10678 - Shortcode 'wps_after_check_order_payment_total_amount'
+
+Corrections / Fix
+
+* 9042 - Module statistiques mis à jour pour les sites ayant un grand nombre de commande / Stats module updated for website having a lot of orders
+* 9856 - Résolution des conflits owlcarousel qui est en version 1 dans WPShop et qui posait problème sur certains thème avec owlcarousel en version 2 / Fix confilcts between owlcarousel version 1 and version 2 in some themes
+* 10394 - Le mail de produit téléchargeable et le lien s'affiche même si le probduit n'est pas téléchargeable / Mail & link for download product is always active even if this product isn't downloadable
+* 10677 - Téléchargement devis / Download quotation
+* 10679 - WPS-Form even/odd fix
+* 10682 - Désactivation complet du module barcode / Barcode module disable
+* 10683 - Correctif expédier / Mark as shipped fix
 
 = Version 1.4.4.2 =
 

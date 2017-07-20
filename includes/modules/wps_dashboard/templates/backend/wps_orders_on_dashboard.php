@@ -1,5 +1,5 @@
 <?php if ( !defined( 'ABSPATH' ) ) exit;
-if($orders) : 
+if($orders) :
 	$payment_status = unserialize( WPSHOP_ORDER_STATUS );
 ?>
 <div class="wps-table">
@@ -12,7 +12,7 @@ if($orders) :
 		<div class="wps-table-cell"><?php _e( 'Invoice', 'wpshop'); ?></div>
 		<div class="wps-table-cell"><?php _e( 'Shipping Slip', 'wpshop'); ?></div>
 	</div>
-	<?php foreach( $orders as $order ) : 
+	<?php foreach( $orders as $order ) :
 		$order_meta = get_post_meta( $order->ID, '_order_postmeta', true );
 		$order_info = get_post_meta( $order->ID, '_order_info', true );
 		if ( !empty($order_meta) ) :
@@ -24,13 +24,13 @@ if($orders) :
 				<div class="wps-table-cell wps_dashboard_<?php echo $order_meta['order_status']; ?>"><?php _e($payment_status[ $order_meta['order_status'] ], 'wpshop' ) ?></div>
 				<div class="wps-table-cell"><a href="<?php echo admin_url('/post.php?post=' .$order->ID. '&action=edit'); ?>" role="button" class="wps-bton-first-mini-rounded"><?php _e( 'See', 'wpshop' ); ?></a></div>
 				<div class="wps-table-cell">
-					<?php 
+					<?php
 					$invoice_ref = '';
 					if ( !empty($order_meta['order_invoice_ref']) ) {
 						$invoice_ref = $order_meta['order_invoice_ref'];
 					}
 					if ( !empty($invoice_ref) ) {
-						if( !empty($order_meta) && !empty($order_meta['order_payment']) && !empty($order_meta['order_payment']['received']) ) {
+						if( !empty($order_meta) && !empty($order_meta['order_payment']) && !empty($order_meta['order_payment']['received']) && !empty($order_meta['order_payment']['received'][ count($order_meta['order_payment']['received']) - 1 ]['invoice_ref']) ) {
 							$invoice_ref = $order_meta['order_payment']['received'][ count($order_meta['order_payment']['received']) - 1 ]['invoice_ref'];
 						}
 					}
@@ -43,7 +43,7 @@ if($orders) :
 					<a href="<?php echo admin_url( 'admin-post.php?action=wps_invoice&order_id='.$order->ID.'&bon_colisage=ok&mode=pdf'); ?>" role="button" class="wps-bton-third-mini-rounded"><?php _e( 'Download', 'wpshop' ); ?></a>
 				<?php endif; ?>
 				</div>
-				
+
 			</div>
 		<?php endif; ?>
 	<?php endforeach; ?>

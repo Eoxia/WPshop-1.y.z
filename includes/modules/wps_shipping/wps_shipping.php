@@ -9,6 +9,7 @@
  *
  */
 
+global $wps_shipping_mode_ctr;
 
 /** Template Global vars **/
 DEFINE('WPS_SHIPPING_MODE_DIR', basename(dirname(__FILE__)));

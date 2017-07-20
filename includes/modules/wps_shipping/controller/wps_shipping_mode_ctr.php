@@ -5,7 +5,7 @@ class wps_shipping_mode_ctr {
 	 * Define the main directory containing the template for the current plugin
 	 * @var string
 	 */
-	private $template_dir;
+	public $template_dir;
 	/**
 	 * Define the directory name for the module in order to check into frontend
 	 * @var string

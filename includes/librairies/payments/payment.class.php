@@ -587,24 +587,6 @@ class wpshop_payment {
 					/** Add information about the order completed date */
 					update_post_meta($order_id, '_' . WPSHOP_NEWTYPE_IDENTIFIER_ORDER . '_completed_date', current_time('mysql', 0));
 
-					/** Check if the order content a downloadable product **/
-					if ( ! empty( $order_meta['order_items'] ) ) {
-						foreach ( $order_meta['order_items'] as $key_value => $item ) {
-							$link = wps_download_file_ctr::get_product_download_link( $order_id, $item );
-							if ( empty( $link ) ) {
-								\eoxia\log_class::exec( get_class(), get_class(), sprintf(
-									__( 'Failure returned at order link generation. UserID : <b>%d</b>, ProductID : <b>%d</d>, UserMeta : <pre>%s</pre>', 'wpshop' ),
-									(int) get_current_user_id(),
-									(int) $item['item_id'],
-									print_r( get_user_meta( get_current_user_id(), '_order_download_codes_' . $order_id, true ) )
-								), array( 'object_id' => $order_id ), 0 );
-							} else {
-								$link = '<a href="' . esc_url( $link ) . '" target="_blank">' . __( 'Download the product', 'wpshop' ) . '</a>';
-								$wps_message->wpshop_prepared_email( $email, 'WPSHOP_DOWNLOADABLE_FILE_IS_AVAILABLE', array( 'order_key' => $order_meta['order_key'], 'customer_first_name' => $first_name, 'customer_last_name' => $last_name, 'order_date' => $order_meta['order_date'], 'download_product_link' => $link ), array() );
-							}
-						}
-					}
-
 					// Send confirmation e-mail to administrator
 					if ( empty($_SESSION['wps-pos-addon']) ) {
 						$email_option = get_option('wpshop_emails');
@@ -651,13 +633,15 @@ class wpshop_payment {
 			}
 
 			$order_meta['order_status'] = $payment_status;
-			if( !$save_metadata ) {
-				return 	$order_meta;
-			}
-			else {
+
+			update_post_meta( $order_id, '_wpshop_order_status', $payment_status);
+			if( $save_metadata ) {
 				update_post_meta( $order_id, '_order_postmeta', $order_meta);
 			}
-			update_post_meta( $order_id, '_wpshop_order_status', $payment_status);
+		}
+		do_action( 'wps_after_check_order_payment_total_amount', $order_id );
+		if ( ! $save_metadata ) {
+			return $order_meta;
 		}
 	}
 

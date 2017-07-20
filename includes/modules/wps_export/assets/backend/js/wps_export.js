@@ -1,5 +1,5 @@
 jQuery(document).ready( function($) {
-	
+
     $('.datepicker').datepicker({
     	dateFormat : 'yy-mm-dd'
     });
@@ -11,13 +11,15 @@ jQuery(document).ready( function($) {
 			case 'orders_date':
 			case 'users_date':
 				$( "#wps_export_dates_group" ).show();
+				$( "#wps_export_download_btn" ).show();
 				break;
 			case 'users_orders':
 				$( "#wps_export_minp_group" ).show();
+				$( "#wps_export_download_btn" ).show();
 				break;
 		}
 	});
-	
+
 	$( "#wps_export_download_btn" ).click( function() {
 		redirect = true;
 		$( "#wps_export_download_btn" ).switchClass('wps-bton-first-mini-rounded', 'wps-bton-first-mini-rounded-loading');

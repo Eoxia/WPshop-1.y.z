@@ -577,7 +577,7 @@ wpshop( document ).ready(function() {
 		var oid = jQuery('input[name=oid]').val();
 		var trackingNumber = jQuery('input[name=trackingNumber]').val();
 		var trackingLink = jQuery('input[name=trackingLink]').val();
-		var _this = jQuery('a.order_'+oid);
+		var _this = jQuery('a.markAsShipped.order_'+oid);
 		jQuery('.superBackground').remove();
 		jQuery('.popupAlert').remove();
 
@@ -598,8 +598,7 @@ wpshop( document ).ready(function() {
 
 					//jQuery('mark#order_status_'+oid).hide().html(response[2]).fadeIn(500);
 					//jQuery('mark#order_status_'+oid).attr('class', response[1]);
-					jQuery( '#wps-order-shipping-informations' ).html( response[2] );
-					jQuery('a.order_'+oid).remove();
+					_this.parent().html( response[2] );
 
 					jQuery('#wpshop_order_actions .wpshop_order_status_container').html( response[4] );
 					jQuery('#wpshop_order_actions .wpshop_order_status_container').addClass( response[3] );

@@ -46,13 +46,13 @@ class wps_barcode_metabox {
 		}
 
 		if ($conf['type'] === 'internal') {
-			add_meta_box('wps_barcode_invoice_client', __('Barcode Manager', 'wps_barcode' ),
+			/*add_meta_box('wps_barcode_invoice_client', __('Barcode Manager', 'wps_barcode' ),
 			array( $this, 'meta_box_invoice_client' ), WPSHOP_NEWTYPE_IDENTIFIER_ORDER,
-			'side','default');
+			'side','default');*/
 
-			add_meta_box('wps_barcode_coupons', __('Barcode Manager', 'wps_barcode' ),
+			/*add_meta_box('wps_barcode_coupons', __('Barcode Manager', 'wps_barcode' ),
 			array( $this, 'meta_box_coupons' ), WPSHOP_NEWTYPE_IDENTIFIER_COUPON,
-			'side','default');
+			'side','default');*/
 		}
 	}
 
