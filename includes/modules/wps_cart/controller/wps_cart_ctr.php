@@ -412,6 +412,9 @@ class wps_cart {
 	 */
 	function add_to_cart( $product_list, $quantity, $type='normal', $extra_params=array(), $from_admin = '', $order_meta = '', $order_id = '' ) {
 		global $wpdb;
+
+		$count_items = 0;
+
 		/** Check if a cart already exist. If there is already a cart that is not the same type (could be a cart or a quotation)	*/
 		if ( empty( $from_admin ) ){
 			if(isset($_SESSION['cart']['cart_type']) && $type != $_SESSION['cart']['cart_type'] ) {

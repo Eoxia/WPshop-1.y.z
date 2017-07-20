@@ -92,112 +92,114 @@ class wps_shipping {
 	 *
 	 * @return number|string The sipping cost for the current cart
 	 */
-	function get_shipping_cost( $nb_of_items, $total_cart, $total_shipping_cost, $total_weight, $selected_method = '' ) {
-		global $wpdb;
-		$shipping_mode_option = get_option( 'wps_shipping_mode' );
-		if( !empty($selected_method) || isset( $_SESSION['shipping_address'] ) && empty( $_SESSION['shipping_method'] ) ) {
-			if( !empty($selected_method) ) {
-				$chosen_shipping_mode = $selected_method;
-			} else {
-				$ship_mod = new wps_shipping_mode_ctr();
-				$shipping_modes = $ship_mod->get_shipping_mode_for_address( $_SESSION['shipping_address'] );
-				if( !empty( $shipping_modes ) ) {
-					$shipping_modes = $shipping_modes['modes'];
-					foreach( $shipping_modes as $key => $shipping_mode ) {
-						$chosen_shipping_mode = $key;
-						break;
-					}
-				} else {
-					$chosen_shipping_mode = 'default_choice';
-				}
-			}
-		}
-		else {
-			if( !empty( $_SESSION['shipping_method'] ) ) {
-				$chosen_shipping_mode = wpshop_tools::varSanitizer( $_SESSION['shipping_method'] );
-			} else {
-				$chosen_shipping_mode = 'default_choice';
-			}
-		}
+	 function get_shipping_cost( $nb_of_items, $total_cart, $total_shipping_cost, $total_weight, $selected_method = '' ) {
+ 		global $wpdb;
 
-		$default_weight_unity = get_option( 'wpshop_shop_default_weight_unity' );
-		if ( !empty($default_weight_unity) ) {
-			$query = $wpdb->prepare('SELECT unit FROM ' .WPSHOP_DBT_ATTRIBUTE_UNIT. ' WHERE id = %d', $default_weight_unity);
-			$weight_unity = $wpdb->get_var( $query );
+ 		$shipping_cost = 0;
 
-			if ( !empty($weight_unity) && $weight_unity == 'kg' ) {
+ 		$shipping_mode_state = get_option( 'wpshop_shipping_address_choice' );
+ 		if ( ! empty( $shipping_mode_state ) && isset( $shipping_mode_state['activate'] ) && ( 'on' === $shipping_mode_state['activate'] ) ) {
+ 			$shipping_mode_option = get_option( 'wps_shipping_mode' );
+ 			if( ( !empty($selected_method) || isset( $_SESSION['shipping_address'] ) && empty( $_SESSION['shipping_method'] ) ) ) {
+ 				if( !empty($selected_method) ) {
+ 					$chosen_shipping_mode = $selected_method;
+ 				} else {
+ 					$ship_mod = new wps_shipping_mode_ctr();
+ 					$shipping_modes = $ship_mod->get_shipping_mode_for_address( $_SESSION['shipping_address'] );
+ 					if( !empty( $shipping_modes ) ) {
+ 						$shipping_modes = $shipping_modes['modes'];
+ 						foreach( $shipping_modes as $key => $shipping_mode ) {
+ 							$chosen_shipping_mode = $key;
+ 							break;
+ 						}
+ 					} else {
+ 						$chosen_shipping_mode = 'default_choice';
+ 					}
+ 				}
+ 			}
+ 			else {
+ 				if( !empty( $_SESSION['shipping_method'] ) ) {
+ 					$chosen_shipping_mode = wpshop_tools::varSanitizer( $_SESSION['shipping_method'] );
+ 				} else {
+ 					$chosen_shipping_mode = 'default_choice';
+ 				}
+ 			}
 
-				$total_weight = $total_weight * 1000;
-			}
-		}
+ 			$default_weight_unity = get_option( 'wpshop_shop_default_weight_unity' );
+ 			if ( !empty($default_weight_unity) ) {
+ 				$query = $wpdb->prepare('SELECT unit FROM ' .WPSHOP_DBT_ATTRIBUTE_UNIT. ' WHERE id = %d', $default_weight_unity);
+ 				$weight_unity = $wpdb->get_var( $query );
 
-		if ( ( !empty($_SESSION['shipping_method']) && $_SESSION['shipping_method'] == 'shipping-partners' ) || !empty( $_SESSION['wps-pos-addon']) ) {
-			return 0;
-		}
+ 				if ( !empty($weight_unity) && $weight_unity == 'kg' ) {
 
-		/** Take the selected shipping mode **/
-		if( $chosen_shipping_mode == 'default_choice' ) {
-			if( !empty( $shipping_mode_option['modes'][$shipping_mode_option['default_choice']]) ) {
-				$selected_shipping_mode_config = $shipping_mode_option['modes'][$shipping_mode_option['default_choice']];
-			} else {
-				$selected_shipping_mode_config = '';
-			}
-		} else {
-			if( !empty( $shipping_mode_option['modes'][$chosen_shipping_mode]) ) {
-				$selected_shipping_mode_config = $shipping_mode_option['modes'][$chosen_shipping_mode];
-			} else {
-				$selected_shipping_mode_config = '';
-			}
-		}
-		$shipping_cost = $total_shipping_cost;
+ 					$total_weight = $total_weight * 1000;
+ 				}
+ 			}
 
+ 			if ( ( !empty($_SESSION['shipping_method']) && $_SESSION['shipping_method'] == 'shipping-partners' ) || !empty( $_SESSION['wps-pos-addon']) ) {
+ 				return 0;
+ 			}
 
+ 			/** Take the selected shipping mode **/
+ 			if( $chosen_shipping_mode == 'default_choice' ) {
+ 				if( !empty( $shipping_mode_option['modes'][ $shipping_mode_option['default_choice'] ]) ) {
+ 					$selected_shipping_mode_config = $shipping_mode_option['modes'][ $shipping_mode_option['default_choice'] ];
+ 				} else {
+ 					$selected_shipping_mode_config = '';
+ 				}
+ 			} else {
+ 				if( !empty( $shipping_mode_option['modes'][$chosen_shipping_mode]) ) {
+ 					$selected_shipping_mode_config = $shipping_mode_option['modes'][$chosen_shipping_mode];
+ 				} else {
+ 					$selected_shipping_mode_config = '';
+ 				}
+ 			}
+ 			$shipping_cost = $total_shipping_cost;
 
+ 			/** Free Shipping **/
+ 			if ( ( !empty($selected_shipping_mode_config) && !empty($selected_shipping_mode_config['free_shipping']) ) || ( $selected_method == 'is_downloadable_' ) ) {
+ 				$shipping_cost = 0;
+ 			}
+ 			/** Free Shipping From **/
+ 			elseif( !empty($selected_shipping_mode_config) && !empty($selected_shipping_mode_config['free_from']) && $selected_shipping_mode_config['free_from'] >= 0 && $selected_shipping_mode_config['free_from'] <= number_format( $total_cart, 2, '.', '') ) {
+ 				$shipping_cost = 0;
+ 			}
+ 			else {
+ 				/** Check Custom Shipping Cost **/
 
-		/** Free Shipping **/
-		if ( ( !empty($selected_shipping_mode_config) && !empty($selected_shipping_mode_config['free_shipping']) ) || ( $selected_method == 'is_downloadable_' ) ) {
-			$shipping_cost = 0;
-		}
-		/** Free Shipping From **/
-		elseif( !empty($selected_shipping_mode_config) && !empty($selected_shipping_mode_config['free_from']) && $selected_shipping_mode_config['free_from'] >= 0 && $selected_shipping_mode_config['free_from'] <= number_format( $total_cart, 2, '.', '') ) {
-			$shipping_cost = 0;
-		}
-		else {
-			/** Check Custom Shipping Cost **/
+ 				if ( !empty($selected_shipping_mode_config['custom_shipping_rules']) && !empty($selected_shipping_mode_config['custom_shipping_rules']['active']) ) {
+ 					$address_infos = '';
+ 					if( !empty( $_SESSION['shipping_address'] ) ) {
+ 						$address_infos = get_post_meta($_SESSION['shipping_address'],'_wpshop_address_metadata', true);
+ 					}
+ 					$country = ( !empty($address_infos['country']) ) ? $address_infos['country'] : '';
+ 					/** Check Active Postcode option **/
+ 					if ( !empty($selected_shipping_mode_config['custom_shipping_rules']['active_cp']) ) {
+ 						$postcode = $address_infos['postcode'];
+ 						if ( array_key_exists($country.'-'.$postcode, $selected_shipping_mode_config['custom_shipping_rules']['fees']) ) {
+ 							$country = $country.'-'.$postcode;
+ 						}
+ 						elseif( array_key_exists($country.'-OTHERS', $selected_shipping_mode_config['custom_shipping_rules']['fees']) ) {
+ 							$country = $country.'-OTHERS';
+ 						}
+ 					}
+ 					$shipping_cost += $this->calculate_custom_shipping_cost($country, array('weight'=>$total_weight,'price'=> $total_cart), $selected_shipping_mode_config['custom_shipping_rules']['fees'], $chosen_shipping_mode);
+ 				}
 
-			if ( !empty($selected_shipping_mode_config['custom_shipping_rules']) && !empty($selected_shipping_mode_config['custom_shipping_rules']['active']) ) {
-				$address_infos = '';
-				if( !empty( $_SESSION['shipping_address'] ) ) {
-					$address_infos = get_post_meta($_SESSION['shipping_address'],'_wpshop_address_metadata', true);
-				}
-				$country = ( !empty($address_infos['country']) ) ? $address_infos['country'] : '';
-				/** Check Active Postcode option **/
-				if ( !empty($selected_shipping_mode_config['custom_shipping_rules']['active_cp']) ) {
-					$postcode = $address_infos['postcode'];
-					if ( array_key_exists($country.'-'.$postcode, $selected_shipping_mode_config['custom_shipping_rules']['fees']) ) {
-						$country = $country.'-'.$postcode;
-					}
-					elseif( array_key_exists($country.'-OTHERS', $selected_shipping_mode_config['custom_shipping_rules']['fees']) ) {
-						$country = $country.'-OTHERS';
-					}
-				}
-				$shipping_cost += $this->calculate_custom_shipping_cost($country, array('weight'=>$total_weight,'price'=> $total_cart), $selected_shipping_mode_config['custom_shipping_rules']['fees'], $chosen_shipping_mode);
-			}
+ 				/** Min- Max config **/
+ 				if ( !empty($selected_shipping_mode_config['min_max']) && !empty($selected_shipping_mode_config['min_max']['activate']) ) {
+ 					if ( !empty($selected_shipping_mode_config['min_max']['min']) && $shipping_cost < $selected_shipping_mode_config['min_max']['min'] ) {
+ 						$shipping_cost = $selected_shipping_mode_config['min_max']['min'];
+ 					}
+ 					elseif( !empty($selected_shipping_mode_config['min_max']['max']) &&$shipping_cost > $selected_shipping_mode_config['min_max']['max']) {
+ 						$shipping_cost = $selected_shipping_mode_config['min_max']['max'];
+ 					}
 
-			/** Min- Max config **/
-			if ( !empty($selected_shipping_mode_config['min_max']) && !empty($selected_shipping_mode_config['min_max']['activate']) ) {
-				if ( !empty($selected_shipping_mode_config['min_max']['min']) && $shipping_cost < $selected_shipping_mode_config['min_max']['min'] ) {
-					$shipping_cost = $selected_shipping_mode_config['min_max']['min'];
-				}
-				elseif( !empty($selected_shipping_mode_config['min_max']['max']) &&$shipping_cost > $selected_shipping_mode_config['min_max']['max']) {
-					$shipping_cost = $selected_shipping_mode_config['min_max']['max'];
-				}
-
-			}
-
-		}
-		return $shipping_cost;
-	}
+ 				}
+ 			}
+ 		}
+ 		return $shipping_cost;
+ 	}
 
 
 	/**
