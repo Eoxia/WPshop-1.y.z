@@ -183,7 +183,7 @@ class WPS_Customers_Contacts {
 
 		if ( ! empty( $customers ) && ( 1 < count( $customers ) ) ) {
 			/** Display user list for current customer */
-			require( wpshop_tools::get_template_part( WPS_CUST_CONTACT_DIR, WPS_CUST_CONTACT_TPL, 'frontend', 'customer', 'choice' ) );
+			require_once( wpshop_tools::get_template_part( WPS_CUST_CONTACT_DIR, WPS_CUST_CONTACT_TPL, 'frontend', 'customer', 'choice' ) );
 		}
 	}
 
