@@ -649,7 +649,7 @@ class wps_account_ctr {
 											if ( $attribute_def->data_type_to_use == 'custom' ) {
 												$query = $wpdb->prepare("SELECT label FROM " . WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS . " WHERE attribute_id = %d AND status = 'valid' AND id = %d", $attribute_def->id, $attribute_value );
 												$attribute_value = $wpdb->get_var( $query );
-											} elseif ( $attribute_def->data_type_to_use == 'internal')  {
+											} elseif ( $attribute_def->data_type_to_use == 'internal' ) {
 												$associated_post = get_post( $atribute_value );
 												$attribute_value = $associated_post->post_title;
 											}

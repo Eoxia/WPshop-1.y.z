@@ -283,21 +283,23 @@ class wps_message_ctr {
 		$wps_message_mdl = new wps_message_mdl();
 		$messages_data = $wps_message_mdl->get_messages_histo( $message_id, $customer_id );
 
+		$current_user = wp_get_current_user();
+
 		$messages_histo = array();
- 		foreach ( $messages_data as $meta_id => $messages ) :
- 			$i = 0;
- 			foreach ( $messages as $message ) :
+		foreach ( $messages_data as $meta_id => $messages ) :
+			$i = 0;
+			foreach ( $messages as $message ) :
 				if ( $current_user->user_email === $message['mess_user_email'] ) :
-	 				$messages_histo[ $message['mess_dispatch_date'][0] ][ $i ]['title'] = $message['mess_title'];
-	 				$messages_histo[ $message['mess_dispatch_date'][0] ][ $i ]['message'] = $message['mess_message'];
-	 				$messages_histo[ $message['mess_dispatch_date'][0] ][ $i ]['dates'] = $message['mess_dispatch_date'];
-	 				if ( ! empty( $message['mess_object_id'] ) ) {
-	 					$messages_histo[ $message['mess_dispatch_date'][0] ][ $i ]['object'] = $message['mess_object_id'];
-	 				}
-	 				$i++;
+					$messages_histo[ $message['mess_dispatch_date'][0] ][ $i ]['title'] = $message['mess_title'];
+					$messages_histo[ $message['mess_dispatch_date'][0] ][ $i ]['message'] = $message['mess_message'];
+					$messages_histo[ $message['mess_dispatch_date'][0] ][ $i ]['dates'] = $message['mess_dispatch_date'];
+					if ( ! empty( $message['mess_object_id'] ) ) {
+						$messages_histo[ $message['mess_dispatch_date'][0] ][ $i ]['object'] = $message['mess_object_id'];
+					}
+					$i++;
 				endif;
- 			endforeach;
- 		endforeach;
+			endforeach;
+		endforeach;
 
 		ksort( $messages_histo );
 		$messages_histo = array_reverse( $messages_histo );

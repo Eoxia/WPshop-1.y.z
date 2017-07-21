@@ -257,10 +257,9 @@ class wps_customer_admin {
 		}
 
 		if ( ! empty( $customer_id ) ) {
-			$user_id = wps_customer_ctr::get_author_id_by_customer_id( $customer_id );
 			// Récupération des informations sur le client / Retrieve customer datas.
 			$wps_account = new wps_account_ctr();
-			$customer_datas = $wps_account->display_account_informations( $user_id, false, true );
+			$customer_datas = $wps_account->display_account_informations( $customer_id, false, true );
 
 			if ( true === $order_update_close ) {
 				$wps_address = new wps_address();
