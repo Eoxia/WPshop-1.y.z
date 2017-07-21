@@ -564,21 +564,21 @@ class WPS_Mass_List_Table extends WP_List_Table {
 				p.post_date as pdate,
 				GROUP_CONCAT(
 					CONCAT(
-						attr.id, ':',
-						attr.code, ':',
-						attr.frontend_label, ':',
+						attr.id, '&amp;',
+						attr.code, '&amp;',
+						attr.frontend_label, '&amp;',
 						CONCAT(
 							IFNULL( val_dec.value, '' ),
 							IFNULL( val_dat.value, '' ),
 							IFNULL( val_int.value, '' ),
 							IFNULL( val_tex.value, '' ),
 							IFNULL( val_var.value, '' )
-						), ':',
-						attr.is_requiring_unit, ':',
-						IFNULL( unit.unit, '' ), ':',
-						attr.backend_input, ':',
+						), '&amp;',
+						attr.is_requiring_unit, '&amp;',
+						IFNULL( unit.unit, '' ), '&amp;',
+						attr.backend_input, '&amp;',
 						attr.data_type
-					) SEPARATOR ';'
+					) SEPARATOR '&data;'
 				) as data{$extra_select}
 				FROM {$wpdb->posts} p
 				INNER JOIN {$wpdb->postmeta} postmeta ON postmeta.post_id = p.ID AND postmeta.meta_key = %s AND postmeta.meta_value = %d
@@ -670,9 +670,9 @@ class WPS_Mass_List_Table extends WP_List_Table {
 	 * @return array Item reorganized.
 	 */
 	public function data_reorganize( $item ) {
-		$values = explode( ';', $item['data'] );
+		$values = explode( '&data;', $item['data'] );
 		foreach ( $values as $value ) {
-			$value = explode( ':', $value );
+			$value = explode( '&amp;', $value );
 			if ( ! isset( $this->columns_items[ $value[1] ] ) ) {
 				$this->columns_items[ $value[1] ] = array(
 					'id' => $value[0],
