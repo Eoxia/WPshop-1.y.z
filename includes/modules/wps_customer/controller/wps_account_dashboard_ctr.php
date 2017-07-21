@@ -58,10 +58,12 @@ class wps_account_dashboard_ctr {
 	function display_account_dashboard() {
 		$part = ( !empty($_GET['account_dashboard_part']) ) ? sanitize_title( $_GET['account_dashboard_part'] ) : 'account';
 		$content = $this->import_data( $part );
+
 		ob_start();
 		require_once( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, WPS_ACCOUNT_PATH . WPS_ACCOUNT_DIR . "/templates/", "frontend", "account/account-dashboard") );
 		$output = ob_get_contents();
 		ob_end_clean();
+
 		echo $output;
 	}
 

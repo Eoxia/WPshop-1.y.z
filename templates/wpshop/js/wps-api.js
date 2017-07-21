@@ -732,20 +732,21 @@ jQuery(document).ready(function(wpsjq) {
 	/* Fiche produit */
 
 	wps_product_slider = wpsjq(".wps-showroom-slider-content");
-
-	 wps_product_slider.wpsOwlCarousel({
-		slideSpeed : 300,
-		paginationSpeed : 400,
-		singleItem:true,
-		navigation: false,
-		pagination:false,
-		afterAction : syncPosition,
-		autoPlay : false,
-		stopOnHover : true,
-		touchDrag : true,
-		mouseDrag: true,
-		autoHeight : true
-	});
+	if ( wps_product_slider.length !== 0 ) {
+		wps_product_slider.wpsOwlCarousel({
+			slideSpeed : 300,
+			paginationSpeed : 400,
+			singleItem:true,
+			navigation: false,
+			pagination:false,
+			afterAction : syncPosition,
+			autoPlay : false,
+			stopOnHover : true,
+			touchDrag : true,
+			mouseDrag: true,
+			autoHeight : true
+		});
+	}
 
 	function syncPosition(el){
 		var current = this.currentItem;
