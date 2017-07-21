@@ -35,6 +35,8 @@ class wps_shipping_mode_ctr {
 		add_shortcode( 'wps_shipping_summary', array( &$this, 'display_shipping_summary') );
 
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_box'), 10, 2 );
+
+		add_shortcode( 'wps_product_shipping_cost', array( $this, 'get_shipping_cost_shortcode' ) );
 	}
 
 	function add_meta_box( $post_type, $post ) {
@@ -387,6 +389,30 @@ class wps_shipping_mode_ctr {
 		$output = ob_get_contents();
 		ob_end_clean();
 		echo $output;
+	}
+
+	/**
+	 * Shortcode to display efficient shipping.
+	 * @param  array $atts Attributes : pid, shipping_mode.
+	 * @return float Shipping cost for product.
+	 */
+	function get_shipping_cost_shortcode( $atts ) {
+		$shipping_modes = get_option( 'wps_shipping_mode' );
+		$atts = shortcode_atts( array(
+			'pid' => get_the_ID(),
+			'shipping_mode' => '',
+		), $atts, 'wps_product_shipping_cost' );
+		$atts['pid'] = intval( $atts['pid'] );
+		$wps_shipping = new wps_shipping();
+		$items = array(
+			$atts['pid'] => array(
+				'item_id' => $atts['pid'],
+				'item_qty' => 1,
+			),
+		);
+		$cart_shipping_cost = $wps_shipping->calcul_cart_items_shipping_cost( $items );
+		$cart_weight = $wps_shipping->calcul_cart_weight( $items );
+		return floatval( $wps_shipping->get_shipping_cost( 1, 0, $cart_shipping_cost, $cart_weight, $atts['shipping_mode'] ) );
 	}
 
 }
