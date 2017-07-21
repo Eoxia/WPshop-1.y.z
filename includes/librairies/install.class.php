@@ -2432,48 +2432,4 @@ WHERE ATTR_DET.attribute_id IN (" . $attribute_ids . ")"
 		}
 	}
 
-    /**
-     * Method called when deactivating the plugin
-     * @see register_deactivation_hook()
-     */
-    public function uninstall_wpshop()
-    {
-        global $wpdb;
-
-        if (WPSHOP_DEBUG_MODE_ALLOW_DATA_DELETION && in_array(long2ip(ip2long($_SERVER['REMOTE_ADDR'])), unserialize(WPSHOP_DEBUG_MODE_ALLOWED_IP))) {
-            $query = $wpdb->query("DROP TABLE `wp_wpshop__attribute`, `wp_wpshop__attributes_unit`, `wp_wpshop__attributes_unit_groups`, `wp_wpshop__attribute_set`, `wp_wpshop__attribute_set_section`, `wp_wpshop__attribute_set_section_details`, `wp_wpshop__attribute_value_datetime`, `wp_wpshop__attribute_value_decimal`, `wp_wpshop__attribute_value_integer`, `wp_wpshop__attribute_value_text`, `wp_wpshop__attribute_value_varchar`, `wp_wpshop__attribute_value__histo`, `wp_wpshop__cart`, `wp_wpshop__cart_contents`, `wp_wpshop__documentation`, `wp_wpshop__entity`, `wp_wpshop__historique`, `wp_wpshop__message`, `wp_wpshop__attribute_value_options`;");
-            $query = $wpdb->query("DELETE FROM " . $wpdb->options . " WHERE `option_name` LIKE '%wpshop%';");
-
-            $wpshop_products_posts = $wpdb->get_results("SELECT ID FROM " . $wpdb->posts . " WHERE post_type LIKE 'wpshop_%';");
-            $list = '  ';
-            foreach ($wpshop_products_posts as $post) {
-                $list .= "'" . $post->ID . "', ";
-            }
-            $list = substr($list, 0, -2);
-
-            $wpshop_products_posts = $wpdb->get_results("SELECT ID FROM " . $wpdb->posts . " WHERE post_parent IN (" . $list . ");");
-            $list_attachment = '  ';
-            foreach ($wpshop_products_posts as $post) {
-                $list_attachment .= "'" . $post->ID . "', ";
-            }
-            $list_attachment = substr($list_attachment, 0, -2);
-
-            $query = $wpdb->query("DELETE FROM " . $wpdb->postmeta . " WHERE post_id IN (" . $list . ");");
-            $query = $wpdb->query("DELETE FROM " . $wpdb->postmeta . " WHERE post_id IN (" . $list_attachment . ");");
-            $query = $wpdb->query("DELETE FROM " . $wpdb->posts . " WHERE ID IN (" . $list . ");");
-            $query = $wpdb->query("DELETE FROM " . $wpdb->posts . " WHERE ID IN (" . $list_attachment . ");");
-            $query = $wpdb->query("DELETE FROM " . $wpdb->posts . " WHERE post_content LIKE '%wpshop%';");
-        }
-
-        /*    Unset administrator permission    */
-        $adminRole = get_role('administrator');
-        foreach ($adminRole->capabilities as $capabilityName => $capability) {
-            if (substr($capabilityName, 0, 7) == 'wpshop_') {
-                if ($adminRole->has_cap($capabilityName)) {
-                    $adminRole->remove_cap($capabilityName);
-                }
-            }
-        }
-    }
-
 }

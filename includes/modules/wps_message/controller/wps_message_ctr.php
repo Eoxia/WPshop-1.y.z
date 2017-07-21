@@ -277,37 +277,35 @@ class wps_message_ctr {
 	 * @return string
 	 */
 	function display_message_histo_per_customer( $args, $customer_id = '' ) {
-
-		$customer_id = ( ! empty( $customer_id ) ) ? $customer_id : get_current_user_id();
+		$customer_id = ( ! empty( $customer_id ) ) ? $customer_id : ( isset( $args['cid'] ) && ! empty( $args['cid'] ) ? $args['cid'] : get_current_user_id() );
 		$message_id = ( ! empty( $args ) && ! empty( $args['message_id'] ) ) ? $args['message_id'] : '';
 		$message_elements = '';
 		$wps_message_mdl = new wps_message_mdl();
 		$messages_data = $wps_message_mdl->get_messages_histo( $message_id, $customer_id );
 
-		// ob_start();
-		// require( wpshop_tools::get_template_part( WPS_MESSAGE_DIR, $this->template_dir, "frontend", "messages") );
-		// $output .= ob_get_contents();
-		// ob_end_clean();
-		/**	Order emails	*/
 		$messages_histo = array();
-		foreach ( $messages_data as $meta_id => $messages ) :
-			$i = 0;
-			foreach ( $messages as $message ) :
-				$messages_histo[ $message['mess_dispatch_date'][0] ][ $i ]['title'] = $message['mess_title'];
-				$messages_histo[ $message['mess_dispatch_date'][0] ][ $i ]['message'] = $message['mess_message'];
-				$messages_histo[ $message['mess_dispatch_date'][0] ][ $i ]['dates'] = $message['mess_dispatch_date'];
-				if ( ! empty( $message['mess_object_id'] ) ) {
-					$messages_histo[ $message['mess_dispatch_date'][0] ][ $i ]['object'] = $message['mess_object_id'];
-				}
-				$i++;
-		endforeach;
-endforeach;
+ 		foreach ( $messages_data as $meta_id => $messages ) :
+ 			$i = 0;
+ 			foreach ( $messages as $message ) :
+				if ( $current_user->user_email === $message['mess_user_email'] ) :
+	 				$messages_histo[ $message['mess_dispatch_date'][0] ][ $i ]['title'] = $message['mess_title'];
+	 				$messages_histo[ $message['mess_dispatch_date'][0] ][ $i ]['message'] = $message['mess_message'];
+	 				$messages_histo[ $message['mess_dispatch_date'][0] ][ $i ]['dates'] = $message['mess_dispatch_date'];
+	 				if ( ! empty( $message['mess_object_id'] ) ) {
+	 					$messages_histo[ $message['mess_dispatch_date'][0] ][ $i ]['object'] = $message['mess_object_id'];
+	 				}
+	 				$i++;
+				endif;
+ 			endforeach;
+ 		endforeach;
+
 		ksort( $messages_histo );
 		$messages_histo = array_reverse( $messages_histo );
 		ob_start();
 		require( wpshop_tools::get_template_part( WPS_MESSAGE_DIR, $this->template_dir, 'frontend', 'customer', 'messages' ) );
 		$output = ob_get_contents();
 		ob_end_clean();
+
 		return $output;
 	}
 

@@ -2847,7 +2847,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 				$wpshop_cart_type = $order_meta['cart_type'];
 				foreach( $order_meta['order_items'] as $item_key => $item ) {
 					$item_meta = get_post_meta( $item['item_id'], '_wpshop_product_metadata', true );
-					$stock =  $item_meta['product_stock'];
+					$stock = $item_meta['product_stock'];
 					$qty = $item['item_qty'];
 					$item_option = get_post_meta( $item['item_id'], '_wpshop_product_options', true );
 					if( !empty($item_meta['manage_stock']) ) {
@@ -2856,8 +2856,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 						if( !empty($manage_stock_checking) && strtolower( __( $manage_stock_checking, 'wpshop') ) == strtolower( __( 'Yes', 'wpshop') )  ) {
 							$manage_stock_checking_bool = true;
 						}
-					}
-					else {
+					} else {
 						if( get_post_type($item['item_id']) == WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION ) {
 							$parent_product = wpshop_products::get_parent_variation( $item['item_id'] );
 							if( !empty($parent_product) && !empty($parent_product['parent_post_meta']) ) {
@@ -2874,14 +2873,10 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 						}
 					}
 
-
-
-
 					/** Checking stock **/
 					if ( empty($item_meta['manage_stock']) || ( !empty($item_meta['manage_stock']) && !$manage_stock_checking_bool )|| ( !empty($item_meta['manage_stock']) && $manage_stock_checking_bool && $stock >= $qty ) ) {
 						$_SESSION['cart']['order_items'][ $item_key ] = $item;
-					}
-					else {
+					} else {
 						$add_to_cart_checking = true;
 						$add_to_cart_checking_message = __('Some products cannot be added to cart because they are out of stock', 'wpshop');
 					}
@@ -3064,18 +3059,18 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 		$value_to_take = !empty($_POST[ 'value_to_take' ]) ? (array) $_POST[ 'value_to_take' ] : array();
 		foreach ( $value_to_take as $product_id => $product_element ) {
 			foreach( $product_element as $attribute_id => $attribute_value_to_take ){
-				$query = $wpdb->prepare( "SELECT value, value_type FROM wp_wpshop__attribute_value__histo WHERE value_id = %d", $attribute_value_to_take );
+				$query = $wpdb->prepare( "SELECT value, value_type FROM " . WPSHOP_DBT_ATTRIBUTE_VALUES_HISTO . " WHERE value_id = %d", $attribute_value_to_take );
 				$the_new_value = $wpdb->get_row( $query );
 				if ( 6 == $attribute_id ) {
-					$query = $wpdb->prepare( "SELECT OPT.value, HISTO.value AS rate_id FROM wp_wpshop__attribute_value_options AS OPT INNER JOIN wp_wpshop__attribute_value__histo AS HISTO ON ( ( HISTO.attribute_id = OPT.attribute_id ) AND ( HISTO.value = OPT.id ) ) WHERE HISTO.attribute_id = 29 AND HISTO.entity_id = %d ORDER BY HISTO.creation_date_value DESC LIMIT 1", $product_id );
+					$query = $wpdb->prepare( "SELECT OPT.value, HISTO.value AS rate_id FROM " . WPSHOP_DBT_ATTRIBUTE_VALUES_OPTIONS . " AS OPT INNER JOIN " . WPSHOP_DBT_ATTRIBUTE_VALUES_HISTO . " AS HISTO ON ( ( HISTO.attribute_id = OPT.attribute_id ) AND ( HISTO.value = OPT.id ) ) WHERE HISTO.attribute_id = 29 AND HISTO.entity_id = %d ORDER BY HISTO.creation_date_value DESC LIMIT 1", $product_id );
 					$the_tax = $wpdb->get_row( $query );
 					$pttc = number_format( $the_new_value->value, 5, ".", " " );
 					$ht = number_format( $pttc / ( 1 + ( $the_tax->value / 100 ) ), 5, ".", " " );
 					$tax_amount = number_format( $pttc - $ht, 5, ".", " " );
-					$wpdb->delete( 'wp_wpshop__attribute_value_decimal', array( "entity_id" => $product_id, "attribute_id" => 6 ) );
-					$wpdb->delete( 'wp_wpshop__attribute_value_decimal', array( "entity_id" => $product_id, "attribute_id" => 28 ) );
-					$wpdb->delete( 'wp_wpshop__attribute_value_integer', array( "entity_id" => $product_id, "attribute_id" => 29 ) );
-					$wpdb->delete( 'wp_wpshop__attribute_value_decimal', array( "entity_id" => $product_id, "attribute_id" => 30 ) );
+					$wpdb->delete( WPSHOP_DBT_ATTRIBUTE_VALUES_DECIMAL, array( "entity_id" => $product_id, "attribute_id" => 6 ) );
+					$wpdb->delete( WPSHOP_DBT_ATTRIBUTE_VALUES_DECIMAL, array( "entity_id" => $product_id, "attribute_id" => 28 ) );
+					$wpdb->delete( WPSHOP_DBT_ATTRIBUTE_VALUES_INTEGER, array( "entity_id" => $product_id, "attribute_id" => 29 ) );
+					$wpdb->delete( WPSHOP_DBT_ATTRIBUTE_VALUES_DECIMAL, array( "entity_id" => $product_id, "attribute_id" => 30 ) );
 
 					$common_datas = array(
 						'value_id' => null,
@@ -3088,15 +3083,15 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 					);
 
 					$content_to_write =  "
-" . mysql2date( "d/m/Y H:i", current_time( 'mysql', 0 ), true ) . ' - ' . $product_id . ' - ' . serialize( $common_datas ) . ' - ' . serialize( array( 'ttc' => $pttc,  'ht' => $ht,  'tax_rate_id' => $the_tax->rate_id,  'tax_amount' => $tax_amount,  ) ). '';
+" . mysql2date( "d/m/Y H:i", current_time( 'mysql', 0 ), true ) . ' - ' . $product_id . ' - ' . serialize( $common_datas ) . ' - ' . serialize( array( 'ttc' => $pttc,  'ht' => $ht,  'tax_rate_id' => $the_tax->rate_id,  'tax_amount' => $tax_amount,  ) );
 					$fp = fopen( $log_dir . 'correction_prix.txt', 'a' );
 					fwrite( $fp, $content_to_write );
 					fclose( $fp );
 
-					$wpdb->insert( 'wp_wpshop__attribute_value_decimal', array_merge( $common_datas, array( 'attribute_id' => 6, 'value' => $pttc ) ) );
-					$wpdb->insert( 'wp_wpshop__attribute_value_decimal', array_merge( $common_datas, array( 'attribute_id' => 28, 'value' => $ht ) ) );
-					$wpdb->insert( 'wp_wpshop__attribute_value_integer', array_merge( $common_datas, array( 'attribute_id' => 29, 'value' => $the_tax->rate_id ) ) );
-					$wpdb->insert( 'wp_wpshop__attribute_value_decimal', array_merge( $common_datas, array( 'attribute_id' => 30, 'value' => $tax_amount ) ) );
+					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE_VALUES_DECIMAL, array_merge( $common_datas, array( 'attribute_id' => 6, 'value' => $pttc ) ) );
+					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE_VALUES_DECIMAL, array_merge( $common_datas, array( 'attribute_id' => 28, 'value' => $ht ) ) );
+					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE_VALUES_INTEGER, array_merge( $common_datas, array( 'attribute_id' => 29, 'value' => $the_tax->rate_id ) ) );
+					$wpdb->insert( WPSHOP_DBT_ATTRIBUTE_VALUES_DECIMAL, array_merge( $common_datas, array( 'attribute_id' => 30, 'value' => $tax_amount ) ) );
 				}
 				else {
 					$common_datas = array(
@@ -3135,17 +3130,17 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 				SELECT P.ID, P.post_title,
 					D.value_id, H.value_id, D.attribute_id, D.entity_id, H.creation_date, D.creation_date_value, D.value AS current_value, H.value AS last_history_value
 				FROM {$wpdb->posts} AS P
-					INNER JOIN wp_wpshop__attribute_value_decimal AS D ON ( D.entity_id = P.ID )
-					INNER JOIN wp_wpshop__attribute_value__histo AS H ON (( H.entity_type_id = D.entity_type_id ) AND ( H.attribute_id = D.attribute_id ) AND ( H.entity_id = D.entity_id ))
+					INNER JOIN " . WPSHOP_DBT_ATTRIBUTE_VALUES_DECIMAL . " AS D ON ( D.entity_id = P.ID )
+					INNER JOIN " . WPSHOP_DBT_ATTRIBUTE_VALUES_HISTO . " AS H ON (( H.entity_type_id = D.entity_type_id ) AND ( H.attribute_id = D.attribute_id ) AND ( H.entity_id = D.entity_id ))
 				WHERE ( (P.post_type = %s ) OR (P.post_type = %s ) )
 					AND post_status = %s
 					AND D.attribute_id IN ( " . $decimal_attribute . " )
 					AND D.value = 0.00000
 					AND H.value != 0.00000
-					AND H.value_type = 'wp_wpshop__attribute_value_decimal'
+					AND H.value_type = %s
 
 				ORDER BY H.entity_id ASC, H.value_id DESC",
-			array( WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT, WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION, "publish", )
+			array( WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT, WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION, "publish", WPSHOP_DBT_ATTRIBUTE_VALUES_DECIMAL )
 		);
 		 $list_of_element = $wpdb->get_results( $query );
 		 if ( !empty( $list_of_element ) ) {
@@ -3163,16 +3158,16 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 			SELECT P.ID, P.post_title,
 				D.value_id, H.value_id, D.attribute_id, D.entity_id, H.creation_date, D.creation_date_value, D.value AS current_value, H.value AS last_history_value
 			FROM {$wpdb->posts} AS P
-			INNER JOIN wp_wpshop__attribute_value_varchar AS D ON ( D.entity_id = P.ID )
-			INNER JOIN wp_wpshop__attribute_value__histo AS H ON (( H.entity_type_id = D.entity_type_id ) AND ( H.attribute_id = D.attribute_id ) AND ( H.entity_id = D.entity_id ))
+			INNER JOIN " . WPSHOP_DBT_ATTRIBUTE_VALUES_VARCHAR . " AS D ON ( D.entity_id = P.ID )
+			INNER JOIN " . WPSHOP_DBT_ATTRIBUTE_VALUES_HISTO . " AS H ON (( H.entity_type_id = D.entity_type_id ) AND ( H.attribute_id = D.attribute_id ) AND ( H.entity_id = D.entity_id ))
 			WHERE ( (P.post_type = %s ) OR (P.post_type = %s ) )
 				AND post_status = %s
 				AND D.attribute_id IN ( " . $attribute_list . " )
 				AND ( D.value = '' OR D.value LIKE 'PDCT%%' )
 				AND H.value != ''
-				AND H.value_type = 'wp_wpshop__attribute_value_varchar'
+				AND H.value_type = %s
 			ORDER BY H.creation_date",
-			array( WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT, WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION, "publish", )
+			array( WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT, WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION, "publish", WPSHOP_DBT_ATTRIBUTE_VALUES_VARCHAR )
 		);
 		$list_of_element = $wpdb->get_results( $query );
 		if ( !empty( $list_of_element ) ) {
@@ -3191,16 +3186,16 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 				SELECT P.ID, P.post_title,
 				D.value_id, H.value_id, D.attribute_id, D.entity_id, H.creation_date, D.creation_date_value, D.value AS current_value, H.value AS last_history_value
 				FROM {$wpdb->posts} AS P
-				INNER JOIN wp_wpshop__attribute_value_text AS D ON ( D.entity_id = P.ID )
-				INNER JOIN wp_wpshop__attribute_value__histo AS H ON (( H.entity_type_id = D.entity_type_id ) AND ( H.attribute_id = D.attribute_id ) AND ( H.entity_id = D.entity_id ))
+				INNER JOIN " . WPSHOP_DBT_ATTRIBUTE_VALUES_TEXT . " AS D ON ( D.entity_id = P.ID )
+				INNER JOIN " . WPSHOP_DBT_ATTRIBUTE_VALUES_HISTO . " AS H ON (( H.entity_type_id = D.entity_type_id ) AND ( H.attribute_id = D.attribute_id ) AND ( H.entity_id = D.entity_id ))
 				WHERE ( (P.post_type = %s ) OR (P.post_type = %s ) )
 				AND post_status = %s
 				AND D.attribute_id IN ( " . $attribute_list . " )
 				AND ( D.value = '' )
 				AND H.value != ''
-				AND H.value_type = 'wp_wpshop__attribute_value_text'
+				AND H.value_type = %s
 			ORDER BY H.creation_date",
-			array( WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT, WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION, "publish", )
+			array( WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT, WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION, "publish", WPSHOP_DBT_ATTRIBUTE_VALUES_TEXT )
 		);
 		$list_of_element = $wpdb->get_results( $query );
 		if ( !empty( $list_of_element ) ) {
@@ -3218,16 +3213,16 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 				SELECT P.ID, P.post_title,
 				D.value_id, H.value_id, D.attribute_id, D.entity_id, H.creation_date, D.creation_date_value, D.value AS current_value, H.value AS last_history_value
 				FROM {$wpdb->posts} AS P
-				INNER JOIN wp_wpshop__attribute_value_integer AS D ON ( D.entity_id = P.ID )
-				INNER JOIN wp_wpshop__attribute_value__histo AS H ON (( H.entity_type_id = D.entity_type_id ) AND ( H.attribute_id = D.attribute_id ) AND ( H.entity_id = D.entity_id ))
+				INNER JOIN " . WPSHOP_DBT_ATTRIBUTE_VALUES_INTEGER . " AS D ON ( D.entity_id = P.ID )
+				INNER JOIN " . WPSHOP_DBT_ATTRIBUTE_VALUES_HISTO . " AS H ON (( H.entity_type_id = D.entity_type_id ) AND ( H.attribute_id = D.attribute_id ) AND ( H.entity_id = D.entity_id ))
 				WHERE ( (P.post_type = %s ) OR (P.post_type = %s ) )
 				AND post_status = %s
 				AND D.attribute_id IN ( " . $attribute_list . " )
 				AND ( D.value = '' OR D.value LIKE 'PDCT%%' )
 				AND H.value != ''
-				AND H.value_type = 'wp_wpshop__attribute_value_integer'
+				AND H.value_type = %s
 			ORDER BY H.creation_date",
-			array( WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT, WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION, "publish", )
+			array( WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT, WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION, "publish", WPSHOP_DBT_ATTRIBUTE_VALUES_INTEGER )
 		);
 							$list_of_element = $wpdb->get_results( $query );
 							if ( !empty( $list_of_element ) ) {

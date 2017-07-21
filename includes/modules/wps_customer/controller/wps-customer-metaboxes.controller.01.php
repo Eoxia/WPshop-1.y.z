@@ -90,7 +90,7 @@ class WPS_Customer_Metaboxes_Controller extends wps_customer_ctr {
 	 */
 	function wps_customer_messages_list( $post ) {
 		$wps_messages = new wps_message_ctr();
-		$output = $wps_messages->display_message_histo_per_customer( array(),$post->post_author );
+		$output = $wps_messages->display_message_histo_per_customer( array(), $post->ID );
 
 		echo $output; // WPCS: XSS ok.
 	}

@@ -92,9 +92,6 @@ add_action( 'the_content', array( 'wpshop_display', 'products_page' ), 1 );
 /**    On plugin activation create the default parameters to use the ecommerce    */
 register_activation_hook( __FILE__, array( 'wpshop_install', 'install_on_activation' ) );
 
-/**    On plugin deactivation call the function to clean the WordPress installation    */
-register_deactivation_hook( __FILE__, array( 'wpshop_install', 'uninstall_wpshop' ) );
-
 /**    Get current plugin version    */
 $current_db_version = get_option( 'wpshop_db_options', 0 );
 
