@@ -1,7 +1,7 @@
 {
 	"name": "WPShop",
 	"slug": "wpshop",
-	"version": "1.4.4.3",
+	"version": "1.4.4.4",
 	"externals": [
 		"core/external/wpeo_log/wpeo_log.config.json",
 		"core/external/wpeo_model/wpeo_model.config.json"
