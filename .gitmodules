@@ -1,0 +1,9 @@
+[submodule "core/external/wpeo_log"]
+	path = core/external/wpeo_log
+	url = https://github.com/Eoxia/wpeo_log.git
+[submodule "core/external/wpeo_util"]
+	path = core/external/wpeo_util
+	url = https://github.com/Eoxia/wpeo_util.git
+[submodule "core/external/wpeo_model"]
+	path = core/external/wpeo_model
+	url = https://github.com/Eoxia/wpeo_model.git
