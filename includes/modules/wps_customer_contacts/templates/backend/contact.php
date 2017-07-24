@@ -28,20 +28,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		<td class="wps-customer-contacts-actions" >
 			<?php do_action( 'wps_customer_contacts_list_action', $user_id ); ?>
-
-		<?php if ( true === $user['is_default'] ) : ?>
-			<i title="<?php esc_attr_e( 'This is the main contact / customer creator', 'wpshop' ); ?>" class="dashicons dashicons-star-filled" ></i>
-		<?php else : ?>
-			<i title="<?php esc_attr_e( 'Change to default customer', 'wpshop' ); ?>" class="dashicons dashicons-star-empty" ></i>
-		<?php endif; ?>
-
 			<a title="<?php esc_attr_e( 'User account edition', 'wpshop' ); ?>" href="<?php echo esc_url( get_edit_user_link( $user_id ) ); ?>" target="wps_contact_edition" ><i class="dashicons dashicons-edit" ></i></a>
 
 		<?php if ( true === $user['is_default'] ) : ?>
+			<i title="<?php esc_attr_e( 'This is the main contact / customer creator', 'wpshop' ); ?>" class="dashicons dashicons-star-filled" ></i>
 			<i title="<?php esc_attr_e( 'This is the main contact, you can\'t unlink it', 'wpshop' ); ?>" class="dashicons dashicons-lock" ></i>
 		<?php else : ?>
+			<i title="<?php esc_attr_e( 'Change to default customer', 'wpshop' ); ?>" class="dashicons dashicons-star-empty" ></i>
 			<i title="<?php esc_attr_e( 'Unlink this user', 'wpshop' ); ?>" class="dashicons dashicons-editor-unlink" ></i>
 		<?php endif; ?>
+
 		</td>
 	</tr>
 	<?php endif; ?>

@@ -5,7 +5,7 @@
  *
  *
  */
-#customer_identifier {
+#customer-identifier {
 	width: 90px;
 }
 #customer_date_subscription, #customer_date_lastlogin{

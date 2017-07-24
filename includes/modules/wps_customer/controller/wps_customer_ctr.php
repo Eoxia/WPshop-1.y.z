@@ -54,7 +54,7 @@ class wps_customer_ctr {
 		add_action( 'wsphop_options', array( &$this, 'declare_options' ), 8 );
 		add_action( 'wp_ajax_wps_customer_search', array( $this, 'ajax_search_customer' ) );
 
-		add_action( 'wp_login', array( $this, 'hook_login_for_setting_customer_id' ), 10, 2 );
+		add_action( 'set_current_user', array( $this, 'hook_login_for_setting_customer_id' ) );
 	}
 
 	/**
@@ -79,14 +79,12 @@ class wps_customer_ctr {
 
 	/**
 	 * Définition d'un cookie avec 'idetifiant du client auqule l'utilisateur est affecté : set a cookie with the customer identifier if connected user is associated to only one customer
-	 *
-	 * @param	string    $user_login le nom d'utilisateur de l'utilisateur actuellement connecté / Username of current connected user.
-	 * @param	WP_Object $user			  l'objet WP_User correspond à l'utilisateur actuellement connecté / Current connected user WP_Object definition.
 	 */
-	public function hook_login_for_setting_customer_id( $user_login, $user ) {
-		$customer_id = wps_customer_ctr::get_customer_id_by_author_id( $user->ID );
+	public function hook_login_for_setting_customer_id() {
+		$user_id = get_current_user_id();
+		$customer_id = wps_customer_ctr::get_customer_id_by_author_id( $user_id );
 		if ( empty( $customer_id ) ) {
-			$query = $GLOBALS['wpdb']->prepare( "SELECT post_id FROM {$GLOBALS['wpdb']->postmeta} WHERE meta_key = %s AND meta_value LIKE %s ORDER BY meta_id LIMIT 1", '_wpscrm_associated_user', "%;i:$user->ID;%" );
+			$query = $GLOBALS['wpdb']->prepare( "SELECT post_id FROM {$GLOBALS['wpdb']->postmeta} WHERE meta_key = %s AND meta_value LIKE %s ORDER BY meta_id LIMIT 1", '_wpscrm_associated_user', "%;i:$user_id;%" );
 			$customer_id = $GLOBALS['wpdb']->get_var( $query );
 		}
 
@@ -469,12 +467,12 @@ class wps_customer_ctr {
 		unset( $current_header['title'] );
 		unset( $current_header['date'] );
 
-		$current_header['customer_identifier'] = __( 'Customer ID', 'wpshop' );
+		$current_header['customer-identifier'] = __( 'Customer ID', 'wpshop' );
 		$current_header['customer-name'] = __( 'Customer name', 'wpshop' );
 		// $current_header['customer_name'] = '<span class="wps-customer-last_name" >' . __('Last-name', 'wpshop') . '</span><span class="wps-customer-first_name" >' . __('First-name', 'wpshop') . '</span>';
 		// $current_header['customer_email'] = __('E-mail', 'wpshop');
-		$current_header['customer-contacts'] = __( 'Contacts', 'wpshop' );
 		$current_header['customer-orders'] = __( 'Customer last order', 'wpshop' );
+		$current_header['customer-contacts'] = __( 'Contacts', 'wpshop' );
 		$current_header['customer_date_subscription'] = __( 'Subscription', 'wpshop' );
 		// $current_header['customer_date_lastlogin'] = __( 'Last login date', 'wpshop' );
 
@@ -489,7 +487,6 @@ class wps_customer_ctr {
 	 */
 	public function list_table_column_content( $column, $post_id ) {
 		global $wpdb;
-
 		/**		Get wp_users identifier from customer id		*/
 		$customer_post_author = self::get_author_id_by_customer_id( $post_id );
 
@@ -499,8 +496,8 @@ class wps_customer_ctr {
 		/**		Switch current column for custom case		*/
 		$use_template = true;
 		switch ( $column ) {
-			case 'customer_identifier' :
-				echo $post_id;
+			case 'customer-identifier' :
+				echo esc_html( $post_id );
 				$use_template = false;
 			break;
 

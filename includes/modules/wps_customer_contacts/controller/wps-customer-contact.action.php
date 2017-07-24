@@ -112,6 +112,7 @@ class WPS_Customers_Contacts {
 	 *
 	 * @return [type]           [description]
 	 */
+
 	function get_customer_contact_list( $customer ) {
 		/** Define user list */
 		$users = array();

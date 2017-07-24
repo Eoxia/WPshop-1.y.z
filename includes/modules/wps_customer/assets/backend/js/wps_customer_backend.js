@@ -1,5 +1,11 @@
 jQuery( document ).ready( function() {
 
+	jQuery( ".wps-customer-name-container" ).hover( function( event ){
+		event.preventDefault();
+
+		jQuery( this ).children( ".wps-customer-contact-list-actions" ).toggle();
+	});
+
 	// Choose a customer in Order administration panel
 	jQuery( document ).on( 'change', '#user_customer_id', function() {
 		jQuery( '#wps_orders_selected_customer' ).val( jQuery( '#user_customer_id' ).val() );

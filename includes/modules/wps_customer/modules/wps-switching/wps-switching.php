@@ -77,4 +77,5 @@ if ( class_exists( 'user_switching' ) ) {
 
 		return $output;
 	}
+
 }
