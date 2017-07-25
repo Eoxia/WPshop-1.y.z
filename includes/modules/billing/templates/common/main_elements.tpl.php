@@ -254,7 +254,6 @@ ob_start();
 ?>		<table class="wpshop_invoice_received_payment_container" >
 			<tbody>
 				<tr>
-				<td class="wpshop_invoice_received_payment_container_infos" ></td>
 				<td class="wpshop_invoice_received_payment_container_list wpshop_invoice_summaries_container_received_payment" >
 					<?php _e('Received payment', 'wpshop'); ?>
 					<table class="received_payment_list" >
