@@ -297,7 +297,7 @@ class wps_orders_ctr {
 					$html2pdf->setDefaultFont( 'Arial' );
 					$html2pdf->writeHTML( $html_content );
 					ob_clean();
-					$html2pdf->Output( 'order_' . $order_id . '.pdf', 'D' );
+					$html2pdf->Output( apply_filters( 'wps_filter_invoice_filename', 'order_' . $order_id . '.pdf', $order_id ), 'D' );
 				} catch (HTML2PDF_exception $e) {
 					echo $e;
 					exit;

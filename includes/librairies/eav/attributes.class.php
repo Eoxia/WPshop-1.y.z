@@ -270,7 +270,7 @@ class wpshop_attributes{
 		/*	Define the database operation type from action launched by the user	 */
 		$attribute_parameter['default_value'] = (!empty($attribute_parameter['default_value']) && is_array($attribute_parameter['default_value'])) ? serialize($attribute_parameter['default_value']) : (isset($attribute_parameter['default_value']) ? str_replace('"', "'", $attribute_parameter['default_value']) : '');
 		if ( $attribute_parameter['data_type'] == 'datetime' ) {
-			$date_default_value_trasform_into_config = array('default_value' => $attribute_parameter['default_value'], 'field_options' => (!empty($_POST[self::getDbTable() . '_options']) ? sanitize_text_field($_POST[self::getDbTable() . '_options']) : null));
+			$date_default_value_trasform_into_config = array('default_value' => $attribute_parameter['default_value'], 'field_options' => (!empty($_POST[self::getDbTable() . '_options']) ? $_POST[self::getDbTable() . '_options'] : null));
 			$attribute_parameter['default_value'] = serialize( $date_default_value_trasform_into_config );
 		}
 		/*****************************		GENERIC				**************************/
@@ -635,8 +635,6 @@ ob_end_clean();
 	 *	@return string The html code that output the interface for adding a nem item
 	 */
 	function elementEdition($itemToEdit = '') {
-		ini_set('display_errors', true);
-		error_reporting(E_ALL);
 		global $attribute_displayed_field, $attribute_options_group;
 		$dbFieldList = wpshop_database::fields_to_input(self::getDbTable());
 		$editedItem = '';
@@ -2564,9 +2562,8 @@ GROUP BY ATT.id, chosen_val", $element_id, $attribute_code);
 	 * @param mixed $value
 	 * @return string The complete interface allowing to manage datetime attribute field
 	 */
-	function attribute_type_date_config( $value ) {
+	public static function attribute_type_date_config( $value ) {
 		$date_config_output = '';
-
 		$input_def['name'] = 'default_value';
 		$input_def['type'] = 'checkbox';
 		$input_def['possible_value'] = 'date_of_current_day';
