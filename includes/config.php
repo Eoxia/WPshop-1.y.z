@@ -408,7 +408,7 @@ DEFINE( 'WPSHOP_DEFINED_SHOP_TYPE', $wpshop_shop_type );
 	DEFINE( 'WPSHOP_ORDER_STATUS', serialize( $order_status ) );
 
 	// End if().
-	DEFINE( 'WPSHOP_REGISTER_POST_TYPE_SUPPORT', serialize( array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'trackbacks', 'custom-fields', 'comments', 'revisions' ) ) );
+	DEFINE( 'WPSHOP_REGISTER_POST_TYPE_SUPPORT', serialize( array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'trackbacks', 'custom-fields', 'comments', 'revisions', 'page-attributes' ) ) );
 	$register_post_type_args = array(
 		'labels' => array( 'name', 'singular_name', 'add_new', 'add_new_item', 'edit', 'edit_item', 'new_item', 'view', 'view_item', 'search_items', 'not_found', 'not_found_in_trash' ),
 		'description' => 'text',

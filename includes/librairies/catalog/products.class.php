@@ -103,7 +103,7 @@ class wpshop_products {
                 'not_found_in_trash' => __('No products found in Trash', 'wpshop'),
                 'parent_item_colon' => '',
             ),
-            'supports' => unserialize(WPSHOP_REGISTER_POST_TYPE_SUPPORT),
+            'supports' => unserialize( WPSHOP_REGISTER_POST_TYPE_SUPPORT ),
             'public' => true,
             'has_archive' => true,
             'show_in_nav_menus' => true,
