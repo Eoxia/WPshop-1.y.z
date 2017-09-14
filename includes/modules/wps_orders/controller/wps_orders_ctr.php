@@ -318,8 +318,8 @@ class wps_orders_ctr {
 		 * AJAX - Load order details in customer account
 		 */
 	function wps_orders_load_details() {
-
 		check_ajax_referer( 'wps_orders_load_details' );
+
 		$order_id = ( ! empty( $_POST['order_id'] ) ) ? wpshop_tools::varSanitizer( $_POST['order_id'] ) : '';
 		$user_id = get_current_user_id();
 		$status = false;
@@ -333,8 +333,8 @@ class wps_orders_ctr {
 				$status = true;
 			}
 		}
-		echo json_encode( array( 'status' => $status, 'title' => sprintf( __( 'Order n° %s details', 'wpshop' ), $order_key ), 'content' => $result ) );
-		wp_die();
+
+		wp_die( wp_json_encode( array( 'status' => $status, 'title' => sprintf( __( 'Order n° %s details', 'wpshop' ), $order_key ), 'content' => $result ) ) );
 	}
 
 		/**

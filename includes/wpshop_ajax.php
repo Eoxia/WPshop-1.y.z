@@ -2119,7 +2119,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 
 			$message_confirmation = sprintf( __('%s has been add to the cart', 'wpshop'), $product->post_title );
 
-			$modal_content = wpshop_display::display_template_element('wps_new_add_to_cart_confirmation_modal', array( 'RELATED_PRODUCTS' => $linked_products , 'PRODUCT_PICTURE' => $product_img, 'PRODUCT_TITLE' => $product_title, 'PRODUCT_PRICE' => $product_price, 'PRODUCT_DESCRIPTION' => $product_description) );
+			$modal_content = wpshop_display::display_template_element('wps_new_add_to_cart_confirmation_modal', array( 'PRODUCT_ID' => $product_id, 'RELATED_PRODUCTS' => $linked_products , 'PRODUCT_PICTURE' => $product_img, 'PRODUCT_TITLE' => $product_title, 'PRODUCT_PRICE' => $product_price, 'PRODUCT_DESCRIPTION' => $product_description) );
 			$modal_footer_content = wpshop_display::display_template_element('wps_new_add_to_cart_confirmation_modal_footer', array( 'LINK_CART_PAGE' => wpshop_tools::get_page_id( get_permalink( get_option('wpshop_cart_page_id') ) ) ) );
 
 			$response = array( true, $succes_message_box, $action_after_add, $cart_page_url, $product_id, array($cart_animation_choice, $message_confirmation), array($product_img, $product_title, $linked_products, $product_price), $modal_content, $modal_footer_content );

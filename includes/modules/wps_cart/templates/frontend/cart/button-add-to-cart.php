@@ -1,5 +1,4 @@
-<?php if ( !defined( 'ABSPATH' ) ) exit;
- if ( !defined( 'ABSPATH' ) ) exit; ?>
+<?php if ( !defined( 'ABSPATH' ) ) exit; ?>
 
 <div class="wps-product-section">
 	<label><?php _e('Quantity', 'wpshop'); ?></label>
