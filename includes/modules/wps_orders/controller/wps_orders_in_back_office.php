@@ -228,7 +228,7 @@ class wps_orders_in_back_office {
 		$wpshop_admin_order_payment_received = ! empty( $_REQUEST['wpshop_admin_order_payment_received'] ) ? (array) $_REQUEST['wpshop_admin_order_payment_received'] : array();
 		$wpshop_admin_order_payment_received['method'] = ! empty( $wpshop_admin_order_payment_received['method'] ) ? sanitize_text_field( $wpshop_admin_order_payment_received['method'] ) : '';
 		$wpshop_admin_order_payment_received['payment_reference'] = ! empty( $wpshop_admin_order_payment_received['payment_reference'] ) ? sanitize_text_field( $wpshop_admin_order_payment_received['payment_reference'] ) : '';
-		$wpshop_admin_order_payment_received['date'] = ! empty( $wpshop_admin_order_payment_received['date'] ) ? sanitize_text_field( $wpshop_admin_order_payment_received['date'] ) : '';
+		$wpshop_admin_order_payment_received['date'] = ! empty( $wpshop_admin_order_payment_received['date'] ) ? sanitize_text_field( $wpshop_admin_order_payment_received['date'] ) : current_time( 'mysql', 0 );
 		$wpshop_admin_order_payment_received['received_amount'] = ! empty( $wpshop_admin_order_payment_received['received_amount'] ) ? sanitize_text_field( $wpshop_admin_order_payment_received['received_amount'] ) : '';
 		$action_triggered_from = ! empty( $_REQUEST['action_triggered_from'] ) ? sanitize_text_field( $_REQUEST['action_triggered_from'] ) : '';
 		$wshop_admin_order_payment_reference = ! empty( $_REQUEST['wpshop_admin_order_payment_reference'] ) ? sanitize_text_field( $_REQUEST['wpshop_admin_order_payment_reference'] ) : '';
@@ -247,7 +247,7 @@ class wps_orders_in_back_office {
 				'status' 						=> 'payment_received',
 				'author' 						=> $user_id,
 				'payment_reference' => $wpshop_admin_order_payment_received['payment_reference'],
-				'date' 							=> current_time( 'mysql', 0 ),
+				'date' 							=> $wpshop_admin_order_payment_received['date'],
 				'received_amount' 	=> $received_payment_amount,
 			);
 			$order_meta = wpshop_payment::check_order_payment_total_amount( $post_id, $params_array, 'completed', $order_meta, false );
