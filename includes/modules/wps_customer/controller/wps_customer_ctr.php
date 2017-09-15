@@ -86,6 +86,10 @@ class wps_customer_ctr {
 		if ( empty( $customer_id ) ) {
 			$query = $GLOBALS['wpdb']->prepare( "SELECT post_id FROM {$GLOBALS['wpdb']->postmeta} WHERE meta_key = %s AND meta_value LIKE %s ORDER BY meta_id LIMIT 1", '_wpscrm_associated_user', "%;i:$user_id;%" );
 			$customer_id = $GLOBALS['wpdb']->get_var( $query );
+
+			if ( ! empty( $user_id ) && empty( $customer_id ) ) {
+				self::create_entity_customer_when_user_is_created( $user_id );
+			}
 		}
 
 		setcookie( 'wps_current_connected_customer', $customer_id, strtotime( '+30 days' ), SITECOOKIEPATH, COOKIE_DOMAIN, is_ssl() );

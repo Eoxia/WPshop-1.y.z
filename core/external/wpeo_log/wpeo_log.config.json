@@ -13,6 +13,6 @@
 		"class": {
 		}
 	},
-	"log": true,
+	"log": false,
 	"number_decimal_ms": 2
 }
