@@ -1,5 +1,11 @@
 jQuery( document ).ready( function() {
 
+	jQuery( '#wpshop_order_customer_information_box h2 span .page-title-action.thickbox' ).click( function( event ) {
+		event.preventDefault();
+
+		tb_show( jQuery( this ).html(), jQuery( this ).attr( 'href' ) );
+	} );
+
 	jQuery( ".wps-customer-name-container" ).hover( function( event ){
 		event.preventDefault();
 
@@ -25,26 +31,9 @@ jQuery( document ).ready( function() {
 				if ( response[0] ) {
 					jQuery( '#TB_closeWindowButton' ).click();
 					jQuery( '#wps_signup_button' ).removeClass( 'wps-bton-loading' );
-					jQuery( '#wps_orders_selected_customer' ).val( response[2] );
-					// Refresh User list
-					jQuery( '#wps_customer_list_container' ).animate( { 'opacity': 0.15 }, 350 );
-					var data = {
-							action: 'wps_order_refresh_customer_list',
-							_wpnonce: jQuery( '#wps_customer_list_container' ).data( 'nonce' ),
-							customer_id: response[2]
-						};
-					jQuery.post( ajaxurl, data, function( return_data ) {
-							if ( return_data['status'] ) {
-								jQuery( '#wps_customer_list_container' ).html( return_data['response'] );
-								jQuery( '#wps_customer_list_container' ).animate( { 'opacity': 1 }, 350, function() {
-									jQuery( '#user_customer_id' ).chosen();
-								} );
-							} else {
-								alert( 'Error #CustomerBackJS35' );
-								jQuery( '#wps_customer_list_container' ).animate( { 'opacity': 1 }, 350 );
-							}
-					}, 'json' );
-					// Refresh address & account datas
+					jQuery( '#wps_orders_selected_customer' ).val( response[3] );
+
+					// Refresh customer informations metabox into order.
 					refreshCustomerInformationsInOrders();
 				} else {
 					jQuery( '#wps_signup_error_container' ).html( response[1] );

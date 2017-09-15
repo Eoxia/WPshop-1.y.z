@@ -1364,7 +1364,7 @@ class wps_address {
 			}
 		}
 
-		wp_die( json_encode( array( $status, $result, $address_type, $same_address_type ) ) );
+		wp_die( wp_json_encode( array( $status, $result, $address_type, $same_address_type ) ) );
 	}
 
 }

@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<?php
 		// On affiche la liste des clients uniquement si le paiement est encore en attente / Display the customer list only if the order payment status is: awaiting payment.
 		if ( true === $order_update_close ) : ?>
-		<div class="wps-form" id="wps_customer_list_container" data-nonce="<?php wp_create_nonce( 'wps_order_refresh_customer_list' ); ?>">
+		<div class="wps-form" id="wps_customer_list_container" data-nonce="<?php echo esc_attr( wp_create_nonce( 'wps_order_refresh_customer_list' ) ); ?>">
 			<?php echo wps_customer_ctr::customer_select( $customer_id ); // WPCS: XSS ok. ?>
 		</div>
 		<?php endif; ?>

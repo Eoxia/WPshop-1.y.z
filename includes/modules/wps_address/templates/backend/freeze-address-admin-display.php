@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-?><div>
+?><div id="wps_customer_addresses" >
 	<div class="wps-boxed summary_shipping_boxed" id="wpshop_order_<?php echo esc_attr( $address_type ); ?>" >
 		<div class="wps-h5"><?php esc_html_e( ucfirst( $address_type ) . ' address', 'wpshop' ); ?></div>
 		<?php if ( ! empty( $address_informations ) && ! empty( $order_infos[ $address_type ]['id'] ) ) : ?>

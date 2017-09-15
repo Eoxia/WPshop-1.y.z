@@ -393,6 +393,10 @@ class wpshop_orders {
 
 				case "order_status":
 					echo !empty($order_postmeta['order_status']) ? sprintf('<mark class="%s" id="order_status_'.$post_id.'">%s</mark>', sanitize_title(strtolower($order_postmeta['order_status'])), __($order_status[strtolower($order_postmeta['order_status'])], 'wpshop')) : __('Unknown Status', 'wpshop');
+					$credit_meta = get_post_meta( $post_id, '_wps_order_credit', true );
+					if ( ! empty( $credit_meta ) ) {
+						printf( '<mark class="%s" id="order_refunded_status_' . $post_id . ' ">%s</mark>', 'refunded', __( 'Refunded', 'wpshop' ) );
+					}
 				break;
 
 				case "order_billing":

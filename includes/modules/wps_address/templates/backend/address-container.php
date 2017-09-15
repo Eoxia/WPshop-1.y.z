@@ -16,7 +16,7 @@ $url_separator = '?';
 if ( strpos( admin_url( 'admin-ajax.php' ), '?' ) ) :
 	$url_separator = '&';
 endif;
-?><div>
+?><div id="wps_customer_addresses" >
 	<div class="<?php echo esc_attr( $extra_class ); ?> wps-boxed">
 		<span class="wps-h3">
 			<?php echo esc_html( $address_title ); ?>

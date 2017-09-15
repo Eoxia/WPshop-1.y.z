@@ -419,10 +419,7 @@ class wps_account_ctr {
 	 * SIGN UP - Save sign up form
 	 */
 	function wps_save_signup_form( $connect = false ) {
-		$_wpnonce = !empty( $_POST['_wpnonce'] ) ? sanitize_text_field( $_POST['_wpnonce'] ) : '';
-
-		if ( !wp_verify_nonce( $_wpnonce, 'wps_save_signup_form' ) )
-			wp_die();
+		check_ajax_referer( 'wps_save_signup_form' );
 
 		global $wpdb, $wpshop;
 		$user_id = ( !empty( $_POST['wps_sign_up_request_from_admin'] ) ) ? (int) $_POST['wps_sign_up_request_from_admin'] : get_current_user_id();
@@ -533,7 +530,7 @@ class wps_account_ctr {
 			}
 		}
 
-		wp_die( json_encode( array( $status, $result, $user_id ) ) );
+		wp_die( json_encode( array( $status, $result, $user_id, $customer_post_ID ) ) );
 	}
 
 	/** SIGN UP - Display the commercial & newsletter form

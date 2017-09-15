@@ -164,7 +164,7 @@ class wps_download_file_ctr {
 							__( 'Failure returned at order link generation. UserID : <b>%1$d</b>, ProductID : <b>%2$d</d>, UserMeta : <pre>%3$s</pre>', 'wpshop' ),
 							(int) get_current_user_id(),
 							(int) $item['item_id'],
-							get_user_meta( (int) $order_meta['customer_id'], '_order_download_codes_' . $order_id, true )
+							serialize( get_user_meta( (int) $order_meta['customer_id'], '_order_download_codes_' . $order_id, true ) )
 						),
 						array(
 							'object_id' => $order_id,
