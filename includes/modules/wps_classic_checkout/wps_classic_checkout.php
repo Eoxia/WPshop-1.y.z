@@ -93,15 +93,14 @@ if ( !class_exists("wps_classic_checkout") ) {
 						ob_end_clean();
 					break;
 					case 2 :
-						if ( get_current_user_id() != 0 ) {
+						if ( true === is_user_logged_in() ) {
 							$permalink_option = get_option( 'permalink_structure' );
 							$checkout_page_id = wpshop_tools::get_page_id( get_option( 'wpshop_checkout_page_id' ) );
-							$url = get_permalink( $checkout_page_id  ).( ( !empty($permalink_option) ) ? '?' : '&').'order_step=3';
+							$url = get_permalink( $checkout_page_id ) . ( ( ! empty( $permalink_option ) ) ? '?' : '&' ) . 'order_step=3';
 							wpshop_tools::wpshop_safe_redirect( $url );
-						}
-						else {
+						} else {
 							ob_start();
-							require( wpshop_tools::get_template_part( WPS_CLASSIC_CHECKOUT_DIR, $this->template_dir, "frontend", "classic-checkout", "step-two") );
+							require( wpshop_tools::get_template_part( WPS_CLASSIC_CHECKOUT_DIR, $this->template_dir, 'frontend', 'classic-checkout', 'step-two' ) );
 							$checkout_content .= ob_get_contents();
 							ob_end_clean();
 						}
@@ -116,7 +115,7 @@ if ( !class_exists("wps_classic_checkout") ) {
 						else {
 							if( !empty($_SESSION) && !empty($_SESSION['cart']) && !empty($_SESSION['cart']['order_items']) ) {
 								ob_start();
-								require( wpshop_tools::get_template_part( WPS_CLASSIC_CHECKOUT_DIR, $this->template_dir, "frontend", "classic-checkout", "step-three") );
+								require( wpshop_tools::get_template_part( WPS_CLASSIC_CHECKOUT_DIR, $this->template_dir, 'frontend', "classic-checkout", "step-three") );
 								$checkout_content .= ob_get_contents();
 								ob_end_clean();
 								$url = apply_filters('wps_extra_signup_actions', ( isset( $url ) ? $url : '' ) );

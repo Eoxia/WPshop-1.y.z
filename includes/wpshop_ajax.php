@@ -1979,159 +1979,151 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 
 
 /*	Frontend	*/
-	/**
-	 * Add product to the end user cart
-	 */
-	function ajax_wpshop_add_to_cart() {
-		check_ajax_referer( 'ajax_pos_product_variation_selection' );
+/**
+ * Add product to the end user cart
+ */
+function ajax_wpshop_add_to_cart() {
+	check_ajax_referer( 'ajax_pos_product_variation_selection' );
 
-		global $wpdb;
-		$wpshop_cart = new wps_cart();
+	global $wpdb;
+	$wpshop_cart = new wps_cart();
 
-		$product_id = isset($_POST['wpshop_pdt']) ? intval(wpshop_tools::varSanitizer($_POST['wpshop_pdt'])) : null;
-		$product_qty = isset($_POST['wpshop_pdt_qty']) ? intval(wpshop_tools::varSanitizer($_POST['wpshop_pdt_qty'])) : 1;
-		$cart_option = get_option('wpshop_cart_option', array() );
-		$wpshop_variation_selected = !empty($_POST['wps_pdt_variations']) ? (array)$_POST['wps_pdt_variations'] : array();
-		$from_administration =  ( !empty($_POST['from_admin']) ) ? (int)$_POST['from_admin'] : false;
-		$order_id =  ( !empty($_POST['wps_orders_order_id']) ) ? wpshop_tools::varSanitizer( $_POST['wps_orders_order_id'] ) : null;
+	$product_id = isset($_POST['wpshop_pdt']) ? intval(wpshop_tools::varSanitizer($_POST['wpshop_pdt'])) : null;
+	$product_qty = isset($_POST['wpshop_pdt_qty']) ? intval(wpshop_tools::varSanitizer($_POST['wpshop_pdt_qty'])) : 1;
+	$cart_option = get_option('wpshop_cart_option', array() );
+	$wpshop_variation_selected = !empty($_POST['wps_pdt_variations']) ? (array)$_POST['wps_pdt_variations'] : array();
+	$from_administration =  ( !empty($_POST['from_admin']) ) ? (int)$_POST['from_admin'] : false;
+	$order_id =  ( !empty($_POST['wps_orders_order_id']) ) ? wpshop_tools::varSanitizer( $_POST['wps_orders_order_id'] ) : null;
 
 
-		// Check Cart Animation
-		$cart_animation_choice = ( !empty($cart_option) && !empty($cart_option['animation_cart_type']) ? $cart_option['animation_cart_type'] : null);
-		if ( !empty($cart_option['total_nb_of_item_allowed']) && ((int) $cart_option['total_nb_of_item_allowed'][0] == 1) ) {
-			$wpshop_cart->empty_cart();
-		}
-
-		// Prepare Product to be added to cart
-		$formatted_product = $wpshop_cart->prepare_product_to_add_to_cart( $product_id, $product_qty, $wpshop_variation_selected );
-		$product_to_add_to_cart = $formatted_product[0];
-		$new_pid = $formatted_product[1];
-
-		// Check cart Type
-		$cart_type_for_adding = 'normal';
-		$wpshop_cart_type = !empty( $_POST['wpshop_cart_type'] ) ? sanitize_text_field( $_POST['wpshop_cart_type'] ) : '';
-		if (!empty($wpshop_cart_type) ) {
-			switch(wpshop_tools::varSanitizer($wpshop_cart_type)){
-				case 'quotation':
-					$wpshop_cart_type = 'quotation';
-					break;
-				default:
-					$wpshop_cart_type = 'normal';
-					break;
-			}
-		}
-
-		// Check Product image
-		$product = get_post( $product_id );
-		$product_img = '<img src="' .WPSHOP_DEFAULT_PRODUCT_PICTURE. '" alt="no picture" />';
-		if ( !empty($product_id) ) {
-			if ( $product->post_type == WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION ) {
-				$parent_def = wpshop_products::get_parent_variation( $product_id );
-				$parent_post = ( !empty($parent_def['parent_post']) ) ? $parent_def['parent_post'] : array();
-				$product_title = ( !empty($parent_post) && !empty($parent_post->post_title) ) ? $parent_post->post_title : '';
-				$product_description = ( !empty($parent_post) && !empty($parent_post->post_content) ) ? $parent_post->post_content : '';
-				$product_img =  ( !empty($parent_post->ID) ) ? get_the_post_thumbnail( $parent_post->ID, 'thumbnail') : '';
-			}
-			else {
-				$product_title = $product->post_title;
-				$product_description = $product->post_content;
-				$product_img =  get_the_post_thumbnail( $product_id, 'thumbnail');
-			}
-		}
-
-		$wps_orders_from_admin = !empty( $_POST['wps_orders_from_admin'] ) ? (int) $_POST['wps_orders_from_admin'] : 0;
-		if ( !empty($wps_orders_from_admin) && $wps_orders_from_admin) {
-			$order_meta = get_post_meta($order_id, '_order_postmeta', true);
-			$return = $wpshop_cart->add_to_cart( $product_to_add_to_cart, array( $new_pid => $product_qty ), $wpshop_cart_type, array(), true, $order_meta, $order_id );
-
-			echo json_encode( array(true) );
-			die();
-		}
-		else {
-			$return = $wpshop_cart->add_to_cart( $product_to_add_to_cart, array( $new_pid => $product_qty ), $wpshop_cart_type );
-		}
-
-		if ( $return == 'success' ) {
-			$cart_page_url = apply_filters( 'wps_cart_page_url', get_permalink( wpshop_tools::get_page_id( get_option( 'wpshop_cart_page_id' ) ) ) );
-			/** Template parameters	*/
-			$template_part = 'product_added_to_cart_message';
-
-			/** Build template	*/
-			$tpl_way_to_take = wpshop_display::check_way_for_template($template_part);
-			if ( $tpl_way_to_take[0] && !empty($tpl_way_to_take[1]) ) {
-				/*	Include the old way template part	*/
-				ob_start();
-				require_once(wpshop_display::get_template_file($tpl_way_to_take[1]));
-				$succes_message_box = ob_get_contents();
-				ob_end_clean();
-			}
-			else {
-				$succes_message_box = wpshop_display::display_template_element($template_part, array('PRODUCT_ID' => $product_id));
-			}
-			unset($tpl_component);
-
-			$action_after_add = (($cart_option['product_added_to_cart'][0] == 'cart_page') ? true : false);
-			if ($wpshop_cart_type == 'quotation') {
-				$action_after_add = (($cart_option['product_added_to_quotation'][0] == 'cart_page') ? true : false);
-			}
-
-			/** Product Price **/
-			$product_price = '';
-			if ( !empty($_SESSION['cart']) && !empty($_SESSION['cart']['order_items']) && !empty($product_to_add_to_cart) ) {
-				$idp = '';
-
-				if ( !empty($product_to_add_to_cart[$new_pid]['variations']) && count($product_to_add_to_cart[$new_pid]['variations']) < 2 ) {
-					$idp = $product_to_add_to_cart[$new_pid]['variations'][0];
-				}
-				else {
-					if( strstr( $new_pid, '__') ) {
-						$idp = $new_pid;
-					}
-					else {
-						$idp = $product_to_add_to_cart[$new_pid]['id'];
-					}
-				}
-
-				if( !empty($idp) ) {
-					$default_currency = wpshop_tools::wpshop_get_currency( false );
-					$price_piloting_option = get_option( 'wpshop_shop_price_piloting' );
-
-					$real_price = null;
-					if ( !empty( $_SESSION[ 'cart' ] ) && !empty( $_SESSION[ 'cart' ][ 'order_items' ] ) && !empty( $_SESSION[ 'cart' ][ 'order_items' ][$new_pid] ) && !empty( $_SESSION[ 'cart' ][ 'order_items' ][$new_pid]['item_amount_to_pay_now'] ) ) {
-						$real_price = ( $_SESSION['cart']['order_items'][$new_pid]['item_amount_to_pay_now'] * $product_qty );
-					}
-
-					$pr = empty( $real_price ) ? ( !empty($price_piloting_option) && $price_piloting_option == 'HT' ) ? ( $_SESSION['cart']['order_items'][$new_pid]['item_pu_ht']  * $product_qty ) : ( $_SESSION['cart']['order_items'][$new_pid]['item_pu_ttc'] * $product_qty ) : $real_price;
-					$product_price = wpshop_tools::formate_number( $pr ).$default_currency;
-				}
-			}
-			/** Check if there are linked products **/
-			$related_products = get_post_meta( $product_id, '_wpshop_product_related_products', true);
-			$tpl_component = array();
-			$linked_products = '';
-			if ( !empty($related_products) ) {
-				// $linked_products = '<h2>'.__('Linked products', 'wpshop').'</h2>';
-				$linked_products .= '<div class="modal_product_related">' .do_shortcode( '[wpshop_related_products pid="' .$product_id. '" sorting="no"]' ).'</div>';
-			}
-			else {
-				$linked_products = '';
-			}
-
-			$message_confirmation = sprintf( __('%s has been add to the cart', 'wpshop'), $product->post_title );
-
-			$modal_content = wpshop_display::display_template_element('wps_new_add_to_cart_confirmation_modal', array( 'PRODUCT_ID' => $product_id, 'RELATED_PRODUCTS' => $linked_products , 'PRODUCT_PICTURE' => $product_img, 'PRODUCT_TITLE' => $product_title, 'PRODUCT_PRICE' => $product_price, 'PRODUCT_DESCRIPTION' => $product_description) );
-			$modal_footer_content = wpshop_display::display_template_element('wps_new_add_to_cart_confirmation_modal_footer', array( 'LINK_CART_PAGE' => wpshop_tools::get_page_id( get_permalink( get_option('wpshop_cart_page_id') ) ) ) );
-
-			$response = array( true, $succes_message_box, $action_after_add, $cart_page_url, $product_id, array($cart_animation_choice, $message_confirmation), array($product_img, $product_title, $linked_products, $product_price), $modal_content, $modal_footer_content );
-		}
-		else {
-			$response = array( false, $return );
-		}
-
-		wp_die( json_encode( $response ) );
+	// Check Cart Animation
+	$cart_animation_choice = ( !empty($cart_option) && !empty($cart_option['animation_cart_type']) ? $cart_option['animation_cart_type'] : null);
+	if ( !empty($cart_option['total_nb_of_item_allowed']) && ((int) $cart_option['total_nb_of_item_allowed'][0] == 1) ) {
+		$wpshop_cart->empty_cart();
 	}
- 	add_action('wp_ajax_wpshop_add_product_to_cart', 'ajax_wpshop_add_to_cart');
-	add_action('wp_ajax_nopriv_wpshop_add_product_to_cart', 'ajax_wpshop_add_to_cart');
+
+	// Prepare Product to be added to cart
+	$formatted_product = $wpshop_cart->prepare_product_to_add_to_cart( $product_id, $product_qty, $wpshop_variation_selected );
+	$product_to_add_to_cart = $formatted_product[0];
+	$new_pid = $formatted_product[1];
+
+	// Check cart Type
+	$cart_type_for_adding = 'normal';
+	$wpshop_cart_type = !empty( $_POST['wpshop_cart_type'] ) ? sanitize_text_field( $_POST['wpshop_cart_type'] ) : '';
+	if (!empty($wpshop_cart_type) ) {
+		switch(wpshop_tools::varSanitizer($wpshop_cart_type)){
+			case 'quotation':
+				$wpshop_cart_type = 'quotation';
+				break;
+			default:
+				$wpshop_cart_type = 'normal';
+				break;
+		}
+	}
+
+	// Check Product image
+	$product = get_post( $product_id );
+	$product_img = '<img src="' .WPSHOP_DEFAULT_PRODUCT_PICTURE. '" alt="no picture" />';
+	if ( !empty($product_id) ) {
+		if ( $product->post_type == WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION ) {
+			$parent_def = wpshop_products::get_parent_variation( $product_id );
+			$parent_post = ( !empty($parent_def['parent_post']) ) ? $parent_def['parent_post'] : array();
+			$product_title = ( !empty($parent_post) && !empty($parent_post->post_title) ) ? $parent_post->post_title : '';
+			$product_description = ( !empty($parent_post) && !empty($parent_post->post_content) ) ? $parent_post->post_content : '';
+			$product_img =  ( !empty($parent_post->ID) ) ? get_the_post_thumbnail( $parent_post->ID, 'thumbnail') : '';
+		} else {
+			$product_title = $product->post_title;
+			$product_description = $product->post_content;
+			$product_img =  get_the_post_thumbnail( $product_id, 'thumbnail');
+		}
+	}
+
+	$wps_orders_from_admin = !empty( $_POST['wps_orders_from_admin'] ) ? (int) $_POST['wps_orders_from_admin'] : 0;
+	if ( ! empty( $wps_orders_from_admin ) && $wps_orders_from_admin ) {
+		$order_meta = get_post_meta($order_id, '_order_postmeta', true);
+		$return = $wpshop_cart->add_to_cart( $product_to_add_to_cart, array( $new_pid => $product_qty ), $wpshop_cart_type, array(), true, $order_meta, $order_id );
+
+		die( wp_json_encode( array( true ) ) );
+	} else {
+		$return = $wpshop_cart->add_to_cart( $product_to_add_to_cart, array( $new_pid => $product_qty ), $wpshop_cart_type );
+	}
+
+	if ( $return == 'success' ) {
+		$cart_page_url = apply_filters( 'wps_cart_page_url', get_permalink( wpshop_tools::get_page_id( get_option( 'wpshop_cart_page_id' ) ) ) );
+		/** Template parameters	*/
+		$template_part = 'product_added_to_cart_message';
+
+		/** Build template	*/
+		$tpl_way_to_take = wpshop_display::check_way_for_template($template_part);
+		if ( $tpl_way_to_take[0] && !empty($tpl_way_to_take[1]) ) {
+			/*	Include the old way template part	*/
+			ob_start();
+			require_once(wpshop_display::get_template_file($tpl_way_to_take[1]));
+			$succes_message_box = ob_get_contents();
+			ob_end_clean();
+		} else {
+			$succes_message_box = wpshop_display::display_template_element($template_part, array('PRODUCT_ID' => $product_id));
+		}
+		unset($tpl_component);
+
+		$action_after_add = (($cart_option['product_added_to_cart'][0] == 'cart_page') ? true : false);
+		if ($wpshop_cart_type == 'quotation') {
+			$action_after_add = (($cart_option['product_added_to_quotation'][0] == 'cart_page') ? true : false);
+		}
+
+		/** Product Price **/
+		$product_price = '';
+		if ( !empty($_SESSION['cart']) && !empty($_SESSION['cart']['order_items']) && !empty($product_to_add_to_cart) ) {
+			$idp = '';
+
+			if ( !empty($product_to_add_to_cart[$new_pid]['variations']) && count($product_to_add_to_cart[$new_pid]['variations']) < 2 ) {
+				$idp = $product_to_add_to_cart[$new_pid]['variations'][0];
+			} else {
+				if( strstr( $new_pid, '__') ) {
+					$idp = $new_pid;
+				} else {
+					$idp = $product_to_add_to_cart[$new_pid]['id'];
+				}
+			}
+
+			if( !empty($idp) ) {
+				$default_currency = wpshop_tools::wpshop_get_currency( false );
+				$price_piloting_option = get_option( 'wpshop_shop_price_piloting' );
+
+				$real_price = null;
+				if ( !empty( $_SESSION[ 'cart' ] ) && !empty( $_SESSION[ 'cart' ][ 'order_items' ] ) && !empty( $_SESSION[ 'cart' ][ 'order_items' ][$new_pid] ) && !empty( $_SESSION[ 'cart' ][ 'order_items' ][$new_pid]['item_amount_to_pay_now'] ) ) {
+					$real_price = ( $_SESSION['cart']['order_items'][$new_pid]['item_amount_to_pay_now'] * $product_qty );
+				}
+
+				$pr = empty( $real_price ) ? ( !empty($price_piloting_option) && $price_piloting_option == 'HT' ) ? ( $_SESSION['cart']['order_items'][$new_pid]['item_pu_ht']  * $product_qty ) : ( $_SESSION['cart']['order_items'][$new_pid]['item_pu_ttc'] * $product_qty ) : $real_price;
+				$product_price = wpshop_tools::formate_number( $pr ).$default_currency;
+			}
+		}
+		/** Check if there are linked products **/
+		$related_products = get_post_meta( $product_id, '_wpshop_product_related_products', true);
+		$tpl_component = array();
+		$linked_products = '';
+		if ( !empty($related_products) ) {
+			// $linked_products = '<h2>'.__('Linked products', 'wpshop').'</h2>';
+			$linked_products .= '<div class="modal_product_related">' .do_shortcode( '[wpshop_related_products pid="' .$product_id. '" sorting="no"]' ).'</div>';
+		} else {
+			$linked_products = '';
+		}
+
+		$message_confirmation = sprintf( __('%s has been add to the cart', 'wpshop'), $product->post_title );
+
+		$modal_content = wpshop_display::display_template_element('wps_new_add_to_cart_confirmation_modal', array( 'PRODUCT_ID' => $product_id, 'RELATED_PRODUCTS' => $linked_products , 'PRODUCT_PICTURE' => $product_img, 'PRODUCT_TITLE' => $product_title, 'PRODUCT_PRICE' => $product_price, 'PRODUCT_DESCRIPTION' => $product_description) );
+		$modal_footer_content = wpshop_display::display_template_element('wps_new_add_to_cart_confirmation_modal_footer', array( 'LINK_CART_PAGE' => wpshop_tools::get_page_id( get_permalink( get_option('wpshop_cart_page_id') ) ) ) );
+
+		$response = array( true, $succes_message_box, $action_after_add, $cart_page_url, $product_id, array($cart_animation_choice, $message_confirmation), array($product_img, $product_title, $linked_products, $product_price), $modal_content, $modal_footer_content );
+	} else {
+		$response = array( false, $return );
+	}
+
+	wp_die( json_encode( $response ) );
+}
+	add_action('wp_ajax_wpshop_add_product_to_cart', 'ajax_wpshop_add_to_cart');
+add_action('wp_ajax_nopriv_wpshop_add_product_to_cart', 'ajax_wpshop_add_to_cart');
 
 
 	/**

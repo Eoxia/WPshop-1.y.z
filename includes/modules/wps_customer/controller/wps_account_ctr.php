@@ -69,10 +69,9 @@ class wps_account_ctr {
 	/** LOG IN - Display log in Form **/
 	function get_login_form( $force_login = false ) {
 		$args = array();
-		if ( get_current_user_id() != 0 ) {
+		if ( true === is_user_logged_in() ) {
 			return __( 'You are already logged', 'wpshop');
-		}
-		else {
+		} else {
 			$action = !empty( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
 			$key = !empty( $_GET['key'] ) ? sanitize_text_field( $_GET['key'] ) : '';
 			$login = !empty( $_GET['login'] ) ? sanitize_text_field( $_GET['login'] ) : 0;
