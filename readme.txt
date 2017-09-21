@@ -3,8 +3,8 @@ Contributors: Eoxia
 Tags: boutique, catalog, catalogue, commerce, e-commerce, ecommerce, m-commerce, mcommerce, produits, responsive, shop, shopping cart, wp shop, wordpress ecommerce, wordpress shop, WPshop, wp-shop, french payment gateway, passerelle de paiement française
 Donate link: http://www.wpshop.fr/documentations/presentation-wpshop/
 Requires at least: 3.4.0
-Tested up to: 4.8
-Stable tag: 1.4.4.4
+Tested up to: 4.8.2
+Stable tag: 1.4.5.0
 License: GPLv2 or later
 
 Simple and powerfull eCommerce plugin, with French Payment and Shipping systems : Paybox, Paypal, Atos, Cybermut, SystemPay, Paysite-cash, Colissimo
@@ -96,6 +96,28 @@ Il faut vérifier que le réglage des permaliens pour votre site est bien régl�
 
 
 == Changelog ==
+
+= Version 1.4.5.0 =
+
+Améliorations / Improvments
+
+* 10796 - Ajout d'un filtre permettant de changer le nom du fichier pdf généré / Added a filter allowing to change generated invoice file
+* 10876 - Ajout de l'identifiant du produit dans l'appel de la modal de confirmation d'ajout au panier / Add product identifier when calling add to cart confirmation modal
+* 11370 - Affichage de l'indication "remboursé" sur les commandes possédant unavoir / Display refunded indicator for orders having credit slips
+* 11382 - Création automatique d'un compte client pour un utilisateur qui a été créé avant l'installation de WPShop / Automatically create a customer account for users having their accounts created before WPShop installation
+* 11442 - Afficher le mode de paiement en face des commandes ayant un paiement en attente / Display customer payment method choice in order listing
+* 11472 - Ajout des lignes précisant le domaine de traduction et le chemin vers les fichiers de traduction dans le fichier principal / Add lines for plugin internationnalisation with text-domain and path to translation files
+
+Corrections / Fix
+
+* 10797 - Alignement de la liste des paiements sur une commande à gauche dans le fichier généré / Align to the left the payment list into generated file
+* 10808 - Problème d'enregistrement sur les attributs de type date / Error when saving date attributes
+* 11359 - Remise en place du champs permettant de choisir l'ordre d'affichage des produits dans la boutique / Put back the field allowing to choose product order display in shop
+* 11371 - Correction ajout adresses dans les commandes / Fix addresses creation into orders
+* 11372 - Correction de l'enregistrement des paiements avec le filtre de produit téléchargeable / Fix new payment addition when product is download
+* 11373 - Correction du bouton de création client dans les commandes / Fix customer creation button into orders
+* 11380 - Prise en compte de la date sélectionnée lors de l'ajout d'un paiement à une commande / Chosen date is now setted for order's payment
+* 11419 - Incompatibilité entre les frais de port et les paiements partiels des commandes / Incompatibility between partial payment and Shipping cost
 
 = Version 1.4.4.4 =
 
