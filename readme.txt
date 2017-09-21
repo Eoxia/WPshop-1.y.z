@@ -107,6 +107,7 @@ Améliorations / Improvments
 * 11382 - Création automatique d'un compte client pour un utilisateur qui a été créé avant l'installation de WPShop / Automatically create a customer account for users having their accounts created before WPShop installation
 * 11442 - Afficher le mode de paiement en face des commandes ayant un paiement en attente / Display customer payment method choice in order listing
 * 11472 - Ajout des lignes précisant le domaine de traduction et le chemin vers les fichiers de traduction dans le fichier principal / Add lines for plugin internationnalisation with text-domain and path to translation files
+* 11476 - Modification de l'affichage du template des avis sur les produits / Change display of product rating into product sheet
 
 Corrections / Fix
 

@@ -459,8 +459,7 @@ ob_start();
 		<div itemscope="" itemtype="http://schema.org/Product">
 				<div class="wps-product-section">
 					<h1 itemprop="name" class="entry-title">{WPSHOP_PRODUCT_TITLE}</h1>
-					<div class="wps-productRating">[wps_star_rate_product pid="{WPSHOP_PRODUCT_ID}"]</div>
-
+					{WPSHOP_PRODUCT_RATE}
 					<div class="wps-prices" itemscope itemtype="http://schema.org/Offer">{WPSHOP_PRODUCT_PRICE}</div>
 				</div>
 				<div class="wps-product-section">[wps_low_stock_alert id="{WPSHOP_PRODUCT_ID}"]</div>
@@ -485,6 +484,12 @@ ob_start();
 </section>
 <?php
 $tpl_element['product_complete_tpl'] = ob_get_contents();
+ob_end_clean();
+
+
+ob_start();
+?><div class="wps-productRating">[wps_star_rate_product pid="{WPSHOP_PRODUCT_ID}"]</div><?php
+$tpl_element['product_rating'] = ob_get_contents();
 ob_end_clean();
 
 

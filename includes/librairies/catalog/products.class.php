@@ -1583,6 +1583,11 @@ public static function reduce_product_stock_qty($product_id, $qty, $variation_id
             $tpl_component['LOW_STOCK_ALERT_MESSAGE'] = $wps_marketing_tools->display_alert_stock_message(array('id' => $product_id));
         }
 
+				ob_start();
+				do_shortcode( '[wps_star_rate_product pid="' . $product_id . '"]' );
+				$product_rating = ob_get_clean();
+				$tpl_component['PRODUCT_RATE'] = ! empty( $product_rating ) ? $product_rating : '';
+
         /** Gallery **/
         $tpl_component['PRODUCT_COMPLETE_SHEET_GALLERY'] = wps_media_manager_frontend_ctr::get_product_complete_sheet_galery($product_id);
 
