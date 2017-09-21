@@ -103,9 +103,9 @@ Améliorations / Improvments
 
 * 10796 - Ajout d'un filtre permettant de changer le nom du fichier pdf généré / Added a filter allowing to change generated invoice file
 * 10876 - Ajout de l'identifiant du produit dans l'appel de la modal de confirmation d'ajout au panier / Add product identifier when calling add to cart confirmation modal
-* 11370 - Affichage de l'indication "remboursé" sur les commandes possédant unavoir / Display refunded indicator for orders having credit slips
+* 11370 - Ajout de crochet dans le tunnel de vente permettant d'afficher des informations complémentaires au cours du processus / Add hook into order process in order to display custom informations allong the process
 * 11382 - Création automatique d'un compte client pour un utilisateur qui a été créé avant l'installation de WPShop / Automatically create a customer account for users having their accounts created before WPShop installation
-* 11442 - Afficher le mode de paiement en face des commandes ayant un paiement en attente / Display customer payment method choice in order listing
+* 11442 - Ajout d'un do_action dans la colonne "statut" des commandes permettant d'intégrer n'importe qu'elle donnée supplémentaire depuis le thème ou un autre plugin / Add a do_action in "status" order column into back admmin allowing to display any data from theme or another plugin
 * 11472 - Ajout des lignes précisant le domaine de traduction et le chemin vers les fichiers de traduction dans le fichier principal / Add lines for plugin internationnalisation with text-domain and path to translation files
 * 11476 - Modification de l'affichage du template des avis sur les produits / Change display of product rating into product sheet
 

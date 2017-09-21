@@ -1,7 +1,17 @@
-<?php if ( !defined( 'ABSPATH' ) ) exit;
+<?php
+/**
+ * Fichier de définition de l'affichage des totaux du panier / Template file for cart totals
+ *
+ * @package WPShop
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 ?>
 <div class="wps-cart-cartouche">
 	<div class="wps-cart-message">
+		<?php do_action( 'wps_cart_message_top' ); ?>
 		<?php if( $cart_type != 'admin-panel' ) : ?>
 			<?php if ( !empty($cart_type) && $cart_type == 'summary' && !$account_origin ) : ?>
 				<?php $url_step_one = get_permalink( wpshop_tools::get_page_id( get_option('wpshop_checkout_page_id') ) ); ?>
@@ -29,6 +39,7 @@
 				<?php endif; ?>
 			<?php endif; ?>
 		<?php endif; ?>
+		<?php do_action( 'wps_cart_message_bottom' ); ?>
 	</div><!-- wps-cart-message -->
 	<div class="wps-cart-total">
 		<?php $shipping_price_from = get_option( 'wpshop_shipping_cost_from' ); ?>

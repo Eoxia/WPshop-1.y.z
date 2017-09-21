@@ -393,21 +393,7 @@ class wpshop_orders {
 
 				case "order_status":
 					echo !empty($order_postmeta['order_status']) ? sprintf('<mark class="%s" id="order_status_'.$post_id.'">%s</mark>', sanitize_title(strtolower($order_postmeta['order_status'])), __($order_status[strtolower($order_postmeta['order_status'])], 'wpshop')) : __('Unknown Status', 'wpshop');
-
-					// Affichage du statut remboursé si un ou plusieurs avoir sont trouvés sur la commande / Display refunded status if one or more credit slip are founded on current order
-					$credit_meta = get_post_meta( $post_id, '_wps_order_credit', true );
-					if ( ! empty( $credit_meta ) ) {
-						printf( '<mark class="%s" id="order_refunded_status_' . $post_id . '" >%s</mark>', 'refunded', __( 'Refunded', 'wpshop' ) );
-					}
-
-					// Affichage du moyen de paiement si le paiement est en attente pour savoir si la commande sera finalisée ou non/ Display the payement mean when payment is waited in order to know if the payment order will automatically change or if a human action is required.
-					if ( 'awaiting_payment' === $order_postmeta['order_status'] ) {
-						$customer_choice = $order_postmeta['order_payment']['customer_choice']['method'];
-						$payment_mode_list = get_option( 'wps_payment_mode' );
-						if ( array_key_exists( $customer_choice, $payment_mode_list['mode'] ) ) {
-							printf( '<br/><mark style="display: block; margin: 10px 0 0 0; background-color: transparent;" >' . esc_html( 'Customer payment method: %s', 'wpshop' ) . '</mark>', esc_html( $payment_mode_list['mode'][ $customer_choice ]['name'] ) );
-						}
-					}
+					do_action( 'wps_order_status', $post_id, $order_postmeta );
 				break;
 
 				case "order_billing":
