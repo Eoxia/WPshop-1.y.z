@@ -713,6 +713,7 @@ class wps_cart {
 		if ( ! empty( $price_piloting ) && ( 'HT' === (string) $price_piloting ) ) {
 			$shipping_cost_vat = ( ! empty( $cart_infos['order_shipping_cost'] ) ) ? ( WPSHOP_VAT_ON_SHIPPING_COST / 100 ) * number_format( $cart_infos['order_shipping_cost'], 2, '.', '' ) : 0;
 			$order_tva['VAT_shipping_cost'] = $shipping_cost_vat;
+			$cart_infos['order_amount_to_pay_now'] += $shipping_cost_vat;
 		}
 
 		// Calcul VAT Total.
@@ -730,7 +731,7 @@ class wps_cart {
 		$total_received = 0;
 		if ( ! empty( $cart_infos['order_payment']['received'] ) ) {
 			foreach ( $cart_infos['order_payment']['received'] as $received ) {
-				$total_received += ( ( ! empty( $received['status'] ) && ( 'payment_received' == $received['status'] ) && ! empty( $received['received_amount'] ) ) ? $received['received_amount'] : 0 );
+				$total_received += ( ( ! empty( $received['status'] ) && ( 'payment_received' === $received['status'] ) && ! empty( $received['received_amount'] ) ) ? $received['received_amount'] : 0 );
 			}
 		}
 		$cart_infos['order_amount_to_pay_now'] = $cart_infos['order_amount_to_pay_now'] - $total_received;

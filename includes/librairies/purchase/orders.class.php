@@ -393,6 +393,7 @@ class wpshop_orders {
 
 				case "order_status":
 					echo !empty($order_postmeta['order_status']) ? sprintf('<mark class="%s" id="order_status_'.$post_id.'">%s</mark>', sanitize_title(strtolower($order_postmeta['order_status'])), __($order_status[strtolower($order_postmeta['order_status'])], 'wpshop')) : __('Unknown Status', 'wpshop');
+
 					do_action( 'wps_order_status', $post_id, $order_postmeta );
 				break;
 
