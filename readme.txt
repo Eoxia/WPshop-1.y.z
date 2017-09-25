@@ -2,8 +2,9 @@
 Contributors: Eoxia
 Tags: boutique, catalog, catalogue, commerce, e-commerce, ecommerce, m-commerce, mcommerce, produits,  shop, shopping cart, wp shop, wordpress ecommerce, wordpress shop, WPshop, wp-shop, french payment gateway, passerelle de paiement française
 Donate link: http://www.wpshop.fr/
-Requires at least: 3.4.0
+Requires at least: 4.5
 Tested up to: 4.8.2
+Requires PHP: 5.6.3
 Stable tag: 1.4.5.0
 License: GPLv2 or later
 
@@ -142,8 +143,10 @@ Corrections
 
 * 8782 - Correctif des prix HT des options
 
-= Version 1.0 =
-Plugin first delivery
+== Upgrade Notice ==
+
+Sauvegardez vos données, testez vos sauvegardes !
+Puis mettre à jour
 
 == Contactez l'auteur ==
 
