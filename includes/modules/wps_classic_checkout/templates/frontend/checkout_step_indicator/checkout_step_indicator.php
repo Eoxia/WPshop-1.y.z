@@ -1,6 +1,6 @@
 <?php if ( !defined( 'ABSPATH' ) ) exit;
 ?>
-<div class="wps-gridwrapper6-marged wps-checkout-steps --wps-screen">
+<div class="wps-gridwrapper6-marged wps-checkout-steps -wps-screen">
 <?php
 	$step_finished = false;
 	foreach( $steps as $step_id => $step) :

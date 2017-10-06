@@ -3951,7 +3951,7 @@ a:hover .wps-icodoc:after {
   }
 }
 @media (max-width: 780px) {
-  .--wps-screen {
+  .-wps-screen {
     display: none !important;
   }
   .--wps-touch {
@@ -4220,4 +4220,8 @@ a:hover .wps-icodoc:after {
   -webkit-box-shadow: inset 0 0 0 4px #ebebeb;
   box-shadow: inset 0 0 0 4px #ebebeb;
   background: #fafafa;
+}
+
+.wps-modal-opened .wps-modal-container {
+	pointer-events: all;
 }
