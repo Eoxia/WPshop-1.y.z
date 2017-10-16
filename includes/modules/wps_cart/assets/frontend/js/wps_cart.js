@@ -110,20 +110,7 @@ jQuery( document ).ready( function() {
 
 
 	jQuery( document ).on( 'click', '#wps-cart-order-action', function() {
-		jQuery( this ).addClass( 'wps-bton-loading' );
-		var data = {
-				action: "wps_cart_pass_to_step_two",
-				_wpnonce: jQuery( this ).data( 'nonce' )
-			};
-			jQuery.post(ajaxurl, data, function(response){
-				if( response['status'] ) {
-					window.location.replace( response['response'] );
-				}
-				else {
-					jQuery( '#wps_cart_error_container' ).html( response['response']).slideDown( 'slow' ).delay( 3500 ).slideUp( 'slow' );
-					jQuery( this ).removeClass( 'wps-bton-loading' );
-				}
-			}, 'json');
+		wpsCartGoToStep2( jQuery( this ) );
 	});
 
 	jQuery( document ).on( 'change', '.wps-cart-product-qty', function() {
@@ -185,6 +172,22 @@ jQuery( document ).ready( function() {
 });
 
 
+function wpsCartGoToStep2( button ) {
+	button.addClass( 'wps-bton-loading' );
+	var data = {
+		action: "wps_cart_pass_to_step_two",
+		_wpnonce: button.data( 'nonce' )
+	};
+	jQuery.post(ajaxurl, data, function(response){
+		if( response['status'] ) {
+			window.location.replace( response['response'] );
+		}
+		else {
+			jQuery( '#wps_cart_error_container' ).html( response['response']).slideDown( 'slow' ).delay( 3500 ).slideUp( 'slow' );
+			button.removeClass( 'wps-bton-loading' );
+		}
+	}, 'json');
+}
 
 
 /** Reload cart action **/
