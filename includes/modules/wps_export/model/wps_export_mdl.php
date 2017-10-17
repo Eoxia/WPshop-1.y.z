@@ -104,32 +104,32 @@ class wps_export_mdl {
 	 * @param date $dt2
 	 * @return array
 	 */
-	function get_orders($term, $dt1=null, $dt2=null) {
+	function get_orders( $term, $dt1 = null, $dt2 = null ) {
 		$commands_array = array();
 		$commands_array[] = array(
-				'order_type' => __( 'Order type', 'wps_export' ),
-				'order_invoice_ref' => __( 'Identifier', 'wps_export' ),
-				'name' => __( 'Name', 'wps_export' ),
-				'first_name' => __( 'First name', 'wps_export' ),
-				'email' => __( 'Mail', 'wps_export' ),
-				'tel' => __( 'Phone', 'wps_export' ),
-				'date_order' => __( 'Order date', 'wps_export' ),
-				'order_total_et' => __( 'Products ET', 'wps_export' ),
-				'order_shipping_cost_et' => __( 'Shipping ET', 'wps_export' ),
-				'order_shipping_cost_ati' => __( 'Shipping ATI', 'wps_export' ),
-				'order_discount_amount' => __( 'Order discount', 'wps_export' ),
-				'order_grand_total' => __( 'Order ATI', 'wps_export' )
-				);
+			'order_type' => __( 'Order type', 'wps_export' ),
+			'order_invoice_ref' => __( 'Identifier', 'wps_export' ),
+			'name' => __( 'Name', 'wps_export' ),
+			'first_name' => __( 'First name', 'wps_export' ),
+			'email' => __( 'Mail', 'wps_export' ),
+			'tel' => __( 'Phone', 'wps_export' ),
+			'date_order' => __( 'Order date', 'wps_export' ),
+			'order_total_et' => __( 'Products ET', 'wps_export' ),
+			'order_shipping_cost_et' => __( 'Shipping ET', 'wps_export' ),
+			'order_shipping_cost_ati' => __( 'Shipping ATI', 'wps_export' ),
+			'order_discount_amount' => __( 'Order discount', 'wps_export' ),
+			'order_grand_total' => __( 'Order ATI', 'wps_export' ),
+		);
 		$orders = get_posts( array(
 			'post_type' => WPSHOP_NEWTYPE_IDENTIFIER_ORDER,
-			'posts_per_page' => -1
+			'posts_per_page' => -1,
 		) );
-		if ( !empty( $orders ) ) {
-			foreach( $orders as $order ) {
-				if( !empty($dt1) && strtotime($dt1) <= strtotime($order->post_date) && strtotime($order->post_date) <= strtotime("+1 day", strtotime($dt2)) ) {
-					$user = get_userdata($order->post_author);
+		if ( ! empty( $orders ) ) {
+			foreach ( $orders as $order ) {
+				if ( ! empty( $dt1 ) && strtotime( $dt1 ) <= strtotime( $order->post_date ) && strtotime( $order->post_date ) <= strtotime( '+1 day', strtotime( $dt2 ) ) ) {
+					$user = get_userdata( $order->post_author );
 					$tmp_array = array();
-					$order_postmeta = get_post_meta( $order->ID, '_order_postmeta', true);
+					$order_postmeta = get_post_meta( $order->ID, '_order_postmeta', true );
 					$tmp_array['order_type'] = ( !empty($order_postmeta['order_invoice_ref']) ) ? __( 'Invoice', 'wps_export' ) : ( ( !empty($order_postmeta['order_key']) ) ? __( 'Order', 'wps_export' ) : __( 'Quotation', 'wps_export' ) );
 					$tmp_array['order_invoice_ref'] = ( !empty($order_postmeta['order_invoice_ref']) ) ? $order_postmeta['order_invoice_ref'] : ( ( !empty($order_postmeta['order_key']) ) ? $order_postmeta['order_key'] : $order_postmeta['order_temporary_key'] );
 					$tmp_array['name'] = ( !empty($user->ID) ) ? get_user_meta( $user->ID, 'last_name', true ) : '';
@@ -164,6 +164,7 @@ class wps_export_mdl {
 			}
 		}
 		$commands_array = apply_filters( 'wps_order_export_filter', $commands_array, $orders, $dt1, $dt2 );
+
 		return $commands_array;
 	}
 

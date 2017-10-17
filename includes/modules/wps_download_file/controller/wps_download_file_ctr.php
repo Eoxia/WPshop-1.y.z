@@ -13,6 +13,15 @@ class wps_download_file_ctr {
 	public static function get_product_download_link( $oid, $item ) {
 		global $wpdb;
 
+		// Get current order customer and associated download links.
+		$cid = (int) get_post_meta( $oid, '_wpshop_order_customer_id', true );
+		$cid = ! empty( $cid ) ? $cid : get_current_user_id();
+		$download_codes = get_user_meta( $cid, '_order_download_codes_' . $oid, true );
+
+		if ( array_key_exists( $item['item_id'], $download_codes ) ) {
+			return admin_url( 'admin-post.php?action=wps_download_file&amp;oid=' . $oid . '&amp;download=' . $download_codes[ $item['item_id'] ]['download_code'] );
+		}
+
 		$parent_def = array();
 		$item_id = $item['item_id'];
 		$item_post_type = get_post_type( $item['item_id'] );
@@ -60,9 +69,6 @@ class wps_download_file_ctr {
 		}
 		/** In case there is a item identifier defined for download */
 		if ( null !== $item_id_for_download ) {
-			$cid = (int) get_post_meta( $oid, '_wpshop_order_customer_id', true );
-			$cid = ! empty( $cid ) ? $cid : get_current_user_id();
-			$download_codes = get_user_meta( $cid, '_order_download_codes_' . $oid, true );
 			/** Check if the current product exist into download code list, if not check if there is a composition between parent product and children product  */
 			if ( empty( $download_codes[ $item_id_for_download ] ) ) {
 				$item_id_component = explode( '__', $item_id_for_download );

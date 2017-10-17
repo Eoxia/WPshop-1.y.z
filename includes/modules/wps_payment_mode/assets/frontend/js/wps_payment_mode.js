@@ -13,7 +13,7 @@ jQuery( document ).ready( function() {
 		//Active the selected method
 		jQuery(this).parent().children( 'li' ).removeClass( 'wps-activ' );
 		jQuery(this).addClass( 'wps-activ' );
-		jQuery(this).find( 'input[type=radio]:first' ).prop('checked', true);
+		jQuery(this).find( 'input[type=radio]:first' ).click();
 	});
 
 

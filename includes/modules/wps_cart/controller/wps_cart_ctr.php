@@ -288,7 +288,7 @@ class wps_cart {
 	function load_cart_from_db() {
 		if(empty($_SESSION['cart']) && get_current_user_id() ) {
 			$cart = $this->get_persistent_cart();
-			$_SESSION['cart'] = $cart;
+			$_SESSION['cart'] = ! empty( $cart ) && ! empty( $cart['cart'] ) ? $cart['cart'] : ( ! empty( $cart ) ? $cart : array() );
 			$_SESSION['coupon'] = 0;
 		}
 	}
