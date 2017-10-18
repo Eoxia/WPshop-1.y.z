@@ -163,6 +163,7 @@ class WPS_Customers_Contacts {
 			'post_type'				=> WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS,
 			'posts_per_page'	=> -1,
 			'post_status'			=> 'any',
+			'exclude'         => array( $user_id ),
 			'meta_query'			=> array(
 				array(
 					'key'			=> $this->user_contact_list_meta_key,
