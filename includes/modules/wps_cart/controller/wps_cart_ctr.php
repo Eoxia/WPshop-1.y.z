@@ -902,7 +902,7 @@ class wps_cart {
 			}
 
 			ob_start();
-			require_once( wpshop_tools::get_template_part( WPS_CART_DIR, WPS_CART_TPL_DIR, 'frontend/cart', 'button', 'add-to-cart' ) );
+			require( wpshop_tools::get_template_part( WPS_CART_DIR, WPS_CART_TPL_DIR, 'frontend/cart', 'button', 'add-to-cart' ) );
 			$output = ob_get_clean();
 		}
 
