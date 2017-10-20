@@ -162,22 +162,7 @@ class wps_download_file_ctr {
 		if ( ! empty( $order_meta ) && ! empty( $order_meta['order_items'] ) && ! empty( $order_meta['order_status'] ) && 'completed' === $order_meta['order_status'] ) {
 			foreach ( $order_meta['order_items'] as $key_value => $item ) {
 				$link = self::get_product_download_link( $order_id, $item );
-				if ( false === $link ) {
-					\eoxia\log_class::exec(
-						get_class(),
-						get_class(),
-						sprintf(
-							__( 'Failure returned at order link generation. UserID : <b>%1$d</b>, ProductID : <b>%2$d</d>, UserMeta : <pre>%3$s</pre>', 'wpshop' ),
-							(int) get_current_user_id(),
-							(int) $item['item_id'],
-							serialize( get_user_meta( (int) $order_meta['customer_id'], '_order_download_codes_' . $order_id, true ) )
-						),
-						array(
-							'object_id' => $order_id,
-						),
-						0
-					);
-				} else {
+				if ( true === $link ) {
 					$user_data = get_userdata( $order_meta['customer_id'] );
 					$order_info = get_post_meta( $order_id, '_order_info', true );
 					$email = ( ! empty( $user_data ) && ! empty( $user_data->user_email ) ) ? $user_data->user_email : '';

@@ -17,7 +17,7 @@ wpshop( document ).ready(function() {
 	}).bind( 'change', function( event ) {
 		jQuery( '.page-numbers' ).address(function() {
 
-			return jQuery( this ).attr( 'href' ).replace( location.pathname, '' );
+			// return jQuery( this ).attr( 'href' ).replace( location.pathname, '' );
 		});
 
 		var id = jQuery.address.queryString();

@@ -33,7 +33,7 @@ class WPS_Customer_Metaboxes_Controller extends wps_customer_ctr {
 	 * @param WP_Post $customer Le client actuel / The current customer.
 	 */
 	function add_meta_box_customer( $customer ) {
-		add_meta_box( 'wps_customer_informations', __( 'Customer\'s account informations', 'wpshop' ), array( $this, 'wps_customer_account_informations' ), WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, 'normal', 'high' );
+		// add_meta_box( 'wps_customer_informations', __( 'Customer\'s account informations', 'wpshop' ), array( $this, 'wps_customer_account_informations' ), WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, 'normal', 'high' );
 		if ( 'auto-draft' !== $customer->post_status ) {
 			add_meta_box( 'wps_customer_orders', __( 'Customer\'s orders', 'wpshop' ) . '<a class="page-title-action" href="' . admin_url( 'post-new.php?post_type=' . WPSHOP_NEWTYPE_IDENTIFIER_ORDER ) . '&customer_id=' . $customer->ID . '">' . __( 'Add quotation', 'wpshop' ) . '</a>', array( $this, 'wps_customer_orders_list' ), WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, 'normal', 'low' );
 			add_meta_box( 'wps_customer_messages_list', __( 'Customer\'s send messages', 'wpshop' ), array( $this, 'wps_customer_messages_list' ), WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, 'side', 'low' );

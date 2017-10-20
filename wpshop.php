@@ -138,8 +138,3 @@ add_shortcode( 'wpshop_payment_result_unsuccessfull', array( 'wpshop_payment', '
 add_shortcode( 'wpshop_variations', array( 'wpshop_products', 'wpshop_variation' ) );
 add_shortcode( 'wpshop_entities', array( 'wpshop_entities', 'wpshop_entities_shortcode' ) );
 add_shortcode( 'wpshop_attributes', array( 'wpshop_attributes', 'wpshop_attributes_shortcode' ) );
-
-require_once 'core/external/wpeo_util/singleton.util.php';
-require_once 'core/external/wpeo_util/init.util.php';
-require_once 'core/external/wpeo_log/class/log.class.php';
-\eoxia\Init_util::g()->exec( realpath( plugin_dir_path( __FILE__ ) ) . '/', basename( __FILE__, '.php' ) );

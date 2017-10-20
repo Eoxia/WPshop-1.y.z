@@ -92,7 +92,6 @@ class eo_module_management {
 				$log_error[ 'object_id' ] = $module;
 			}
 
-			\eoxia\log_class::exec( 'wps_addon', 'wps_addon', $log_error, array(), 0 );
 		}
 
 		return $settings;
