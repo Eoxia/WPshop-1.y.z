@@ -490,6 +490,8 @@ ob_start();
 <table class="footer">
 <tr>
 <td>
+<strong>{WPSHOP_COMPANY_LEGAL_STATUT} {WPSHOP_COMPANY_NAME}</strong>, {WPSHOP_COMPANY_STREET} {WPSHOP_COMPANY_POSTCODE} {WPSHOP_COMPANY_CITY} {WPSHOP_COMPANY_COUNTRY}<br/>
+<?php _e('Phone', 'wpshop'); ?> : {WPSHOP_COMPANY_PHONE} / <?php _e('Fax', 'wpshop'); ?> : {WPSHOP_COMPANY_FAX} / <?php _e('Email', 'wpshop'); ?> : {WPSHOP_COMPANY_EMAIL} / <?php _e('Website', 'wpshop'); ?> : {WPSHOP_COMPANY_WEBSITE}<br/>
 {WPSHOP_COMPANY_LEGAL_STATUT} {WPSHOP_COMPANY_CAPITAL} {WPSHOP_COMPANY_SIRET}<br/>{WPSHOP_COMPANY_TVA_INTRA} {WPSHOP_COMPANY_SIREN} {WPSHOP_COMPANY_RCS}
 </td>
 </tr>
