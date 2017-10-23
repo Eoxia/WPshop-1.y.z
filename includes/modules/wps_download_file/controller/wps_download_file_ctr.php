@@ -18,7 +18,7 @@ class wps_download_file_ctr {
 		$cid = ! empty( $cid ) ? $cid : get_current_user_id();
 		$download_codes = get_user_meta( $cid, '_order_download_codes_' . $oid, true );
 
-		if ( array_key_exists( $item['item_id'], $download_codes ) ) {
+		if ( is_array( $download_codes ) && ! empty( $download_codes ) && array_key_exists( $item['item_id'], $download_codes ) ) {
 			return admin_url( 'admin-post.php?action=wps_download_file&amp;oid=' . $oid . '&amp;download=' . $download_codes[ $item['item_id'] ]['download_code'] );
 		}
 
