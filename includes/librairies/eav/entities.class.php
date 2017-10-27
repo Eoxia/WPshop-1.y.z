@@ -202,10 +202,11 @@ class wpshop_entities {
 		/*
 		 * Retrieve existing entities
 		 */
-		$entities = query_posts(array(
+		$query_args = array(
 			'post_type' 	=> WPSHOP_NEWTYPE_IDENTIFIER_ENTITIES,
-			'post_status'	=> 'publish'
-		));
+			'post_status'	=> 'publish',
+		);
+		$entities = get_posts( $query_args );
 
 		/*
 		 * Read the entity list for custom type declaration

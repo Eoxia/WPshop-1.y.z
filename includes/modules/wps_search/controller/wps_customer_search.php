@@ -1,23 +1,47 @@
-<?php if ( !defined( 'ABSPATH' ) ) exit;
+<?php
+/**
+ * Fichier de gestion de la recherche client.
+ *
+ * @package WPShop
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * Classe de filtrage de la recherche pour les clients.
+ */
 class wpshop_customer_search {
 
+	/**
+	 * [__construct description]
+	 */
 	function __construct() {
-		if  ( is_admin() ) {
-			add_filter( 'posts_where', array(&$this, 'wpshop_search_where_in_customer') );
+		if ( is_admin() ) {
+			add_filter( 'posts_where', array( $this, 'wpshop_search_where_in_customer' ) );
 		}
 	}
 
+	/**
+	 * Filtre la requete permettant la recherche des clients dans WPShop
+	 *
+	 * @param  string $where La requete actuelle pour la recherche.
+	 *
+	 * @return string        La requete modifiée pour rechercher les clients.
+	 */
 	public function wpshop_search_where_in_customer( $where ) {
-		$post_type = !empty( $_GET['post_type'] ) ? sanitize_text_field( $_GET['post_type'] ) : '';
-		$s = !empty( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '';
-		$entity_filter = !empty( $_GET['filter'] ) ? sanitize_text_field( $_GET['filter'] ) : '';
 
-		if( is_admin() && ( !empty($post_type) && ( $post_type == WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ) ) && ( !empty( $s ) || !empty( $entity_filter ) ) ) {
+		$post_type = ! empty( $_GET['post_type'] ) ? sanitize_text_field( $_GET['post_type'] ) : '';
+		$s = ! empty( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '';
+		$entity_filter = ! empty( $_GET['filter'] ) ? sanitize_text_field( $_GET['filter'] ) : '';
+
+		if ( is_admin() && ( ! empty( $post_type ) && ( WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS === $post_type ) ) && ( ! empty( $s ) || ! empty( $entity_filter ) ) ) {
 			global $wpdb;
 
 			$where = "	AND {$wpdb->posts}.post_type = '" . WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS . "'";
 
-			if( !empty( $entity_filter ) ) {
+			if ( ! empty( $entity_filter ) ) {
 				switch ( $entity_filter ) {
 					case 'orders':
 						$operator = 'IN';
@@ -35,7 +59,7 @@ class wpshop_customer_search {
 								)";
 			}
 
-			if( !empty( $s ) ) {
+			if ( ! empty( $s ) ) {
 				$s_soundex = soundex( $s );
 				$s = strtoupper( $s );
 				$where .= "	AND ( 	{$wpdb->posts}.ID = '{$s}'
@@ -85,7 +109,6 @@ class wpshop_customer_search {
 									)
 								)";
 			}
-
 		}
 
 		return $where;
@@ -93,6 +116,6 @@ class wpshop_customer_search {
 
 }
 
-if ( class_exists("wpshop_customer_search") ) {
+if ( class_exists( 'wpshop_customer_search' ) ) {
 	$wpshop_customer_search = new wpshop_customer_search();
 }
