@@ -206,20 +206,22 @@ class wps_orders_in_back_office {
 			$billing_address_option = get_option( 'wpshop_billing_address' );
 			$billing_address_option = ( ! empty( $billing_address_option ) && ! empty( $billing_address_option['choice'] ) ) ? $billing_address_option['choice'] : '';
 
-			// Billing datas
-			$order_informations['billing'] = array( 'id' => $billing_address_option,
+			// Billing datas.
+			$order_informations['billing'] = array(
+				'id' => $billing_address_option,
 				'address_id' => $billing_adress_id,
-				'address' => get_post_meta( $billing_adress_id, '_wpshop_address_metadata', true )
+				'address' => get_post_meta( $billing_adress_id, '_wpshop_address_metadata', true ),
 			);
-			// Shipping datas
+			// Shipping datas.
 			$shipping_adress_id = ( ! empty( $_REQUEST['wps_order_selected_address'] ) && ! empty( $_REQUEST['wps_order_selected_address']['shipping'] ) ) ? (int) $_REQUEST['wps_order_selected_address']['shipping'] : 0;
 
-			if( ! empty( $shipping_adress_id ) ) {
+			if ( ! empty( $shipping_adress_id ) ) {
 				$shipping_address_option = get_option( 'wpshop_shipping_address_choice' );
-				$shipping_address_option = ( ! empty($shipping_address_option) && ! empty($shipping_address_option['choice']) ) ? $shipping_address_option['choice'] : '';
-				$order_informations['shipping'] = array( 'id' => $shipping_address_option,
+				$shipping_address_option = ( ! empty( $shipping_address_option ) && ! empty( $shipping_address_option['choice'] ) ) ? $shipping_address_option['choice'] : '';
+				$order_informations['shipping'] = array(
+					'id' => $shipping_address_option,
 					'address_id' => $shipping_adress_id,
-					'address' => get_post_meta( $shipping_adress_id, '_wpshop_address_metadata', true )
+					'address' => get_post_meta( $shipping_adress_id, '_wpshop_address_metadata', true ),
 				);
 			}
 			update_post_meta( $post_id, '_order_info', $order_informations );
