@@ -55,6 +55,10 @@ class wps_customer_ctr {
 		add_action( 'wp_ajax_wps_customer_search', array( $this, 'ajax_search_customer' ) );
 
 		add_action( 'set_current_user', array( $this, 'hook_login_for_setting_customer_id' ) );
+
+		add_action( 'wps_after_check_order_payment_total_amount', array( $this, 'compil_customer_due_amount_after_payment_creation' ) );
+		add_action( 'manage_posts_extra_tablenav', array( $this, 'add_customer_due_amount_compil_button' ) );
+		add_action( 'wp_ajax_wps-customer-due-amount-compil', array( $this, 'ajax_callback_wps_customer_due_amount_compil' ) );
 	}
 
 	/**
@@ -476,7 +480,8 @@ class wps_customer_ctr {
 		// $current_header['customer_name'] = '<span class="wps-customer-last_name" >' . __('Last-name', 'wpshop') . '</span><span class="wps-customer-first_name" >' . __('First-name', 'wpshop') . '</span>';
 		// $current_header['customer_email'] = __('E-mail', 'wpshop');
 		$current_header['customer-orders'] = __( 'Customer last order', 'wpshop' );
-		$current_header['customer-contacts'] = __( 'Contacts', 'wpshop' );
+		$current_header['customer-due-amount'] = __( 'Due amount', 'wpshop' );
+		// $current_header['customer-contacts'] = __( 'Contacts', 'wpshop' );
 		$current_header['customer_date_subscription'] = __( 'Subscription', 'wpshop' );
 		// $current_header['customer_date_lastlogin'] = __( 'Last login date', 'wpshop' );
 
@@ -505,6 +510,16 @@ class wps_customer_ctr {
 				$use_template = false;
 			break;
 
+			case 'customer-due-amount' :
+				$customer_due_amount = get_post_meta( $post_id, '_wps_customer_due_amount', true );
+				if ( ! empty( $customer_due_amount ) ) {
+					echo esc_html( wpshop_tools::formate_number( $customer_due_amount ) . '' . wpshop_tools::wpshop_get_currency() );
+				} else {
+					esc_html_e( '-', 'wpshop' );
+				}
+				$use_template = false;
+			break;
+
 			case 'customer_date_subscription' :
 				echo mysql2date( get_option( 'date_format' ), $customer_post->post_date, true );
 				$use_template = false;
@@ -515,7 +530,7 @@ class wps_customer_ctr {
 				if ( ! empty( $last_login ) ) :
 					echo mysql2date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $last_login, true );
 				else :
-					_e( 'Never logged in', 'wpshop' );
+					esc_html_e( 'Never logged in', 'wpshop' );
 				endif;
 				$use_template = false;
 			break;
@@ -685,6 +700,77 @@ class wps_customer_ctr {
 		}
 
 		return $return;
+	}
+
+
+	/**
+	 * Compil customer due amount for displaying
+	 *
+	 * @param  integer $customer_id Customer identifier we want to compil due amount for.
+	 *
+	 * @return float                Customer's due amount.
+	 */
+	public function wps_compil_customer_due_amount( $customer_id ) {
+		$due_amount = 0;
+
+		$customer_orders = new WP_Query( array(
+			'post_type'      => WPSHOP_NEWTYPE_IDENTIFIER_ORDER,
+			'posts_per_page' => -1,
+			'post_parent'    => $customer_id,
+			'post_status'    => 'any',
+		) );
+		if ( $customer_orders->have_posts() ) {
+			foreach ( $customer_orders->posts as $customer_order ) {
+				$order_meta = get_post_meta( $customer_order->ID, '_order_postmeta', true );
+				$due_amount += $order_meta['order_amount_to_pay_now'];
+			}
+		}
+
+		update_post_meta( $customer_id, '_wps_customer_due_amount', $due_amount );
+
+		return $due_amount;
+	}
+
+	/**
+	 * Callback pour le calcul du montant du par un client après ajout d'un nouveau paiement sur la commande.
+	 *
+	 * @param  integer $order_id L'identifiant de la commande pour laquell on ajout un paiement.
+	 */
+	public function compil_customer_due_amount_after_payment_creation( $order_id ) {
+		$order_def = get_post( $order_id );
+		$customer_id = $order_def->post_parent;
+
+		$due_amount = $this->wps_compil_customer_due_amount( $customer_id );
+	}
+
+	/**
+	 * Lance le calcul de la somme due par client pour toutes les commandes partiellement payée
+	 */
+	public function launch_customer_due_amount_compilation() {
+		global $wpdb;
+
+		$query = $wpdb->prepare( "SELECT P.post_parent as CUSTOMER_ID FROM {$wpdb->postmeta} AS PM INNER JOIN {$wpdb->posts} AS P ON P.ID = PM.post_id WHERE PM.meta_key = %s AND PM.meta_value LIKE %s", '_order_postmeta', '%s:12:"order_status";s:14:"partially_paid";%' );
+		$customer_having_orders_partially_paid = $wpdb->get_results( $query ); // WPCS: unprepared sql ok.
+
+		foreach ( $customer_having_orders_partially_paid as $customer ) {
+			$this->wps_compil_customer_due_amount( $customer->CUSTOMER_ID );
+		}
+	}
+
+	/**
+	 * Ajoute un boutton permettante de recompiler les montants du de tous le clients de la boutique. Ce boutton est disponible dans l'interfave des clients.
+	 */
+	function add_customer_due_amount_compil_button( $where ) {
+		$post_type = ! empty( $_GET['post_type'] ) ? sanitize_text_field( $_GET['post_type'] ) : '';
+		if ( ( 'top' === $where ) && ! empty( $post_type ) && post_type_exists( $post_type ) && ( WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS === $post_type ) ) {
+			require( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, WPS_ACCOUNT_TPL, 'backend/customer_listtable', 'customer_due_amount_compil_button' ) );
+		}
+	}
+
+	public function ajax_callback_wps_customer_due_amount_compil() {
+		$this->launch_customer_due_amount_compilation();
+
+		wp_send_json_success();
 	}
 
 }

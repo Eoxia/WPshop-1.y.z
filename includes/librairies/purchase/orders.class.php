@@ -458,9 +458,14 @@ class wpshop_orders {
 						echo $buttons;
 					break;
 
-				case "order_total":
-					$currency = !empty($order_postmeta['order_currency']) ? $order_postmeta['order_currency'] : get_option('wpshop_shop_default_currency');
-					echo isset( $order_postmeta['order_grand_total'] ) ? number_format( $order_postmeta['order_grand_total'], 2, '.', '' ).' '.  wpshop_tools::wpshop_get_sigle($currency) : 'NaN';
+				case 'order_total':
+					echo esc_html( isset( $order_postmeta['order_grand_total'] ) ? number_format( $order_postmeta['order_grand_total'], 2, '.', '' ) . ' ' . wpshop_tools::wpshop_get_currency() : '-' );
+					// Dans le cas ou la commande n'est pas complétement payée on affiche le montant restant.
+					if ( 'partially_paid' === $order_postmeta['order_status'] && ! empty( $order_postmeta['order_amount_to_pay_now'] ) ) {
+						echo wp_kses( '<br/>' . sprintf( __( 'Due amount %s', 'wpshop' ), number_format( $order_postmeta['order_amount_to_pay_now'], 2, '.', '' ) . ' ' . wpshop_tools::wpshop_get_currency() ), array(
+							'br' => array(),
+						) );
+					}
 				break;
 
 				/*case "order_actions":

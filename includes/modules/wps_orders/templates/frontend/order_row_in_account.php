@@ -9,7 +9,15 @@
 	<?php $currency = wpshop_tools::wpshop_get_currency(false);?>
 	<div class="wps-table-cell"><?php echo !empty($order_meta['order_date']) ? mysql2date(get_option('date_format'), $order_meta['order_date'], true) . '<br>' . mysql2date(get_option('time_format'), $order_meta['order_date'], true) : ''; ?></div>
 	<div class="wps-table-cell"><?php echo !empty($order_meta['order_key']) ? $order_meta['order_key'] : (!empty($order_meta['order_temporary_key']) ? $order_meta['order_temporary_key'] : ''); ?></div>
-	<div class="wps-table-cell"><?php echo !empty($order_meta['order_grand_total']) ? wpshop_tools::formate_number($order_meta['order_grand_total']) . ' ' . $currency : ''; ?></div>
+	<div class="wps-table-cell"><?php
+		echo !empty($order_meta['order_grand_total']) ? wpshop_tools::formate_number($order_meta['order_grand_total']) . ' ' . $currency : '';
+		// Dans le cas ou la commande n'est pas complétement payée on affiche le montant restant.
+		if ( 'partially_paid' === $order_meta['order_status'] && ! empty( $order_meta['order_amount_to_pay_now'] ) ) {
+			echo wp_kses( '<br/>' . sprintf( __( 'Due amount %s', 'wpshop' ), number_format( $order_meta['order_amount_to_pay_now'], 2, '.', '' ) . ' ' . wpshop_tools::wpshop_get_currency() ), array(
+				'br' => array(),
+			) );
+		}
+	?></div>
 	<div class="wps-table-cell">
 		<span class="wps-label-<?php echo $color_label[$order_meta['order_status']]; ?>"><?php _e($order_status[$order_meta['order_status']], 'wpshop');?></span>
 	</div>

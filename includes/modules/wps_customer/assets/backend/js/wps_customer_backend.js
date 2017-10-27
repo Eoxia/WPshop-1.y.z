@@ -1,5 +1,17 @@
 jQuery( document ).ready( function() {
 
+	jQuery( '#wps-customer-due-amount-compil' ).click( function( event ) {
+		var data = {
+			action: 'wps-customer-due-amount-compil'
+		};
+		event.preventDefault();
+		jQuery.post( ajaxurl, data, function( response ) {
+			if ( response.success ) {
+				window.location.reload();
+			}
+		});
+	} );
+
 	jQuery( '#wpshop_order_customer_information_box h2 span .page-title-action.thickbox' ).click( function( event ) {
 		event.preventDefault();
 

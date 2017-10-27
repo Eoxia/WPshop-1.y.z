@@ -8,6 +8,9 @@
 #customer-identifier {
 	width: 90px;
 }
+#customer-name {
+	width: 40%;
+}
 #customer_date_subscription, #customer_date_lastlogin{
 	width: 115px;
 }
@@ -21,7 +24,7 @@
 	width: 35%;
 }
 #customer-orders {
-	width: 35%;
+	width: 24%;
 }
 .column-customer_orders ul {
 	margin: 0px !important;
@@ -43,6 +46,13 @@
 	margin: 0px !important;
 	font-style: italic;
 	text-decoration: underline;
+}
+.wps-customer-name-container {
+	margin: 5px 0 0 20px;
+}
+.wps-customer-name-container div i.dashicons-businessman {
+	font-size: 14px;
+	line-height: 24px
 }
 .wps-customer-name-container:after {
 	content: "";
