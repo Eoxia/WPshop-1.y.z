@@ -2418,6 +2418,13 @@ WHERE ATTR_DET.attribute_id IN (" . $attribute_ids . ")"
 				return true;
 			break;
 
+			case 70:
+				$wps_customer = new wps_customer_ctr();
+				$wps_customer->launch_customer_due_amount_compilation();
+
+				return true;
+			break;
+
 			/** Always add specific case before this bloc */
 			case 'dev':
 				// wp_cache_flush();
