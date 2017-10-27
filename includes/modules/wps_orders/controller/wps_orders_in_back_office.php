@@ -229,26 +229,23 @@ class wps_orders_in_back_office {
 		$wpshop_admin_order_payment_received['method'] = ! empty( $wpshop_admin_order_payment_received['method'] ) ? sanitize_text_field( $wpshop_admin_order_payment_received['method'] ) : '';
 		$wpshop_admin_order_payment_received['payment_reference'] = ! empty( $wpshop_admin_order_payment_received['payment_reference'] ) ? sanitize_text_field( $wpshop_admin_order_payment_received['payment_reference'] ) : '';
 		$wpshop_admin_order_payment_received['date'] = ! empty( $wpshop_admin_order_payment_received['date'] ) ? sanitize_text_field( $wpshop_admin_order_payment_received['date'] ) : current_time( 'mysql', 0 );
-		$wpshop_admin_order_payment_received['received_amount'] = ! empty( $wpshop_admin_order_payment_received['received_amount'] ) ? sanitize_text_field( $wpshop_admin_order_payment_received['received_amount'] ) : '';
+		$wpshop_admin_order_payment_received['received_amount'] = ! empty( $wpshop_admin_order_payment_received['received_amount'] ) ? str_replace( ',', '.', $wpshop_admin_order_payment_received['received_amount'] ) : 0;
 		$action_triggered_from = ! empty( $_REQUEST['action_triggered_from'] ) ? sanitize_text_field( $_REQUEST['action_triggered_from'] ) : '';
 		$wshop_admin_order_payment_reference = ! empty( $_REQUEST['wpshop_admin_order_payment_reference'] ) ? sanitize_text_field( $_REQUEST['wpshop_admin_order_payment_reference'] ) : '';
 
 		// Ajout des informations de paiements / Add payment informations.
 		if ( ! empty( $wpshop_admin_order_payment_received ) && ! empty( $wpshop_admin_order_payment_received['method'] )
 				&& ! empty( $wpshop_admin_order_payment_received['date'] ) && ! empty( $wpshop_admin_order_payment_received['received_amount'] ) &&
-				( ( 'add_payment' == $action_triggered_from ) || ! empty( $wshop_admin_order_payment_reference ) ) ) {
-
-			$received_payment_amount = $wpshop_admin_order_payment_received['received_amount'];
-
+				( ( 'add_payment' === $action_triggered_from ) || ! empty( $wshop_admin_order_payment_reference ) ) ) {
 			// Enregistrement des informations de paiement dans la commande / Save order payment information.
 			$params_array = array(
 				'method' 						=> $wpshop_admin_order_payment_received['method'],
-				'waited_amount' 		=> $received_payment_amount,
+				'waited_amount' 		=> $wpshop_admin_order_payment_received['received_amount'],
 				'status' 						=> 'payment_received',
 				'author' 						=> $user_id,
 				'payment_reference' => $wpshop_admin_order_payment_received['payment_reference'],
 				'date' 							=> $wpshop_admin_order_payment_received['date'],
-				'received_amount' 	=> $received_payment_amount,
+				'received_amount' 	=> $wpshop_admin_order_payment_received['received_amount'],
 			);
 			$order_meta = wpshop_payment::check_order_payment_total_amount( $post_id, $params_array, 'completed', $order_meta, false );
 		}

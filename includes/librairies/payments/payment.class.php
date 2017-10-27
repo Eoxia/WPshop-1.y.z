@@ -551,7 +551,7 @@ class wpshop_payment {
 			$order_grand_total = $order_meta['order_grand_total'];
 			$total_received = ( ( !empty($params_array['status']) && ( $params_array['status'] == 'payment_received') && ($bank_response == 'completed') && !empty($params_array['received_amount']) ) ? $params_array['received_amount'] : 0 );
 			foreach ( $order_meta['order_payment']['received'] as $received ) {
-				$total_received += ( ( !empty($received['status']) && ( $received['status'] == 'payment_received') && ($bank_response == 'completed') && !empty($received['received_amount']) ) ? $received['received_amount'] : 0 );
+				$total_received += ( ( !empty($received['status']) && ( $received['status'] == 'payment_received') && ($bank_response == 'completed') && !empty($received['received_amount']) ) ? str_replace( ',', '.', $received['received_amount'] ) : 0 );
 			}
 			$order_meta['order_amount_to_pay_now'] = $order_grand_total - $total_received;
 			$order_meta['order_payment']['received'][$key] = self::add_new_payment_to_order( $order_id, $order_meta, $key, $params_array, $bank_response );

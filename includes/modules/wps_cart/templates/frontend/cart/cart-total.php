@@ -169,7 +169,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<?php $allready_received_amount = 0; ?>
 				<?php foreach ( $cart_content[ 'order_payment' ][ 'received' ] as $payment ) : ?>
 					<?php if ( ! empty( $payment[ 'status' ] ) && 'payment_received' == $payment[ 'status' ] ) : ?>
-						<?php $allready_received_amount += $payment[ 'received_amount' ]; ?>
+						<?php $allready_received_amount += str_replace( ',', '.', $payment['received_amount'] ); ?>
 					<?php endif; ?>
 				<?php endforeach; ?>
 				<p><?php _e( 'Already paid', 'wpshop'); ?><span class="wps-alignRight"><strong><?php echo wpshop_tools::formate_number( $allready_received_amount ); ?></strong> <?php echo $currency; ?></span></p>
