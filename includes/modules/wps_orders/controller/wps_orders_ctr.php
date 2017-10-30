@@ -328,7 +328,7 @@ class wps_orders_ctr {
 			$order = get_post( $order_id );
 			$order_infos = get_post_meta( $order_id, '_order_postmeta', true );
 			$order_key = ( ! empty( $order_infos['order_key'] ) ) ? $order_infos['order_key'] : '-';
-			if ( ! empty( $order ) && ! empty( $user_id ) && $order->post_type == WPSHOP_NEWTYPE_IDENTIFIER_ORDER && $order->post_author == $user_id ) {
+			if ( ! empty( $order ) && ! empty( $user_id ) && WPSHOP_NEWTYPE_IDENTIFIER_ORDER === $order->post_type && $order->post_author === $user_id ) {
 				$result = do_shortcode( '[wps_cart cart_type="summary" oid="' . $order_id . '"]' );
 				$status = true;
 			}

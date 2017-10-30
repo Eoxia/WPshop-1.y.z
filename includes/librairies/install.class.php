@@ -44,89 +44,88 @@ class wpshop_install
     /**
      *    Create the default pages
      */
-    public static function wpshop_insert_default_pages($pages_type = '')
-    {
-        global $wpdb, $wp_rewrite;
+    public static function wpshop_insert_default_pages( $pages_type = '' ) {
+      global $wpdb, $wp_rewrite;
 
-        /**    if we will create any new pages we need to flush page cache */
-        $page_creation = false;
-        $created_pages = array();
+      /**    if we will create any new pages we need to flush page cache */
+      $page_creation = false;
+      $created_pages = array();
 
-        /** Default data array for add page */
-        $page_default_args = array(
-            'post_type' => 'page',
-            'comment_status' => 'closed',
-            'ping_status' => 'closed',
-            'post_status' => 'publish',
-            'post_author' => get_current_user_id(),
-        );
+      /** Default data array for add page */
+      $page_default_args = array(
+        'post_type' => 'page',
+        'comment_status' => 'closed',
+        'ping_status' => 'closed',
+        'post_status' => 'publish',
+        'post_author' => get_current_user_id(),
+      );
 
-        /**    Get defined shop type    */
-        $wpshop_shop_type = !empty($pages_type) ? $pages_type : get_option('wpshop_shop_type', WPSHOP_DEFAULT_SHOP_TYPE);
+      /**    Get defined shop type    */
+      $wpshop_shop_type = !empty($pages_type) ? $pages_type : get_option('wpshop_shop_type', WPSHOP_DEFAULT_SHOP_TYPE);
 
-        /**    Get the default datas for installation - Pages    */
-        $xml_default_pages = file_get_contents(WP_PLUGIN_DIR . '/' . WPSHOP_PLUGIN_DIR . '/assets/datas/default_pages.xml');
-        $defined_default_pages = new SimpleXMLElement($xml_default_pages);
-        foreach ($defined_default_pages->xpath('//pages/page') as $page) {
-            if (($wpshop_shop_type == $page->attributes()->shop_type) || ('sale' == $wpshop_shop_type)) {
-                $page_id = null;
+      /**    Get the default datas for installation - Pages    */
+      $xml_default_pages = file_get_contents(WP_PLUGIN_DIR . '/' . WPSHOP_PLUGIN_DIR . '/assets/datas/default_pages.xml');
+      $defined_default_pages = new SimpleXMLElement($xml_default_pages);
+      foreach ($defined_default_pages->xpath('//pages/page') as $page) {
+        if (($wpshop_shop_type == $page->attributes()->shop_type) || ('sale' == $wpshop_shop_type)) {
+          $page_id = null;
 
-                /**    Do a specific check for cart page, for old wpshop installation    */
-                if ('wpshop_cart_page_id' == (string) $page->attributes()->code) {
-                    $query = $wpdb->prepare("SELECT ID FROM " . $wpdb->posts . " WHERE post_content LIKE %s	AND post_type != %s", '%[wpshop_basket]%', 'revision');
-                    $page_id = $wpdb->get_var($query);
+          /**    Do a specific check for cart page, for old wpshop installation    */
+          if ('wpshop_cart_page_id' == (string) $page->attributes()->code) {
+            $query = $wpdb->prepare("SELECT ID FROM " . $wpdb->posts . " WHERE post_content LIKE %s	AND post_type != %s", '%[wpshop_basket]%', 'revision');
+            $page_id = $wpdb->get_var($query);
 
-                    wp_update_post(array(
-                        'ID' => $page_id,
-                        'post_content' => (string) $page->content,
-                    ));
-                }
+            wp_update_post(array(
+              'ID' => $page_id,
+              'post_content' => (string) $page->content,
+            ));
+          }
 
-                /**    Check if a page exists with the current content readed form xml file    */
-                if (empty($page_id)) {
-                    $query = $wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE post_content LIKE %s AND post_type != %s", '%' . (string) $page->content . '%', 'revision');
-                    $page_id = $wpdb->get_var($query);
-                }
+          /**    Check if a page exists with the current content readed form xml file    */
+          if (empty($page_id)) {
+            $query = $wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE post_content LIKE %s AND post_type != %s", '%' . (string) $page->content . '%', 'revision');
+            $page_id = $wpdb->get_var($query);
+          }
 
-                /**    If the page does not exists create it    */
-                if (empty($page_id)) {
-                    $default_page_args = wp_parse_args(array(
-                        'post_title' => __((string) $page->title, 'wpshop'),
-                        'post_name' => __((string) $page->slug, 'wpshop'),
-                        'post_content' => __((string) $page->content, 'wpshop'),
-                        'menu_order' => (string) $page->attributes()->position,
-                    ), $page_default_args);
+          /**    If the page does not exists create it    */
+          if (empty($page_id)) {
+            $default_page_args = wp_parse_args(array(
+              'post_title' => __((string) $page->title, 'wpshop'),
+              'post_name' => __((string) $page->slug, 'wpshop'),
+              'post_content' => __((string) $page->content, 'wpshop'),
+              'menu_order' => (string) $page->attributes()->position,
+            ), $page_default_args);
 
-                    $page_id = wp_insert_post($default_page_args);
-                    $created_pages[] = (string) $page->attributes()->code;
-                }
+            $page_id = wp_insert_post($default_page_args);
+            $created_pages[] = (string) $page->attributes()->code;
+          }
 
-                /**    If the page is created or already exists associated the page to the good service    */
-                if (!empty($page_id)) {
-                    add_option((string) $page->attributes()->code, $page_id);
+          /**    If the page is created or already exists associated the page to the good service    */
+          if (!empty($page_id)) {
+            add_option((string) $page->attributes()->code, $page_id);
 
-                    $page_creation = true;
-                }
-
-            }
-        }
-
-        /**    Check if page have been created in order to do specific action    */
-        if (!empty($created_pages)) {
-            /**    If cart page and checkout page have just been created, change cart page id into checkout page id    */
-            if (in_array('wpshop_cart_page_id', $created_pages) && in_array('wpshop_checkout_page_id', $created_pages)) {
-                update_option('wpshop_cart_page_id', get_option('wpshop_checkout_page_id'));
-            }
+            $page_creation = true;
+          }
 
         }
+      }
 
-        wp_cache_flush();
-        /** If new page => empty cache */
-        if ($page_creation) {
-            wp_cache_delete('all_page_ids', 'pages');
-            //    $wp_rewrite->flush_rules();
-        }
-    }
+      /**    Check if page have been created in order to do specific action    */
+      if (!empty($created_pages)) {
+          /**    If cart page and checkout page have just been created, change cart page id into checkout page id    */
+          if (in_array('wpshop_cart_page_id', $created_pages) && in_array('wpshop_checkout_page_id', $created_pages)) {
+              update_option('wpshop_cart_page_id', get_option('wpshop_checkout_page_id'));
+          }
+
+      }
+
+      wp_cache_flush();
+      /** If new page => empty cache */
+      if ($page_creation) {
+        wp_cache_delete('all_page_ids', 'pages');
+        //    $wp_rewrite->flush_rules();
+      }
+  	}
 
     /**
      * Insert sample datas when installing wpshop the first time if the admin choose
