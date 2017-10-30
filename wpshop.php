@@ -3,7 +3,7 @@
  * Plugin Name: WP-Shop
  * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/
  * Description: With this plugin you will be able to manage the products you want to sell and user would be able to buy this products
- * Version: 1.4.5.0
+ * Version: 1.5.0
  * Author: Eoxia
  * Author URI: http://eoxia.com/
  * Text Domain: wpshop
@@ -18,7 +18,7 @@
  * This file is the main file called by WordPress for our plugin use. It define the basic vars and include the different file needed to use the plugin
  *
  * @author Eoxia <dev@eoxia.com>
- * @version 1.4.5.0
+ * @version 1.5.0
  * @package wpshop
  */
 
@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**    Allows to refresh css and js file in final user browser    */
-DEFINE( 'WPSHOP_VERSION', '1.4.5.0' );
+DEFINE( 'WPSHOP_VERSION', '1.5.0' );
 
 /**    Allows to avoid problem with theme not supporting thumbnail for post    */
 add_theme_support( 'post-thumbnails' );

@@ -5,7 +5,7 @@ Donate link: http://www.wpshop.fr/
 Requires at least: 4.5
 Tested up to: 4.8.2
 Requires PHP: 5.6.3
-Stable tag: 1.4.5.0
+Stable tag: 1.5.0
 License: GPLv2 or later
 
 Simple and powerfull eCommerce plugin, with French Payment and Shipping systems : Paybox, Paypal, Atos, Cybermut, SystemPay, Paysite-cash, Colissimo
@@ -72,6 +72,18 @@ Il faut vérifier que le réglage des permaliens pour votre site est bien régl�
 
 
 == Changelog ==
+
+= Version 1.5.0 =
+
+Améliorations
+
+* 12190 - Report des informations de la société dans le pied de page des factures / Report company information in the footer of invoices
+* 12192 - Mise en place de la notion de dû client / Implementation of customer due amount notion
+
+Corrections
+
+* 12194 - Calcul du montant déjà réglé et a régler sur les commandes avec des "," à la place des points / Calculation of the amount already settled and to settle on the orders with "," instead of points
+* 12331 - Correction de l'export des commandes depuis le tableau de bord de la boutique / Fixed orders' export from the shop dashboard
 
 = Version 1.4.5.0 =
 
