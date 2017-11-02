@@ -9,12 +9,12 @@ jQuery( document ).ready( function() {
 
 	});
 
-	jQuery( document ).on( 'click' , '.wps-bloc-loader' , function() {
-		//Active the selected method
-		jQuery(this).parent().children( 'li' ).removeClass( 'wps-activ' );
-		jQuery(this).addClass( 'wps-activ' );
-		jQuery(this).find( 'input[type=radio]:first' ).click();
-	});
+	// jQuery( document ).on( 'click' , '.wps-bloc-loader' , function() {
+	// 	//Active the selected method
+	// 	jQuery(this).parent().children( 'li' ).removeClass( 'wps-activ' );
+	// 	jQuery(this).addClass( 'wps-activ' );
+	// 	jQuery(this).find( 'input[type=radio]:first' ).click();
+	// });
 
 
 });
