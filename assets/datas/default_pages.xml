@@ -33,7 +33,7 @@
 		</page>
 		<page code="wpshop_signup_page_id" position="569845" shop_type="presentation" >
 			<title>Signup</title>
-			<content>[wpshop_signup]</content>
+			<content>[wps_account_dashboard]</content>
 			<slug>signup</slug>
 			<description>Display the signout page</description>
 		</page>

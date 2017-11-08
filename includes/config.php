@@ -230,67 +230,7 @@ DEFINE( 'WPSHOP_DEFINED_SHOP_TYPE', $wpshop_shop_type );
 	DEFINE( 'WPSHOP_CREDIT_SLIP_REFERENCE_PREFIX', 'AV' );
 	DEFINE( 'WPSHOP_ORDER_REFERENCE_PREFIX', 'OR' );
 	DEFINE( 'WPSHOP_PREORDER_REFERENCE_PREFIX', 'D' );
-	/*  Define the different pages to create for basic usage    */
-	$default_pages = array();
-	$product_options = get_option( 'wpshop_catalog_product_option' );
-	$default_pages['presentation'][] = array(
-		'page_code' => 'wpshop_product_page_id',
-		'post_title' => __( 'Shop', 'wpshop' ),
-		'post_name' => ! empty( $product_options['wpshop_catalog_product_slug'] ) ? $product_options['wpshop_catalog_product_slug'] : 'catalog',
-		'post_content' => '[wpshop_products]',
-		'menu_order' => 569841,
-	);
-	$default_pages['presentation'][] = array(
-		'page_code' => 'wpshop_cart_page_id',
-		'post_title' => __( 'Cart', 'wpshop' ),
-		'post_name' => 'cart',
-		'post_content' => '[wpshop_cart]',
-		'menu_order' => 569842,
-	);
-	$default_pages['presentation'][] = array(
-		'page_code' => 'wpshop_checkout_page_id',
-		'post_title' => __( 'Checkout', 'wpshop' ),
-		'post_name' => 'checkout',
-		'post_content' => '[wpshop_checkout]',
-		'menu_order' => 569843,
-	);
-	$default_pages['presentation'][] = array(
-		'page_code' => 'wpshop_myaccount_page_id',
-		'post_title' => __( 'My account', 'wpshop' ),
-		'post_name' => 'myaccount',
-		'post_content' => '[wpshop_myaccount]',
-		'menu_order' => 569844,
-	);
-	$default_pages['presentation'][] = array(
-		'page_code' => 'wpshop_signup_page_id',
-		'post_title' => __( 'Signup', 'wpshop' ),
-		'post_name' => 'signup',
-		'post_content' => '[wpshop_signup]',
-		'menu_order' => 569845,
-	);
-	$default_pages['sale'][] = array(
-		'page_code' => 'wpshop_payment_return_page_id',
-		'post_title' => __( 'Payment return successfull', 'wpshop' ),
-		'post_name' => 'return',
-		'post_content' => '[wpshop_payment_result]',
-		'menu_order' => 569846,
-	);
-	$default_pages['sale'][] = array(
-		'page_code' => 'wpshop_payment_return_nok_page_id',
-		'post_title' => __( 'Payment return unsuccessfull', 'wpshop' ),
-		'post_name' => 'unsuccessfull_payment_return',
-		'post_content' => '[wpshop_payment_result_unsuccessfull]',
-		'menu_order' => 569848,
-	);
-	$default_pages['presentation'][] = array(
-		'page_code' => 'wpshop_terms_of_sale_page_id',
-		'post_title' => __( 'Terms of sale', 'wpshop' ),
-		'post_name' => 'terms-of-sale',
-		'post_content' => '[wpshop_terms_of_sale]',
-		'menu_order' => 569847,
-	);
 
-	DEFINE( 'WPSHOP_DEFAULT_PAGES', serialize( $default_pages ) );
 	/*  Define the different vars used for price calculation    */
 	$wpshop_shop_price_piloting = get_option( 'wpshop_shop_price_piloting' );
 	DEFINE( 'WPSHOP_PRODUCT_PRICE_PILOT', ( ! empty( $wpshop_shop_price_piloting ) ? $wpshop_shop_price_piloting : 'TTC') );
