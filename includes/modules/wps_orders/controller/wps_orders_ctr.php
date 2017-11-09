@@ -464,11 +464,12 @@ class wps_orders_ctr {
 	 */
 	public static function wps_token_order_customer( $order_id, $date = null ) {
 		$date = isset( $date ) ? $date : date( 'Ym' );
-		$order_metadata = get_post_meta( $order_id, '_order_postmeta', true );
-		if ( ! isset( $order_metadata['customer_id'] ) ) {
+		$customer_id = wp_get_post_parent_id( $order_id );
+		if ( false === $customer_id ) {
 			return false;
 		}
-		return sha1( site_url() . '_' . $order_id . '_' . $order_metadata['customer_id'] . '_' . $date );
+
+		return sha1( site_url() . '_' . $order_id . '_' . $customer_id . '_' . $date );
 	}
 
 	/**

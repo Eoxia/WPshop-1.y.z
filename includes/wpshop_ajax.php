@@ -2952,7 +2952,7 @@ add_action('wp_ajax_nopriv_wpshop_add_product_to_cart', 'ajax_wpshop_add_to_cart
 			$response = wpshop_orders::display_customer_pay_quotation( isset( $order_metadata['pay_quotation'] ), $order_id );
 			$status = true;
 		} else {
-			$response = __( 'An error was occured, no Order ID defined', 'wpshop' );
+			$response = __( 'An error occured, no Order ID defined', 'wpshop' );
 		}
 		echo json_encode( array( 'status' => $status, 'response' => $response) );
 		die();
