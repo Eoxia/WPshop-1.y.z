@@ -326,9 +326,11 @@ class wps_orders_ctr {
 		$result = '';
 		if ( ! empty( $order_id ) ) {
 			$order = get_post( $order_id );
-			$order_infos = get_post_meta( $order_id, '_order_postmeta', true );
-			$order_key = ( ! empty( $order_infos['order_key'] ) ) ? $order_infos['order_key'] : '-';
-			if ( ! empty( $order ) && ! empty( $user_id ) && ( WPSHOP_NEWTYPE_IDENTIFIER_ORDER === $order->post_type ) && (int) $order->post_author === $user_id ) {
+			$customer_id = $order->post_parent;
+			$customer_default_user_id = get_post_field( 'post_author', $customer_id );
+			if ( ! empty( $order ) && ! empty( $user_id ) && ( WPSHOP_NEWTYPE_IDENTIFIER_ORDER === $order->post_type ) && (int) $customer_default_user_id === $user_id ) {
+				$order_infos = get_post_meta( $order_id, '_order_postmeta', true );
+				$order_key = ( ! empty( $order_infos['order_key'] ) ) ? $order_infos['order_key'] : '-';
 				$result = do_shortcode( '[wps_cart cart_type="summary" oid="' . $order_id . '"]' );
 				$status = true;
 			}
