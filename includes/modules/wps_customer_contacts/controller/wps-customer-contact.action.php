@@ -112,7 +112,6 @@ class WPS_Customers_Contacts {
 	 *
 	 * @return [type]           [description]
 	 */
-
 	function get_customer_contact_list( $customer ) {
 		/** Define user list */
 		$users = array();
@@ -163,7 +162,7 @@ class WPS_Customers_Contacts {
 			'post_type'				=> WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS,
 			'posts_per_page'	=> -1,
 			'post_status'			=> 'any',
-			'exclude'         => array( $user_id ),
+			'author__not_in'  => array( $user_id ),
 			'meta_query'			=> array(
 				array(
 					'key'			=> $this->user_contact_list_meta_key,
