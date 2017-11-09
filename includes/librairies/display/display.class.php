@@ -721,8 +721,9 @@ class wpshop_display {
 	}
 
 	public static function wps_hide_admin_bar_for_customers() {
-		$wpshop_hide_admin_bar_option = get_option('wpshop_display_option');
-		if ( !empty($wpshop_hide_admin_bar_option) && !empty($wpshop_hide_admin_bar_option['wpshop_hide_admin_bar']) && ! current_user_can( 'manage_options' ) ) {
+		$wpshop_hide_admin_bar_option = get_option( 'wpshop_display_option' );
+		$current_user = get_userdata( get_current_user_id() );
+		if ( ! empty( $wpshop_hide_admin_bar_option ) && ! empty( $wpshop_hide_admin_bar_option['wpshop_hide_admin_bar'] ) && in_array( 'customer', $current_user->roles, true ) ) {
 			show_admin_bar( false );
 		}
 	}
