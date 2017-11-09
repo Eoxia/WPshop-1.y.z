@@ -491,12 +491,12 @@ class wps_orders_in_back_office {
 		$product_qty = ( ! empty($_POST['qty']) ) ? intval( $_POST['qty'] ) : 0;
 
 		if( ! empty($product_id) && ! empty($order_id) ) {
-			// Get Metadatas
+			// Get Metadatas.
 			$order_metadata = get_post_meta( $order_id, '_order_postmeta', true );
-			// Calcul cart informations
+			// Calcul cart informations.
 			$wps_cart = new wps_cart();
 			$order_metadata = $wps_cart->calcul_cart_information( array( $product_id => array( 'product_id' => $product_id, 'product_qty' => $product_qty ) ), '', $order_metadata, true, false );
-			// Update Metadatas
+			// Update Metadatas.
 			update_post_meta( $order_id, '_order_postmeta', $order_metadata );
 			$status = true;
 		}

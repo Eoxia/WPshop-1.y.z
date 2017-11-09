@@ -328,7 +328,8 @@ class wpshop_checkout {
 	 * @return string Url or empty string.
 	 */
 	public static function wps_direct_payment_link_url( $order_id ) {
-		return ( (bool) ( $token = wps_orders_ctr::wps_token_order_customer( (int) $order_id ) ) ) ? admin_url( 'admin-post.php?action=wps_direct_payment_link&token=' . $token . '&amp;order_id=' . (int) $order_id ) : '';
+		$token = wps_orders_ctr::wps_token_order_customer( (int) $order_id );
+		return ( false !== $token ? admin_url( 'admin-post.php?action=wps_direct_payment_link&token=' . $token . '&amp;order_id=' . (int) $order_id ) : '' );
 	}
 
 }

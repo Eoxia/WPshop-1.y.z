@@ -1048,22 +1048,19 @@ public static function reduce_product_stock_qty($product_id, $qty, $variation_id
      * @param boolean $for_cart_storage
      * @return array Information about the product defined by first parameter
      */
-    public static function get_product_data($product_id, $for_cart_storage = false, $post_status = '"publish"')
-    {
+    public static function get_product_data( $product_id, $for_cart_storage = false, $post_status = '"publish"' ) {
         global $wpdb;
+
         $query = $wpdb->prepare('
 			SELECT P.*, PM.meta_value AS attribute_set_id
 			FROM ' . $wpdb->posts . ' AS P
 				INNER JOIN ' . $wpdb->postmeta . ' AS PM ON (PM.post_id=P.ID)
-			WHERE
-				P.ID = %d
+			WHERE P.ID = %d
 				AND ( (P.post_type = "' . WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT . '") OR (P.post_type = "' . WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION . '") OR (P.post_type = "free_product") )
 				AND P.post_status IN (' . $post_status . ')
 				AND	PM.meta_key = "_' . WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT . '_attribute_set_id"
-			LIMIT 1
-		', $product_id);
-
-        $product = $wpdb->get_row($query);
+			LIMIT 1', $product_id);
+				$product = $wpdb->get_row($query);
 
         $product_data = array();
         $product_meta = array();

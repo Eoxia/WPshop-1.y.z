@@ -613,7 +613,11 @@ class wps_cart {
 					}
 
 					// Construct final product.
-					$product = wpshop_products::get_product_data( $d['product_id'], true, '"publish", "free_product"' );
+					$default_status = array( '"publish"', '"free_product"' );
+					if ( true === $from_admin ) {
+						$default_status[] = '"private"';
+					}
+					$product = wpshop_products::get_product_data( $d['product_id'], true, implode( ', ', $default_status ) );
 					$the_product = array_merge( array(
 						'product_id'	=> $d['product_id'],
 						'product_qty' => $product_qty,
