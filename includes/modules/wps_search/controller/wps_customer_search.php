@@ -112,7 +112,9 @@ class wpshop_customer_search {
 		}
 
 		// Exclude post with title containing "doublon" word.
-		$where .= " AND {$wpdb->posts}.post_title NOT LIKE '%doublon%' AND UPPER( {$wpdb->posts}.post_title ) NOT LIKE '%DOUBLON%'";
+		if ( is_admin() && ( ! empty( $post_type ) && ( WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS === $post_type ) ) ) {
+			$where .= " AND {$wpdb->posts}.post_title NOT LIKE '%doublon%' AND UPPER( {$wpdb->posts}.post_title ) NOT LIKE '%DOUBLON%'";
+		}
 
 		return $where;
 	}
