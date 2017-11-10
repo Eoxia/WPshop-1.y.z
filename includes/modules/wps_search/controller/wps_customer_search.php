@@ -31,13 +31,13 @@ class wpshop_customer_search {
 	 * @return string        La requete modifiée pour rechercher les clients.
 	 */
 	public function wpshop_search_where_in_customer( $where ) {
+		global $wpdb;
 
 		$post_type = ! empty( $_GET['post_type'] ) ? sanitize_text_field( $_GET['post_type'] ) : '';
 		$s = ! empty( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '';
 		$entity_filter = ! empty( $_GET['filter'] ) ? sanitize_text_field( $_GET['filter'] ) : '';
 
 		if ( is_admin() && ( ! empty( $post_type ) && ( WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS === $post_type ) ) && ( ! empty( $s ) || ! empty( $entity_filter ) ) ) {
-			global $wpdb;
 
 			$where = "	AND {$wpdb->posts}.post_type = '" . WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS . "'";
 
@@ -110,6 +110,9 @@ class wpshop_customer_search {
 								)";
 			}
 		}
+
+		// Exclude post with title containing "doublon" word.
+		$where .= " AND {$wpdb->posts}.post_title NOT LIKE '%doublon%' AND UPPER( {$wpdb->posts}.post_title ) NOT LIKE '%DOUBLON%'";
 
 		return $where;
 	}
