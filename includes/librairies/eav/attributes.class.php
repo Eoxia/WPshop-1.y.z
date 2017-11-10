@@ -1900,27 +1900,30 @@ ob_end_clean();
 		if ($attribute->is_requiring_unit == 'yes') {
 			if ( in_array($attribute->code, $wpshop_price_attributes) || ( WPSHOP_COST_OF_POSTAGE == $attribute->code) ) {
 				$input_def['options'] .= '&nbsp;<span class="attribute_currency" id="attribute_currency_' . $attribute->id . '" >' . wpshop_tools::wpshop_get_currency() . '</span>';
-			}
-			elseif ( in_array($attribute->code, $wpshop_weight_attributes) ) {
-				$weight_defaut_unity_option = get_option('wpshop_shop_default_weight_unity');
-				$query = $wpdb->prepare('SELECT name FROM '. WPSHOP_DBT_ATTRIBUTE_UNIT . ' WHERE id=%d', $weight_defaut_unity_option);
-				$unity = $wpdb->get_var( $query );
-				$input_def['options'] .= '&nbsp;<span class="attribute_weight" id="attribute_weight_' . $attribute->id . '" >' . __($unity, 'wpshop') . '</span>';
-			}
-			else {
-				unset($unit_input_def);
+			} elseif ( in_array( $attribute->code, $wpshop_weight_attributes ) ) {
+				$unity = '';
+				ob_start();
+				wpshop_attributes_unit::the_attribute_unit_by_code_for_product( $specific_argument['element_identifier'], $attribute->code );
+				$unity = ob_get_clean();
+				if ( empty( $unity ) ) {
+					$weight_defaut_unity_option = get_option('wpshop_shop_default_weight_unity');
+					$query = $wpdb->prepare('SELECT name FROM '. WPSHOP_DBT_ATTRIBUTE_UNIT . ' WHERE id=%d', $weight_defaut_unity_option);
+					$unity = $wpdb->get_var( $query );
+				}
+				$input_def['options'] .= '&nbsp;<span class="attribute_weight" id="attribute_weight_' . $attribute->id . '" >' . __( $unity, 'wpshop' ) . '</span>';
+			} else {
+				unset( $unit_input_def );
 				$unit_input_def['possible_value'] = wpshop_attributes_unit::get_unit_list_for_group($attribute->_unit_group_id);
 				$unit_input_def['type'] = 'select';
 				$unit_input_def['option'] = ' class="wpshop_attribute_unit_input chosen_select" ';
 				$unit_input_def['id'] = ( !empty($specific_argument['page_code']) ? $specific_argument['page_code'] : null ) . '_' . ( !empty($specific_argument['element_identifier']) ? $specific_argument['element_identifier'] : null ) . '_unit_attribute_' . $attribute->id;
 				$unit_input_def['name'] = $attribute->code;
 				$unit_input_def['value'] = (!empty($attribute_value->unit_id) ? $attribute_value->unit_id : '');
-				if($unit_input_def['value'] == ''){
+				if ( $unit_input_def['value'] == '' ) {
 					if ( $attribute->_default_unit > 0 ) {
 						$unit_input_def['value'] = $attribute->_default_unit;
-					}
-					else {
-						$unit_input_def['value'] = wpshop_attributes_unit::get_default_unit_for_group($attribute->_unit_group_id);
+					} else {
+						$unit_input_def['value'] = wpshop_attributes_unit::get_default_unit_for_group( $attribute->_unit_group_id );
 					}
 				}
 				$input_def['options'] .= wpshop_form::check_input_type($unit_input_def, $attributeInputDomain . '[unit]');
