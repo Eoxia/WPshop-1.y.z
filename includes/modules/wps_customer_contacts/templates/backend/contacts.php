@@ -22,6 +22,7 @@ $output = ob_get_clean();
 	data-dissociate-nonce="<?php echo esc_attr( wp_create_nonce( 'wps_customer_contacts_dissociate' ) ); ?>"
 	data-change-default-nonce="<?php echo esc_attr( wp_create_nonce( 'wps_customer_contacts_change_default' ) ); ?>"
 	data-default-user-id="<?php echo esc_attr( $default_user ); ?>"  >
+	<input type="hidden" name="wps_customer_contacts_default_id" value="<?php echo esc_attr( $default_user ); ?>" />
 
 	<thead>
 		<tr data-customer-id="<?php echo esc_attr( $customer->ID ); ?>" data-user-id="<?php echo esc_attr( $user_id ); ?>" >

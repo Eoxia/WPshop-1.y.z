@@ -80,6 +80,10 @@ class wps_customer_admin {
 			'post_status'	=> 'draft',
 		);
 
+		if ( ! empty( $_POST ) && ! empty( (int) $_POST['wps_customer_contacts_default_id'] ) && ( (int) $_POST['wps_customer_contacts_default_id'] !== $post->post_author )  ) { // WPCS: CSRF ok.
+			$custom_args['post_author'] = (int) $_POST['wps_customer_contacts_default_id'];
+		}
+
 		/** Récupération des informations envoyées par l'administrateur et ajout de la possibilité d'étendre/modifier les données envoyées avec un filtre */
 		$sended_attributes = ( ! empty( $_POST ) && ! empty( $_POST['attribute'] ) ? (array) $_POST['attribute'] : array() ); // WPCS: CSRF ok.
 		$data_to_save = apply_filters( 'wps_save_customer_extra_filter', $sended_attributes );
