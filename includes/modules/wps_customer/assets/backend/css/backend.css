@@ -17,6 +17,9 @@
 .post-type-wpshop_customers.post-php .wrap > h2, .post-type-wpshop_customers.post-php .wrap #titlediv, .post-type-wpshop_customers.edit-php .wrap ul.subsubsub {
 /* 	display: none; */
 }
+body.wpshop-admin-post-type-wpshop_customers input#delete_all {
+	display: none;
+}
 .post-type-wpshop_customers.post-php .wrap {
 	clear: both;
 }

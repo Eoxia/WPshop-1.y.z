@@ -20,7 +20,6 @@ if ( ! defined( 'WPSHOP_VERSION' ) ) {
 if ( class_exists( 'user_switching' ) ) {
 
 	add_action( 'wps_customer_contacts_list_action', 'wps_display_user_switching_link_in_contacts' );
-	// add_action( 'post_submitbox_misc_actions', 'wps_display_user_switching_link_original_post_metabox' ); !
 	add_filter( 'wps_filter_customer_list_actions', 'wps_display_user_switching_link', 10, 2 );
 	add_filter( 'wps_filter_customer_in_order', 'wps_display_user_switching_link', 10, 2 );
 
@@ -33,15 +32,6 @@ if ( class_exists( 'user_switching' ) ) {
 	 */
 	function wps_display_user_switching_link( $customer_id, $wp_user_id, $need_separator = true ) {
 		echo wps_display_user_switching_link_from_user_id( $wp_user_id );  // WPCS: XSS ok.
-	}
-
-	/**
-	 * Display the link allowing to switch to another user everywhere it is possible
-	 *
-	 * @param  integer $customer Current customer admin is on.
-	 */
-	function wps_display_user_switching_link_original_post_metabox( $customer ) {
-		echo '<span class="misc-pub-section" >' . wps_display_user_switching_link_from_user_id( $customer->post_author ) . '</span>';  // WPCS: XSS ok.
 	}
 
 	/**
@@ -77,5 +67,4 @@ if ( class_exists( 'user_switching' ) ) {
 
 		return $output;
 	}
-
 }

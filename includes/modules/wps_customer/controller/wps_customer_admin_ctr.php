@@ -35,6 +35,7 @@ class wps_customer_admin {
 		add_action( 'admin_enqueue_scripts', array( $this, 'customer_admin_assets' ) );
 		add_action( 'save_post', array( $this, 'save_entity_customer' ), 10, 2 );
 		add_filter( 'post_updated_messages', array( $this, 'customer_post_messages' ) );
+		add_filter( 'map_meta_cap', array( $this, 'callback_disallow_customer_total_deletion' ), 10, 4 );
 
 		/** Ajax Listener */
 		add_action( 'wp_ajax_wps_order_refresh_customer_informations', array( $this, 'wps_order_refresh_customer_informations' ) );
@@ -77,8 +78,10 @@ class wps_customer_admin {
 		$custom_args = array();
 		$default_args = array(
 			'ID'					=> $post_id,
-			'post_status'	=> 'draft',
 		);
+		if ( 'trash' !== $post->post_status ) {
+			$custom_args['post_status']	= 'draft';
+		}
 
 		if ( ! empty( $_POST ) && ! empty( (int) $_POST['wps_customer_contacts_default_id'] ) && ( (int) $_POST['wps_customer_contacts_default_id'] !== $post->post_author )  ) { // WPCS: CSRF ok.
 			$custom_args['post_author'] = (int) $_POST['wps_customer_contacts_default_id'];
@@ -278,6 +281,30 @@ class wps_customer_admin {
 		}
 
 		require( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, WPS_ACCOUNT_TPL, 'backend/customer-informations', 'wps-order-customer-informations' ) );
+	}
+
+	/**
+	 * [callback_disallow_customer_total_deletion description]
+	 *
+	 * @param array   $caps    [description].
+	 * @param string  $cap     [description].
+	 * @param integer $user_id [description].
+	 * @param array   $args    [description].
+	 *
+	 * @return array          [description]
+	 */
+	public function callback_disallow_customer_total_deletion( $caps, $cap, $user_id, $args ) {
+		// Nothing to do.
+		if ( 'delete_post' !== $cap || empty( $args[0] ) ) {
+			return $caps;
+		}
+
+		// Target the payment and transaction post types.
+		if ( in_array( get_post_type( $args[0] ), array( WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS ), true ) ) {
+			$caps[] = 'do_not_allow';
+		}
+
+		return $caps;
 	}
 
 }

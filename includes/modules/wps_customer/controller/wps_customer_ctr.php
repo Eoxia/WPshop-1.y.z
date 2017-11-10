@@ -247,6 +247,7 @@ class wps_customer_ctr {
 				'publish_posts' => 'wpshop_view_dashboard',
 				'read_post' => 'wpshop_view_dashboard',
 				'read_private_posts' => 'wpshop_view_dashboard',
+				'delete_post' => 'wpshop_view_dashboard',
 				'delete_posts' => 'wpshop_view_dashboard',
 			),
 		);
@@ -554,7 +555,8 @@ class wps_customer_ctr {
 	 */
 	public function customer_list_table_bulk_actions( $actions ) {
 		unset( $actions['edit'] );
-		unset( $actions['trash'] );
+		// unset( $actions['trash'] );
+		unset( $actions['delete'] );
 
 		return $actions;
 	}
