@@ -5,7 +5,7 @@ Donate link: http://www.wpshop.fr/
 Requires at least: 4.5
 Tested up to: 4.8.3
 Requires PHP: 5.6.3
-Stable tag: 1.5.2
+Stable tag: 1.6.0
 License: GPLv2 or later
 
 Simple and powerfull eCommerce plugin, with French Payment and Shipping systems : Paybox, Paypal, Atos, Cybermut, SystemPay, Paysite-cash, Colissimo
@@ -72,6 +72,25 @@ Il faut vérifier que le réglage des permaliens pour votre site est bien régl�
 
 
 == Changelog ==
+
+= Version 1.6.0 =
+
+Améliorations
+
+* 12516 - Prise en compte des produits ayant le statut privé dans les commandes
+* 12517 - Export des commandes
+* 12519 - Masquage des clients "doublon"
+* 12525 - Cacher la barre uniquement pour le rôle client
+* 12626 - Possibilité de mettre le clients dans la corbeille
+
+Corrections
+
+* 12515 - Faille de sécurité sur le lien de paiement direct
+* 12513 - Les pages WPShop sont créées en double
+* 10393 - Modification de l'unité de poids dans les réglages n'est pas répercutée dans le front
+* 12520 - Association / Changement de contact par défaut
+* 12575 - Visualisation des détails d'une commande pour un client dont la commande a été créée par un administrateur
+* 12601 - Affichage des comptes clients disponible dans le compte utilisateur
 
 = Version 1.5.2 =
 

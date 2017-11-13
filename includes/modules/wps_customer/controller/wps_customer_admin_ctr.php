@@ -83,7 +83,7 @@ class wps_customer_admin {
 			$custom_args['post_status']	= 'draft';
 		}
 
-		if ( ! empty( $_POST ) && ! empty( (int) $_POST['wps_customer_contacts_default_id'] ) && ( (int) $_POST['wps_customer_contacts_default_id'] !== $post->post_author )  ) { // WPCS: CSRF ok.
+		if ( ! empty( $_POST ) && ! empty( $_POST['wps_customer_contacts_default_id'] ) && ( (int) $_POST['wps_customer_contacts_default_id'] !== $post->post_author )  ) { // WPCS: CSRF ok.
 			$custom_args['post_author'] = (int) $_POST['wps_customer_contacts_default_id'];
 		}
 
