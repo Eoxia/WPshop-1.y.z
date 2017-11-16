@@ -104,7 +104,7 @@ class wps_download_file_ctr {
 							 wpshop_tools::create_custom_hook('encrypt_actions_for_downloadable_product', array(
 								 'order_id' => $oid,
 								 'download_product_id' => $downloadable_product_id,
-
+								 'download_item_id' => $d['item_id'],
 							 ) );
 
 							if ( get_post_type( $downloadable_product_id ) === WPSHOP_NEWTYPE_IDENTIFIER_PRODUCT_VARIATION ) {
