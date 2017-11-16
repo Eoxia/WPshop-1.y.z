@@ -38,16 +38,17 @@ class wpshop_checkout {
 		if (is_user_logged_in()) :
 			$user_id = get_current_user_id();
 
-		if ( $customer_id != 0 ) {
-			$user_id = $customer_id;
-		}
+			if ( $customer_id != 0 ) {
+				$user_id = $customer_id;
+			}
 
 			// If the order is already created in the db
-			if(!empty($order_id) && is_numeric($order_id)) {
-				$order = get_post_meta($order_id, '_order_postmeta', true);
-
-				if(!empty($order)) {
-					if($order['customer_id'] == $user_id) {
+			if ( ! empty( $order_id ) && is_numeric( $order_id ) ) {
+				$order = get_post_meta( $order_id, '_order_postmeta', true );
+				if ( ! empty( $order ) ) {
+					$customer_id = get_post_field( 'post_parent', $order_id );
+					$customer_default_user_id = get_post_field( 'post_author', $customer_id );
+					if ( $customer_default_user_id == $user_id ) {
 						$order['payment_method'] = $paymentMethod;
 						$_SESSION['order_id'] = (int) $order_id;
 						// Store cart in session
@@ -56,14 +57,15 @@ class wpshop_checkout {
 						$order['order_payment']['received'][] = array( 'method' => $paymentMethod, 'waited_amount' => $order['order_amount_to_pay_now'], 'status' => 'waiting_payment', 'author' => get_current_user_id() );
 
 						// On enregistre la commande
-						update_post_meta($order_id, '_order_postmeta', $order);
-						update_post_meta($order_id, '_wpshop_order_customer_id', $user_id);
+						update_post_meta( $order_id, '_order_postmeta', $order );
+						update_post_meta( $order_id, '_wpshop_order_customer_id', $user_id );
+					} else {
+						$wpshop->add_error( __('You don\'t own the order', 'wpshop' ) );
 					}
-					else $wpshop->add_error(__('You don\'t own the order', 'wpshop'));
+				} else {
+					$wpshop->add_error( __('The order doesn\'t exist.', 'wpshop' ) );
 				}
-				else $wpshop->add_error(__('The order doesn\'t exist.', 'wpshop'));
-			}
-			else{
+			} else {
 				$order_data = array(
 					'post_type' => WPSHOP_NEWTYPE_IDENTIFIER_ORDER,
 					'post_title' => sprintf(__('Order - %s','wpshop'), mysql2date('d M Y\, H:i:s', current_time('mysql', 0), true)),

@@ -157,8 +157,7 @@ if ( !class_exists("wps_classic_checkout") ) {
 							$checkout_page_id = wpshop_tools::get_page_id( get_option( 'wpshop_checkout_page_id' ) );
 							$url = get_permalink( $checkout_page_id  ).( ( !empty($permalink_option) ) ? '?' : '&').'order_step=2';
 							wpshop_tools::wpshop_safe_redirect( $url );
-						}
-						else {
+						}	else {
 							$wps_cart = new wps_cart();
 							$order = $wps_cart->calcul_cart_information( array() );
 							$wps_cart->store_cart_in_session($order);
@@ -170,8 +169,7 @@ if ( !class_exists("wps_classic_checkout") ) {
 								$checkout_content .= ob_get_contents();
 								ob_end_clean();
 								$checkout_content = apply_filters( 'classic_checkout_step_six_extra_content', $checkout_content );
-							}
-							else {
+							} else {
 								$checkout_page_id = wpshop_tools::get_page_id( get_option( 'wpshop_checkout_page_id' ) );
 								$url = get_permalink( $checkout_page_id  );
 								wpshop_tools::wpshop_safe_redirect( $url );
@@ -179,14 +177,12 @@ if ( !class_exists("wps_classic_checkout") ) {
 						}
 					break;
 					case 6 :
-
 						if ( !empty($_SESSION['cart']) && !empty($_SESSION['cart']['order_items']) ){
 						 	$wps_marketing_tools_ctr = new wps_marketing_tools_ctr();
 						 	$checkout_content .=  $wps_marketing_tools_ctr->display_ecommerce_ga_tracker( $_SESSION['order_id'] );
 						 	$checkout_content .= $this->wps_classic_confirmation_message();
 						 	$checkout_content .= $this->wps_summary_order();
-						}
-						else {
+						} else {
 							$checkout_page_id = wpshop_tools::get_page_id( get_option( 'wpshop_checkout_page_id' ) );
 							$url = get_permalink( $checkout_page_id  );
 							wpshop_tools::wpshop_safe_redirect( $url );
@@ -518,23 +514,19 @@ if ( !class_exists("wps_classic_checkout") ) {
 						$status = true;
 						//Add an action to extra actions on order save
 						// @TODO : REQUEST
-						$args = array( 'order_id' => $order_id, 'posted_data' => $_REQUEST);
+						$args = array( 'order_id' => $order_id, 'posted_data' => $_REQUEST );
 						wpshop_tools::create_custom_hook( 'wps_order_extra_save_action', $args );
-					}
-					else {
+					} else {
 						$response = '<div class="wps-alert-error">' .__( 'This payment method is unavailable', 'wpshop' ).'</div>';
 					}
-				}
-				else {
+				} else {
 					$response = '<div class="wps-alert-error">' .__( 'You must choose a payment method', 'wpshop' ).'</div>';
 				}
-			}
-			else {
+			} else {
 				$response = '<div class="wps-alert-error">' .__( 'You must accept the terms of sale to order', 'wpshop' ).'</div>';
 			}
 
-			echo json_encode( array('status' => $status, 'response' => $response) );
-			die();
+			wp_die( wp_json_encode( array( 'status' => $status, 'response' => $response ) ) );
 		}
 
 		/**
