@@ -91,6 +91,7 @@ Corrections
 * 12520 - Association / Changement de contact par défaut
 * 12575 - Visualisation des détails d'une commande pour un client dont la commande a été créée par un administrateur
 * 12601 - Affichage des comptes clients disponible dans le compte utilisateur
+* 12806 - Impossibilité pour un client de payer un devis réalisé par un administrateur
 
 = Version 1.5.2 =
 
