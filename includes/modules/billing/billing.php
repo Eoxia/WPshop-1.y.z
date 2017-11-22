@@ -320,11 +320,11 @@ if (!class_exists("wpshop_modules_billing")) {
 				 *
 				 * @return string The invoice output in case no error is found. The error in other case
 				 */
-				public static function generate_html_invoice($order_id, $invoice_ref)
-				{
+				public static function generate_html_invoice( $order_id, $invoice_ref ) {
 						global $wpdb;
 
-						$date_output_format = get_option('date_format') . ' ' . get_option('time_format');
+						// $date_output_format = get_option('date_format') . ' ' . get_option('time_format'); // Changement de format suite aux remarques de LM Nov.2017
+						$date_output_format = 'd M Y'; // H\hi\m\i\n
 						$count_products = 0;
 
 						if (!empty($order_id)) {
@@ -375,11 +375,11 @@ if (!class_exists("wpshop_modules_billing")) {
 										}
 
 										$tpl_component['INVOICE_ORDER_INVOICE_REF'] = (!empty($invoice_ref)) ? $invoice_ref : (!empty($order_postmeta['order_invoice_ref']) ? $order_postmeta['order_invoice_ref'] : null);
-										if ($bon_colisage) {
-												$tpl_component['INVOICE_ORDER_INVOICE_REF'] = '';
+										if ( $bon_colisage ) {
+											$tpl_component['INVOICE_ORDER_INVOICE_REF'] = '';
 										}
-										$tpl_component['INVOICE_ORDER_KEY_INDICATION'] = ($is_quotation) ? sprintf(__('Ref. %s', 'wpshop'), $order_postmeta['order_temporary_key']) : sprintf(__('Order n. %s', 'wpshop'), $order_postmeta['order_key']);
-										$tpl_component['INVOICE_ORDER_DATE_INDICATION'] = ($is_quotation) ? sprintf(__('Quotation date %s', 'wpshop'), mysql2date($date_output_format, $order_postmeta['order_date'], true)) : sprintf(__('Order date %s', 'wpshop'), mysql2date($date_output_format, $order_postmeta['order_date'], true));
+										$tpl_component['INVOICE_ORDER_KEY_INDICATION'] = ( empty( $order_postmeta['order_key'] ) ) ? sprintf(__('Ref. %s', 'wpshop'), $order_postmeta['order_temporary_key']) : sprintf(__('Order n. %s', 'wpshop'), $order_postmeta['order_key']);
+										$tpl_component['INVOICE_ORDER_DATE_INDICATION'] = mysql2date( $date_output_format, $order_postmeta['order_date'], true ); //($is_quotation) ? sprintf(__('Quotation date %s', 'wpshop'), mysql2date( $date_output_format, $order_postmeta['order_date'], true ) ) : sprintf( __('Order date %s', 'wpshop' ), mysql2date( $date_output_format, $order_postmeta['order_date'], true ) );
 
 										/** Validate period for Quotation **/
 										if ($is_quotation) {
@@ -792,9 +792,9 @@ if (!class_exists("wpshop_modules_billing")) {
 				 * @param integer $order_id
 				 * @return string
 				 */
-				public static function generate_received_payment_part($order_id)
-				{
-						$date_ouput_format = get_option('date_format') . ' ' . get_option('time_format');
+				public static function generate_received_payment_part($order_id) {
+					// $date_output_format = get_option('date_format') . ' ' . get_option('time_format'); // Changement de format suite aux remarques de LM Nov.2017
+						$date_output_format = 'd/m/y';
 						$output = '';
 						$tpl_component = array();
 						$tpl_component['ORDER_RECEIVED_PAYMENT_ROWS'] = '';
@@ -806,7 +806,7 @@ if (!class_exists("wpshop_modules_billing")) {
 												if (!empty($payment) && !in_array($payment['method'], array('quotation'), true) && !empty($payment['received_amount'])) {
 														$sub_tpl_component = array();
 														$sub_tpl_component['INVOICE_RECEIVED_PAYMENT_RECEIVED_AMOUNT'] = (!empty($payment['received_amount'])) ? number_format($payment['received_amount'], 2, ',', '') . ' ' . wpshop_tools::wpshop_get_currency() : 0;
-														$sub_tpl_component['INVOICE_RECEIVED_PAYMENT_DATE'] = (!empty($payment['date'])) ? mysql2date($date_ouput_format, $payment['date'], true) : '';
+														$sub_tpl_component['INVOICE_RECEIVED_PAYMENT_DATE'] = (!empty($payment['date'])) ? mysql2date( $date_output_format, $payment['date'], true) : '';
 														$sub_tpl_component['INVOICE_RECEIVED_PAYMENT_METHOD'] = ((!empty($payment['method']) && is_array($wps_payment_option) && array_key_exists(strtolower($payment['method']), $wps_payment_option['mode']) && !empty($wps_payment_option['mode'][strtolower($payment['method'])]['name'])) ? $wps_payment_option['mode'][strtolower($payment['method'])]['name'] : (!empty($payment['method']) ? __($payment['method'], 'wpshop') : ''));
 														$sub_tpl_component['INVOICE_RECEIVED_PAYMENT_PAYMENT_REFERENCE'] = (!empty($payment['payment_reference'])) ? $payment['payment_reference'] : '';
 														$sub_tpl_component['INVOICE_RECEIVED_PAYMENT_INVOICE_REF'] = (!empty($payment['invoice_ref'])) ? $payment['invoice_ref'] : '';

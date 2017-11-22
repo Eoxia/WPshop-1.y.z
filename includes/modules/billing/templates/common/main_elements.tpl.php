@@ -24,7 +24,7 @@ ob_start();
 	.invoice_main_title_container {
 		width: 100%;
 	}
-	.invoice_main_title {
+	.invoice_main_title span {
 		font-size: 40px;
 	}
 	.invoice_main_title_container td {
@@ -171,6 +171,7 @@ ob_start();
 	}
 	.received_payment_list_row {
 		text-align: center;
+		word-wrap: break-word;
 	}
 		</style><?php
 $tpl_element['common']['default']['invoice_print_page_content_css'] = ob_get_contents();
@@ -185,15 +186,15 @@ ob_start();
 			<tbody>
 				<tr>
 					<td class="invoice_logo">{WPSHOP_INVOICE_LOGO}</td>
-					<td class="invoice_main_title" >{WPSHOP_INVOICE_TITLE}</td>
+					<td class="invoice_main_title" >
+						<span>{WPSHOP_INVOICE_TITLE}&nbsp;&nbsp;{WPSHOP_INVOICE_ORDER_INVOICE_REF}</span><br/>
+						{WPSHOP_INVOICE_ORDER_KEY_INDICATION} {WPSHOP_INVOICE_VALIDATE_TIME}
+					</td>
 				</tr>
 				<tr>
 					<td></td>
-					<td >
-						{WPSHOP_INVOICE_ORDER_INVOICE_REF}
-						<br/><br/>{WPSHOP_INVOICE_ORDER_KEY_INDICATION}
-						<br/>{WPSHOP_INVOICE_ORDER_DATE_INDICATION}<br/>
-						{WPSHOP_INVOICE_VALIDATE_TIME}
+					<td style="text-align: right;" >
+						{WPSHOP_INVOICE_ORDER_DATE_INDICATION}<br/>
 					</td>
 				</tr>
 			</tbody>
@@ -262,8 +263,8 @@ ob_start();
 								<th><?php _e('Date', 'wpshop'); ?></th>
 								<th><?php _e('Invoice ref.', 'wpshop'); ?></th>
 								<th><?php _e('Method', 'wpshop'); ?></th>
-								<th><?php _e('Ref.', 'wpshop'); ?></th>
 								<th><?php _e('Amount', 'wpshop'); ?></th>
+								<th><?php _e('Ref.', 'wpshop'); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -291,8 +292,8 @@ ob_start();
 	<td>{WPSHOP_INVOICE_RECEIVED_PAYMENT_DATE}</td>
 	<td>{WPSHOP_INVOICE_RECEIVED_PAYMENT_INVOICE_REF}</td>
 	<td>{WPSHOP_INVOICE_RECEIVED_PAYMENT_METHOD}</td>
-	<td>{WPSHOP_INVOICE_RECEIVED_PAYMENT_PAYMENT_REFERENCE}</td>
 	<td>{WPSHOP_INVOICE_RECEIVED_PAYMENT_RECEIVED_AMOUNT}</td>
+	<td>{WPSHOP_INVOICE_RECEIVED_PAYMENT_PAYMENT_REFERENCE}</td>
 </tr><?php
 $tpl_element['common']['default']['received_payment_row'] = ob_get_contents();
 ob_end_clean();
