@@ -77,21 +77,22 @@ Il faut vérifier que le réglage des permaliens pour votre site est bien régl�
 
 Améliorations
 
-* 12516 - Prise en compte des produits ayant le statut privé dans les commandes
-* 12517 - Export des commandes
-* 12519 - Masquage des clients "doublon"
-* 12525 - Cacher la barre uniquement pour le rôle client
-* 12626 - Possibilité de mettre le clients dans la corbeille
+* 12516 - Prise en compte des produits ayant le statut privé dans les commandes / Take care about private product into admin orders
+* 12517 - Export des commandes / Order export
+* 12519 - Masquage des clients "doublon" / Hide duplicate customers
+* 12525 - Cacher la barre uniquement pour le rôle client lorsque la case est cochée dans les réglages / Hide admin bar only for customer role when checkbox is checked into settings
+* 12626 - Possibilité de mettre le clients dans la corbeille / Allows admin to put customers into trash
 
 Corrections
 
-* 12515 - Faille de sécurité sur le lien de paiement direct
-* 12513 - Les pages WPShop sont créées en double
-* 10393 - Modification de l'unité de poids dans les réglages n'est pas répercutée dans le front
-* 12520 - Association / Changement de contact par défaut
-* 12575 - Visualisation des détails d'une commande pour un client dont la commande a été créée par un administrateur
-* 12601 - Affichage des comptes clients disponible dans le compte utilisateur
-* 12806 - Impossibilité pour un client de payer un devis réalisé par un administrateur
+* 12515 - Faille de sécurité sur le lien de paiement direct / Direct payment link security fix
+* 12513 - Les pages WPShop sont créées en double / WPShop pages created twice
+* 10393 - Modification de l'unité de poids dans les réglages n'est pas répercutée dans le front / Weight unit settings is not taken into website frontend
+* 12520 - Association - Changement de contact par défaut / Defaut contact association - update on customers
+* 12575 - Visualisation des détails d'une commande pour un client dont la commande a été créée par un administrateur / Displaying order details for a customer whose order was created by an admin
+* 12601 - Affichage des comptes clients disponible dans le compte utilisateur / Available customer account display in current connected user account
+* 12806 - Impossibilité pour un client de payer un devis réalisé par un administrateur / Customer was not able to pay a quotation made by an administrator
+* 12978 - Mise en page facture PDF / PDF invoice layout
 
 = Version 1.5.2 =
 
