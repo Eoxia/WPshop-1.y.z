@@ -5,7 +5,7 @@ Donate link: http://www.wpshop.fr/
 Requires at least: 4.5
 Tested up to: 4.8.3
 Requires PHP: 5.6.3
-Stable tag: 1.6.0
+Stable tag: 1.6.1
 License: GPLv2 or later
 
 Simple and powerfull eCommerce plugin, with French Payment and Shipping systems : Paybox, Paypal, Atos, Cybermut, SystemPay, Paysite-cash, Colissimo
@@ -72,6 +72,11 @@ Il faut vérifier que le réglage des permaliens pour votre site est bien régl�
 
 
 == Changelog ==
+
+= Version 1.6.1 =
+
+* 22474 - Correction pilotage HT
+* 22475 - Ajout de la gestion des prospects
 
 = Version 1.6.0 =
 
