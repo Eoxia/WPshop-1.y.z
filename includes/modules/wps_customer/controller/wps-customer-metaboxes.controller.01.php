@@ -38,6 +38,7 @@ class WPS_Customer_Metaboxes_Controller extends wps_customer_ctr {
 			add_meta_box( 'wps_customer_orders', __( 'Customer\'s orders', 'wpshop' ) . '<a class="page-title-action" href="' . admin_url( 'post-new.php?post_type=' . WPSHOP_NEWTYPE_IDENTIFIER_ORDER ) . '&customer_id=' . $customer->ID . '">' . __( 'Add quotation', 'wpshop' ) . '</a>', array( $this, 'wps_customer_orders_list' ), WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, 'normal', 'low' );
 			add_meta_box( 'wps_customer_messages_list', __( 'Customer\'s send messages', 'wpshop' ), array( $this, 'wps_customer_messages_list' ), WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, 'side', 'low' );
 			add_meta_box( 'wps_customer_coupons_list', __( 'Customer\'s coupons list', 'wpshop' ), array( $this, 'wps_customer_coupons_list' ), WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, 'side', 'low' );
+			add_meta_box( 'wps_customer_prospect_status', __( 'Customer\'s prospect status', 'wpshop' ), array( $this, 'wps_customer_prospect_status' ), WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, 'side', 'low' );
 			add_meta_box( 'wps_customer_addresses_list', __( 'Customer\'s addresses', 'wpshop' ), array( $this, 'wps_customer_addresses_list' ), WPSHOP_NEWTYPE_IDENTIFIER_CUSTOMERS, 'normal', 'low' );
 		}
 	}
@@ -93,6 +94,19 @@ class WPS_Customer_Metaboxes_Controller extends wps_customer_ctr {
 		$output = $wps_messages->display_message_histo_per_customer( array(), $post->ID );
 
 		echo $output; // WPCS: XSS ok.
+	}
+
+	/**
+	 * META-BOX CONTENT - Display prospect status
+	 *
+	 * @param WP_Post $post Current post (customer) we are editing.
+	 */
+	function wps_customer_prospect_status( $post ) {
+		$customer_prospect = new WPS_Customer_Prospect();
+		$current_status    = (int) get_post_meta( $post->ID, 'fk_stcomm', true );
+		$statuses          = $customer_prospect->statuses;
+
+		require( wpshop_tools::get_template_part( WPS_ACCOUNT_DIR, WPS_ACCOUNT_PATH . WPS_ACCOUNT_DIR . '/templates/', 'backend', 'prospect_status/prospect_status' ) );
 	}
 
 	/**

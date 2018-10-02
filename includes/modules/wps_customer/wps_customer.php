@@ -28,6 +28,7 @@ if ( !defined( 'WPSHOP_VERSION' ) ) {
 // 	include( plugin_dir_path( __FILE__ ).'controller/wp_list_custom_groups.class.php' );
 	include( plugin_dir_path( __FILE__ ).'controller/wp_list_custom_entities_customers.php' );
 	include( plugin_dir_path( __FILE__ ).'controller/wps_provider_ctr.php' );
+	include( plugin_dir_path( __FILE__ ).'controller/wps_customer_prospect_ctr.php' );
 
 	$wps_customer = new wps_customer_ctr();
 	$wps_account = new wps_account_ctr();

@@ -1,4 +1,4 @@
-﻿=== WPshop - eCommerce ===
+﻿﻿=== WPshop - eCommerce ===
 Contributors: Eoxia
 Tags: boutique, catalog, catalogue, commerce, e-commerce, ecommerce, m-commerce, mcommerce, produits,  shop, shopping cart, wp shop, wordpress ecommerce, wordpress shop, WPshop, wp-shop, french payment gateway, passerelle de paiement française
 Donate link: http://www.wpshop.fr/

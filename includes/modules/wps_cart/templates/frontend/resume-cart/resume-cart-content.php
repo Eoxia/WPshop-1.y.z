@@ -57,8 +57,13 @@
 			    	</div>
 				</div>
 				<div class="wps-cart-item-price">
-			    	<span class="wps-price"><?php echo wpshop_tools::formate_number( $item['item_total_ttc'] ); ?> <span><?php echo $currency; ?></span></span>
-			    	<span class="wps-tva"><?php _e( 'ATI', 'wpshop'); ?></span><br>
+					<?php if ( $price_piloting == 'TTC' ) : ?>
+				    	<span class="wps-price"><?php echo wpshop_tools::formate_number( $item['item_total_ttc'] ); ?> <span><?php echo $currency; ?></span></span>
+				    	<span class="wps-tva"><?php _e( 'TTC', 'wpshop'); ?></span><br>
+					<?php else: ?>
+						<span class="wps-price"><?php echo wpshop_tools::formate_number( $item['item_total_ht'] ); ?> <span><?php echo $currency; ?></span></span>
+				    	<span class="wps-tva"><?php _e( 'HT', 'wpshop'); ?></span><br>
+					<?php endif; ?>
 				</div>
 			</li>
 	<?php endforeach; ?>
@@ -68,17 +73,29 @@
 		<?php echo do_shortcode('[wps_apply_coupon]'); ?>
 	</div>
 	<div class="wps-cart-total">
-		<p><?php _e( 'Shipping cost ATI', 'wpshop'); ?><span class="wps-alignRight"><strong><?php echo wpshop_tools::formate_number( $shipping_cost_ati ); ?></strong><?php echo $currency; ?></span></p>
+		<?php if ( $price_piloting == 'TTC' ) : ?>
+			<p><?php _e( 'Shipping cost ATI', 'wpshop'); ?><span class="wps-alignRight"><strong><?php echo wpshop_tools::formate_number( $shipping_cost_ati ); ?></strong><?php echo $currency; ?></span></p>
+		<?php else: ?>
+			<p><?php _e( 'Frais de livraison', 'wpshop'); ?><span class="wps-alignRight"><strong><?php echo wpshop_tools::formate_number( $shipping_cost_ati ); ?></strong>&nbsp;<?php echo $currency; ?></span></p>
+		<?php endif; ?>
 		<?php if ( !empty( $cart_content['coupon_id']) ) : ?>
 			<p><?php _e( 'Total ATI before discount', 'wpshop'); ?><span class="wps-alignRight"><strong><?php echo wpshop_tools::formate_number( $order_total_before_discount ); ?></strong><?php echo $currency; ?></span></p>
 			<p><?php _e( 'Discount', 'wpshop'); ?><span class="wps-inline-alignRight"><strong><?php echo wpshop_tools::formate_number( $coupon_value ); ?></strong><?php echo $currency; ?></span></p>
 		<?php endif; ?>
 		<p class="wps-hightlight">
-			<?php _e( 'Total ATI', 'wpshop'); ?>
-			<span class="wps-inline-alignRight">
-				<strong><?php echo wpshop_tools::formate_number( $total_ati ); ?></strong>
-				<?php echo $currency; ?>
-			</span>
+			<?php if ( $price_piloting == 'TTC' ) : ?>
+				<?php _e( 'Total ATI', 'wpshop'); ?>
+				<span class="wps-inline-alignRight">
+					<strong><?php echo wpshop_tools::formate_number( $total_ati ); ?></strong>
+					<?php echo $currency; ?>
+				</span>
+			<?php else : ?>
+				Total HT
+				<span class="wps-inline-alignRight">
+					<strong><?php echo wpshop_tools::formate_number( $total_ht ); ?></strong>
+					<?php echo $currency; ?>
+				</span>
+			<?php endif; ?>
 		</p>
 	</div><!-- wp-cart-total -->
 </div><!-- wps-cart-cartouche -->

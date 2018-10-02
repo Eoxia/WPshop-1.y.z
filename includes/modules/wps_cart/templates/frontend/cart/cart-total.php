@@ -48,7 +48,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		<?php if( $cart_option == 'full_cart' || $cart_option == 'simplified_et' || $price_piloting == 'HT' ) : ?>
 			<p>
-				<?php _e( 'Shipping cost ET', 'wpshop'); ?> <?php echo ( ( !empty($shipping_price_from) && empty( $_SESSION['shipping_address'] ) ) ? '<br/><i>('.__( 'From', 'wpshop').')</i>' : '' ); ?>
+				<?php _e( 'Shipping cost', 'wpshop'); ?> <?php echo ( ( !empty($shipping_price_from) && empty( $_SESSION['shipping_address'] ) ) ? '<br/><i>('.__( 'From', 'wpshop').')</i>' : '' ); ?>
 				<span class="wps-alignRight">
 					<?php if( $cart_type != 'admin-panel' ) : ?>
 						<strong><?php echo wpshop_tools::formate_number( $shipping_cost_et ); ?></strong> <?php echo $currency; ?>
@@ -63,7 +63,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			</p>
 		<?php endif; ?>
 
-		<?php if( $cart_option == 'full_cart' ) : ?>
+		<?php if( $cart_option == 'full_cart' && $price_piloting == 'TTC' ) : ?>
 			<p>
 				<?php _e( 'VAT on Shipping cost', 'wpshop'); ?>
 				<span class="wps-alignRight">
@@ -72,7 +72,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			</p>
 		<?php endif; ?>
 
-		<?php if( $cart_option == 'full_cart' || $cart_option == 'simplified_ati' || $price_piloting == 'TTC' ) : ?>
+		<?php if( ( $cart_option == 'full_cart' && $price_piloting == 'TTC' ) || $cart_option == 'simplified_ati' || $price_piloting == 'TTC' ) : ?>
 			<p>
 				<?php _e( 'Shipping cost', 'wpshop'); ?> <?php echo ( ( !empty($shipping_price_from) && empty( $_SESSION['shipping_address'] ) ) ? '<br/><i>('.__( 'From', 'wpshop').')</i>' : '' ); ?>
 				<span class="wps-alignRight">
@@ -176,9 +176,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<p class="wps-hightlight"><?php _e( 'Due amount for this order', 'wpshop'); ?><span class="wps-alignRight"><strong><?php echo wpshop_tools::formate_number( $cart_content['order_grand_total'] - $allready_received_amount ); ?></strong> <?php echo $currency; ?></span></p>
 			<?php else : ?>
 				<?php if ( isset( $_SESSION[ 'cart' ][ 'order_product_partial_payment' ]) ) : ?>
-				<p class="wps-hightlight"><?php _e( 'Total ATI', 'wpshop'); ?><span class="wps-alignRight"><strong><?php echo wpshop_tools::formate_number( $_SESSION['cart']['order_amount_to_pay_now'] ); ?></strong> <?php echo $currency; ?></span></p>
+					<p class="wps-hightlight"><?php _e( 'Total ATI', 'wpshop'); ?><span class="wps-alignRight"><strong><?php echo wpshop_tools::formate_number( $_SESSION['cart']['order_amount_to_pay_now'] ); ?></strong> <?php echo $currency; ?></span></p>
 				<?php else: ?>
-				<p class="wps-hightlight"><?php _e( 'Total ATI', 'wpshop'); ?><span class="wps-alignRight"><strong><?php echo wpshop_tools::formate_number( $total_ati ); ?></strong> <?php echo $currency; ?></span></p>
+					<?php if ( $price_piloting == 'TTC' || is_admin() ) : ?>
+						<p class="wps-hightlight"><?php _e( 'Total ATI', 'wpshop'); ?><span class="wps-alignRight"><strong><?php echo wpshop_tools::formate_number( $total_ati ); ?></strong> <?php echo $currency; ?></span></p>
+					<?php else: ?>
+						<p class="wps-hightlight">Total HT<span class="wps-alignRight"><strong><?php echo wpshop_tools::formate_number( $total_ht ); ?></strong> <?php echo $currency; ?></span></p>
+					<?php endif; ?>
 				<?php endif; ?>
 			<?php endif; ?>
 	</div><!-- wps-cart-total -->

@@ -54,8 +54,13 @@
 				?>
 			</div>
 			<div class="wps-cart-item-price">
-			   	<span class="wps-price"><?php echo wpshop_tools::formate_number( $item['item_total_ttc'] ); ?><span> <?php echo $currency; ?></span></span>
-			   	<span class="wps-tva"><?php _e( 'ATI', 'wpshop'); ?></span><br>
+				<?php if ( $price_piloting == 'TTC' ) : ?>
+				   	<span class="wps-price"><?php echo wpshop_tools::formate_number( $item['item_total_ttc'] ); ?><span> <?php echo $currency; ?></span></span>
+				   	<span class="wps-tva"><?php _e( 'ATI', 'wpshop'); ?></span><br>
+				<?php else : ?>
+					<span class="wps-price"><?php echo wpshop_tools::formate_number( $item['item_total_ht'] ); ?><span> <?php echo $currency; ?></span></span>
+				   	<span class="wps-tva"><?php _e( 'HT', 'wpshop'); ?></span><br>
+				<?php endif; ?>
 			</div>
 			<div class="wps-cart-item-close">
 				<button type="button" class="wps-bton-icon wps_cart_delete_product" data-nonce="<?php echo wp_create_nonce( 'ajax_wpshop_set_qty_for_product_into_cart' ); ?>"><i class="wps-icon-trash"></i></button>
@@ -71,6 +76,10 @@
 	<p><?php _e( 'Discount', 'wpshop' ); ?><span class="wps-inline-alignRight"><strong><?php echo wpshop_tools::formate_number( $coupon_value ); ?></strong> <?php echo $currency; ?></span></p>
 <?php endif; ?>
 
-<p class="wps-hightlight"><?php _e( 'Total ATI', 'wpshop'); ?><span class="wps-inline-alignRight"><strong><?php echo wpshop_tools::formate_number( $total_ati ); ?></strong> <?php echo $currency; ?></span></p>
+<?php if ( $price_piloting == 'TTC' ) : ?>
+	<p class="wps-hightlight"><?php _e( 'Total ATI', 'wpshop'); ?><span class="wps-inline-alignRight"><strong><?php echo wpshop_tools::formate_number( $total_ati ); ?></strong> <?php echo $currency; ?></span></p>
+<?php else : ?>
+	<p class="wps-hightlight">Total HT<span class="wps-inline-alignRight"><strong><?php echo wpshop_tools::formate_number( $total_ht ); ?></strong> <?php echo $currency; ?></span></p>
+<?php endif; ?>
 <button class="wps-bton-second-halfwidth wpsjq-closeFixedCart"><i class="wps-icon-arrowleft"></i><?php _e( 'Return', 'wpshop'); ?></button>
 <a href="<?php echo get_permalink( wpshop_tools::get_page_id( get_option('wpshop_cart_page_id') ) ); ?>" class="wps-bton-first-halfwidth" role="button"><i class="wps-icon-paiement"></i><?php _e( 'Order', 'wpshop'); ?></a>

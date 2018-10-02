@@ -140,6 +140,7 @@ class wps_cart {
 				$order_totla_before_discount = ( ! empty($cart_content['order_grand_total_before_discount']) ) ? $cart_content['order_grand_total_before_discount'] : 0;
 				$order_amount_to_pay_now = wpshop_tools::formate_number( $cart_content['order_amount_to_pay_now'] );
 				$total_ati = ( ! empty( $order_amount_to_pay_now ) && ! empty($oid) && $order_amount_to_pay_now > 0 ) ? $cart_content['order_amount_to_pay_now'] : ( (! empty($cart_content['order_grand_total']) ) ? $cart_content['order_grand_total'] : 0 );
+				$total_ht  = $cart_content['order_total_ht'] + $cart_content['order_shipping_cost'];
 				unset($tracking);
 				if( ! empty($cart_content['order_trackingNumber']) ) {
 					$tracking['number'] = $cart_content['order_trackingNumber'];
@@ -164,6 +165,8 @@ class wps_cart {
 
 	/** Display mini cart **/
 	function display_mini_cart( $args ) {
+		$price_piloting = get_option( 'wpshop_shop_price_piloting' );
+		
 		$total_cart_item = 0;
 		$cart_content = ( ! empty($_SESSION) && ! empty($_SESSION['cart']) ) ? $_SESSION['cart'] : array();
 		$type = ( ! empty($args) && ! empty($args['type']) ) ? $args['type'] : '';
@@ -193,6 +196,8 @@ class wps_cart {
 
 	/** Mini cart Content **/
 	public static function mini_cart_content( $type = '') {
+		$price_piloting  = get_option( 'wpshop_shop_price_piloting' );
+		
 		$currency = wpshop_tools::wpshop_get_currency( false );
 		$cart_content = ( ! empty($_SESSION) && ! empty($_SESSION['cart']) ) ? $_SESSION['cart'] : array();
 		$output = '';
@@ -206,6 +211,7 @@ class wps_cart {
 				$order_total_before_discount = ( ! empty($cart_content['order_grand_total_before_discount']) ) ? $cart_content['order_grand_total_before_discount'] : 0;
 				$shipping_cost_ati = ( ! empty($cart_content['order_shipping_cost']) ) ? $cart_content['order_shipping_cost'] : 0;
 				$total_ati  = $total_cart = ( ! empty($cart_content['order_amount_to_pay_now']) ) ? $cart_content['order_amount_to_pay_now'] : 0;
+				$total_ht  = $cart_content['order_total_ht'] + $cart_content['order_shipping_cost'];
 
 				ob_start();
 				if( ! empty($type) && $type == 'fixed' ) {
@@ -239,6 +245,8 @@ class wps_cart {
 
 	/** Resume cart Content **/
 	public static function resume_cart_content() {
+		$price_piloting  = get_option( 'wpshop_shop_price_piloting' );
+		
 		$output = '';
 		$currency = wpshop_tools::wpshop_get_currency( false );
 		$cart_content = ( ! empty($_SESSION) && ! empty($_SESSION['cart']) ) ? $_SESSION['cart'] : array();
@@ -252,6 +260,7 @@ class wps_cart {
 				$order_total_before_discount = ( ! empty($cart_content['order_grand_total_before_discount']) ) ? $cart_content['order_grand_total_before_discount'] : 0;
 				$shipping_cost_ati = ( ! empty($cart_content['order_shipping_cost']) ) ? $cart_content['order_shipping_cost'] : 0;
 				$total_ati  = $total_cart = ( ! empty($cart_content['order_amount_to_pay_now']) ) ? $cart_content['order_amount_to_pay_now'] : 0;
+				$total_ht  = $cart_content['order_total_ht'] + $cart_content['order_shipping_cost'];
 				ob_start();
 				require_once( wpshop_tools::get_template_part( WPS_CART_DIR, WPS_CART_TPL_DIR, "frontend", "resume-cart/resume-cart", "content") );
 				$output = ob_get_contents();

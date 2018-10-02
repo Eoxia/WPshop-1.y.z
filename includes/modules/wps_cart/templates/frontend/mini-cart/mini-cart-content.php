@@ -43,6 +43,11 @@
 		<p><?php _e( 'Total ATI before discount', 'wpshop'); ?><span class="wps-alignRight"><strong><?php echo wpshop_tools::formate_number( $order_total_before_discount ); ?></strong><?php echo $currency; ?></span></p>
 		<p><?php _e( 'Discount', 'wpshop'); ?><span class="wps-inline-alignRight"><strong><?php echo wpshop_tools::formate_number( $coupon_value ); ?></strong><?php echo $currency; ?></span></p>
 	<?php endif; ?>
-	<p class="wps-hightlight"><?php _e( 'Total ATI', 'wpshop'); ?><span class="wps-inline-alignRight"><strong><?php echo wpshop_tools::formate_number( $total_ati ); ?></strong><?php echo $currency; ?></span></p>
+	
+	<?php var_dump( $price_piloting ); if ( $price_piloting == 'TTC' ) : ?>
+		<p class="wps-hightlight"><?php _e( 'Total ATI', 'wpshop'); ?><span class="wps-inline-alignRight"><strong><?php echo wpshop_tools::formate_number( $total_ati ); ?></strong><?php echo $currency; ?></span></p>
+	<?php else : ?>
+		<p class="wps-hightlight">Total HT<span class="wps-inline-alignRight"><strong><?php echo wpshop_tools::formate_number( $total_ht ); ?></strong><?php echo $currency; ?></span></p>
+	<?php endif; ?>
 	<a href="<?php echo get_permalink( wpshop_tools::get_page_id( get_option('wpshop_checkout_page_id') ) ); ?>" role="button" class="wps-bton-first"><?php _e( 'Order', 'wpshop' ); ?></a>
 </div>
