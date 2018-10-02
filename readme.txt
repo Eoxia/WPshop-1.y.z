@@ -75,6 +75,8 @@ Il faut vérifier que le réglage des permaliens pour votre site est bien régl�
 
 = Version 1.6.1 =
 
+Corrections
+
 * 22474 - Correction pilotage HT
 * 22475 - Ajout de la gestion des prospects
 
