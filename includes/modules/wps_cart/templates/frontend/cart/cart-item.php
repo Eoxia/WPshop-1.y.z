@@ -36,7 +36,10 @@
 
 	<?php if( $cart_option == 'full_cart' ) : ?>
 	<div class="wps-cart-item-unit-price wps-cart-item-unit-price-et">
-		<span class="wps-price"> <?php echo wpshop_tools::formate_number( $item['item_pu_ht'] ); ?><span><?php echo $currency; ?></span></span>
+		<span class="wps-price">
+			<?php echo wpshop_tools::formate_number( $item['item_pu_ht'] ); ?><span><?php echo $currency; ?></span>
+			<span class="wps-tva"><?php _e( 'ET', 'wpshop'); ?></span>
+		</span>
 	</div>
 	<?php endif; ?>
 

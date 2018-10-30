@@ -166,7 +166,7 @@ class wps_cart {
 	/** Display mini cart **/
 	function display_mini_cart( $args ) {
 		$price_piloting = get_option( 'wpshop_shop_price_piloting' );
-		
+
 		$total_cart_item = 0;
 		$cart_content = ( ! empty($_SESSION) && ! empty($_SESSION['cart']) ) ? $_SESSION['cart'] : array();
 		$type = ( ! empty($args) && ! empty($args['type']) ) ? $args['type'] : '';
@@ -196,8 +196,10 @@ class wps_cart {
 
 	/** Mini cart Content **/
 	public static function mini_cart_content( $type = '') {
+		$cart_option = get_option( 'wpshop_cart_option' );
+		$cart_option = ( ! empty($cart_option) && ! empty($cart_option['cart_type']) ) ? $cart_option['cart_type'] : 'simplified_ati';
 		$price_piloting  = get_option( 'wpshop_shop_price_piloting' );
-		
+
 		$currency = wpshop_tools::wpshop_get_currency( false );
 		$cart_content = ( ! empty($_SESSION) && ! empty($_SESSION['cart']) ) ? $_SESSION['cart'] : array();
 		$output = '';
@@ -245,8 +247,10 @@ class wps_cart {
 
 	/** Resume cart Content **/
 	public static function resume_cart_content() {
+		$cart_option = get_option( 'wpshop_cart_option' );
+		$cart_option = ( ! empty($cart_option) && ! empty($cart_option['cart_type']) ) ? $cart_option['cart_type'] : 'simplified_ati';
 		$price_piloting  = get_option( 'wpshop_shop_price_piloting' );
-		
+
 		$output = '';
 		$currency = wpshop_tools::wpshop_get_currency( false );
 		$cart_content = ( ! empty($_SESSION) && ! empty($_SESSION['cart']) ) ? $_SESSION['cart'] : array();
@@ -258,6 +262,7 @@ class wps_cart {
 					$coupon_value = wpshop_tools::formate_number( $cart_content['order_discount_amount_total_cart'] );
 				}
 				$order_total_before_discount = ( ! empty($cart_content['order_grand_total_before_discount']) ) ? $cart_content['order_grand_total_before_discount'] : 0;
+				$shipping_cost_et = ( ! empty($cart_content['order_shipping_cost']) ) ? ( (! empty($price_piloting) && $price_piloting != 'HT') ? ( $cart_content['order_shipping_cost'] / ( 1 + ( WPSHOP_VAT_ON_SHIPPING_COST / 100 ) ) ) : $cart_content['order_shipping_cost'] ) : 0;
 				$shipping_cost_ati = ( ! empty($cart_content['order_shipping_cost']) ) ? $cart_content['order_shipping_cost'] : 0;
 				$total_ati  = $total_cart = ( ! empty($cart_content['order_amount_to_pay_now']) ) ? $cart_content['order_amount_to_pay_now'] : 0;
 				$total_ht  = $cart_content['order_total_ht'] + $cart_content['order_shipping_cost'];
@@ -703,6 +708,7 @@ class wps_cart {
 		$cart_infos['order_total_ht'] = $order_total_ht;
 		$cart_infos['order_total_ttc'] = $order_total_ttc;
 
+
 		// Calcul Shipping cost.
 		if ( ! $from_admin && empty( $cart_infos['order_shipping_cost_fixe'] ) && empty( $_SESSION['wps-pos-addon'] ) ) {
 			$wps_shipping = new wps_shipping();
@@ -819,6 +825,8 @@ class wps_cart {
 		if ( isset( $_SESSION['cart']['cart_type'] ) ) {
 			$cart_infos['cart_type'] = $_SESSION['cart']['cart_type'];
 		}
+
+		$cart_infos['order_tva'] = $order_tva;
 
 		// Apply Extra actions on cart infos.
 		$cart_infos = apply_filters( 'wps_extra_calcul_in_cart', $cart_infos, $_SESSION );

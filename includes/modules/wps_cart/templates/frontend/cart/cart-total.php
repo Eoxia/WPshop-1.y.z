@@ -44,65 +44,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="wps-cart-total">
 		<?php $shipping_price_from = get_option( 'wpshop_shipping_cost_from' ); ?>
 
-		<!--	Recap shipping	-->
-
-		<?php if( $cart_option == 'full_cart' || $cart_option == 'simplified_et' || $price_piloting == 'HT' ) : ?>
-			<p>
-				<?php _e( 'Shipping cost', 'wpshop'); ?> <?php echo ( ( !empty($shipping_price_from) && empty( $_SESSION['shipping_address'] ) ) ? '<br/><i>('.__( 'From', 'wpshop').')</i>' : '' ); ?>
-				<span class="wps-alignRight">
-					<?php if( $cart_type != 'admin-panel' ) : ?>
-						<strong><?php echo wpshop_tools::formate_number( $shipping_cost_et ); ?></strong> <?php echo $currency; ?>
-					<?php else : ?>
-						<?php if( ( empty( $cart_content['order_status'] ) || ( $cart_content['order_status'] == 'awaiting_payment' ) ) && $price_piloting == 'HT' ) : ?>
-							<input type="text" size="5" value="<?php echo number_format( $shipping_cost_et, 2 ); ?>" id="wps-orders-shipping-cost" class="wps-error" style="text-align : right" />
-						<?php else : ?>
-							<strong><?php echo wpshop_tools::formate_number( $shipping_cost_et ); ?> <?php echo wpshop_tools::wpshop_get_currency(); ?></strong>
-						<?php endif; ?>
-					<?php endif; ?>
-				</span>
-			</p>
-		<?php endif; ?>
-
-		<?php if( $cart_option == 'full_cart' && $price_piloting == 'TTC' ) : ?>
-			<p>
-				<?php _e( 'VAT on Shipping cost', 'wpshop'); ?>
-				<span class="wps-alignRight">
-					<strong><?php echo wpshop_tools::formate_number( $shipping_cost_vat ); ?></strong> <?php echo $currency; ?>
-				</span>
-			</p>
-		<?php endif; ?>
-
-		<?php if( ( $cart_option == 'full_cart' && $price_piloting == 'TTC' ) || $cart_option == 'simplified_ati' || $price_piloting == 'TTC' ) : ?>
-			<p>
-				<?php _e( 'Shipping cost', 'wpshop'); ?> <?php echo ( ( !empty($shipping_price_from) && empty( $_SESSION['shipping_address'] ) ) ? '<br/><i>('.__( 'From', 'wpshop').')</i>' : '' ); ?>
-				<span class="wps-alignRight">
-					<?php if( $cart_type != 'admin-panel' ) : ?>
-						<strong><?php echo wpshop_tools::formate_number( $shipping_cost_ati ); ?></strong> <?php echo $currency; ?>
-					<?php else : ?>
-						<?php if( ( empty( $cart_content['order_status'] ) || ( $cart_content['order_status'] == 'awaiting_payment' ) ) && $price_piloting == 'TTC' ) : ?>
-							<input type="text" size="5" value="<?php echo number_format( $shipping_cost_ati, 2 ); ?>" id="wps-orders-shipping-cost" class="wps-error" style="text-align : right" />
-						<?php else : ?>
-							<strong><?php echo wpshop_tools::formate_number( $shipping_cost_ati ); ?> <?php echo wpshop_tools::wpshop_get_currency(); ?></strong>
-						<?php endif; ?>
-					<?php endif; ?>
-				</span>
-			</p>
-		<?php endif; ?>
-
-		<?php if( $cart_option == 'full_cart' && !empty($cart_content['order_tva']) ) : ?>
-		<?php foreach( $cart_content['order_tva'] as $order_vat_rate => $order_vat_value ) :
-				if( $order_vat_rate != 'VAT_shipping_cost') :
-					?>
-					<p>
-						<?php printf( __( 'VAT (%s %%)', 'wpshop'), $order_vat_rate); ?>
-						<span class="wps-alignRight">
-							<strong><?php echo wpshop_tools::formate_number( $order_vat_value ); ?></strong> <?php echo $currency; ?>
-						</span>
-					</p>
-					<?php
-				endif;
-		endforeach; ?>
-		<?php endif; ?>
 			<?php if( !empty($cart_content['order_discount_value']) || ( $cart_type == 'admin-panel' ) ) : ?>
 				<p>
 					<?php _e( 'Discount on order', 'wpshop'); ?>
@@ -181,7 +122,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<?php if ( $price_piloting == 'TTC' || is_admin() ) : ?>
 						<p class="wps-hightlight"><?php _e( 'Total ATI', 'wpshop'); ?><span class="wps-alignRight"><strong><?php echo wpshop_tools::formate_number( $total_ati ); ?></strong> <?php echo $currency; ?></span></p>
 					<?php else: ?>
-						<p class="wps-hightlight">Total HT<span class="wps-alignRight"><strong><?php echo wpshop_tools::formate_number( $total_ht ); ?></strong> <?php echo $currency; ?></span></p>
+						<p class="wps-hightlight"><?php _e( 'Total ET', 'wpshop' ); ?><span class="wps-alignRight"><strong><?php echo wpshop_tools::formate_number( $total_ht ); ?></strong> <?php echo $currency; ?></span></p>
+						<?php if( $cart_option == 'full_cart' && !empty($cart_content['order_tva']) ) : ?>
+							<?php foreach( $cart_content['order_tva'] as $order_vat_rate => $order_vat_value ) :
+								if ( $order_vat_rate != 'VAT_shipping_cost' ) :
+									?>
+									<p>
+										<?php printf( __( 'Total VAT (%s %%)', 'wpshop'), $order_vat_rate); ?>
+										<span class="wps-alignRight">
+											<strong><?php echo wpshop_tools::formate_number( $order_vat_value ); ?></strong> <?php echo $currency; ?>
+										</span>
+									</p>
+									<?php
+								else :
+									?>
+									<p>
+										<?php esc_html_e( 'Total VAT Shipping cost', 'wpshop' ); ?>
+										<span class="wps-alignRight">
+											<strong><?php echo wpshop_tools::formate_number( $order_vat_value ); ?></strong> <?php echo $currency; ?>
+										</span>
+									</p>
+									<?php
+								endif;
+							endforeach; ?>
+						<?php endif; ?>
+						<p class="wps-hightlight"><?php _e( 'Total ATI', 'wpshop'); ?><span class="wps-alignRight"><strong><?php echo wpshop_tools::formate_number( $total_ati ); ?></strong> <?php echo $currency; ?></span></p>
 					<?php endif; ?>
 				<?php endif; ?>
 			<?php endif; ?>

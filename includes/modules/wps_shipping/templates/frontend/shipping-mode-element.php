@@ -61,9 +61,10 @@
 
 			<span class="wps-shipping-method-name"><strong><?php _e( $shipping_mode['name'], 'wpshop' ); ?></strong></span>
 			<span class="alignright">
-				<?php if ( false === $shipping_cost_are_free ) : _e('Cost of postage ', 'wpshop'); endif; ?>
-				<?php echo $shipping_cost; ?>
-				<?php if ( false === $shipping_cost_are_free ) : echo $price_piloting; endif; ?>
+				<?php if ( 0 != $shipping_mode['free_from'] ) : ?>
+					<?php if ( false === $shipping_cost_are_free ) : _e('Frais de livraison offert à partir de', 'wpshop'); endif; ?>
+					<?php echo $shipping_mode['free_from'] . ' ' . $currency . ' TTC'; ?>
+				<?php endif; ?>
 			</span>
 
 			<div class="wps-shipping-method-explanation"><?php if( !empty( $shipping_mode['explanation'] ) ) :

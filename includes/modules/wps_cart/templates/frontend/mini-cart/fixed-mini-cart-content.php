@@ -69,7 +69,35 @@
 		<?php endforeach; ?>
 	</ul>
 </div>
-<p><?php _e( 'Shipping cost', 'wpshop' ); ?><span class="wps-inline-alignRight"><strong><?php echo wpshop_tools::formate_number( $shipping_cost_ati ); ?></strong>€</span></p>
+<?php if ( $price_piloting == 'TTC' ) : ?>
+	<p><?php _e( 'Shipping cost ATI', 'wpshop' ); ?><span class="wps-inline-alignRight"><strong><?php echo wpshop_tools::formate_number( $shipping_cost_ati ); ?></strong>€</span></p>
+<?php else : ?>
+	<p><?php _e( 'Shipping cost HT', 'wpshop' ); ?><span class="wps-inline-alignRight"><strong><?php echo wpshop_tools::formate_number( $shipping_cost_ati ); ?></strong>€</span></p>
+<?php endif; ?>
+
+<?php if( $cart_option == 'full_cart' && !empty($cart_content['order_tva']) ) : ?>
+<?php foreach( $cart_content['order_tva'] as $order_vat_rate => $order_vat_value ) :
+		if( $order_vat_rate != 'VAT_shipping_cost') :
+			?>
+			<p>
+				<?php printf( __( 'Total VAT (%s %%)', 'wpshop'), $order_vat_rate); ?>
+				<span class="wps-alignRight">
+					<strong><?php echo wpshop_tools::formate_number( $order_vat_value ); ?></strong> <?php echo $currency; ?>
+				</span>
+			</p>
+			<?php
+		else :
+			?>
+			<p>
+				<?php esc_html_e( 'Total VAT Shipping cost', 'wpshop' ); ?>
+				<span class="wps-alignRight">
+					<strong><?php echo wpshop_tools::formate_number( $order_vat_value ); ?></strong> <?php echo $currency; ?>
+				</span>
+			</p>
+			<?php
+		endif;
+endforeach; ?>
+<?php endif; ?>
 
 <?php if ( !empty( $cart_content['coupon_id']) ) : ?>
 	<p><?php _e( 'Total ATI before discount', 'wpshop' ); ?><span class="wps-inline-alignRight"><strong><?php echo wpshop_tools::formate_number( $order_total_before_discount ); ?></strong> <?php echo $currency; ?></span></p>
@@ -79,7 +107,7 @@
 <?php if ( $price_piloting == 'TTC' ) : ?>
 	<p class="wps-hightlight"><?php _e( 'Total ATI', 'wpshop'); ?><span class="wps-inline-alignRight"><strong><?php echo wpshop_tools::formate_number( $total_ati ); ?></strong> <?php echo $currency; ?></span></p>
 <?php else : ?>
-	<p class="wps-hightlight">Total HT<span class="wps-inline-alignRight"><strong><?php echo wpshop_tools::formate_number( $total_ht ); ?></strong> <?php echo $currency; ?></span></p>
+	<p class="wps-hightlight"><?php _e( 'Total ET', 'wpshop' ); ?><span class="wps-inline-alignRight"><strong><?php echo wpshop_tools::formate_number( $total_ht ); ?></strong> <?php echo $currency; ?></span></p>
 <?php endif; ?>
 <button class="wps-bton-second-halfwidth wpsjq-closeFixedCart"><i class="wps-icon-arrowleft"></i><?php _e( 'Return', 'wpshop'); ?></button>
 <a href="<?php echo get_permalink( wpshop_tools::get_page_id( get_option('wpshop_cart_page_id') ) ); ?>" class="wps-bton-first-halfwidth" role="button"><i class="wps-icon-paiement"></i><?php _e( 'Order', 'wpshop'); ?></a>
