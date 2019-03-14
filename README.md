@@ -1,4 +1,4 @@
-# WpShop 2.0 Béta
+# WpShop 2.0 Beta
 
 WpShop 2.X will turn your WordPress into a simple, fast and intuitive Ecommerce for your customers.
 WpShop 2.X will be connected to your PGI.
