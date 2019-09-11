@@ -24,6 +24,9 @@ include_once( WPSHOP_LIBRAIRIES_DIR . 'install.class.php' );
 include_once( WPSHOP_LIBRAIRIES_DIR . 'permissions.class.php' );
 include_once( WPSHOP_LIBRAIRIES_DIR . 'options/options.class.php' );
 include_once( WPSHOP_LIBRAIRIES_DIR . 'notices.class.php' );
+
+include_once( WPSHOP_LIBRAIRIES_DIR . 'parsedown/parsedown.php' );
+
 /* Purchase management */
 include_once( WPSHOP_LIBRAIRIES_DIR . 'purchase/checkout.class.php' );
 include_once( WPSHOP_LIBRAIRIES_DIR . 'purchase/orders.class.php' );

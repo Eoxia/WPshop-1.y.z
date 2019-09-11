@@ -37,6 +37,37 @@ class wpshop_init{
 		/*	Declare the different options for the plugin	*/
 		add_action('admin_init', array('wpshop_options', 'add_options'));
 
+		add_action( 'admin_notices', function() {
+			$class = 'notice notice-error';
+			$message = __( 'WPshop 2 is coming! Please read <a href="#" class="open-modal-notice-wpshop2">compatibility guide.</a>', 'wpshop' );
+
+			printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), $message, esc_html( '#' ) );
+		} );
+
+		add_action( 'wp_ajax_load_wpshop2_notice_content', function() {
+			$ch = curl_init("https://api.github.com/repos/Eoxia/wpshop/contents/wpshop2-notice/fr.md");
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+			curl_setopt($ch, CURLOPT_USERAGENT, 'Eoxia');
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+				'Content-Type: application/json',
+			) );
+			$content = curl_exec( $ch );
+			curl_close($ch);
+
+			$content = json_decode( $content );
+			$content = base64_decode( $content->content );
+
+			$parsedown = new Parsedown();
+			$content = $parsedown->text( $content );
+			ob_start();
+			require_once( WPSHOP_DIR . '/templates/modal-notice-wpshop2.php' );
+
+			wp_send_json_success( array(
+				'view' => ob_get_clean(),
+			) );
+		} );
+
 		/*	Include head js	*/
 		add_action('admin_print_scripts', array('wpshop_init', 'admin_print_js'));
 
@@ -45,6 +76,12 @@ class wpshop_init{
 		$action = !empty( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
 		$post = !empty( $_GET['post'] ) ? (array) $_GET['post'] : '';
 		$taxonomy = !empty( $_GET['taxonomy'] ) ? sanitize_text_field( $_GET['taxonomy'] ) : '';
+
+		add_action( 'admin_enqueue_scripts', function() {
+			wp_enqueue_script('wpshop_2_script_js', WPSHOP_URL . '/templates/admin/js/wpshop2.js', array( 'jquery' ), WPSHOP_VERSION);
+			wp_enqueue_style('wpshop_2_script_css', WPSHOP_URL . '/templates/admin/css/wpshop2.css', WPSHOP_VERSION);
+		} );
+
 		if((isset($page) && substr($page, 0, 7) == 'wpshop_') || (isset($page) && $page == 'wps-installer' ) || (isset($post_type) && substr($post_type, 0, 7) == 'wpshop_') || !empty($post) || (isset($page) && $page==WPSHOP_NEWTYPE_IDENTIFIER_GROUP) || (isset($taxonomy) && ($taxonomy == WPSHOP_NEWTYPE_IDENTIFIER_CATEGORIES))){
 			/*	Include the different javascript	*/
 // 			add_action('admin_init', array('wpshop_init', 'admin_js'));
