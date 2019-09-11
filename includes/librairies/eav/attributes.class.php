@@ -1960,7 +1960,7 @@ ob_end_clean();
 	 * @return string The output for
 	 */
 	public static function display_attribute( $attribute_code, $output_from = 'admin', $output_specs = array() ) {
-		$output = '';
+		$output = array();
 		/*	Get the page code	*/
 		$currentPageCode = !empty($output_specs['page_code']) ? $output_specs['page_code'] : '';
 		$element_identifier = !empty($output_specs['element_identifier']) ? $output_specs['element_identifier'] : '';

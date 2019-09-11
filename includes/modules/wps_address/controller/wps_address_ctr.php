@@ -611,7 +611,7 @@ class wps_address {
 		$submit_billing_and_shipping_info = !empty( $_POST['submitbillingAndShippingInfo'] ) ? sanitize_key( $_POST['submitbillingAndShippingInfo'] ) : '';
 
 		$address = array();
-		$all_addresses = '';
+		$all_addresses = array();
 		$attribute = !empty( $_POST['attribute'] ) ? (array) $_POST['attribute'] : array();
 		/*	Get the attribute set details in order to build the product interface	*/
 

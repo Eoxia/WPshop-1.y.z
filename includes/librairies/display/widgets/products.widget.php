@@ -8,8 +8,10 @@ class WP_Widget_Wpshop_Products extends WP_Widget {
 	 * @return void
 	 */
 	function __construct() {
-		add_action('widgets_init', create_function('', 'return register_widget("WP_Widget_Wpshop_Products");' ) );
-		
+		add_action('widgets_init', function() {
+			return register_widget("WP_Widget_Wpshop_Products");
+		});
+
 		$widget_ops = array( 'classname' => 'WP_Widget_Wpshop_Products', 'description' => __('Allows you to display a widget with a list of product into your shop', 'wpshop') );
 		parent::__construct( 'WP_Widget_Wpshop_Products', __( '• Wpshop products', 'wpshop' ), $widget_ops );
 	}

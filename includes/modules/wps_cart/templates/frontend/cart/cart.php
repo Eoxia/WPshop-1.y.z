@@ -85,10 +85,7 @@
 
 			require( wpshop_tools::get_template_part( WPS_CART_DIR, WPS_CART_TPL_DIR,"frontend", "cart/cart", "item") );
 		endforeach;
-
-		require( wpshop_tools::get_template_part( WPS_CART_DIR, WPS_CART_TPL_DIR, "frontend", "cart/shipping", "item" ) );
 	?>
-
 </ul>
 <?php if( ! is_admin() ) {
 	require_once( wpshop_tools::get_template_part( WPS_CART_DIR, WPS_CART_TPL_DIR,"frontend", "cart/cart", "total") );

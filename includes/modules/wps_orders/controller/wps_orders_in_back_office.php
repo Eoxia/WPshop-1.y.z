@@ -182,6 +182,11 @@ class wps_orders_in_back_office {
 		// Récupération des informations actuelles de la commande / Get order's current information.
 		$order_meta = get_post_meta( $post_id, '_order_postmeta', true );
 
+		if ( empty( $order_meta ) ) {
+			$order_meta = array();
+		}
+
+
 		// Affectation du client de la commande / Affect customer to order.
 		remove_action( 'save_post', array( $this, 'save_order_custom_informations' ) );
 		wp_update_post( array( 'ID' => $post_id, 'post_parent' => $customer_id ) );

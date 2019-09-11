@@ -955,7 +955,7 @@ class wpshop_attributes_set{
 	*/
 	public static function getAttributeSetDetails($attributeSetId, $attributeSetStatus = "'valid', 'moderated'"){
 		global $wpdb, $validAttributeList;
-		$attributeSetDetailsGroups = '';
+		$attributeSetDetailsGroups = array();
 
 		$query = $wpdb->prepare(
 			"SELECT ATTRIBUTE_GROUP.id AS attr_group_id, ATTRIBUTE_GROUP.backend_display_type AS backend_display_type, ATTRIBUTE_GROUP.used_in_shop_type,

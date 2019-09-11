@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Wp Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-30 10:40+0100\n"
-"PO-Revision-Date: 2018-10-30 10:40+0100\n"
+"POT-Creation-Date: 2018-10-02 17:09+0200\n"
+"PO-Revision-Date: 2018-10-02 17:11+0200\n"
 "Last-Translator: Equipe de développement de digirisk <dev@digirisk.com>\n"
 "Language-Team: Développement Eoxia <dev@eoxia.com>\n"
 "Language: fr_FR\n"
@@ -952,7 +952,7 @@ msgid "There is nothing to output here"
 msgstr "Il n'y a aucun contenu dans cette catégorie"
 
 #: includes/librairies/catalog/products.class.php:1657
-#: includes/modules/wps_cart/controller/wps_cart_ctr.php:452
+#: includes/modules/wps_cart/controller/wps_cart_ctr.php:448
 msgid "This product does not exist"
 msgstr "Ce produit n'existe pas"
 
@@ -968,13 +968,7 @@ msgstr "A partir de"
 #: includes/librairies/catalog/products.class.php:2419
 #: includes/librairies/catalog/products.class.php:2446
 #: includes/modules/billing/billing.php:744
-#: includes/modules/wps_cart/templates/frontend/cart/cart-item.php:41
-#: includes/modules/wps_cart/templates/frontend/cart/cart-item.php:71
-#: includes/modules/wps_cart/templates/frontend/cart/shipping-item.php:13
-#: includes/modules/wps_cart/templates/frontend/cart/shipping-item.php:21
-#: includes/modules/wps_cart/templates/frontend/resume-cart/resume-cart-content.php:65
-#: includes/modules/wps_cart/templates/frontend/resume-cart/resume-cart-content.php:81
-#: includes/modules/wps_cart/templates/frontend/resume-cart/resume-cart-content.php:84
+#: includes/modules/wps_cart/templates/frontend/cart/cart-item.php:68
 #: includes/modules/wpshop_prices/wpshop_prices.php:260
 #: includes/modules/wpshop_prices/wpshop_prices.php:311
 msgid "ET"
@@ -1781,7 +1775,7 @@ msgstr "Cet addonn'est pas activé, cliquez ici pour l'activer"
 #: includes/librairies/eav/attributes.class.php:2009
 #: includes/librairies/eav/attributes.class.php:2505
 #: includes/librairies/eav/attributes.class.php:3205
-#: includes/modules/wps_cart/controller/wps_cart_ctr.php:718
+#: includes/modules/wps_cart/controller/wps_cart_ctr.php:713
 #: includes/modules/wps_classic_checkout/wps_classic_checkout.php:316
 #: includes/modules/wps_customer/controller/wps_provider_ctr.php:91
 #: languages/alone_text.php:17 languages/alone_text.php:64
@@ -3606,10 +3600,10 @@ msgstr "PU HT"
 #: includes/librairies/pdf/fpdf_extends.class.php:365
 #: includes/modules/billing/templates/common/main_elements.tpl.php:316
 #: includes/modules/billing/templates/common/main_elements.tpl.php:585
-#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:91
-#: includes/modules/wps_cart/templates/frontend/mini-cart/fixed-mini-cart-content.php:104
+#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:150
+#: includes/modules/wps_cart/templates/frontend/mini-cart/fixed-mini-cart-content.php:76
 #: includes/modules/wps_cart/templates/frontend/mini-cart/mini-cart-content.php:44
-#: includes/modules/wps_cart/templates/frontend/resume-cart/resume-cart-content.php:96
+#: includes/modules/wps_cart/templates/frontend/resume-cart/resume-cart-content.php:83
 #: templates/wpshop/main_elements.tpl.php:106
 msgid "Discount"
 msgstr "Remise"
@@ -3623,10 +3617,7 @@ msgstr "Montant TVA"
 #: includes/modules/billing/templates/common/main_elements.tpl.php:317
 #: includes/modules/billing/templates/common/main_elements.tpl.php:348
 #: includes/modules/wps-pos-addon/templates/backend/order/order-content.php:70
-#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:125
 #: includes/modules/wps_cart/templates/frontend/cart/cart.php:24
-#: includes/modules/wps_cart/templates/frontend/mini-cart/fixed-mini-cart-content.php:110
-#: includes/modules/wps_cart/templates/frontend/resume-cart/resume-cart-content.php:106
 #: includes/modules/wps_message/templates/backend/mails/order_content_mail_template.php:67
 #: templates/wpshop/main_elements.tpl.php:211
 msgid "Total ET"
@@ -3638,10 +3629,10 @@ msgstr "TVA"
 
 #: includes/librairies/pdf/fpdf_extends.class.php:361
 #: includes/modules/billing/templates/common/main_elements.tpl.php:581
-#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:90
-#: includes/modules/wps_cart/templates/frontend/mini-cart/fixed-mini-cart-content.php:103
+#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:149
+#: includes/modules/wps_cart/templates/frontend/mini-cart/fixed-mini-cart-content.php:75
 #: includes/modules/wps_cart/templates/frontend/mini-cart/mini-cart-content.php:43
-#: includes/modules/wps_cart/templates/frontend/resume-cart/resume-cart-content.php:95
+#: includes/modules/wps_cart/templates/frontend/resume-cart/resume-cart-content.php:82
 msgid "Total ATI before discount"
 msgstr "Total TTC avant réduction"
 
@@ -3651,15 +3642,13 @@ msgstr "Total TTC avant réduction"
 #: includes/modules/billing/templates/common/main_elements.tpl.php:350
 #: includes/modules/wps-pos-addon/templates/backend/order/order-content.php:8
 #: includes/modules/wps-pos-addon/templates/backend/order/order-content.php:71
-#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:103
-#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:109
-#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:120
-#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:123
-#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:149
-#: includes/modules/wps_cart/templates/frontend/mini-cart/fixed-mini-cart-content.php:108
+#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:162
+#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:168
+#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:179
+#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:182
+#: includes/modules/wps_cart/templates/frontend/mini-cart/fixed-mini-cart-content.php:80
 #: includes/modules/wps_cart/templates/frontend/mini-cart/mini-cart-content.php:48
-#: includes/modules/wps_cart/templates/frontend/resume-cart/resume-cart-content.php:100
-#: includes/modules/wps_cart/templates/frontend/resume-cart/resume-cart-content.php:134
+#: includes/modules/wps_cart/templates/frontend/resume-cart/resume-cart-content.php:87
 #: includes/modules/wps_customer/controller/wp_list_custom_entities_customers.php:53
 #: includes/modules/wps_message/templates/backend/mails/order_content_mail_template.php:96
 #: templates/wpshop/main_elements.tpl.php:215
@@ -4705,8 +4694,8 @@ msgstr "Commandes"
 #: includes/modules/wps-pos-addon/templates/backend/bank_deposit/bank_deposit.php:38
 #: includes/modules/wps-pos-addon/templates/backend/bank_deposit/metabox-bank_deposit.php:34
 #: includes/modules/wps-pos-addon/templates/backend/tab_pos.php:5
-#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:162
-#: includes/modules/wps_cart/templates/frontend/mini-cart/fixed-mini-cart-content.php:113
+#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:197
+#: includes/modules/wps_cart/templates/frontend/mini-cart/fixed-mini-cart-content.php:85
 #: includes/modules/wps_cart/templates/frontend/mini-cart/mini-cart-content.php:52
 #: includes/modules/wps_classic_checkout/templates/frontend/classic-checkout-step-five.php:29
 #: includes/modules/wps_classic_checkout/templates/frontend/classic-checkout-step-four.php:10
@@ -5240,7 +5229,9 @@ msgid "Order grand total ET"
 msgstr "Montant total HT"
 
 #: includes/modules/billing/templates/common/main_elements.tpl.php:520
-#: includes/modules/wps_cart/templates/frontend/resume-cart/resume-cart-content.php:76
+#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:51
+#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:77
+#: includes/modules/wps_cart/templates/frontend/mini-cart/fixed-mini-cart-content.php:72
 #: includes/modules/wps_credit/wps_credit.php:103
 #: includes/modules/wps_credit/wps_credit.php:149
 #: includes/modules/wps_credit/wps_credit.php:453
@@ -5457,6 +5448,8 @@ msgid "Add product"
 msgstr "Ajouter un produit"
 
 #: includes/modules/wps-pos-addon/templates/backend/bank_deposit/bank_deposit.php:19
+#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:51
+#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:77
 msgid "From"
 msgstr "A partir de"
 
@@ -5683,6 +5676,7 @@ msgid "P.U ATI"
 msgstr "P.U TTC"
 
 #: includes/modules/wps-pos-addon/templates/backend/order/order-content.php:60
+#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:97
 #, php-format
 msgid "VAT (%s %%)"
 msgstr "TVA ( %s %%)"
@@ -5973,18 +5967,18 @@ msgstr "Panier complet"
 
 #: includes/modules/wps_cart/controller/wps_cart_ctr.php:157
 #: includes/modules/wps_cart/controller/wps_cart_ctr.php:161
-#: includes/modules/wps_cart/controller/wps_cart_ctr.php:229
-#: includes/modules/wps_cart/controller/wps_cart_ctr.php:233
+#: includes/modules/wps_cart/controller/wps_cart_ctr.php:227
+#: includes/modules/wps_cart/controller/wps_cart_ctr.php:231
+#: includes/modules/wps_cart/controller/wps_cart_ctr.php:270
 #: includes/modules/wps_cart/controller/wps_cart_ctr.php:274
-#: includes/modules/wps_cart/controller/wps_cart_ctr.php:278
 msgid "Your cart is empty"
 msgstr "Votre panier est vide"
 
-#: includes/modules/wps_cart/controller/wps_cart_ctr.php:417
+#: includes/modules/wps_cart/controller/wps_cart_ctr.php:413
 msgid "This product does not exist in the cart."
 msgstr "Ce produit n'existe pas dans le panier."
 
-#: includes/modules/wps_cart/controller/wps_cart_ctr.php:435
+#: includes/modules/wps_cart/controller/wps_cart_ctr.php:431
 msgid ""
 "You have another element type into your cart. Please finalize it by going to "
 "cart page."
@@ -5992,31 +5986,31 @@ msgstr ""
 "Vous devez finaliser votre panier courant avant de pouvoir effectuer cette "
 "action."
 
-#: includes/modules/wps_cart/controller/wps_cart_ctr.php:504
+#: includes/modules/wps_cart/controller/wps_cart_ctr.php:500
 msgid "No more products can be added to your cart."
 msgstr "Le panier ne peux pas contenir plus d'éléments."
 
-#: includes/modules/wps_cart/controller/wps_cart_ctr.php:908
+#: includes/modules/wps_cart/controller/wps_cart_ctr.php:901
 #: includes/modules/wps_orders/controller/wps_orders_in_back_office.php:520
 #: templates/wpshop/main_elements.tpl.php:35
 msgid "Add to cart"
 msgstr "Ajouter au panier"
 
-#: includes/modules/wps_cart/controller/wps_cart_ctr.php:910
+#: includes/modules/wps_cart/controller/wps_cart_ctr.php:903
 #: includes/modules/wps_product/controller/wps_product_ctr.php:309
 #: includes/modules/wps_product/controller/wps_product_ctr.php:326
 msgid "No product has been found."
 msgstr "Aucun produit trouvé"
 
-#: includes/modules/wps_cart/controller/wps_cart_ctr.php:972
+#: includes/modules/wps_cart/controller/wps_cart_ctr.php:965
 msgid "The coupon has been applied"
 msgstr "Le coupon a été appliqué"
 
-#: includes/modules/wps_cart/controller/wps_cart_ctr.php:979
+#: includes/modules/wps_cart/controller/wps_cart_ctr.php:972
 msgid "A coupon code is required"
 msgstr "Un code-coupon est obligatoire"
 
-#: includes/modules/wps_cart/controller/wps_cart_ctr.php:1005
+#: includes/modules/wps_cart/controller/wps_cart_ctr.php:998
 msgid ""
 "An error was occured, please retry later or contact the website administrator"
 msgstr ""
@@ -6045,52 +6039,43 @@ msgstr "Numéro de suivi"
 msgid "Tracking link"
 msgstr "Lien de suivi"
 
-#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:49
+#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:68
+msgid "VAT on Shipping cost"
+msgstr "TVA sur frais de port"
+
+#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:108
 msgid "Discount on order"
 msgstr "Remise sur la commande"
 
-#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:58
-#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:80
+#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:117
+#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:139
 msgid "Amount reduction"
 msgstr "Montant de la réduction"
 
-#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:70
+#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:129
 msgid "Type of discount on order"
 msgstr "Type de remise sur la commande"
 
-#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:105
+#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:164
 #, php-format
 msgid "Payable now %s"
 msgstr "A régler maintenant %s"
 
-#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:116
+#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:175
 msgid "Already paid"
 msgstr "Montant réglé"
 
-#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:117
+#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:176
 #: includes/modules/wps_orders/templates/backend/wps_order_payment_box.php:183
 msgid "Due amount for this order"
 msgstr "Montant restant à payer"
 
-#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:131
-#: includes/modules/wps_cart/templates/frontend/mini-cart/fixed-mini-cart-content.php:83
-#: includes/modules/wps_cart/templates/frontend/resume-cart/resume-cart-content.php:116
-#, php-format
-msgid "Total VAT (%s %%)"
-msgstr "Total TVA (%s %%)"
-
-#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:140
-#: includes/modules/wps_cart/templates/frontend/mini-cart/fixed-mini-cart-content.php:92
-#: includes/modules/wps_cart/templates/frontend/resume-cart/resume-cart-content.php:125
-msgid "Total VAT Shipping cost"
-msgstr "Total TVA Frais de livraison"
-
-#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:158
+#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:193
 #: templates/wpshop/main_elements.tpl.php:192
 msgid "Empty the cart"
 msgstr "Vider le panier"
 
-#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:160
+#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:195
 #: includes/modules/wps_classic_checkout/templates/frontend/classic-checkout-step-five.php:27
 #: includes/modules/wps_classic_checkout/templates/frontend/classic-checkout-step-four.php:8
 #: includes/modules/wps_classic_checkout/templates/frontend/classic-checkout-step-three.php:9
@@ -6098,7 +6083,7 @@ msgstr "Vider le panier"
 msgid "Validate my quotation"
 msgstr "Valider mon devis"
 
-#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:173
+#: includes/modules/wps_cart/templates/frontend/cart/cart-total.php:208
 msgid "Update order informations"
 msgstr "Mettre à jour les informations de la commande"
 
@@ -6123,10 +6108,6 @@ msgstr "Total"
 msgid "Download the product"
 msgstr "Télécharger le produit"
 
-#: includes/modules/wps_cart/templates/frontend/cart/shipping-item.php:8
-msgid "Shipping cost ET"
-msgstr "Frais de livraison HT"
-
 #: includes/modules/wps_cart/templates/frontend/coupon/apply_coupon.php:13
 msgid "Coupon"
 msgstr "Coupon de réduction"
@@ -6141,19 +6122,11 @@ msgid "item(s)"
 msgstr "article(s)"
 
 #: includes/modules/wps_cart/templates/frontend/mini-cart/fixed-mini-cart-content.php:62
+#: includes/modules/wps_cart/templates/frontend/resume-cart/resume-cart-content.php:65
 msgid "HT"
-msgstr "HT"
+msgstr ""
 
-#: includes/modules/wps_cart/templates/frontend/mini-cart/fixed-mini-cart-content.php:73
-#: includes/modules/wps_cart/templates/frontend/mini-cart/mini-cart-content.php:41
-msgid "Shipping cost ATI"
-msgstr "Frais de port TTC"
-
-#: includes/modules/wps_cart/templates/frontend/mini-cart/fixed-mini-cart-content.php:75
-msgid "Shipping cost HT"
-msgstr "Frais de livraison HT"
-
-#: includes/modules/wps_cart/templates/frontend/mini-cart/fixed-mini-cart-content.php:112
+#: includes/modules/wps_cart/templates/frontend/mini-cart/fixed-mini-cart-content.php:84
 #: includes/modules/wps_credit/templates/backend/main_elements.tpl.php:66
 msgid "Return"
 msgstr "Retour"
@@ -6163,13 +6136,22 @@ msgstr "Retour"
 msgid "My cart"
 msgstr "Mon panier"
 
+#: includes/modules/wps_cart/templates/frontend/mini-cart/mini-cart-content.php:41
+#: includes/modules/wps_cart/templates/frontend/resume-cart/resume-cart-content.php:77
+msgid "Shipping cost ATI"
+msgstr "Frais de port TTC"
+
 #: includes/modules/wps_cart/templates/frontend/resume-cart/resume-cart-content.php:3
 msgid "Cart summary"
 msgstr "Récapitulatif du panier"
 
 #: includes/modules/wps_cart/templates/frontend/resume-cart/resume-cart-content.php:62
 msgid "TTC"
-msgstr "TTC"
+msgstr ""
+
+#: includes/modules/wps_cart/templates/frontend/resume-cart/resume-cart-content.php:79
+msgid "Frais de livraison"
+msgstr ""
 
 #: includes/modules/wps_classic_checkout/templates/frontend/checkout_step_indicator/checkout_step_indicator.php:30
 msgid "Etape"
@@ -6218,11 +6200,14 @@ msgstr ""
 "sa livraison. Merci pour votre confiance."
 
 #: includes/modules/wps_classic_checkout/templates/frontend/confirmation/confirmation-checks.php:7
+#: templates/wpshop/main_elements.tpl.php:1130
 #, php-format
 msgid ""
-"You have to send the check with an amount of %s ATI to about \"%s\" to the "
+"You have to send the check with an amount of %s to about \"%s\" to the "
 "adress :"
 msgstr ""
+"Vous devez envoyer un chèque avec un montant de %s à l'ordre de \"%s\" et à "
+"l'adresse ci-dessous :"
 
 #: includes/modules/wps_classic_checkout/templates/frontend/confirmation/confirmation-checks.php:12
 #: templates/wpshop/main_elements.tpl.php:1135
@@ -9224,9 +9209,9 @@ msgstr ""
 msgid "Free in %s"
 msgstr "Offert dans %s"
 
-#: includes/modules/wps_shipping/templates/frontend/shipping-mode-element.php:65
-msgid "Frais de livraison offert à partir de"
-msgstr ""
+#: includes/modules/wps_shipping/templates/frontend/shipping-mode-element.php:64
+msgid "Cost of postage "
+msgstr "Frais de port "
 
 #: includes/modules/wps_shortcodes/controller/wps_shortcodes_ctr.php:91
 msgid "Simple product shortcode"
@@ -11565,15 +11550,6 @@ msgstr ""
 "Désolé mais vous ne pouvez pas commander sur cette boutique, nous ne livrons "
 "pas dans votre pays."
 
-#: templates/wpshop/main_elements.tpl.php:1130
-#, php-format
-msgid ""
-"You have to send the check with an amount of %s to about \"%s\" to the "
-"adress :"
-msgstr ""
-"Vous devez envoyer un chèque avec un montant de %s à l'ordre de \"%s\" et à "
-"l'adresse ci-dessous :"
-
 #: templates/wpshop/main_elements.tpl.php:1162
 msgid "Download your product"
 msgstr "Télécharger votre produit"
@@ -11610,17 +11586,14 @@ msgstr "Reprendre la commande"
 msgid "Latest products ordered"
 msgstr "Les derniers produits commandés"
 
-#~ msgid "VAT on Shipping cost"
-#~ msgstr "TVA sur frais de port"
-
-#~ msgid "Cost of postage "
-#~ msgstr "Frais de port "
-
 #~ msgid "Quotation date %s"
 #~ msgstr "Date du devis %s"
 
 #~ msgid "Order date %s"
 #~ msgstr "Date de la commande %s"
+
+#~ msgid "Shipping cost ET"
+#~ msgstr "Frais de livraison HT"
 
 #~ msgid "Add the attribute : "
 #~ msgstr "Ajouter l'attribut:"

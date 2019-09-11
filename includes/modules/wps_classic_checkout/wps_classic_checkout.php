@@ -471,10 +471,16 @@ if ( !class_exists("wps_classic_checkout") ) {
 			if ( !wp_verify_nonce( $_wpnonce, 'wps_checkout_valid_step_five' ) )
 				wp_die();
 
+
 			$status = false;
 			$response = '';
 			$payment_method = ( !empty($_POST['wps-payment-method']) ) ? wpshop_tools::varSanitizer( $_POST['wps-payment-method'] ): null;
 			$order_id = ( !empty($_SESSION['cart']['order_id']) ) ? (int) $_SESSION['cart']['order_id'] : 0;
+
+			if ( empty( $order_id ) ) {
+				$order_id = ( !empty($_SESSION['order_id']) ) ? (int) $_SESSION['order_id'] : 0;
+			}
+
 			$customer_comment = ( !empty($_POST['wps-customer-comment']) ) ? wpshop_tools::varSanitizer( $_POST['wps-customer-comment'] ) : null;
 
 			$terms_of_sale_required = isset( $_POST['terms_of_sale_indicator'] ) && !empty( $_POST['terms_of_sale_indicator'] ) ? (bool)$_POST['terms_of_sale_indicator'] : (bool)false;
@@ -493,6 +499,7 @@ if ( !class_exists("wps_classic_checkout") ) {
 						} else {
 							$is_quotation = false;
 						}
+
 						$order_id = wpshop_checkout::process_checkout( $payment_method, $order_id, get_current_user_id(), $_SESSION['billing_address'], $_SESSION['shipping_address'] );
 						if( !empty($order_id) && !empty($customer_comment) ) {
 							$wps_back_office_orders_mdl = new wps_back_office_orders_mdl();

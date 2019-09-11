@@ -62,35 +62,22 @@
 				    	<span class="wps-tva"><?php _e( 'TTC', 'wpshop'); ?></span><br>
 					<?php else: ?>
 						<span class="wps-price"><?php echo wpshop_tools::formate_number( $item['item_total_ht'] ); ?> <span><?php echo $currency; ?></span></span>
-				    	<span class="wps-tva"><?php _e( 'ET', 'wpshop'); ?></span><br>
+				    	<span class="wps-tva"><?php _e( 'HT', 'wpshop'); ?></span><br>
 					<?php endif; ?>
 				</div>
 			</li>
 	<?php endforeach; ?>
-
-	<!-- Frais de livraison produit -->
-	<li data-id="<?php echo $product_key; ?>" >
-		<div class="wps-cart-item-img">
-		</div>
-		<div class="wps-cart-item-content">
-			<?php esc_html_e( 'Shipping cost ', 'wpshop' ); ?>
-		</div>
-		<div class="wps-cart-item-price">
-			<?php if ( $price_piloting == 'TTC' ) : ?>
-				<span class="wps-price"><?php echo wpshop_tools::formate_number( $shipping_cost_ttc ); ?>€</span>
-				<span class="wps-tva"><?php _e( 'ET', 'wpshop'); ?></span>
-			<?php else: ?>
-				<span class="wps-price"><?php echo wpshop_tools::formate_number( $shipping_cost_et ); ?>€</span>
-				<span class="wps-tva"><?php _e( 'ET', 'wpshop'); ?></span>
-			<?php endif; ?>
-		</div>
-	</li>
 </ul>
 <div class="wps-cart-cartouche">
 	<div class="wps-cart-message">
 		<?php echo do_shortcode('[wps_apply_coupon]'); ?>
 	</div>
 	<div class="wps-cart-total">
+		<?php if ( $price_piloting == 'TTC' ) : ?>
+			<p><?php _e( 'Shipping cost ATI', 'wpshop'); ?><span class="wps-alignRight"><strong><?php echo wpshop_tools::formate_number( $shipping_cost_ati ); ?></strong><?php echo $currency; ?></span></p>
+		<?php else: ?>
+			<p><?php _e( 'Frais de livraison', 'wpshop'); ?><span class="wps-alignRight"><strong><?php echo wpshop_tools::formate_number( $shipping_cost_ati ); ?></strong>&nbsp;<?php echo $currency; ?></span></p>
+		<?php endif; ?>
 		<?php if ( !empty( $cart_content['coupon_id']) ) : ?>
 			<p><?php _e( 'Total ATI before discount', 'wpshop'); ?><span class="wps-alignRight"><strong><?php echo wpshop_tools::formate_number( $order_total_before_discount ); ?></strong><?php echo $currency; ?></span></p>
 			<p><?php _e( 'Discount', 'wpshop'); ?><span class="wps-inline-alignRight"><strong><?php echo wpshop_tools::formate_number( $coupon_value ); ?></strong><?php echo $currency; ?></span></p>
@@ -103,35 +90,11 @@
 					<?php echo $currency; ?>
 				</span>
 			<?php else : ?>
-				<?php _e( 'Total ET', 'wpshop' ); ?>
+				Total HT
 				<span class="wps-inline-alignRight">
 					<strong><?php echo wpshop_tools::formate_number( $total_ht ); ?></strong>
 					<?php echo $currency; ?>
 				</span>
-				<?php if( $cart_option == 'full_cart' && !empty($cart_content['order_tva']) ) : ?>
-				<?php foreach( $cart_content['order_tva'] as $order_vat_rate => $order_vat_value ) :
-						if( $order_vat_rate != 'VAT_shipping_cost') :
-							?>
-							<p>
-								<?php printf( __( 'Total VAT (%s %%)', 'wpshop'), $order_vat_rate); ?>
-								<span class="wps-alignRight">
-									<strong><?php echo wpshop_tools::formate_number( $order_vat_value ); ?></strong> <?php echo $currency; ?>
-								</span>
-							</p>
-							<?php
-						else :
-							?>
-							<p>
-								<?php esc_html_e( 'Total VAT Shipping cost', 'wpshop' ); ?>
-								<span class="wps-alignRight">
-									<strong><?php echo wpshop_tools::formate_number( $order_vat_value ); ?></strong> <?php echo $currency; ?>
-								</span>
-							</p>
-							<?php
-						endif;
-				endforeach; ?>
-				<?php endif; ?>
-				<p class="wps-hightlight"><?php _e( 'Total ATI', 'wpshop'); ?><span class="wps-alignRight"><strong><?php echo wpshop_tools::formate_number( $total_ati ); ?></strong> <?php echo $currency; ?></span></p>
 			<?php endif; ?>
 		</p>
 	</div><!-- wp-cart-total -->

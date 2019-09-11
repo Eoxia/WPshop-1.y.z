@@ -465,7 +465,9 @@ class wpshop_tools {
 		$number = number_format( $number, 2, '.', '' );
 		$exploded_number = explode( '.', $number );
 		$number = $exploded_number[0];
-		$number .= '<span class="wps_number_cents">,' . $exploded_number[1]. '</span>';
+		if( $exploded_number[1] != '00' ) {
+			$number .= '<span class="wps_number_cents">,' . $exploded_number[1]. '</span>';
+		}
 		return $number;
 	}
 

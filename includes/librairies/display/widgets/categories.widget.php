@@ -22,13 +22,15 @@ class WP_Widget_Wpshop_Product_categories extends WP_Widget {
 	 * Widget Constructor
 	 */
 	public function __construct() {
-		add_action('widgets_init', create_function('', 'return register_widget("WP_Widget_Wpshop_Product_categories");' ) );
-		
+		add_action('widgets_init', function() {
+			return register_widget("WP_Widget_Wpshop_Product_categories");
+		});
+
 		$params = array(
 			'classname' => 'widget_wpshop_pdt_categories',
 			'description' => __('Wpshop product categories widget', 'wpshop')
 		);
-		
+
 		parent::__construct( 'wpshop_pdt_categories', __('• Wpshop Categories', 'wpshop'), $params );
 	}
 
