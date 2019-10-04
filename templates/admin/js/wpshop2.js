@@ -14,6 +14,7 @@ jQuery( document ).ready(function() {
 			_this.find( '.loader-spin' ).remove();
 
 			jQuery( 'body' ).append( response.data.view );
+			jQuery( '.modal-notice-wpshop .modal-title' ).text( response.data.title );
 		});
 	});
 

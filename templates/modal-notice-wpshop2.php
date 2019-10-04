@@ -31,7 +31,7 @@ defined( 'ABSPATH' ) || exit; ?>
 
 		<!-- Footer -->
 		<div class="modal-footer">
-			<a class="wpeo-button button-main button-uppercase modal-close"><span>Valider</span></a>
+			<a class="wpeo-button button-main button-uppercase modal-close"><span><?php esc_html_e( 'I understand!', 'wpshop' ); ?></span></a>
 		</div>
 	</div>
 </div>
