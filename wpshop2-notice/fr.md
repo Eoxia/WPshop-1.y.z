@@ -1,4 +1,5 @@
-# WPshop 2 arrive !
+# WPshop 2 est bientôt disponible !
+
 ## Compatibilité avec WPShop 1.X.X
 Nous avons fait le choix de **ne pas reprendre** les données de façon native. 
 
