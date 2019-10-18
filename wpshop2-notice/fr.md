@@ -1,7 +1,7 @@
 # WPshop 2 est bientôt disponible !
 
 ## Compatibilité avec WPShop 1.X.X
-La version 1 et 2 **ne sont pas compatibles**.
+Les versions 1 et 2 **ne sont pas compatibles**.
 
 Wpshop 2 est simple. Vous gérez votre boutique en ligne depuis votre site. Les transactions sont gérées grâce à votre ERP, nativement synchronisé. 
 
