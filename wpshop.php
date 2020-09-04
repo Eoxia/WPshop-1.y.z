@@ -3,7 +3,7 @@
  * Plugin Name: WP-Shop
  * Plugin URI: http://www.wpshop.fr/documentations/presentation-wpshop/
  * Description: With this plugin you will be able to manage the products you want to sell and user would be able to buy this products
- * Version: 1.6.3
+ * Version: 1.6.4
  * Author: Eoxia
  * Author URI: http://eoxia.com/
  * Text Domain: wpshop
@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**    Allows to refresh css and js file in final user browser    */
-DEFINE( 'WPSHOP_VERSION', '1.6.3' );
+DEFINE( 'WPSHOP_VERSION', '1.6.4' );
 
 /**    Allows to avoid problem with theme not supporting thumbnail for post    */
 add_theme_support( 'post-thumbnails' );
@@ -41,6 +41,15 @@ add_image_size( 'wps-categorie-display', 480, 340, true );
 /**    First thing we define the main directory for our plugin in a super global var    */
 DEFINE( 'WPSHOP_PLUGIN_DIR', basename( dirname( __FILE__ ) ) );
 DEFINE( 'WPSHOP_PLUGIN_NAME', plugin_basename( __FILE__ ) );
+
+add_filter('site_transient_update_plugins',
+	function ($value) {
+		if ( $value->checked[plugin_basename(__FILE__)] <= "1.6.4" ) {
+			unset( $value->response[plugin_basename(__FILE__)] );
+		}
+		return $value;
+	}
+);
 
 /**    Get the current language to translate the different text in plugin    */
 $locale = get_locale();
