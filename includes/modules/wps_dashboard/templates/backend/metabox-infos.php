@@ -33,5 +33,5 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div class="wps-boxed">
 	<span class="wps-h5"><?php esc_html_e( 'WPShop\'s Video Tutorials', 'wpshop' )?></span>
-	<div><?php $this->wpshop_rss_tutorial_videos(); ?></div>
+<!--	<div>--><?php //$this->wpshop_rss_tutorial_videos(); ?><!--</div>-->
 </div>

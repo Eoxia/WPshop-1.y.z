@@ -89,7 +89,7 @@ class wps_dashboard_ctr {
 		echo $output;
 	}
 
-	function wpshop_rss_tutorial_videos() {
+	/*function wpshop_rss_tutorial_videos() {
 		$ini_get_checking = ini_get( 'allow_url_fopen' );
 
 		if ( $ini_get_checking != 0 ) {
@@ -116,7 +116,7 @@ class wps_dashboard_ctr {
 		}
 
 		echo $output;
-	}
+	}*/
 
 	function wpshop_dashboard_get_changelog() {
 		$readme_file = fopen( WPSHOP_DIR.'/readme.txt', 'r' );
