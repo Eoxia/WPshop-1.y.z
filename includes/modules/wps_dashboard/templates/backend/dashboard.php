@@ -10,6 +10,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="pageTitle" id="pageTitleContainer" >
 		<h2 ><?php esc_html_e( 'Shop dashboard', 'wpshop' ); ?></h2>
 	</div>
+	<div class="wps_dashboard_notice">
+		<div class="notice-content">
+			<div class="notice-title"><?php esc_html_e('WPshop 2 est enfin disponible, pour mettre a jour votre site vers la version 2 de WPshop'); ?>
+				<a target="_blank" href="https://wpshop.fr/">Cliquez ici</a>
+			</div>
+		</div>
+	</div>
 	<div id="champsCaches" class="wpshop_cls wpshopHide" ></div>
 	<div id="wpshop_dashboard">
 		<div class="wpshop_cls wps-gridwrapper2-padded metabox-holder wps-statistics-container" id="dashboard-widgets" >
