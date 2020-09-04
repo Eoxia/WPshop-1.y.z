@@ -37,7 +37,7 @@ class wpshop_init{
 		/*	Declare the different options for the plugin	*/
 		add_action('admin_init', array('wpshop_options', 'add_options'));
 
-		add_action( 'admin_notices', function() {
+		/*add_action( 'admin_notices', function() {
 			$ch = curl_init("https://api.github.com/repos/Eoxia/wpshop/contents/wpshop2-notice/fr.md?ref=1.6.2");
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -58,7 +58,7 @@ class wpshop_init{
 			$message = sprintf( __( '%s <a href="#" class="open-modal-notice-wpshop2">Read more.</a>', 'wpshop' ), $title );
 
 			printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), $message, esc_html( '#' ) );
-		} );
+		} );*/
 
 		add_action( 'wp_ajax_load_wpshop2_notice_content', function() {
 			$ch = curl_init("https://api.github.com/repos/Eoxia/wpshop/contents/wpshop2-notice/fr.md?ref=1.6.2");

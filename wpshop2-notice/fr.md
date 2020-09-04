@@ -1,27 +1,22 @@
-# WPshop 2 est bientôt disponible !
-
+# WPshop 2 arrive !
 ## Compatibilité avec WPShop 1.X.X
-Les versions 1 et 2 **ne sont pas compatibles**.
+Nous avons fait le choix de **ne pas reprendre** les données de façon native. 
 
-Wpshop 2 est simple. Vous gérez votre boutique en ligne depuis votre site. Les transactions sont gérées grâce à votre ERP, nativement synchronisé. 
-
-**WPShop 2**, le choix de la simplicité :
- - Mode **non connecté** vous disposez d'un cataloge de présentation
- - Mode **connecté** vous disposez du premier e-commerce français nativement synchronisé à un ERP
+En passant à **WPShop 2** vous changez de vie :
+ - Mode **catalogue** vous profitez de la **simplicité**
+ - Mode **connecté** votre ERP assure toutes les transactions, WPShop les **affiches aux clients**
 
 ## Pour tester avant la mise à jour
 Vous pouvez télécharger la nouvelle version de [WPShop](https://wpshop.fr)
 
-## Pourquoi cette nouvelle version ?
-Car nous avons été confrontés aux évolutions réglementaires. C'est pourquoi nous avons fait le choix d'un e-commerce nativement synchronisé à un ERP. L'ERP gère les aspects légaux :
+## Pourquoi ce saut de version
+Nous avons été confrontés aux évolutions réglementaires et nous avons fait le choix de nous appuyer sur des éditeurs ou projet Open-Source qui sont structurés pour apporter toutes garanties demandées pour gérer :
  - Devis
  - Commande
  - Factures
  - Paiements
  - Compte
  - Etc..
-Ainsi, votre e-commerce respecte la législation. Car celle-ci est gérée par votre ERP.
-**WPShop** se concentre sur l'essentiel : la vente. 
 
 ## Reprise des données
 Pour ceux qui souhaitent bricoler, nous avons livré les outils d'imports suivant :

@@ -5,7 +5,7 @@ Donate link: http://www.wpshop.fr/
 Requires at least: 4.5
 Tested up to: 5.2.3
 Requires PHP: 5.6.3
-Stable tag: 1.6.2
+Stable tag: 1.6.3
 License: GPLv2 or later
 
 Simple and powerfull eCommerce plugin, with French Payment and Shipping systems : Paybox, Paypal, Atos, Cybermut, SystemPay, Paysite-cash, Colissimo
@@ -28,8 +28,6 @@ WPshop vous propose également des [thèmes wordpress eCommerce](http://www.wpsh
 
 Consultez notre [documentation en ligne](http://www.wpshop.fr/documentations/presentation-wpshop "documentation wpshop") et nos [guides vidéos ecommerce](http://www.wpshop.fr/videotheque/ "guides vidéos wpshop").
 Commandez du temps d'[assistance pour votre site WordPress](http://www.wpshop.fr/boutique/extensions/assistance/ "assistance wordpress et wpshop"), du dépannage ou de la formation.
-
-===
 
 == Installation ==
 
